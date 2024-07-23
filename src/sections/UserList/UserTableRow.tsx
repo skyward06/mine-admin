@@ -1,4 +1,4 @@
-import type { User } from 'src/__generated__/graphql';
+import type { Admin } from 'src/__generated__/graphql';
 
 import Tooltip from '@mui/material/Tooltip';
 import TableRow from '@mui/material/TableRow';
@@ -19,7 +19,7 @@ import { Iconify } from 'src/components/Iconify';
 
 type Props = {
   selected: boolean;
-  row: User;
+  row: Admin;
   onSelectRow: VoidFunction;
 };
 
@@ -31,7 +31,7 @@ export default function UserTableRow({
 }: Props) {
   const router = useRouter();
 
-  const { id, username, email, isAdmin, createdAt, updatedAt, deletedAt } = row;
+  const { id, username, email, createdAt, updatedAt, deletedAt } = row;
   return (
     <TableRow hover selected={selected}>
       <TableCell padding="checkbox">
@@ -58,18 +58,6 @@ export default function UserTableRow({
             color: 'text.disabled',
           }}
         />
-      </TableCell>
-
-      <TableCell sx={{ whiteSpace: 'nowrap' }}>
-        {isAdmin ? (
-          <Label variant="soft" color="success">
-            Admin
-          </Label>
-        ) : (
-          <Label variant="soft" color="warning">
-            User
-          </Label>
-        )}
       </TableCell>
 
       <TableCell>

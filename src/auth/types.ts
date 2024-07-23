@@ -1,7 +1,7 @@
-import type { User } from 'src/__generated__/graphql';
+import type { Admin } from 'src/__generated__/graphql';
 
 export type AuthContextValue = {
-  user?: User | null;
+  admin?: Admin | null;
   loading: boolean;
   isAuthenticated: boolean;
   signIn: (token: string) => void;

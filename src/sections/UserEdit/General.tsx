@@ -1,4 +1,4 @@
-import type { User } from 'src/__generated__/graphql';
+import type { Admin } from 'src/__generated__/graphql';
 
 import { z as zod } from 'zod';
 import { useMemo } from 'react';
@@ -29,18 +29,17 @@ import { Form, Field } from 'src/components/Form';
 // ----------------------------------------------------------------------
 
 type Props = {
-  currentUser: User;
+  currentUser: Admin;
 };
 
 // ----------------------------------------------------------------------
 
 const UPDATE_USER = gql(/* GraphQL */ `
-  mutation UpdateUser($data: UpdateUserInput!) {
-    updateUser(data: $data) {
+  mutation UpdateUser($data: UpdateAdminInput!) {
+    updateAdmin(data: $data) {
       id
       username
       email
-      isAdmin
       createdAt
     }
   }

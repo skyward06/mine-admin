@@ -22,12 +22,11 @@ import { Form, Field } from 'src/components/Form';
 // ----------------------------------------------------------------------
 
 const CREATE_USER = gql(/* GraphQL */ `
-  mutation CreateUser($data: CreateUserInput!) {
-    createUser(data: $data) {
+  mutation CreateUser($data: CreateAdminInput!) {
+    createAdmin(data: $data) {
       id
       username
       email
-      isAdmin
       createdAt
     }
   }

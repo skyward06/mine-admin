@@ -39,7 +39,7 @@ const MemberGeneralSchema = zod.object({
     .string({ required_error: 'Email is required' })
     .email({ message: 'Invalid email address is provided' }),
   mobile: zod.string({ required_error: 'Mobile is required' }),
-  address: zod.string({ required_error: 'Address is required' }),
+  primaryAddress: zod.string({ required_error: 'Address is required' }),
   payoutId: zod.string({ required_error: 'TXC Payout is required' }),
   wallet: zod.string({ required_error: 'TXC Cold is required' }),
 });
@@ -89,7 +89,7 @@ export default function MemberGeneral({ currentMember }: Props) {
             email: newMember.email,
             fullName: `${firstName} ${lastName}`,
             mobile: newMember.mobile,
-            address: newMember.address,
+            primaryAddress: newMember.primaryAddress,
             payoutId: newMember.payoutId,
             wallet: newMember.wallet,
             assetId: newMember.wallet.substring(1, 7),

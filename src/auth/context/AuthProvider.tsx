@@ -23,12 +23,11 @@ type Props = {
 // ----------------------------------------------------------------------
 const FETCH_ME_QUERY = gql(/* GraphQL */ `
   query FetchMe {
-    me {
+    adminMe {
       id
       avatar
       username
       email
-      isAdmin
     }
   }
 `);
@@ -76,7 +75,7 @@ export function AuthProvider({ children }: Props) {
     router.push(paths.statistics.root);
   }, [router]);
 
-  const user = data?.me;
+  const user = data?.adminMe;
 
   const memoizedValue: AuthContextValue = useMemo(
     () => ({ user, token, isAuthenticated: !!token, loading, signIn, signOut }),

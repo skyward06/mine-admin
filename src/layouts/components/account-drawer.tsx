@@ -40,7 +40,7 @@ export function AccountDrawer({ data = [], sx, ...other }: AccountDrawerProps) {
 
   const pathname = usePathname();
 
-  const { user } = useAuthContext();
+  const { admin } = useAuthContext();
 
   const [open, setOpen] = useState(false);
 
@@ -65,8 +65,8 @@ export function AccountDrawer({ data = [], sx, ...other }: AccountDrawerProps) {
       <AccountButton
         open={open}
         onClick={handleOpenDrawer}
-        photoURL={user?.username ?? ''}
-        displayName={user?.username ?? ''}
+        photoURL={admin?.username ?? ''}
+        displayName={admin?.username ?? ''}
         sx={sx}
         {...other}
       />
@@ -88,11 +88,11 @@ export function AccountDrawer({ data = [], sx, ...other }: AccountDrawerProps) {
         <ScrollBar>
           <Stack alignItems="center" sx={{ pt: 8 }}>
             <Typography variant="subtitle1" noWrap sx={{ mt: 2 }}>
-              {user?.username}
+              {admin?.username}
             </Typography>
 
             <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }} noWrap>
-              {user?.email}
+              {admin?.email}
             </Typography>
           </Stack>
 

@@ -15,7 +15,8 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
           email
           mobile
           assetId
-          address
+          primaryAddress
+          secondaryAddress
           payoutId
           payout {
             id

@@ -55,7 +55,6 @@ const STATUS_OPTIONS: { value: UserRole; label: string; color: LabelColor }[] = 
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', sortable: true },
-  { id: 'isAdmin', label: 'Admin', width: 130, sortable: true },
   { id: 'createdAt', label: 'Created At', width: 200, sortable: true },
   { id: 'updatedAt', label: 'Updated At', width: 200, sortable: true },
   { id: 'deletedAt', label: 'Status', width: 95, sortable: true },
@@ -75,16 +74,16 @@ const FETCH_USER_STATS_QUERY = gql(/* GraphQL */ `
     $apFilter: JSONObject
     $inactiveFilter: JSONObject
   ) {
-    all: users {
+    all: admins {
       total
     }
-    admin: users(filter: $adminFilter) {
+    admin: admins(filter: $adminFilter) {
       total
     }
-    user: users(filter: $apFilter) {
+    user: admins(filter: $apFilter) {
       total
     }
-    inactive: users(filter: $inactiveFilter) {
+    inactive: admins(filter: $inactiveFilter) {
       total
     }
   }
@@ -92,13 +91,12 @@ const FETCH_USER_STATS_QUERY = gql(/* GraphQL */ `
 
 const FETCH_USERS_QUERY = gql(/* GraphQL */ `
   query FetchUsers($page: String, $filter: JSONObject, $sort: String) {
-    users(page: $page, filter: $filter, sort: $sort) {
-      users {
+    admins(page: $page, filter: $filter, sort: $sort) {
+      admins {
         id
         avatar
         username
         email
-        isAdmin
         createdAt
         updatedAt
         deletedAt
@@ -109,8 +107,8 @@ const FETCH_USERS_QUERY = gql(/* GraphQL */ `
 `);
 
 const REMOVE_USERS = gql(/* GraphQL */ `
-  mutation RemoveUsers($data: UserIDsInput!) {
-    removeUsers(data: $data) {
+  mutation RemoveUsers($data: IDsInput!) {
+    removeAdmins(data: $data) {
       count
     }
   }
@@ -183,9 +181,9 @@ export default function UserListView() {
     variables: { data: { ids: table.selected } },
   });
 
-  const tableData = data?.users;
+  const tableData = data?.admins;
 
-  const notFound = (canReset && !tableData?.users?.length) || !tableData?.users?.length;
+  const notFound = (canReset && !tableData?.admins?.length) || !tableData?.admins?.length;
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: UserRole) => {
     setQuery({
@@ -259,11 +257,11 @@ export default function UserListView() {
           <TableSelectedAction
             dense={table.dense}
             numSelected={table.selected.length}
-            rowCount={loading ? 0 : tableData!.users!.length}
+            rowCount={loading ? 0 : tableData!.admins!.length}
             onSelectAllRows={(checked) =>
               table.onSelectAllRows(
                 checked,
-                tableData!.users!.map((row) => row!.id)
+                tableData!.admins!.map((row) => row!.id)
               )
             }
             action={
@@ -281,7 +279,7 @@ export default function UserListView() {
                 order={sort && sort[Object.keys(sort)[0]]}
                 orderBy={sort && Object.keys(sort)[0]}
                 headLabel={TABLE_HEAD}
-                rowCount={loading ? 0 : tableData!.users!.length}
+                rowCount={loading ? 0 : tableData!.admins!.length}
                 numSelected={table.selected.length}
                 onSort={(id) => {
                   const isAsc = sort && sort[id] === 'asc';
@@ -291,7 +289,7 @@ export default function UserListView() {
                 onSelectAllRows={(checked) =>
                   table.onSelectAllRows(
                     checked,
-                    tableData!.users!.map((row) => row!.id)
+                    tableData!.admins!.map((row) => row!.id)
                   )
                 }
               />
@@ -300,14 +298,12 @@ export default function UserListView() {
                 <LoadingScreen />
               ) : (
                 <TableBody>
-                  {tableData!.users!.map((row) => (
+                  {tableData!.admins!.map((row) => (
                     <UserTableRow
                       key={row!.id}
                       row={row!}
                       selected={table.selected.includes(row!.id)}
                       onSelectRow={() => table.onSelectRow(row!.id)}
-                      // onDeleteRow={() => handleDeleteRow(row.id)}
-                      // onEditRow={() => handleEditRow(row.id)}
                     />
                   ))}
 

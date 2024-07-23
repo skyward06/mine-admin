@@ -21,13 +21,12 @@ import UserGeneral from './General';
 // ----------------------------------------------------------------------
 const FETCH_USER = gql(/* GraphQL */ `
   query FetchUser($filter: JSONObject) {
-    users(filter: $filter) {
-      users {
+    admins(filter: $filter) {
+      admins {
         id
         avatar
         username
         email
-        isAdmin
         deletedAt
       }
     }
@@ -59,7 +58,7 @@ export default function OrganizationEditView() {
     setIsLoading(!called || loading);
   }, [loading, called]);
 
-  const user = data?.users?.users?.[0];
+  const user = data?.admins?.admins?.[0];
 
   if (isLoading) {
     return <LoadingScreen />;
