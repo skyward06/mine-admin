@@ -52,16 +52,16 @@ const STATUS_OPTIONS: { value: SaleRole; label: string; color: LabelColor }[] = 
 ];
 
 const TABLE_HEAD = [
-  { id: 'invoiceNo', label: 'Invoice No', sortable: true },
-  { id: 'name', label: 'Name', width: 130, sortable: true },
+  { id: 'invoiceNo', label: 'Invoice No', width: 80, sortable: true },
+  { id: 'name', label: 'Name', sortable: true },
   { id: 'mobile', label: 'Mobile', width: 130, sortable: true },
-  { id: 'assetId', label: 'Asset ID', width: 130, sortable: true },
+  { id: 'assetId', label: 'Asset ID', width: 90, sortable: true },
   { id: 'productName', label: 'Product Name', width: 200, sortable: true },
-  { id: 'paymentMethod', label: 'Payment Method', width: 130, sortable: true },
-  { id: 'amount', label: 'Amount', width: 140, sortable: true },
-  { id: 'hashPower', label: 'Hash Power', width: 95, sortable: true },
-  { id: 'orderedAt', label: 'Ordered At', width: 95, sortable: true },
-  { id: 'action', label: 'Action', sortable: true, align: 'center' },
+  { id: 'paymentMethod', label: 'Payment Method', width: 250, sortable: true },
+  { id: 'amount', label: 'Amount', width: 90, sortable: true },
+  { id: 'hashPower', label: 'Hash Power', width: 120, sortable: true },
+  { id: 'orderedAt', label: 'Ordered At', width: 110, sortable: true },
+  { id: 'action', label: 'Action', align: 'center', sortable: true },
 ];
 
 const defaultFilter: ISaleTableFilters = {

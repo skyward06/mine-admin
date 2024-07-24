@@ -41,8 +41,6 @@ export default function SaleTableRow({ row, confirm, setSelected }: Props) {
       <TableCell
         align="left"
         sx={{
-          px: 1,
-          whiteSpace: 'nowrap',
           cursor: 'pointer',
           '&:hover': { bgcolor: (theme) => theme.vars.palette.action.hover },
         }}
@@ -60,25 +58,13 @@ export default function SaleTableRow({ row, confirm, setSelected }: Props) {
           }}
         />
       </TableCell>
-      <TableCell align="left" sx={{ whiteSpace: 'nowrap' }}>
-        {member?.mobile}
-      </TableCell>
-      <TableCell align="left" sx={{ whiteSpace: 'nowrap' }}>
-        {member?.assetId}
-      </TableCell>
-      <TableCell align="left" sx={{ whiteSpace: 'nowrap' }}>
-        {product?.productName}
-      </TableCell>
-      <TableCell align="left" sx={{ whiteSpace: 'nowrap' }}>
-        {paymentMethod}
-      </TableCell>
-      <TableCell align="left" sx={{ whiteSpace: 'nowrap' }}>
-        {product?.amount}
-      </TableCell>
-      <TableCell align="left" sx={{ whiteSpace: 'nowrap' }}>
-        {product?.token}
-      </TableCell>
-      <TableCell align="left" sx={{ whiteSpace: 'nowrap' }}>
+      <TableCell align="left">{member?.mobile}</TableCell>
+      <TableCell align="left">{member?.assetId}</TableCell>
+      <TableCell align="left">{product?.productName}</TableCell>
+      <TableCell align="left">{paymentMethod}</TableCell>
+      <TableCell align="left">{product?.amount}</TableCell>
+      <TableCell align="left">{product?.token}</TableCell>
+      <TableCell align="left">
         <ListItemText
           primary={fDate(orderedAt)}
           secondary={fTime(orderedAt)}
@@ -90,7 +76,7 @@ export default function SaleTableRow({ row, confirm, setSelected }: Props) {
           }}
         />
       </TableCell>
-      <TableCell align="center" sx={{ display: 'flex' }}>
+      <TableCell align="center">
         <Tooltip title="Edit" placement="top" arrow>
           <IconButton
             onClick={() => {
