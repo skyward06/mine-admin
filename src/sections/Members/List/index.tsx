@@ -8,9 +8,11 @@ import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
+import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import { alpha } from '@mui/material/styles';
+import Skeleton from '@mui/material/Skeleton';
 import TableBody from '@mui/material/TableBody';
 import IconButton from '@mui/material/IconButton';
 import TableContainer from '@mui/material/TableContainer';
@@ -28,7 +30,6 @@ import { Iconify } from 'src/components/Iconify';
 import { ScrollBar } from 'src/components/ScrollBar';
 import { SearchInput } from 'src/components/SearchInput';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
-import { LoadingScreen } from 'src/components/loading-screen';
 import {
   useTable,
   TableNoData,
@@ -218,40 +219,47 @@ export default function MemberListView() {
 
           <ScrollBar>
             <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
-              <TableHeadCustom
-                order={sort && sort[Object.keys(sort)[0]]}
-                orderBy={sort && Object.keys(sort)[0]}
-                headLabel={TABLE_HEAD}
-                rowCount={loading ? 0 : tableData!.members!.length}
-                numSelected={table.selected.length}
-                onSort={(id) => {
-                  const isAsc = sort && sort[id] === 'asc';
-                  const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
-                  setQuery({ ...query, sort: newSort });
-                }}
-                onSelectAllRows={(checked) =>
-                  table.onSelectAllRows(
-                    checked,
-                    tableData!.members!.map((row) => row!.id)
-                  )
-                }
-              />
-
               {loading ? (
-                <LoadingScreen />
+                <Paper sx={{ display: 'block', width: '95%', margin: 'auto' }}>
+                  <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
+                  <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
+                  <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
+                  <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
+                  <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
+                </Paper>
               ) : (
-                <TableBody>
-                  {tableData!.members!.map((row) => (
-                    <MemberTableRow
-                      key={row!.id}
-                      row={row!}
-                      selected={table.selected.includes(row!.id)}
-                      onSelectRow={() => table.onSelectRow(row!.id)}
-                    />
-                  ))}
+                <>
+                  <TableHeadCustom
+                    order={sort && sort[Object.keys(sort)[0]]}
+                    orderBy={sort && Object.keys(sort)[0]}
+                    headLabel={TABLE_HEAD}
+                    rowCount={loading ? 0 : tableData!.members!.length}
+                    numSelected={table.selected.length}
+                    onSort={(id) => {
+                      const isAsc = sort && sort[id] === 'asc';
+                      const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
+                      setQuery({ ...query, sort: newSort });
+                    }}
+                    onSelectAllRows={(checked) =>
+                      table.onSelectAllRows(
+                        checked,
+                        tableData!.members!.map((row) => row!.id)
+                      )
+                    }
+                  />
+                  <TableBody>
+                    {tableData!.members!.map((row) => (
+                      <MemberTableRow
+                        key={row!.id}
+                        row={row!}
+                        selected={table.selected.includes(row!.id)}
+                        onSelectRow={() => table.onSelectRow(row!.id)}
+                      />
+                    ))}
 
-                  <TableNoData notFound={notFound} />
-                </TableBody>
+                    <TableNoData notFound={notFound} />
+                  </TableBody>
+                </>
               )}
             </Table>
           </ScrollBar>

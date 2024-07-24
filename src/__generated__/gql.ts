@@ -34,6 +34,7 @@ const documents = {
     "\n  mutation CreateSale($data: CreateSaleInput!) {\n    createSale(data: $data) {\n      invoiceNo\n      orderedAt\n      memberId\n      paymentMethod\n      packageId\n      status\n    }\n  }\n": types.CreateSaleDocument,
     "\n  mutation UpdateSale($data: UpdateSaleInput!) {\n    updateSale(data: $data) {\n      id\n      status\n    }\n  }\n": types.UpdateSaleDocument,
     "\n  query Packages($sort: String, $page: String, $filter: JSONObject) {\n    packages(sort: $sort, page: $page, filter: $filter) {\n      packages {\n        id\n        productName\n      }\n    }\n  }\n": types.PackagesDocument,
+    "\n  mutation RemoveSale($data: IDInput!) {\n    removeSale(data: $data) {\n      result\n    }\n  }\n": types.RemoveSaleDocument,
     "\n  mutation Login($data: AdminLoginInput!) {\n    adminLogin(data: $data) {\n      accessToken\n    }\n  }\n": types.LoginDocument,
     "\n  query Query($data: LiveStatsArgs!) {\n    liveBlockStats(data: $data) {\n      dailyData {\n        count\n        field\n      }\n      meta\n      total\n    }\n    liveMiningStats {\n      dailyData {\n        count\n        field\n      }\n      meta\n      total\n    }\n    liveUserStats(data: $data) {\n      dailyData {\n        count\n        field\n      }\n      meta\n      total\n    }\n  }\n": types.QueryDocument,
     "\n  query Blocks($page: String, $filter: JSONObject, $sort: String) {\n    blocks(page: $page, filter: $filter, sort: $sort) {\n      blocks {\n        id\n        blockNo\n        hashRate\n        difficulty\n        issuedAt\n        createdAt\n        updatedAt\n        deletedAt\n      }\n      total\n    }\n  }\n": types.BlocksDocument,
@@ -146,6 +147,10 @@ export function gql(source: "\n  mutation UpdateSale($data: UpdateSaleInput!) {\
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  query Packages($sort: String, $page: String, $filter: JSONObject) {\n    packages(sort: $sort, page: $page, filter: $filter) {\n      packages {\n        id\n        productName\n      }\n    }\n  }\n"): (typeof documents)["\n  query Packages($sort: String, $page: String, $filter: JSONObject) {\n    packages(sort: $sort, page: $page, filter: $filter) {\n      packages {\n        id\n        productName\n      }\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation RemoveSale($data: IDInput!) {\n    removeSale(data: $data) {\n      result\n    }\n  }\n"): (typeof documents)["\n  mutation RemoveSale($data: IDInput!) {\n    removeSale(data: $data) {\n      result\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

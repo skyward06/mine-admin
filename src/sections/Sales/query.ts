@@ -87,3 +87,11 @@ export const FETCH_PACKAGES_QUERY = gql(/* GraphQL */ `
     }
   }
 `);
+
+export const REMOVE_SALE = gql(/* GraphQL */ `
+  mutation RemoveSale($data: IDInput!) {
+    removeSale(data: $data) {
+      result
+    }
+  }
+`);

@@ -1,18 +1,19 @@
 import type { LabelColor } from 'src/components/Label';
 import type { SortOrder } from 'src/routes/hooks/useQuery';
 
-import { useMemo, useCallback } from 'react';
-import { useQuery as useGraphQuery } from '@apollo/client';
+import { useMemo, useState, useCallback } from 'react';
+import { useMutation, useQuery as useGraphQuery } from '@apollo/client';
 
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
+import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
 import { alpha } from '@mui/material/styles';
+import Skeleton from '@mui/material/Skeleton';
 import TableBody from '@mui/material/TableBody';
-import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 
 import { paths } from 'src/routes/paths';
@@ -24,22 +25,22 @@ import { useBoolean } from 'src/hooks/useBoolean';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Label } from 'src/components/Label';
+import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 import { ScrollBar } from 'src/components/ScrollBar';
+import { ConfirmDialog } from 'src/components/Dialog';
 import { SearchInput } from 'src/components/SearchInput';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
-import { LoadingScreen } from 'src/components/loading-screen';
 import {
   useTable,
   TableNoData,
   TableHeadCustom,
-  TableSelectedAction,
   TablePaginationCustom,
 } from 'src/components/Table';
 
 import SaleTableRow from './SaleTableRow';
 import SaleTableFiltersResult from './SaleTableFiltersResult';
-import { FETCH_SALES_QUERY, FETCH_SALES_STATS_QUERY } from '../query';
+import { REMOVE_SALE, FETCH_SALES_QUERY, FETCH_SALES_STATS_QUERY } from '../query';
 
 import type { SaleRole, ISalePrismaFilter, ISaleTableFilters } from './types';
 
@@ -61,7 +62,7 @@ const TABLE_HEAD = [
   { id: 'hashPower', label: 'Hash Power', width: 95, sortable: true },
   { id: 'orderedAt', label: 'Ordered At', width: 95, sortable: true },
   { id: 'status', label: 'Status', width: 95, sortable: true },
-  { id: 'action', label: 'Action', width: 70, sortable: true },
+  { id: 'action', label: 'Action', sortable: true, align: 'center' },
 ];
 
 const defaultFilter: ISaleTableFilters = {
@@ -71,6 +72,7 @@ const defaultFilter: ISaleTableFilters = {
 
 export default function SaleListView() {
   const table = useTable({ defaultDense: true });
+  const [selected, setSelected] = useState<string>('');
 
   const [query, { setQueryParams: setQuery, setPage, setPageSize }] = useQuery<ISaleTableFilters>();
 
@@ -126,6 +128,12 @@ export default function SaleListView() {
       sort: graphQuerySort,
     },
   });
+
+  const [removeSale] = useMutation(REMOVE_SALE, {
+    awaitRefetchQueries: true,
+    refetchQueries: ['FetchSales'],
+  });
+
   const tableData = data?.sales;
 
   const notFound = (canReset && !tableData?.sales?.length) || !tableData?.sales?.length;
@@ -199,49 +207,42 @@ export default function SaleListView() {
         )}
 
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-          <TableSelectedAction
-            dense={table.dense}
-            numSelected={table.selected.length}
-            rowCount={loading ? 0 : tableData!.sales!.length}
-            onSelectAllRows={(checked) =>
-              table.onSelectAllRows(
-                checked,
-                tableData!.sales!.map((row) => row!.id)
-              )
-            }
-            action={
-              <Tooltip title="Delete">
-                <IconButton color="primary" onClick={confirm.onTrue}>
-                  <Iconify icon="solar:trash-bin-trash-bold" />
-                </IconButton>
-              </Tooltip>
-            }
-          />
-
           <ScrollBar>
             <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
-              <TableHeadCustom
-                order={sort && sort[Object.keys(sort)[0]]}
-                orderBy={sort && Object.keys(sort)[0]}
-                headLabel={TABLE_HEAD}
-                rowCount={loading ? 0 : tableData!.sales!.length}
-                onSort={(id) => {
-                  const isAsc = sort && sort[id] === 'asc';
-                  const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
-                  setQuery({ ...query, sort: newSort });
-                }}
-              />
-
               {loading ? (
-                <LoadingScreen />
+                <Paper sx={{ display: 'block', width: '95%', margin: 'auto' }}>
+                  <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
+                  <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
+                  <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
+                  <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
+                  <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
+                </Paper>
               ) : (
-                <TableBody>
-                  {tableData!.sales!.map((row) => (
-                    <SaleTableRow key={row!.id} row={row!} />
-                  ))}
+                <>
+                  <TableHeadCustom
+                    order={sort && sort[Object.keys(sort)[0]]}
+                    orderBy={sort && Object.keys(sort)[0]}
+                    headLabel={TABLE_HEAD}
+                    rowCount={loading ? 0 : tableData!.sales!.length}
+                    onSort={(id) => {
+                      const isAsc = sort && sort[id] === 'asc';
+                      const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
+                      setQuery({ ...query, sort: newSort });
+                    }}
+                  />
+                  <TableBody>
+                    {tableData!.sales!.map((row) => (
+                      <SaleTableRow
+                        key={row!.id}
+                        row={row!}
+                        confirm={confirm}
+                        setSelected={setSelected}
+                      />
+                    ))}
 
-                  <TableNoData notFound={notFound} />
-                </TableBody>
+                    <TableNoData notFound={notFound} />
+                  </TableBody>
+                </>
               )}
             </Table>
           </ScrollBar>
@@ -262,6 +263,38 @@ export default function SaleListView() {
           onChangeDense={table.onChangeDense}
         />
       </Card>
+
+      <ConfirmDialog
+        open={confirm.value}
+        onClose={confirm.onFalse}
+        title="Delete"
+        content={
+          <>
+            <Typography>This sale will be removed permanently!</Typography>
+            <Typography>Are you sure?</Typography>
+          </>
+        }
+        action={
+          <Button
+            variant="contained"
+            color="error"
+            onClick={async () => {
+              const promise = await removeSale({ variables: { data: { id: selected } } });
+              const result = promise.data?.removeSale.result;
+
+              if (result === 'success') {
+                toast.success('Sale removed successfully');
+              } else {
+                toast.error('You are not allowed to remove this sale');
+              }
+
+              confirm.onFalse();
+            }}
+          >
+            Confirm
+          </Button>
+        }
+      />
     </DashboardContent>
   );
 }

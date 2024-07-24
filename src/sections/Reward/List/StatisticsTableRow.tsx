@@ -159,7 +159,7 @@ export default function StatisticsTableRow({
               <Iconify icon="bxs:check-circle" />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Confirm" placement="top" arrow>
+          <Tooltip title="Delete" placement="top" arrow>
             <IconButton
               color="error"
               disabled={status}

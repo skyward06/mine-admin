@@ -7,9 +7,11 @@ import { useMemo, useState, useEffect } from 'react';
 import { useMutation, useLazyQuery, useQuery as useGraphQuery } from '@apollo/client';
 
 import Card from '@mui/material/Card';
+import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
+import Skeleton from '@mui/material/Skeleton';
 import Grid from '@mui/material/Unstable_Grid2';
 import TableBody from '@mui/material/TableBody';
 import IconButton from '@mui/material/IconButton';
@@ -24,7 +26,6 @@ import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 import { ScrollBar } from 'src/components/ScrollBar';
 import { ConfirmDialog } from 'src/components/custom-dialog';
-import { LoadingScreen } from 'src/components/loading-screen';
 import {
   useTable,
   TableHeadCustom,
@@ -162,7 +163,13 @@ export default function StatisticsTable() {
             <ScrollBar>
               <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
                 {loading ? (
-                  <LoadingScreen />
+                  <Paper sx={{ display: 'block', width: '95%', margin: 'auto' }}>
+                    <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
+                    <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
+                    <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
+                    <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
+                    <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
+                  </Paper>
                 ) : (
                   <>
                     <TableHeadCustom
@@ -225,7 +232,7 @@ export default function StatisticsTable() {
       <ConfirmDialog
         open={confirm.value}
         onClose={confirm.onFalse}
-        title="Confirm"
+        title="Delete"
         content="Are you sure?"
         action={
           <Button

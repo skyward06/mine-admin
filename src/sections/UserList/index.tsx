@@ -8,9 +8,11 @@ import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
+import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import { alpha } from '@mui/material/styles';
+import Skeleton from '@mui/material/Skeleton';
 import TableBody from '@mui/material/TableBody';
 import IconButton from '@mui/material/IconButton';
 import TableContainer from '@mui/material/TableContainer';
@@ -30,7 +32,6 @@ import { ScrollBar } from 'src/components/ScrollBar';
 import { ConfirmDialog } from 'src/components/Dialog';
 import { SearchInput } from 'src/components/SearchInput';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
-import { LoadingScreen } from 'src/components/loading-screen';
 import {
   useTable,
   TableNoData,
@@ -48,8 +49,6 @@ import type { UserRole, IUserPrismaFilter, IUserTableFilters } from './types';
 
 const STATUS_OPTIONS: { value: UserRole; label: string; color: LabelColor }[] = [
   { value: 'all', label: 'All', color: 'info' },
-  { value: 'admin', label: 'Admin', color: 'success' },
-  { value: 'user', label: 'User', color: 'warning' },
   { value: 'inactive', label: 'Inactive', color: 'error' },
 ];
 
@@ -132,14 +131,6 @@ export default function UserListView() {
         { name: { contains: filter.search } },
         { email: { contains: filter.search } },
       ];
-    }
-
-    if (filter.status === 'admin') {
-      filterObj.isAdmin = true;
-    }
-
-    if (filter.status === 'user') {
-      filterObj.isAdmin = false;
     }
 
     if (filter.status === 'inactive') {
@@ -275,40 +266,47 @@ export default function UserListView() {
 
           <ScrollBar>
             <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
-              <TableHeadCustom
-                order={sort && sort[Object.keys(sort)[0]]}
-                orderBy={sort && Object.keys(sort)[0]}
-                headLabel={TABLE_HEAD}
-                rowCount={loading ? 0 : tableData!.admins!.length}
-                numSelected={table.selected.length}
-                onSort={(id) => {
-                  const isAsc = sort && sort[id] === 'asc';
-                  const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
-                  setQuery({ ...query, sort: newSort });
-                }}
-                onSelectAllRows={(checked) =>
-                  table.onSelectAllRows(
-                    checked,
-                    tableData!.admins!.map((row) => row!.id)
-                  )
-                }
-              />
-
               {loading ? (
-                <LoadingScreen />
+                <Paper sx={{ display: 'block', width: '95%', margin: 'auto' }}>
+                  <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
+                  <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
+                  <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
+                  <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
+                  <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
+                </Paper>
               ) : (
-                <TableBody>
-                  {tableData!.admins!.map((row) => (
-                    <UserTableRow
-                      key={row!.id}
-                      row={row!}
-                      selected={table.selected.includes(row!.id)}
-                      onSelectRow={() => table.onSelectRow(row!.id)}
-                    />
-                  ))}
+                <>
+                  <TableHeadCustom
+                    order={sort && sort[Object.keys(sort)[0]]}
+                    orderBy={sort && Object.keys(sort)[0]}
+                    headLabel={TABLE_HEAD}
+                    rowCount={loading ? 0 : tableData!.admins!.length}
+                    numSelected={table.selected.length}
+                    onSort={(id) => {
+                      const isAsc = sort && sort[id] === 'asc';
+                      const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
+                      setQuery({ ...query, sort: newSort });
+                    }}
+                    onSelectAllRows={(checked) =>
+                      table.onSelectAllRows(
+                        checked,
+                        tableData!.admins!.map((row) => row!.id)
+                      )
+                    }
+                  />
+                  <TableBody>
+                    {tableData!.admins!.map((row) => (
+                      <UserTableRow
+                        key={row!.id}
+                        row={row!}
+                        selected={table.selected.includes(row!.id)}
+                        onSelectRow={() => table.onSelectRow(row!.id)}
+                      />
+                    ))}
 
-                  <TableNoData notFound={notFound} />
-                </TableBody>
+                    <TableNoData notFound={notFound} />
+                  </TableBody>
+                </>
               )}
             </Table>
           </ScrollBar>

@@ -1,5 +1,7 @@
 import type { Sale } from 'src/__generated__/graphql';
+import type { UseBooleanReturn } from 'src/hooks/useBoolean';
 
+import Tooltip from '@mui/material/Tooltip';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
@@ -15,9 +17,11 @@ import { Iconify } from 'src/components/Iconify';
 
 type Props = {
   row: Sale;
+  confirm: UseBooleanReturn;
+  setSelected: Function;
 };
 
-export default function SaleTableRow({ row }: Props) {
+export default function SaleTableRow({ row, confirm, setSelected }: Props) {
   const router = useRouter();
 
   const { id, invoiceNo, member, package: product, paymentMethod, orderedAt, status } = row;
@@ -79,14 +83,27 @@ export default function SaleTableRow({ row }: Props) {
           </Label>
         )}
       </TableCell>
-      <TableCell>
-        <IconButton
-          onClick={() => {
-            router.push(`${paths.dashboard.sales.edit(id)}`);
-          }}
-        >
-          <Iconify icon="solar:pen-2-bold" />
-        </IconButton>
+      <TableCell align="center" sx={{ display: 'flex' }}>
+        <Tooltip title="Edit" placement="top" arrow>
+          <IconButton
+            onClick={() => {
+              router.push(`${paths.dashboard.sales.edit(id)}`);
+            }}
+          >
+            <Iconify icon="solar:pen-2-bold" />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Delete" placement="top" arrow>
+          <IconButton
+            color="error"
+            onClick={() => {
+              confirm.onTrue();
+              setSelected(id);
+            }}
+          >
+            <Iconify icon="bxs:coffee-togo" />
+          </IconButton>
+        </Tooltip>
       </TableCell>
     </TableRow>
   );
