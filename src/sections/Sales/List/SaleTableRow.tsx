@@ -10,7 +10,8 @@ import ListItemText from '@mui/material/ListItemText';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { Label } from 'src/components/Label';
+import { fDate, fTime } from 'src/utils/format-time';
+
 import { Iconify } from 'src/components/Iconify';
 
 // ----------------------------------------------------------------------
@@ -24,7 +25,15 @@ type Props = {
 export default function SaleTableRow({ row, confirm, setSelected }: Props) {
   const router = useRouter();
 
-  const { id, invoiceNo, member, package: product, paymentMethod, orderedAt, status } = row;
+  const {
+    id,
+    invoiceNo,
+    member,
+    package: product,
+    paymentMethod,
+    orderedAt,
+    statisticsSales,
+  } = row;
 
   return (
     <TableRow hover>
@@ -70,18 +79,16 @@ export default function SaleTableRow({ row, confirm, setSelected }: Props) {
         {product?.token}
       </TableCell>
       <TableCell align="left" sx={{ whiteSpace: 'nowrap' }}>
-        {orderedAt}
-      </TableCell>
-      <TableCell align="left" sx={{ whiteSpace: 'nowrap' }}>
-        {status ? (
-          <Label variant="soft" color="success">
-            active
-          </Label>
-        ) : (
-          <Label variant="soft" color="error">
-            inactive
-          </Label>
-        )}
+        <ListItemText
+          primary={fDate(orderedAt)}
+          secondary={fTime(orderedAt)}
+          primaryTypographyProps={{ typography: 'caption', noWrap: true }}
+          secondaryTypographyProps={{
+            mt: 0.5,
+            component: 'span',
+            typography: 'caption',
+          }}
+        />
       </TableCell>
       <TableCell align="center" sx={{ display: 'flex' }}>
         <Tooltip title="Edit" placement="top" arrow>
@@ -96,6 +103,7 @@ export default function SaleTableRow({ row, confirm, setSelected }: Props) {
         <Tooltip title="Delete" placement="top" arrow>
           <IconButton
             color="error"
+            disabled={!!statisticsSales?.length}
             onClick={() => {
               confirm.onTrue();
               setSelected(id);

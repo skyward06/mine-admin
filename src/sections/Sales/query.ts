@@ -35,6 +35,12 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
           token
           status
         }
+        statisticsSales {
+          id
+          saleId
+          statisticsId
+          issuedAt
+        }
         paymentMethod
         orderedAt
         status
