@@ -9,7 +9,7 @@ import Divider from '@mui/material/Divider';
 import { fDate } from 'src/utils/format-time';
 import { fNumber } from 'src/utils/formatNumber';
 
-import { FETCH_MEMBER_HISTORY } from '../query';
+import { FETCH_MEMBER_HISTORY } from '../../query';
 
 export const OverView = () => {
   const { id } = useParams();

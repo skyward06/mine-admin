@@ -17,6 +17,7 @@ import { Iconify } from 'src/components/Iconify';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import { LoadingScreen } from 'src/components/loading-screen';
 
+import Sale from './Sale';
 import History from './History';
 import MemberGeneral from './General';
 import { FETCH_MEMBER } from '../query';
@@ -28,6 +29,7 @@ const TABS = [
     icon: <Iconify icon="carbon:analytics" width={24} />,
   },
   { value: 'edit', label: 'Edit', icon: <Iconify icon="solar:pen-2-bold" width={24} /> },
+  { value: 'sale', label: 'Sale', icon: <Iconify icon="bi:currency-exchange" /> },
 ];
 
 // ----------------------------------------------------------------------
@@ -38,8 +40,6 @@ export default function MemberEditView() {
   const tabs = useTabs('history');
 
   const params = useParams();
-
-  console.log('params => ', params);
 
   const [fetchMemberQuery, { loading, data, called }] = useLazyQuery(FETCH_MEMBER);
 
@@ -93,6 +93,8 @@ export default function MemberEditView() {
         {tabs.value === 'edit' && <MemberGeneral currentMember={member} />}
 
         {tabs.value === 'history' && <History />}
+
+        {tabs.value === 'sale' && <Sale />}
       </DashboardContent>
     </>
   );

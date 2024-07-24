@@ -21,7 +21,7 @@ import { useRouter } from 'src/routes/hooks';
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
 
-import { UPDATE_MEMBER, FETCH_PAYOUTS_QUERY } from '../query';
+import { UPDATE_MEMBER, FETCH_PAYOUTS_QUERY } from '../../query';
 
 // ----------------------------------------------------------------------
 

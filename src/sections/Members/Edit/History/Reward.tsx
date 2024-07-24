@@ -11,7 +11,7 @@ import { formatDate } from 'src/utils/format-time';
 
 import ChartWidget from 'src/components/ChartWidget';
 
-import { FETCH_MEMBER_STATISTICS } from '../query';
+import { FETCH_MEMBER_STATISTICS } from '../../query';
 
 export const Reward = () => {
   const { id } = useParams();

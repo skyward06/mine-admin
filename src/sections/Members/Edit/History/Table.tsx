@@ -3,6 +3,8 @@ import { useQuery as useGraphQuery } from '@apollo/client';
 
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
+import Paper from '@mui/material/Paper';
+import Skeleton from '@mui/material/Skeleton';
 import TableBody from '@mui/material/TableBody';
 import CardHeader from '@mui/material/CardHeader';
 import TableContainer from '@mui/material/TableContainer';
@@ -10,7 +12,6 @@ import TableContainer from '@mui/material/TableContainer';
 import { useQuery } from 'src/routes/hooks';
 
 import { ScrollBar } from 'src/components/ScrollBar';
-import { LoadingScreen } from 'src/components/loading-screen';
 import {
   useTable,
   TableNoData,
@@ -22,7 +23,7 @@ import { FETCH_MEMBERSTATISTICS_QUERY } from 'src/sections/Reward/query';
 
 import MemberStatisticsTableRow from './MemberStatisticsTableRow';
 
-import type { IMemberStatisticsTableFilters } from './types';
+import type { IMemberStatisticsTableFilters } from '../types';
 
 const TABLE_HEAD = [
   { id: 'issuedAt', label: 'Date', width: 200, sortable: true },
@@ -61,7 +62,18 @@ export default function MemberStatistics() {
       <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
         <ScrollBar>
           {loading ? (
-            <LoadingScreen />
+            <Paper sx={{ display: 'block', width: '95%', margin: 'auto' }}>
+              <Skeleton variant="text" sx={{ width: '100%', height: 40 }} />
+              <Skeleton variant="text" sx={{ width: '100%', height: 40 }} />
+              <Skeleton variant="text" sx={{ width: '100%', height: 40 }} />
+              <Skeleton variant="text" sx={{ width: '100%', height: 40 }} />
+              <Skeleton variant="text" sx={{ width: '100%', height: 40 }} />
+              <Skeleton variant="text" sx={{ width: '100%', height: 40 }} />
+              <Skeleton variant="text" sx={{ width: '100%', height: 40 }} />
+              <Skeleton variant="text" sx={{ width: '100%', height: 40 }} />
+              <Skeleton variant="text" sx={{ width: '100%', height: 40 }} />
+              <Skeleton variant="text" sx={{ width: '100%', height: 40 }} />
+            </Paper>
           ) : (
             <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
               <TableHeadCustom
@@ -74,8 +86,6 @@ export default function MemberStatistics() {
                     key={row!.id}
                     row={row!}
                     selected={table.selected.includes(row!.id)}
-                    // onDeleteRow={() => handleDeleteRow(row.id)}
-                    // onEditRow={() => handleEditRow(row.id)}
                   />
                 ))}
 
