@@ -128,8 +128,7 @@ export default function MemberCreateForm() {
               <Field.Text name="firstName" label="First Name" />
               <Field.Text name="lastName" label="Last Name" />
               <Field.Phone name="mobile" label="Mobile" />
-              <Field.Text name="primaryAddress" label="Address" />
-              {/* <Field.Text name="txcPayout" label="TXC Payout" /> */}
+              <Field.Text name="primaryAddress" label="Primary Address" />
               <Autocomplete
                 fullWidth
                 options={payouts}

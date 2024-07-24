@@ -146,7 +146,7 @@ export default function MemberGeneral({ currentMember }: Props) {
                 onChange={(e) => setLastName(e.target.value)}
               />
               <Field.Phone name="mobile" label="Mobile" />
-              <Field.Text name="address" label="Address" />
+              <Field.Text name="primaryAddress" label="Primay Address" />
               <Field.Select name="payoutId" label="TXC Payout">
                 {payouts.map((option) => (
                   <MenuItem key={option?.id} value={option?.id}>

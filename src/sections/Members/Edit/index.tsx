@@ -39,6 +39,8 @@ export default function MemberEditView() {
 
   const params = useParams();
 
+  console.log('params => ', params);
+
   const [fetchMemberQuery, { loading, data, called }] = useLazyQuery(FETCH_MEMBER);
 
   const { id: memberId } = params;

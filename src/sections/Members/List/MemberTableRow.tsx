@@ -10,9 +10,8 @@ import ListItemText from '@mui/material/ListItemText';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { fDate, fTime, fDateTime } from 'src/utils/format-time';
+import { fDate, fTime } from 'src/utils/format-time';
 
-import { Label } from 'src/components/Label';
 import { Iconify } from 'src/components/Iconify';
 
 // ----------------------------------------------------------------------
@@ -27,19 +26,7 @@ type Props = {
 export default function MemberTableRow({ row, selected, action = true, onSelectRow }: Props) {
   const router = useRouter();
 
-  const {
-    id,
-    username,
-    email,
-    mobile,
-    primaryAddress,
-    assetId,
-    fullName,
-    payout,
-    wallet,
-    createdAt,
-    deletedAt,
-  } = row;
+  const { id, username, email, mobile, primaryAddress, assetId, payout, wallet, createdAt } = row;
   return (
     <TableRow hover selected={selected}>
       <TableCell padding="checkbox">
@@ -68,8 +55,6 @@ export default function MemberTableRow({ row, selected, action = true, onSelectR
         />
       </TableCell>
 
-      <TableCell sx={{ whiteSpace: 'nowrap' }}>{fullName}</TableCell>
-
       <TableCell sx={{ whiteSpace: 'nowrap' }}>{mobile}</TableCell>
 
       <TableCell sx={{ whiteSpace: 'nowrap' }}>{primaryAddress}</TableCell>
@@ -93,37 +78,13 @@ export default function MemberTableRow({ row, selected, action = true, onSelectR
         />
       </TableCell>
 
-      <TableCell>
-        {deletedAt ? (
-          <Tooltip title={`Deactivated at ${fDateTime(deletedAt)}`} placement="top" arrow>
-            <Label variant="soft" color="error">
-              Inactive
-            </Label>
-          </Tooltip>
-        ) : (
-          <Label variant="soft" color="success">
-            Active
-          </Label>
-        )}
-      </TableCell>
-
       {action && (
-        <TableCell align="left" sx={{ px: 1, whiteSpace: 'nowrap' }}>
-          <Tooltip title="Edit" placement="top" arrow>
-            <IconButton
-              color="default"
-              onClick={() => {
-                router.push(paths.dashboard.members.edit(id));
-              }}
-            >
-              <Iconify icon="solar:pen-2-bold" />
-            </IconButton>
-          </Tooltip>
+        <TableCell align="center" sx={{ px: 1, whiteSpace: 'nowrap' }}>
           <Tooltip title="View" placement="top" arrow>
             <IconButton
               color="default"
               onClick={() => {
-                router.push(`${paths.dashboard.members.edit(id)}/history`);
+                router.push(`${paths.dashboard.members.edit(id)}`);
               }}
             >
               <Iconify icon="solar:eye-bold" />
