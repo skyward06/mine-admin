@@ -1,18 +1,31 @@
 import type { Member } from 'src/__generated__/graphql';
 
+import { useState } from 'react';
+import { useMutation } from '@apollo/client';
+
+import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
 import TableCell from '@mui/material/TableCell';
+import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import ListItemText from '@mui/material/ListItemText';
+import InputAdornment from '@mui/material/InputAdornment';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { useBoolean } from 'src/hooks/useBoolean';
+
 import { fDate, fTime } from 'src/utils/format-time';
 
+import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
+import { ConfirmDialog } from 'src/components/Dialog';
+
+import { UPDATE_PASSWORD_QUERY } from '../query';
 
 // ----------------------------------------------------------------------
 
@@ -24,74 +37,150 @@ type Props = {
 };
 
 export default function MemberTableRow({ row, selected, action = true, onSelectRow }: Props) {
+  const [newPassword, setNewPassword] = useState<any>();
   const router = useRouter();
 
+  const confirm = useBoolean();
+  const password = useBoolean();
+
   const { id, username, email, mobile, primaryAddress, assetId, payout, wallet, createdAt } = row;
+
+  const [updatePassword] = useMutation(UPDATE_PASSWORD_QUERY);
+
+  const resetContent = (
+    <Paper sx={{ py: 2 }}>
+      <TextField
+        variant="outlined"
+        type={password.value ? 'text' : 'password'}
+        fullWidth
+        label="New Password"
+        onChange={(e) => {
+          setNewPassword(e.target.value);
+        }}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <Iconify icon="solar:user-rounded-bold" width={24} />
+            </InputAdornment>
+          ),
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton onClick={password.onToggle} edge="end">
+                <Iconify
+                  icon={password.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'}
+                  width={24}
+                />
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
+      />
+    </Paper>
+  );
+
   return (
-    <TableRow hover selected={selected}>
-      <TableCell padding="checkbox">
-        <Checkbox checked={selected} onClick={onSelectRow} />
-      </TableCell>
-
-      <TableCell
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          cursor: 'pointer',
-          '&:hover': { bgcolor: (theme) => theme.vars.palette.action.hover },
-        }}
-        onClick={() => {
-          router.push(paths.dashboard.members.edit(id));
-        }}
-      >
-        <ListItemText
-          primary={username}
-          secondary={email}
-          primaryTypographyProps={{ typography: 'body2' }}
-          secondaryTypographyProps={{
-            component: 'span',
-            color: 'text.disabled',
-          }}
-        />
-      </TableCell>
-
-      <TableCell sx={{ whiteSpace: 'nowrap' }}>{mobile}</TableCell>
-
-      <TableCell sx={{ whiteSpace: 'nowrap' }}>{primaryAddress}</TableCell>
-
-      <TableCell sx={{ whiteSpace: 'nowrap' }}>{assetId}</TableCell>
-
-      <TableCell sx={{ whiteSpace: 'nowrap' }}>{payout.display}</TableCell>
-
-      <TableCell sx={{ whiteSpace: 'nowrap' }}>{wallet}</TableCell>
-
-      <TableCell>
-        <ListItemText
-          primary={fDate(createdAt)}
-          secondary={fTime(createdAt)}
-          primaryTypographyProps={{ typography: 'body2', noWrap: true }}
-          secondaryTypographyProps={{
-            mt: 0.5,
-            component: 'span',
-            typography: 'caption',
-          }}
-        />
-      </TableCell>
-
-      {action && (
-        <TableCell align="center" sx={{ px: 1, whiteSpace: 'nowrap' }}>
-          <Tooltip title="View" placement="top" arrow>
-            <IconButton
-              color="default"
-              onClick={() => {
-                router.push(`${paths.dashboard.members.edit(id)}`);
-              }}
-            >
-              <Iconify icon="solar:eye-bold" />
-            </IconButton>
-          </Tooltip>
+    <>
+      <TableRow hover selected={selected}>
+        <TableCell padding="checkbox">
+          <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell>
-      )}
-    </TableRow>
+
+        <TableCell
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            cursor: 'pointer',
+            '&:hover': { bgcolor: (theme) => theme.vars.palette.action.hover },
+          }}
+          onClick={() => {
+            router.push(paths.dashboard.members.edit(id));
+          }}
+        >
+          <ListItemText
+            primary={username}
+            secondary={email}
+            primaryTypographyProps={{ typography: 'body2' }}
+            secondaryTypographyProps={{
+              component: 'span',
+              color: 'text.disabled',
+            }}
+          />
+        </TableCell>
+
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{mobile}</TableCell>
+
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{primaryAddress}</TableCell>
+
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{assetId}</TableCell>
+
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{payout.display}</TableCell>
+
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{wallet}</TableCell>
+
+        <TableCell>
+          <ListItemText
+            primary={fDate(createdAt)}
+            secondary={fTime(createdAt)}
+            primaryTypographyProps={{ typography: 'body2', noWrap: true }}
+            secondaryTypographyProps={{
+              mt: 0.5,
+              component: 'span',
+              typography: 'caption',
+            }}
+          />
+        </TableCell>
+
+        {action && (
+          <TableCell align="center" sx={{ px: 1, whiteSpace: 'nowrap' }}>
+            <Tooltip title="View" placement="top" arrow>
+              <IconButton
+                color="default"
+                onClick={() => {
+                  router.push(`${paths.dashboard.members.edit(id)}`);
+                }}
+              >
+                <Iconify icon="solar:eye-bold" />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="View" placement="top" arrow>
+              <IconButton
+                color="default"
+                onClick={() => {
+                  confirm.onTrue();
+                }}
+              >
+                <Iconify icon="basil:unlock-solid" />
+              </IconButton>
+            </Tooltip>
+          </TableCell>
+        )}
+      </TableRow>
+
+      <ConfirmDialog
+        open={confirm.value}
+        onClose={confirm.onFalse}
+        title="Reset Paaword"
+        content={resetContent}
+        action={
+          <Button
+            variant="contained"
+            color="error"
+            onClick={async () => {
+              try {
+                await updatePassword({ variables: { data: { id, newPassword } } });
+
+                toast.success('password updated successfully!');
+
+                confirm.onFalse();
+              } catch (err) {
+                console.log(err);
+              }
+            }}
+          >
+            OK
+          </Button>
+        }
+      />
+    </>
   );
 }

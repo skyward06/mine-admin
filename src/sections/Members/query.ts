@@ -141,3 +141,11 @@ export const FETCH_PAYOUTS_QUERY = gql(/* GraphQL */ `
     }
   }
 `);
+
+export const UPDATE_PASSWORD_QUERY = gql(/* GraphQL */ `
+  mutation UpdatePasswordMemberById($data: UpdateMemberPasswordInputById!) {
+    updatePasswordMemberById(data: $data) {
+      id
+    }
+  }
+`);
