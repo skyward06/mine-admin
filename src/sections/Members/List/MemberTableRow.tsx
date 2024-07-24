@@ -107,15 +107,15 @@ export default function MemberTableRow({ row, selected, action = true, onSelectR
           />
         </TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{mobile}</TableCell>
+        <TableCell>{mobile}</TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{primaryAddress}</TableCell>
+        <TableCell>{primaryAddress}</TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{assetId}</TableCell>
+        <TableCell>{assetId}</TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{payout.display}</TableCell>
+        <TableCell>{payout.display}</TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{wallet}</TableCell>
+        <TableCell>{wallet}</TableCell>
 
         <TableCell>
           <ListItemText
@@ -131,7 +131,7 @@ export default function MemberTableRow({ row, selected, action = true, onSelectR
         </TableCell>
 
         {action && (
-          <TableCell align="center" sx={{ px: 1, whiteSpace: 'nowrap' }}>
+          <TableCell sx={{ whiteSpace: 'nowrap' }}>
             <Tooltip title="View" placement="top" arrow>
               <IconButton
                 color="default"
@@ -142,7 +142,7 @@ export default function MemberTableRow({ row, selected, action = true, onSelectR
                 <Iconify icon="solar:eye-bold" />
               </IconButton>
             </Tooltip>
-            <Tooltip title="View" placement="top" arrow>
+            <Tooltip title="Password" placement="top" arrow>
               <IconButton
                 color="default"
                 onClick={() => {
@@ -159,12 +159,12 @@ export default function MemberTableRow({ row, selected, action = true, onSelectR
       <ConfirmDialog
         open={confirm.value}
         onClose={confirm.onFalse}
-        title="Reset Paaword"
+        title="Reset Password"
         content={resetContent}
         action={
           <Button
             variant="contained"
-            color="error"
+            color="info"
             onClick={async () => {
               try {
                 await updatePassword({ variables: { data: { id, newPassword } } });
