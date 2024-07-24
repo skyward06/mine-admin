@@ -35,7 +35,7 @@ type Props = {
 // ----------------------------------------------------------------------
 
 const UPDATE_USER = gql(/* GraphQL */ `
-  mutation UpdateUser($data: UpdateAdminInput!) {
+  mutation UpdateAdmin($data: UpdateAdminInput!) {
     updateAdmin(data: $data) {
       id
       username
@@ -54,7 +54,6 @@ const UserGeneralSchema = zod.object({
     .string({ required_error: 'Email is required' })
     .email({ message: 'Invalid email address is provided' }),
   avatar: zod.custom<File | string>().nullable().optional(),
-  isAdmin: zod.boolean().default(false),
 });
 
 export default function UserGeneral({ currentUser }: Props) {
@@ -162,17 +161,6 @@ export default function UserGeneral({ currentUser }: Props) {
             >
               <Field.Text name="username" label="Username" />
               <Field.Text name="email" label="Email Address" />
-
-              <Field.Switch
-                name="isAdmin"
-                labelPlacement="start"
-                label={
-                  <Typography variant="subtitle1" sx={{ mb: 0.5 }}>
-                    Admin
-                  </Typography>
-                }
-                sx={{ mx: 0, px: 1, width: 1, justifyContent: 'space-between' }}
-              />
             </Box>
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>

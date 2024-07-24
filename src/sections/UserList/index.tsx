@@ -57,7 +57,7 @@ const TABLE_HEAD = [
   { id: 'createdAt', label: 'Created At', width: 200, sortable: true },
   { id: 'updatedAt', label: 'Updated At', width: 200, sortable: true },
   { id: 'deletedAt', label: 'Status', width: 95, sortable: true },
-  { id: '', width: 50 },
+  { id: 'action', label: 'Action', width: 50 },
 ];
 
 const defaultFilter: IUserTableFilters = {
@@ -194,8 +194,8 @@ export default function UserListView() {
   return (
     <DashboardContent>
       <Breadcrumbs
-        heading="User"
-        links={[{ name: 'User', href: paths.dashboard.user.root }, { name: 'List' }]}
+        heading="Admin"
+        links={[{ name: 'Admin', href: paths.dashboard.user.root }, { name: 'List' }]}
         action={
           <Button
             component={RouterLink}
@@ -203,7 +203,7 @@ export default function UserListView() {
             variant="contained"
             startIcon={<Iconify icon="mingcute:add-line" />}
           >
-            New User
+            New Admin
           </Button>
         }
         sx={{

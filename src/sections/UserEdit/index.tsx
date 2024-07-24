@@ -3,11 +3,7 @@ import { useLazyQuery } from '@apollo/client';
 import { Navigate, useParams } from 'react-router-dom';
 import { useState, useEffect, useCallback } from 'react';
 
-import Button from '@mui/material/Button';
-
 import { paths } from 'src/routes/paths';
-
-import { useBoolean } from 'src/hooks/useBoolean';
 
 import { CONFIG } from 'src/config';
 import { gql } from 'src/__generated__/gql';
@@ -39,8 +35,6 @@ export default function OrganizationEditView() {
   const [isLoading, setIsLoading] = useState(true);
 
   const params = useParams();
-
-  const drawerState = useBoolean();
 
   const [fetchUserQuery, { loading, data, called }] = useLazyQuery(FETCH_USER);
 
@@ -80,11 +74,6 @@ export default function OrganizationEditView() {
           sx={{
             mb: { xs: 1, md: 2 },
           }}
-          action={
-            <Button variant="contained" onClick={drawerState.onTrue}>
-              Manage organizations
-            </Button>
-          }
         />
 
         {tabParam === 'general' && <UserGeneral currentUser={user} />}

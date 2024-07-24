@@ -22,7 +22,7 @@ import { Form, Field } from 'src/components/Form';
 // ----------------------------------------------------------------------
 
 const CREATE_USER = gql(/* GraphQL */ `
-  mutation CreateUser($data: CreateAdminInput!) {
+  mutation CreateAdmin($data: CreateAdminInput!) {
     createAdmin(data: $data) {
       id
       username
@@ -41,7 +41,6 @@ const NewUserSchema = zod.object({
     .string({ required_error: 'Email is required' })
     .email({ message: 'Invalid email address is provided' }),
   avatar: zod.custom<File | string>().nullable(),
-  isAdmin: zod.boolean().default(false),
 });
 
 export default function UserCreateForm() {
@@ -52,7 +51,6 @@ export default function UserCreateForm() {
       name: '',
       email: '',
       avatar: null,
-      isAdmin: false,
     }),
     []
   );
@@ -137,22 +135,11 @@ export default function UserCreateForm() {
             >
               <Field.Text name="username" label="Username" />
               <Field.Text name="email" label="Email Address" />
-
-              <Field.Switch
-                name="isAdmin"
-                labelPlacement="start"
-                label={
-                  <Typography variant="subtitle1" sx={{ mb: 0.5 }}>
-                    Admin
-                  </Typography>
-                }
-                sx={{ mx: 0, px: 1, width: 1, justifyContent: 'space-between' }}
-              />
             </Box>
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>
               <LoadingButton type="submit" variant="contained" loading={loading}>
-                Create User
+                Create Admin
               </LoadingButton>
             </Stack>
           </Card>

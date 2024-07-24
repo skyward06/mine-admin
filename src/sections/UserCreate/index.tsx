@@ -13,13 +13,13 @@ export default function UserCreateView() {
     // TODO: Consider moving this Container to dashboard route definition as every page will have same layout
     <DashboardContent>
       <Breadcrumbs
-        heading="Create a new user"
+        heading="Create a new admin"
         links={[
           {
-            name: 'User',
+            name: 'Admin',
             href: paths.dashboard.user.root,
           },
-          { name: 'New user' },
+          { name: 'New admin' },
         ]}
         sx={{
           mb: { xs: 1, md: 2 },
