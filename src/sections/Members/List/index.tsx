@@ -28,6 +28,7 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { Label } from 'src/components/Label';
 import { Iconify } from 'src/components/Iconify';
 import { ScrollBar } from 'src/components/ScrollBar';
+import { ConfirmDialog } from 'src/components/Dialog';
 import { SearchInput } from 'src/components/SearchInput';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import {
@@ -280,6 +281,24 @@ export default function MemberListView() {
           onChangeDense={table.onChangeDense}
         />
       </Card>
+
+      <ConfirmDialog
+        open={confirm.value}
+        onClose={confirm.onFalse}
+        title="Delete"
+        content="Are you sure?"
+        action={
+          <Button
+            variant="contained"
+            color="error"
+            onClick={async () => {
+              confirm.onFalse();
+            }}
+          >
+            OK
+          </Button>
+        }
+      />
     </DashboardContent>
   );
 }

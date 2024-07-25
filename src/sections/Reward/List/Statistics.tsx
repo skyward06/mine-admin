@@ -144,11 +144,11 @@ export default function StatisticsTable() {
             <TableSelectedAction
               dense={table.dense}
               numSelected={table.selected.length}
-              rowCount={loading ? 0 : memberStatistics!.length}
+              rowCount={loading ? 0 : statistics!.length}
               onSelectAllRows={(checked) =>
                 table.onSelectAllRows(
                   checked,
-                  memberStatistics!.map((row) => row!.id)
+                  statistics!.map((row) => row!.id)
                 )
               }
               action={
@@ -186,7 +186,7 @@ export default function StatisticsTable() {
                       onSelectAllRows={(checked) =>
                         table.onSelectAllRows(
                           checked,
-                          memberStatistics!.map((row) => row!.id)
+                          statistics!.map((row) => row!.id)
                         )
                       }
                     />
