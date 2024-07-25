@@ -199,6 +199,7 @@ export default function StatisticsTable() {
                           selected={table.selected.includes(row!.id)}
                           setSelected={setSelected}
                           statisticsId={statisticsId}
+                          table={table}
                           setStatisticsId={setStatisticsId}
                           onSelectRow={() => table.onSelectRow(row!.id)}
                           memberStatistics={memberStatistics!}

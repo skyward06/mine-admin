@@ -33,6 +33,7 @@ type Props = {
   selected: boolean;
   memberStatistics: any[];
   statisticsId: string;
+  table: any;
   setSelected: Function;
   onSelectRow: VoidFunction;
   setStatisticsId: Function;
@@ -49,6 +50,7 @@ export default function StatisticsTableRow({
   onSelectRow,
   memberStatistics,
   updateStatistics,
+  table,
 }: Props) {
   const {
     id,
@@ -162,7 +164,7 @@ export default function StatisticsTableRow({
           <Tooltip title="Delete" placement="top" arrow>
             <IconButton
               color="error"
-              disabled={status}
+              disabled={status || table.selected.length}
               onClick={() => {
                 removeConfirm.onTrue();
                 setSelected([id]);
