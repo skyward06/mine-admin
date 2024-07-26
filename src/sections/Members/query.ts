@@ -25,6 +25,18 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         mobile
         payoutId
         sponsorId
+        sponsor {
+          id
+          username
+          fullName
+          email
+          primaryAddress
+          secondaryAddress
+          mobile
+          wallet
+          assetId
+          payoutId
+        }
         payout {
           id
           name
@@ -81,12 +93,25 @@ export const FETCH_MEMBER = gql(/* GraphQL */ `
         assetId
         wallet
         payoutId
+        sponsorId
         payout {
           id
           name
           status
           method
           display
+        }
+        sponsor {
+          id
+          username
+          fullName
+          email
+          primaryAddress
+          secondaryAddress
+          mobile
+          wallet
+          assetId
+          payoutId
         }
         deletedAt
       }

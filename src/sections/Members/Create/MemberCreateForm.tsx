@@ -123,7 +123,7 @@ export default function MemberCreateForm() {
   useEffect(() => {
     fetchMembers({
       variables: {
-        page: '1,10',
+        page: '1,5',
         filter: { OR: [{ username: { contains: member?.username ?? '', mode: 'insensitive' } }] },
       },
     });

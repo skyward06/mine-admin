@@ -2,18 +2,20 @@ import type { Member } from 'src/__generated__/graphql';
 
 import { z as zod } from 'zod';
 import isEqual from 'lodash/isEqual';
-import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useMemo, useState, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ApolloError, useMutation, useQuery as useGraphQuery } from '@apollo/client';
+import { ApolloError, useMutation, useLazyQuery, useQuery as useGraphQuery } from '@apollo/client';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
+import Autocomplete from '@mui/material/Autocomplete';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
@@ -21,13 +23,18 @@ import { useRouter } from 'src/routes/hooks';
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
 
-import { UPDATE_MEMBER, FETCH_PAYOUTS_QUERY } from '../../query';
+import { UPDATE_MEMBER, FETCH_PAYOUTS_QUERY, FETCH_MEMBERS_QUERY } from '../../query';
 
 // ----------------------------------------------------------------------
 
 type Props = {
   currentMember: Member;
 };
+
+interface Edit {
+  id: string;
+  username: string;
+}
 
 // ----------------------------------------------------------------------
 export type MemberGeneralSchemaType = zod.infer<typeof MemberGeneralSchema>;
@@ -40,6 +47,7 @@ const MemberGeneralSchema = zod.object({
     .email({ message: 'Invalid email address is provided' }),
   mobile: zod.string({ required_error: 'Mobile is required' }),
   primaryAddress: zod.string({ required_error: 'Address is required' }),
+  secondaryAddress: zod.string().optional(),
   payoutId: zod.string({ required_error: 'TXC Payout is required' }),
   wallet: zod.string({ required_error: 'TXC Cold is required' }),
 });
@@ -54,7 +62,13 @@ export default function MemberGeneral({ currentMember }: Props) {
     variables: {},
   });
 
+  const [fetchMembers, { loading: memberLoading, data: memberData }] =
+    useLazyQuery(FETCH_MEMBERS_QUERY);
+
   const payouts = payoutsData?.payouts.payouts ?? [];
+  const members = memberData?.members.members ?? [];
+
+  const [member, setMember] = useState<Edit>();
 
   const [submit, { loading }] = useMutation(UPDATE_MEMBER);
 
@@ -81,6 +95,20 @@ export default function MemberGeneral({ currentMember }: Props) {
         return;
       }
 
+      console.log('data => ', {
+        id: currentMember.id,
+        username: newMember.username,
+        email: newMember.email,
+        fullName: `${firstName} ${lastName}`,
+        mobile: newMember.mobile,
+        primaryAddress: newMember.primaryAddress,
+        secondaryAddress: newMember.secondaryAddress,
+        payoutId: newMember.payoutId,
+        sponsorId: member?.id,
+        wallet: newMember.wallet,
+        assetId: newMember.wallet.substring(1, 7),
+      });
+
       await submit({
         variables: {
           data: {
@@ -90,7 +118,9 @@ export default function MemberGeneral({ currentMember }: Props) {
             fullName: `${firstName} ${lastName}`,
             mobile: newMember.mobile,
             primaryAddress: newMember.primaryAddress,
+            secondaryAddress: newMember.secondaryAddress,
             payoutId: newMember.payoutId,
+            sponsorId: member?.id,
             wallet: newMember.wallet,
             assetId: newMember.wallet.substring(1, 7),
           },
@@ -110,6 +140,16 @@ export default function MemberGeneral({ currentMember }: Props) {
       toast.error(err.message);
     }
   });
+
+  useEffect(() => {
+    fetchMembers({
+      variables: {
+        page: '1,5',
+        filter: { OR: [{ username: { contains: member?.username ?? '', mode: 'insensitive' } }] },
+      },
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [member]);
 
   return (
     <Form methods={methods} onSubmit={onSubmit}>
@@ -146,7 +186,30 @@ export default function MemberGeneral({ currentMember }: Props) {
                 onChange={(e) => setLastName(e.target.value)}
               />
               <Field.Phone name="mobile" label="Mobile" />
+              <Autocomplete
+                fullWidth
+                options={members}
+                loading={memberLoading}
+                loadingText={<LoadingButton loading={memberLoading} />}
+                getOptionLabel={(option) => option!.username}
+                value={member ?? currentMember!.sponsor}
+                renderInput={(params) => (
+                  <TextField {...params} label="Sponsor Name" margin="none" />
+                )}
+                renderOption={(props, option) => (
+                  <li {...props} key={option!.username}>
+                    {option!.username}
+                  </li>
+                )}
+                onInputChange={(_, username: string) => {
+                  setMember({ id: '', username });
+                }}
+                onChange={(_, value) => {
+                  setMember({ id: value?.id ?? '', username: value?.username ?? '' });
+                }}
+              />
               <Field.Text name="primaryAddress" label="Primay Address" />
+              <Field.Text name="secondaryAddress" label="Address Line 2" />
               <Field.Select name="payoutId" label="TXC Payout">
                 {payouts.map((option) => (
                   <MenuItem key={option?.id} value={option?.id}>

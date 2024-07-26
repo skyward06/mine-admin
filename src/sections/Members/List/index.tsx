@@ -57,7 +57,6 @@ const TABLE_HEAD = [
   { id: 'mobile', label: 'Mobile', width: 150, sortable: true },
   { id: 'primaryAddress', label: 'Primary Address', sortable: true },
   { id: 'assetId', label: 'AssetID', width: 100, sortable: true },
-  { id: 'txcPayout', label: 'TXC Payout', width: 120, sortable: true },
   { id: 'txcCold', label: 'TXC Cold', width: 130, sortable: true },
   { id: 'createdAt', label: 'Created At', width: 150, sortable: true },
   { id: 'action', label: 'Action', align: 'center', width: 50 },
