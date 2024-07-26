@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import Paper from '@mui/material/Paper';
 import Drawer from '@mui/material/Drawer';
@@ -8,7 +8,6 @@ import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
-import ButtonGroup from '@mui/material/ButtonGroup';
 import ListItemText from '@mui/material/ListItemText';
 
 import { paths } from 'src/routes/paths';
@@ -66,6 +65,7 @@ export default function StatisticsTableRow({
   } = row;
 
   const confirm = useBoolean();
+  const copy = useBoolean();
 
   const router = useRouter();
 
@@ -79,6 +79,23 @@ export default function StatisticsTableRow({
         `\\"${item?.member?.wallet}\\": ${item?.txcShared}${index === memberStatistics.length - 1 ? '}"' : ','}`
     ),
   ];
+
+  useEffect(() => {
+    if (copy.value) {
+      setTimeout(() => {
+        copy.onFalse();
+      }, 3000);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [copy]);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(sendmany.join('\n'));
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+    }
+  };
 
   return (
     <>
@@ -205,9 +222,23 @@ export default function StatisticsTableRow({
             )}
           </ComponentBlock>
           <Paper sx={{ textAlign: 'right' }}>
-            <ButtonGroup sx={{ mt: 2 }} variant="contained" color="success">
-              <Button onClick={() => confirm.onTrue()}>Confirm</Button>
-            </ButtonGroup>
+            <Button
+              variant="contained"
+              color="success"
+              sx={{ mt: 2, mr: 2 }}
+              onClick={() => {
+                handleCopy();
+                copy.onTrue();
+              }}
+              startIcon={
+                copy.value ? <Iconify icon="mingcute:check-fill" /> : <Iconify icon="bxs:copy" />
+              }
+            >
+              {copy.value ? 'Copied' : 'Copy'}
+            </Button>
+            <Button variant="contained" color="success" sx={{ mt: 2 }} onClick={confirm.onTrue}>
+              Confirm
+            </Button>
           </Paper>
         </Paper>
       </Drawer>

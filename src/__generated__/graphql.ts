@@ -280,7 +280,7 @@ export type Mutation = {
   removeManyMemberStatistics: ManySuccessResponse;
   removeManyStatistics: ManySuccessResponse;
   removeManyStatisticsSales: ManySuccessResponse;
-  removeMember: SuccessResponse;
+  removeMember: Member;
   removeMemberStatisticsByStaitisId: ManySuccessResponse;
   removeSale: SuccessResponse;
   removeStatisticsSalesByStaitisId: ManySuccessResponse;
@@ -381,7 +381,7 @@ export type MutationRemoveManyStatisticsSalesArgs = {
 
 
 export type MutationRemoveMemberArgs = {
-  data: IDsInput;
+  data: IdInput;
 };
 
 
