@@ -1,8 +1,8 @@
 import type { LabelColor } from 'src/components/Label';
 import type { SortOrder } from 'src/routes/hooks/useQuery';
 
-import { useMemo, useCallback } from 'react';
-import { useQuery as useGraphQuery } from '@apollo/client';
+import { useMemo, useState, useCallback } from 'react';
+import { useMutation, useQuery as useGraphQuery } from '@apollo/client';
 
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
@@ -10,11 +10,10 @@ import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
 import { alpha } from '@mui/material/styles';
 import Skeleton from '@mui/material/Skeleton';
 import TableBody from '@mui/material/TableBody';
-import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 
 import { paths } from 'src/routes/paths';
@@ -26,22 +25,23 @@ import { useBoolean } from 'src/hooks/useBoolean';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Label } from 'src/components/Label';
+import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 import { ScrollBar } from 'src/components/ScrollBar';
 import { ConfirmDialog } from 'src/components/Dialog';
 import { SearchInput } from 'src/components/SearchInput';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
+import { LoadingScreen } from 'src/components/loading-screen';
 import {
   useTable,
   TableNoData,
   TableHeadCustom,
-  TableSelectedAction,
   TablePaginationCustom,
 } from 'src/components/Table';
 
 import MemberTableRow from './MemberTableRow';
 import MemberTableFiltersResult from './MemberTableFiltersResult';
-import { FETCH_MEMBERS_QUERY, FETCH_MEMBER_STATS_QUERY } from '../query';
+import { REMOVE_MEMBER_QUERY, FETCH_MEMBERS_QUERY, FETCH_MEMBER_STATS_QUERY } from '../query';
 
 import type { MemberRole, IMemberPrismaFilter, IMemberTableFilters } from './types';
 
@@ -54,12 +54,12 @@ const STATUS_OPTIONS: { value: MemberRole; label: string; color: LabelColor }[] 
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', sortable: true },
-  { id: 'mobile', label: 'Mobile', width: 130, sortable: true },
-  { id: 'primaryAddress', label: 'Primary Address', width: 250, sortable: true },
+  { id: 'mobile', label: 'Mobile', width: 150, sortable: true },
+  { id: 'primaryAddress', label: 'Primary Address', sortable: true },
   { id: 'assetId', label: 'AssetID', width: 100, sortable: true },
   { id: 'txcPayout', label: 'TXC Payout', width: 120, sortable: true },
   { id: 'txcCold', label: 'TXC Cold', width: 130, sortable: true },
-  { id: 'createdAt', label: 'Created At', width: 130, sortable: true },
+  { id: 'createdAt', label: 'Created At', width: 150, sortable: true },
   { id: 'action', label: 'Action', align: 'center', width: 50 },
 ];
 
@@ -70,6 +70,7 @@ const defaultFilter: IMemberTableFilters = {
 
 export default function MemberListView() {
   const table = useTable({ defaultDense: true });
+  const [selected, setSelected] = useState<string>('');
 
   const [query, { setQueryParams: setQuery, setPage, setPageSize }] =
     useQuery<IMemberTableFilters>();
@@ -124,6 +125,11 @@ export default function MemberListView() {
       filter: graphQueryFilter,
       sort: graphQuerySort,
     },
+  });
+
+  const [removeMember, { loading: removeLoading }] = useMutation(REMOVE_MEMBER_QUERY, {
+    awaitRefetchQueries: true,
+    refetchQueries: ['FetchMembers'],
   });
 
   const tableData = data?.members;
@@ -199,25 +205,6 @@ export default function MemberListView() {
         )}
 
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-          <TableSelectedAction
-            dense={table.dense}
-            numSelected={table.selected.length}
-            rowCount={loading ? 0 : tableData!.members!.length}
-            onSelectAllRows={(checked) =>
-              table.onSelectAllRows(
-                checked,
-                tableData!.members!.map((row) => row!.id)
-              )
-            }
-            action={
-              <Tooltip title="Delete">
-                <IconButton color="primary" onClick={confirm.onTrue}>
-                  <Iconify icon="solar:trash-bin-trash-bold" />
-                </IconButton>
-              </Tooltip>
-            }
-          />
-
           <ScrollBar>
             <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
               {loading ? (
@@ -235,18 +222,11 @@ export default function MemberListView() {
                     orderBy={sort && Object.keys(sort)[0]}
                     headLabel={TABLE_HEAD}
                     rowCount={loading ? 0 : tableData!.members!.length}
-                    numSelected={table.selected.length}
                     onSort={(id) => {
                       const isAsc = sort && sort[id] === 'asc';
                       const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
                       setQuery({ ...query, sort: newSort });
                     }}
-                    onSelectAllRows={(checked) =>
-                      table.onSelectAllRows(
-                        checked,
-                        tableData!.members!.map((row) => row!.id)
-                      )
-                    }
                   />
                   <TableBody>
                     {tableData!.members!.map((row) => (
@@ -254,7 +234,8 @@ export default function MemberListView() {
                         key={row!.id}
                         row={row!}
                         selected={table.selected.includes(row!.id)}
-                        onSelectRow={() => table.onSelectRow(row!.id)}
+                        confirm={confirm}
+                        setSelected={setSelected}
                       />
                     ))}
 
@@ -286,16 +267,34 @@ export default function MemberListView() {
         open={confirm.value}
         onClose={confirm.onFalse}
         title="Delete"
-        content="Are you sure?"
+        content={
+          removeLoading ? (
+            <LoadingScreen />
+          ) : (
+            <>
+              <Typography>This sale will be removed permanently!</Typography>
+              <Typography>Are you sure?</Typography>
+            </>
+          )
+        }
         action={
           <Button
             variant="contained"
             color="error"
             onClick={async () => {
+              const promise = await removeMember({ variables: { data: { id: selected } } });
+              const result = promise.data?.removeMember.result;
+
+              if (result === 'success') {
+                toast.success('Member removed successfully');
+              } else {
+                toast.error('You are not allowed to remove this member');
+              }
+
               confirm.onFalse();
             }}
           >
-            OK
+            Confirm
           </Button>
         }
       />

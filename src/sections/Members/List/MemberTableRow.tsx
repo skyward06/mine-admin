@@ -7,7 +7,6 @@ import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import TableRow from '@mui/material/TableRow';
-import Checkbox from '@mui/material/Checkbox';
 import TableCell from '@mui/material/TableCell';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
@@ -17,7 +16,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { useBoolean } from 'src/hooks/useBoolean';
+import { useBoolean, type UseBooleanReturn } from 'src/hooks/useBoolean';
 
 import { fDate, fTime } from 'src/utils/format-time';
 
@@ -33,17 +32,25 @@ type Props = {
   selected: boolean;
   row: Member;
   action?: boolean;
-  onSelectRow: VoidFunction;
+  confirm: UseBooleanReturn;
+  setSelected: Function;
 };
 
-export default function MemberTableRow({ row, selected, action = true, onSelectRow }: Props) {
+export default function MemberTableRow({
+  row,
+  selected,
+  action = true,
+  confirm: removeConfirm,
+  setSelected,
+}: Props) {
   const [newPassword, setNewPassword] = useState<any>();
   const router = useRouter();
 
   const confirm = useBoolean();
   const password = useBoolean();
 
-  const { id, username, email, mobile, primaryAddress, assetId, payout, wallet, createdAt } = row;
+  const { id, username, email, mobile, primaryAddress, assetId, payout, wallet, createdAt, sales } =
+    row;
 
   const [updatePassword] = useMutation(UPDATE_PASSWORD_QUERY);
 
@@ -81,10 +88,6 @@ export default function MemberTableRow({ row, selected, action = true, onSelectR
   return (
     <>
       <TableRow hover selected={selected}>
-        <TableCell padding="checkbox">
-          <Checkbox checked={selected} onClick={onSelectRow} />
-        </TableCell>
-
         <TableCell
           sx={{
             display: 'flex',
@@ -150,6 +153,18 @@ export default function MemberTableRow({ row, selected, action = true, onSelectR
                 }}
               >
                 <Iconify icon="basil:unlock-solid" />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Delete" placement="top" arrow>
+              <IconButton
+                color="error"
+                disabled={!!sales?.length}
+                onClick={() => {
+                  removeConfirm.onTrue();
+                  setSelected(id);
+                }}
+              >
+                <Iconify icon="bxs:coffee-togo" />
               </IconButton>
             </Tooltip>
           </TableCell>

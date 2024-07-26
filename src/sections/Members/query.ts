@@ -32,6 +32,15 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           method
           display
         }
+        sales {
+          id
+          invoiceNo
+          memberId
+          packageId
+          paymentMethod
+          status
+          orderedAt
+        }
         wallet
         createdAt
         updatedAt
@@ -147,6 +156,15 @@ export const UPDATE_PASSWORD_QUERY = gql(/* GraphQL */ `
   mutation UpdatePasswordMemberById($data: UpdateMemberPasswordInputById!) {
     updatePasswordMemberById(data: $data) {
       id
+    }
+  }
+`);
+
+export const REMOVE_MEMBER_QUERY = gql(/* GraphQL */ `
+  mutation RemoveMember($data: IDInput!) {
+    removeMember(data: $data) {
+      message
+      result
     }
   }
 `);

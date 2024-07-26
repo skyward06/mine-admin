@@ -102,7 +102,9 @@ export default function MemberCreateForm() {
           },
         },
       });
+
       reset();
+
       toast.success('Create success!');
       router.push(paths.dashboard.members.root);
     } catch (err) {

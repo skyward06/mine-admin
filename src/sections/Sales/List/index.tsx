@@ -31,6 +31,7 @@ import { ScrollBar } from 'src/components/ScrollBar';
 import { ConfirmDialog } from 'src/components/Dialog';
 import { SearchInput } from 'src/components/SearchInput';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
+import { LoadingScreen } from 'src/components/loading-screen';
 import {
   useTable,
   TableNoData,
@@ -128,7 +129,7 @@ export default function SaleListView() {
     },
   });
 
-  const [removeSale] = useMutation(REMOVE_SALE, {
+  const [removeSale, { loading: removeLoading }] = useMutation(REMOVE_SALE, {
     awaitRefetchQueries: true,
     refetchQueries: ['FetchSales'],
   });
@@ -268,10 +269,14 @@ export default function SaleListView() {
         onClose={confirm.onFalse}
         title="Delete"
         content={
-          <>
-            <Typography>This sale will be removed permanently!</Typography>
-            <Typography>Are you sure?</Typography>
-          </>
+          removeLoading ? (
+            <LoadingScreen />
+          ) : (
+            <>
+              <Typography>This sale will be removed permanently!</Typography>
+              <Typography>Are you sure?</Typography>
+            </>
+          )
         }
         action={
           <Button
