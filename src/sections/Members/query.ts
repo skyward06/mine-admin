@@ -24,6 +24,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         assetId
         mobile
         payoutId
+        sponsorId
         payout {
           id
           name

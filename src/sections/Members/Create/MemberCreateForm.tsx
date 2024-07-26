@@ -1,8 +1,8 @@
 import { z as zod } from 'zod';
-import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useMemo, useState, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ApolloError, useMutation, useQuery as useGraphQuery } from '@apollo/client';
+import { ApolloError, useMutation, useLazyQuery, useQuery as useGraphQuery } from '@apollo/client';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -19,7 +19,7 @@ import { useRouter } from 'src/routes/hooks';
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
 
-import { CREATE_MEMBER, FETCH_PAYOUTS_QUERY } from '../query';
+import { CREATE_MEMBER, FETCH_PAYOUTS_QUERY, FETCH_MEMBERS_QUERY } from '../query';
 
 // ----------------------------------------------------------------------
 export type NewMemberSchemaType = zod.infer<typeof NewMemberSchema>;
@@ -33,7 +33,9 @@ const NewMemberSchema = zod.object({
     .email({ message: 'Invalid email address is provided' }),
   mobile: zod.string({ required_error: 'Mobile is required' }),
   primaryAddress: zod.string({ required_error: 'Address is required' }),
+  secondaryAddress: zod.string().optional(),
   payoutId: zod.string({ required_error: 'TXC Payout is required' }),
+  sponsorId: zod.string().optional(),
   wallet: zod.string({ required_error: 'TXC Cold is required' }),
 });
 
@@ -42,14 +44,23 @@ interface Payout {
   display: string;
 }
 
+interface Member {
+  id: string;
+  username: string;
+}
+
 export default function MemberCreateForm() {
   const { data: payoutsData } = useGraphQuery(FETCH_PAYOUTS_QUERY, {
     variables: {},
   });
 
+  const [fetchMembers, { data: memberData }] = useLazyQuery(FETCH_MEMBERS_QUERY);
+
   const payouts = payoutsData?.payouts.payouts ?? [];
+  const members = memberData?.members.members ?? [];
 
   const [payout, setPayout] = useState<Payout>();
+  const [member, setMember] = useState<Member>();
 
   const router = useRouter();
 
@@ -60,7 +71,9 @@ export default function MemberCreateForm() {
       email: '',
       mobile: '',
       primaryAddress: '',
+      secondaryAddress: '',
       payoutId: '',
+      sponsorId: '',
       wallet: '',
     }),
     []
@@ -85,6 +98,7 @@ export default function MemberCreateForm() {
             fullName: `${firstName} ${lastName}`,
             wallet,
             payoutId: payout?.id ?? '',
+            sponsorId: member?.id,
           },
         },
       });
@@ -102,6 +116,16 @@ export default function MemberCreateForm() {
       }
     }
   });
+
+  useEffect(() => {
+    fetchMembers({
+      variables: {
+        page: '1,5',
+        filter: { OR: [{ username: { contains: member?.username ?? '', mode: 'insensitive' } }] },
+      },
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [member]);
 
   return (
     <Form methods={methods} onSubmit={onSubmit}>
@@ -128,7 +152,27 @@ export default function MemberCreateForm() {
               <Field.Text name="firstName" label="First Name" />
               <Field.Text name="lastName" label="Last Name" />
               <Field.Phone name="mobile" label="Mobile" />
+              <Autocomplete
+                fullWidth
+                options={members}
+                getOptionLabel={(option) => option!.username}
+                renderInput={(params) => (
+                  <TextField {...params} label="Sponsor Name" margin="none" />
+                )}
+                renderOption={(props, option) => (
+                  <li {...props} key={option!.username}>
+                    {option!.username}
+                  </li>
+                )}
+                onInputChange={(_, username: string) => {
+                  setMember({ id: '', username });
+                }}
+                onChange={(_, value) => {
+                  setMember({ id: value?.id ?? '', username: value?.username ?? '' });
+                }}
+              />
               <Field.Text name="primaryAddress" label="Primary Address" />
+              <Field.Text name="secondaryAddress" label="Address Line 2" />
               <Autocomplete
                 fullWidth
                 options={payouts}
