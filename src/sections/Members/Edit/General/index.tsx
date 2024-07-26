@@ -47,8 +47,9 @@ const MemberGeneralSchema = zod.object({
     .email({ message: 'Invalid email address is provided' }),
   mobile: zod.string({ required_error: 'Mobile is required' }),
   primaryAddress: zod.string({ required_error: 'Address is required' }),
-  secondaryAddress: zod.string().optional(),
+  secondaryAddress: zod.string().optional().nullable(),
   payoutId: zod.string({ required_error: 'TXC Payout is required' }),
+  sponsorId: zod.string().optional().nullable(),
   wallet: zod.string({ required_error: 'TXC Cold is required' }),
 });
 
@@ -94,20 +95,6 @@ export default function MemberGeneral({ currentMember }: Props) {
         toast.warning('No changes to save');
         return;
       }
-
-      console.log('data => ', {
-        id: currentMember.id,
-        username: newMember.username,
-        email: newMember.email,
-        fullName: `${firstName} ${lastName}`,
-        mobile: newMember.mobile,
-        primaryAddress: newMember.primaryAddress,
-        secondaryAddress: newMember.secondaryAddress,
-        payoutId: newMember.payoutId,
-        sponsorId: member?.id,
-        wallet: newMember.wallet,
-        assetId: newMember.wallet.substring(1, 7),
-      });
 
       await submit({
         variables: {
