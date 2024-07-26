@@ -54,7 +54,8 @@ export default function MemberCreateForm() {
     variables: {},
   });
 
-  const [fetchMembers, { data: memberData }] = useLazyQuery(FETCH_MEMBERS_QUERY);
+  const [fetchMembers, { loading: memberLoading, data: memberData }] =
+    useLazyQuery(FETCH_MEMBERS_QUERY);
 
   const payouts = payoutsData?.payouts.payouts ?? [];
   const members = memberData?.members.members ?? [];
@@ -122,7 +123,7 @@ export default function MemberCreateForm() {
   useEffect(() => {
     fetchMembers({
       variables: {
-        page: '1,5',
+        page: '1,10',
         filter: { OR: [{ username: { contains: member?.username ?? '', mode: 'insensitive' } }] },
       },
     });
@@ -157,6 +158,8 @@ export default function MemberCreateForm() {
               <Autocomplete
                 fullWidth
                 options={members}
+                loading={memberLoading}
+                loadingText={<LoadingButton loading={memberLoading} />}
                 getOptionLabel={(option) => option!.username}
                 renderInput={(params) => (
                   <TextField {...params} label="Sponsor Name" margin="none" />

@@ -14,6 +14,7 @@ import { alpha } from '@mui/material/styles';
 import Skeleton from '@mui/material/Skeleton';
 import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
+import LoadingButton from '@mui/lab/LoadingButton';
 import TableContainer from '@mui/material/TableContainer';
 
 import { paths } from 'src/routes/paths';
@@ -31,7 +32,6 @@ import { ScrollBar } from 'src/components/ScrollBar';
 import { ConfirmDialog } from 'src/components/Dialog';
 import { SearchInput } from 'src/components/SearchInput';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
-import { LoadingScreen } from 'src/components/loading-screen';
 import {
   useTable,
   TableNoData,
@@ -268,19 +268,16 @@ export default function MemberListView() {
         onClose={confirm.onFalse}
         title="Delete"
         content={
-          removeLoading ? (
-            <LoadingScreen />
-          ) : (
-            <>
-              <Typography>This sale will be removed permanently!</Typography>
-              <Typography>Are you sure?</Typography>
-            </>
-          )
+          <>
+            <Typography>This sale will be removed permanently!</Typography>
+            <Typography>Are you sure?</Typography>
+          </>
         }
         action={
-          <Button
+          <LoadingButton
             variant="contained"
             color="error"
+            loading={removeLoading}
             onClick={async () => {
               const promise = await removeMember({ variables: { data: { id: selected } } });
               const result = promise.data?.removeMember.result;
@@ -295,7 +292,7 @@ export default function MemberListView() {
             }}
           >
             Confirm
-          </Button>
+          </LoadingButton>
         }
       />
     </DashboardContent>
