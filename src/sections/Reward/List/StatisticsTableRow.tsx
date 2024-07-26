@@ -76,7 +76,7 @@ export default function StatisticsTableRow({
     ...initial,
     ...memberStatistics!.map(
       (item, index) =>
-        `\\"${item?.member?.wallet}\\": ${item?.txcShared}${index === memberStatistics.length - 1 ? '}"' : ','}`
+        `\\"${item?.member?.wallet}\\": ${item?.txcShared.toFixed(8)}${index === memberStatistics.length - 1 ? '}"' : ','}`
     ),
   ];
 

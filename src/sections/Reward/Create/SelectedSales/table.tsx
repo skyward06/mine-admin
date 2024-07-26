@@ -136,7 +136,7 @@ export default function MemberStatisticsTable({
             <Typography sx={{ mr: 5 }}>{estimated}</Typography>
 
             <Typography color="grey">TXC to reward:</Typography>
-            <Typography sx={{ mr: 5 }}>{totalTXC}</Typography>
+            <Typography sx={{ mr: 5 }}>{Number(totalTXC.toFixed(8))}</Typography>
 
             <Typography color="grey">Diff:</Typography>
             <Typography sx={{ mr: 20 }} color={Number(diff) > 0 ? 'blue' : 'red'}>
