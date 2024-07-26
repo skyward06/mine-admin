@@ -79,7 +79,7 @@ export const Personal = () => {
             TXC Payout:
           </Stack>
           <Stack width={1}>
-            <Typography variant="body2">{member?.payout.method}</Typography>
+            <Typography variant="body2">{member?.payout?.method}</Typography>
           </Stack>
         </Stack>
         <Stack direction="row" spacing={2} sx={{ pb: 1 }}>

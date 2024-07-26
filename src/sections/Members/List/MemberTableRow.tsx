@@ -113,7 +113,7 @@ export default function MemberTableRow({ row, selected, action = true, onSelectR
 
         <TableCell>{assetId}</TableCell>
 
-        <TableCell>{payout.display}</TableCell>
+        <TableCell>{payout?.display}</TableCell>
 
         <TableCell>{wallet}</TableCell>
 
