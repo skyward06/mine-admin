@@ -23,7 +23,6 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         secondaryAddress
         assetId
         mobile
-        payoutId
         sponsorId
         sponsor {
           id
@@ -33,16 +32,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           primaryAddress
           secondaryAddress
           mobile
-          wallet
           assetId
-          payoutId
-        }
-        payout {
-          id
-          name
-          status
-          method
-          display
         }
         sales {
           id
@@ -53,7 +43,6 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           status
           orderedAt
         }
-        wallet
         createdAt
         updatedAt
         deletedAt
@@ -73,48 +62,6 @@ export const CREATE_MEMBER = gql(/* GraphQL */ `
       primaryAddress
       secondaryAddress
       assetId
-      wallet
-      payoutId
-    }
-  }
-`);
-
-export const FETCH_MEMBER = gql(/* GraphQL */ `
-  query FetchMember($filter: JSONObject) {
-    members(filter: $filter) {
-      members {
-        id
-        username
-        fullName
-        email
-        mobile
-        primaryAddress
-        secondaryAddress
-        assetId
-        wallet
-        payoutId
-        sponsorId
-        payout {
-          id
-          name
-          status
-          method
-          display
-        }
-        sponsor {
-          id
-          username
-          fullName
-          email
-          primaryAddress
-          secondaryAddress
-          mobile
-          wallet
-          assetId
-          payoutId
-        }
-        deletedAt
-      }
     }
   }
 `);
@@ -126,11 +73,6 @@ export const UPDATE_MEMBER = gql(/* GraphQL */ `
       mobile
       primaryAddress
       secondaryAddress
-      payout {
-        method
-        display
-      }
-      wallet
       assetId
     }
   }

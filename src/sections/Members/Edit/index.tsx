@@ -20,7 +20,7 @@ import { LoadingScreen } from 'src/components/loading-screen';
 import Sale from './Sale';
 import History from './History';
 import MemberGeneral from './General';
-import { FETCH_MEMBER } from '../query';
+import { FETCH_MEMBERS_QUERY } from '../query';
 
 const TABS = [
   {
@@ -41,7 +41,7 @@ export default function MemberEditView() {
 
   const params = useParams();
 
-  const [fetchMemberQuery, { loading, data, called }] = useLazyQuery(FETCH_MEMBER);
+  const [fetchMemberQuery, { loading, data, called }] = useLazyQuery(FETCH_MEMBERS_QUERY);
 
   const { id: memberId } = params;
 

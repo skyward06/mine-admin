@@ -6,14 +6,14 @@ import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 
-import { FETCH_MEMBER } from '../../query';
+import { FETCH_MEMBERS_QUERY } from '../../query';
 
 export const Personal = () => {
   const params = useParams();
 
   const { id } = params;
 
-  const { data } = useGraphQuery(FETCH_MEMBER, {
+  const { data } = useGraphQuery(FETCH_MEMBERS_QUERY, {
     variables: {
       filter: { id: id ?? '' },
     },

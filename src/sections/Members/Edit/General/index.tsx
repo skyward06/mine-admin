@@ -107,7 +107,7 @@ export default function MemberGeneral({ currentMember }: Props) {
             primaryAddress: newMember.primaryAddress,
             secondaryAddress: newMember.secondaryAddress,
             payoutId: newMember.payoutId,
-            sponsorId: member?.id,
+            // sponsorId: member?.id,
             wallet: newMember.wallet,
             assetId: newMember.wallet.substring(1, 7),
           },

@@ -49,15 +49,6 @@ export const FETCH_MEMBERSTATISTICS_QUERY = gql(/* GraphQL */ `
           email
           mobile
           assetId
-          payoutId
-          payout {
-            id
-            name
-            status
-            method
-            display
-          }
-          wallet
           primaryAddress
           secondaryAddress
         }
