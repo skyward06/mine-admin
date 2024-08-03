@@ -56,7 +56,7 @@ export const Reward = () => {
               },
             },
           }}
-          height={418}
+          height={462}
           type="bar"
           card
         />

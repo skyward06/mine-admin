@@ -23,6 +23,8 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         secondaryAddress
         assetId
         mobile
+        city
+        zipCode
         sponsorId
         sponsor {
           id
@@ -42,6 +44,26 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           paymentMethod
           status
           orderedAt
+        }
+        memberWallets {
+          createdAt
+          updatedAt
+          deletedAt
+          id
+          memberId
+          payoutId
+          address
+          percent
+          payout {
+            id
+            method
+            status
+            name
+            display
+            createdAt
+            updatedAt
+            deletedAt
+          }
         }
         createdAt
         updatedAt

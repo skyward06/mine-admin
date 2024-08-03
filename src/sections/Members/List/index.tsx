@@ -85,7 +85,6 @@ export default function MemberListView() {
     if (filter.search) {
       filterObj.OR = [
         { email: { contains: filter.search, mode: 'insensitive' } },
-        { wallet: { contains: filter.search, mode: 'insensitive' } },
         { mobile: { contains: filter.search, mode: 'insensitive' } },
         { primaryAddress: { contains: filter.search, mode: 'insensitive' } },
         { username: { contains: filter.search, mode: 'insensitive' } },
