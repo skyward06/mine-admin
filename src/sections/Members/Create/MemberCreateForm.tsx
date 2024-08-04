@@ -9,7 +9,6 @@ import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Autocomplete from '@mui/material/Autocomplete';
 
@@ -19,6 +18,7 @@ import { useRouter } from 'src/routes/hooks';
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
 
+import MemberWallets from './MemberWallets';
 import { CREATE_MEMBER, FETCH_PAYOUTS_QUERY, FETCH_MEMBERS_QUERY } from '../query';
 
 // ----------------------------------------------------------------------
@@ -34,15 +34,8 @@ const NewMemberSchema = zod.object({
   mobile: zod.string({ required_error: 'Mobile is required' }),
   primaryAddress: zod.string({ required_error: 'Address is required' }),
   secondaryAddress: zod.string().optional(),
-  payoutId: zod.string({ required_error: 'TXC Payout is required' }),
   sponsorId: zod.string().optional(),
-  wallet: zod.string({ required_error: 'TXC Cold is required' }),
 });
-
-interface Payout {
-  id: string;
-  display: string;
-}
 
 interface Member {
   id: string;
@@ -60,8 +53,8 @@ export default function MemberCreateForm() {
   const payouts = payoutsData?.payouts.payouts ?? [];
   const members = memberData?.members.members ?? [];
 
-  const [payout, setPayout] = useState<Payout>();
   const [member, setMember] = useState<Member>();
+  const [submitData, setSubmitData] = useState<any>();
 
   const router = useRouter();
 
@@ -73,9 +66,7 @@ export default function MemberCreateForm() {
       mobile: '',
       primaryAddress: '',
       secondaryAddress: '',
-      payoutId: '',
       sponsorId: '',
-      wallet: '',
     }),
     []
   );
@@ -89,25 +80,31 @@ export default function MemberCreateForm() {
 
   const { reset, setError, handleSubmit } = methods;
 
-  const onSubmit = handleSubmit(async ({ firstName, lastName, wallet, ...data }) => {
+  const onSubmit = handleSubmit(async () => {
     try {
-      await submit({
-        variables: {
-          data: {
-            ...data,
-            assetId: wallet.substring(1, 7),
-            fullName: `${firstName} ${lastName}`,
-            wallet,
-            payoutId: payout?.id ?? '',
-            sponsorId: member?.id,
+      const { firstName, lastName, items, ...data } = submitData;
+
+      const total = items.reduce((prev: number, save: any) => prev + save.percent, 0);
+
+      if (total === 100) {
+        await submit({
+          variables: {
+            data: {
+              ...data,
+              assetId: '',
+              fullName: `${firstName} ${lastName}`,
+              sponsorId: member?.id,
+              wallets: items,
+            },
           },
-        },
-      });
+        });
 
-      reset();
-
-      toast.success('Create success!');
-      router.push(paths.dashboard.members.root);
+        reset();
+        toast.success('Create success!');
+        router.push(paths.dashboard.members.root);
+      } else {
+        toast.warning('Total percent muse be 100%');
+      }
     } catch (err) {
       if (err instanceof ApolloError) {
         const [error] = err.graphQLErrors;
@@ -133,14 +130,8 @@ export default function MemberCreateForm() {
   return (
     <Form methods={methods} onSubmit={onSubmit}>
       <Grid container spacing={3}>
-        <Grid xl={12}>
-          <Card sx={{ p: 3 }}>
-            <Stack spacing={1} sx={{ mb: 3 }}>
-              <Typography variant="subtitle2">Personal Information</Typography>
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                Personal information here.
-              </Typography>
-            </Stack>
+        <Grid md={12} xl={6}>
+          <Card sx={{ p: 3, mb: 2 }}>
             <Box
               rowGap={3}
               columnGap={2}
@@ -150,11 +141,11 @@ export default function MemberCreateForm() {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <Field.Text name="username" label="Username" />
-              <Field.Text name="email" label="Email" />
-              <Field.Text name="firstName" label="First Name" />
-              <Field.Text name="lastName" label="Last Name" />
-              <Field.Phone name="mobile" label="Mobile" />
+              <Field.Text name="username" label="Username" size="small" />
+              <Field.Text name="email" label="Email" size="small" />
+              <Field.Text name="firstName" label="First Name" size="small" />
+              <Field.Text name="lastName" label="Last Name" size="small" />
+              <Field.Phone name="mobile" label="Mobile" size="small" />
               <Autocomplete
                 fullWidth
                 options={members}
@@ -175,32 +166,23 @@ export default function MemberCreateForm() {
                 onChange={(_, value) => {
                   setMember({ id: value?.id ?? '', username: value?.username ?? '' });
                 }}
+                size="small"
               />
-              <Field.Text name="primaryAddress" label="Primary Address" />
-              <Field.Text name="secondaryAddress" label="Address Line 2" />
-              <Autocomplete
-                fullWidth
-                options={payouts}
-                getOptionLabel={(option) => option!.method}
-                renderInput={(params) => <TextField {...params} label="TXC Payout" margin="none" />}
-                renderOption={(props, option) => (
-                  <li {...props} key={option!.method}>
-                    {option!.method}
-                  </li>
-                )}
-                onChange={(_, value) =>
-                  setPayout({ id: value?.id ?? '', display: value?.display ?? '' })
-                }
-              />
-              <Field.Text name="wallet" label={payout?.display} />
+              <Field.Text name="primaryAddress" label="Primary Address" size="small" />
+              <Field.Text name="secondaryAddress" label="Address Line 2" size="small" />
+              <Field.Text name="city" label="City" size="small" />
+              <Field.Text name="zipCode" label="ZIP Code" size="small" />
             </Box>
-
-            <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-              <LoadingButton type="submit" variant="contained" loading={loading}>
-                Create Member
-              </LoadingButton>
-            </Stack>
           </Card>
+
+          <Stack alignItems="flex-start">
+            <LoadingButton type="submit" variant="contained" loading={loading}>
+              Create Member
+            </LoadingButton>
+          </Stack>
+        </Grid>
+        <Grid md={12} xl={6}>
+          <MemberWallets payouts={payouts} setData={setSubmitData} />
         </Grid>
       </Grid>
     </Form>
