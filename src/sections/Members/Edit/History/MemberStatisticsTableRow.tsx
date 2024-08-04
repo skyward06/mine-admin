@@ -18,7 +18,7 @@ export default function MemberStatisticsTableRow({ row, selected }: Props) {
     <TableRow hover selected={selected}>
       <TableCell>{fDate(issuedAt)}</TableCell>
       <TableCell>{member?.username}</TableCell>
-      <TableCell>{member?.wallet}</TableCell>
+      <TableCell>{member?.assetId}</TableCell>
       <TableCell>{hashPower}</TableCell>
       <TableCell>{txcShared}</TableCell>
       <TableCell>{percent.toFixed(2)} %</TableCell>

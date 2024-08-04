@@ -49,7 +49,7 @@ export default function MemberTableRow({
   const confirm = useBoolean();
   const password = useBoolean();
 
-  const { id, username, email, mobile, primaryAddress, assetId, wallet, createdAt, sales } = row;
+  const { id, username, email, mobile, primaryAddress, assetId, createdAt, sales } = row;
 
   const [updatePassword] = useMutation(UPDATE_PASSWORD_QUERY);
 
@@ -115,7 +115,7 @@ export default function MemberTableRow({
 
         <TableCell>{assetId}</TableCell>
 
-        <TableCell>{wallet}</TableCell>
+        <TableCell>{assetId}</TableCell>
 
         <TableCell>
           <ListItemText
