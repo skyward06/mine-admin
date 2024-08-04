@@ -111,12 +111,6 @@ export type CreateMemberStatisticsInput = {
   txcShared: Scalars['Float']['input'];
 };
 
-export type CreateMemberStatisticsWalletInput = {
-  memberStatisticId: Scalars['String']['input'];
-  memberWalletId: Scalars['String']['input'];
-  txc: Scalars['Float']['input'];
-};
-
 export type CreatePackageInput = {
   amount: Scalars['Float']['input'];
   date: Scalars['DateTimeISO']['input'];
@@ -318,13 +312,13 @@ export type MembersResponse = {
 export type Mutation = {
   __typename?: 'Mutation';
   adminLogin: AdminLoginResponse;
+  confirmStatistics: Statistics;
   createAdmin: Admin;
   createBlock: Block;
   createManyMemberStatistics: ManySuccessResponse;
   createManyStatisticsSales: ManySuccessResponse;
   createMember: Member;
   createMemberStatistics: MemberStatistics;
-  createMemberWallet: MemberStatisticsWallet;
   createPackage: Package;
   createPayout: Payout;
   createSale: Sale;
@@ -356,6 +350,11 @@ export type MutationAdminLoginArgs = {
 };
 
 
+export type MutationConfirmStatisticsArgs = {
+  data: IdInput;
+};
+
+
 export type MutationCreateAdminArgs = {
   data: CreateAdminInput;
 };
@@ -383,11 +382,6 @@ export type MutationCreateMemberArgs = {
 
 export type MutationCreateMemberStatisticsArgs = {
   data: CreateMemberStatisticsInput;
-};
-
-
-export type MutationCreateMemberWalletArgs = {
-  data: CreateMemberStatisticsWalletInput;
 };
 
 
@@ -759,6 +753,7 @@ export type UpdateMemberInput = {
   sponsorId?: InputMaybe<Scalars['ID']['input']>;
   state?: InputMaybe<Scalars['String']['input']>;
   username?: InputMaybe<Scalars['String']['input']>;
+  wallets?: InputMaybe<Array<InputMaybe<MemberWalletDataInput>>>;
   zipCode?: InputMaybe<Scalars['String']['input']>;
 };
 

@@ -32,9 +32,20 @@ const NewMemberSchema = zod.object({
     .string({ required_error: 'Email is required' })
     .email({ message: 'Invalid email address is provided' }),
   mobile: zod.string({ required_error: 'Mobile is required' }),
-  primaryAddress: zod.string({ required_error: 'Address is required' }),
-  secondaryAddress: zod.string().optional(),
+  city: zod.string({ required_error: 'City is required' }),
+  zipCode: zod.string({ required_error: 'ZIPCode is required' }),
+  state: zod.string({ required_error: 'State is required' }),
+  primaryAddress: zod.string({ required_error: 'Primary Address is required' }),
+  secondaryAddress: zod.string({ required_error: 'Secondary Address is required' }),
   sponsorId: zod.string().optional(),
+  assetId: zod.string({ required_error: 'AssetID is required' }),
+  wallets: zod.array(
+    zod.object({
+      payoutId: zod.string({ required_error: 'Payout is required' }),
+      address: zod.string({ required_error: 'Address is required' }),
+      percent: zod.number({ required_error: 'Percent is required' }),
+    })
+  ),
 });
 
 interface Member {
@@ -54,7 +65,6 @@ export default function MemberCreateForm() {
   const members = memberData?.members.members ?? [];
 
   const [member, setMember] = useState<Member>();
-  const [submitData, setSubmitData] = useState<any>();
 
   const router = useRouter();
 
@@ -66,7 +76,17 @@ export default function MemberCreateForm() {
       mobile: '',
       primaryAddress: '',
       secondaryAddress: '',
+      state: '',
+      city: '',
+      zipCode: '',
       sponsorId: '',
+      wallets: [
+        {
+          payoutId: '',
+          address: '',
+          percent: 100,
+        },
+      ],
     }),
     []
   );
@@ -80,21 +100,18 @@ export default function MemberCreateForm() {
 
   const { reset, setError, handleSubmit } = methods;
 
-  const onSubmit = handleSubmit(async () => {
+  const onSubmit = handleSubmit(async ({ firstName, lastName, wallets, ...data }) => {
     try {
-      const { firstName, lastName, items, ...data } = submitData;
-
-      const total = items.reduce((prev: number, save: any) => prev + save.percent, 0);
+      const total = wallets.reduce((prev: number, save: any) => prev + save.percent, 0);
 
       if (total === 100) {
         await submit({
           variables: {
             data: {
               ...data,
-              assetId: '',
               fullName: `${firstName} ${lastName}`,
               sponsorId: member?.id,
-              wallets: items,
+              wallets,
             },
           },
         });
@@ -103,7 +120,7 @@ export default function MemberCreateForm() {
         toast.success('Create success!');
         router.push(paths.dashboard.members.root);
       } else {
-        toast.warning('Total percent muse be 100%');
+        toast.warning('Sum of percent muse be 100%');
       }
     } catch (err) {
       if (err instanceof ApolloError) {
@@ -141,11 +158,11 @@ export default function MemberCreateForm() {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <Field.Text name="username" label="Username" size="small" />
-              <Field.Text name="email" label="Email" size="small" />
-              <Field.Text name="firstName" label="First Name" size="small" />
-              <Field.Text name="lastName" label="Last Name" size="small" />
-              <Field.Phone name="mobile" label="Mobile" size="small" />
+              <Field.Text name="username" label="Username" />
+              <Field.Text name="email" label="Email" />
+              <Field.Text name="firstName" label="First Name" />
+              <Field.Text name="lastName" label="Last Name" />
+              <Field.Phone name="mobile" label="Mobile" />
               <Autocomplete
                 fullWidth
                 options={members}
@@ -166,12 +183,13 @@ export default function MemberCreateForm() {
                 onChange={(_, value) => {
                   setMember({ id: value?.id ?? '', username: value?.username ?? '' });
                 }}
-                size="small"
               />
-              <Field.Text name="primaryAddress" label="Primary Address" size="small" />
-              <Field.Text name="secondaryAddress" label="Address Line 2" size="small" />
-              <Field.Text name="city" label="City" size="small" />
-              <Field.Text name="zipCode" label="ZIP Code" size="small" />
+              <Field.Text name="primaryAddress" label="Primary Address" />
+              <Field.Text name="secondaryAddress" label="Address Line 2" />
+              <Field.Text name="city" label="City" />
+              <Field.Text name="state" label="State" />
+              <Field.Text name="zipCode" label="ZIP Code" />
+              <Field.Text name="assetId" label="Asset ID" />
             </Box>
           </Card>
 
@@ -182,7 +200,7 @@ export default function MemberCreateForm() {
           </Stack>
         </Grid>
         <Grid md={12} xl={6}>
-          <MemberWallets payouts={payouts} setData={setSubmitData} />
+          <MemberWallets payouts={payouts} />
         </Grid>
       </Grid>
     </Form>
