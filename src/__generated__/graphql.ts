@@ -262,6 +262,7 @@ export type MemberStatisticsWallet = {
   createdAt?: Maybe<Scalars['DateTimeISO']['output']>;
   deletedAt?: Maybe<Scalars['DateTimeISO']['output']>;
   id: Scalars['ID']['output'];
+  issuedAt: Scalars['DateTimeISO']['output'];
   memberStatistic?: Maybe<MemberStatistics>;
   memberStatisticId: Scalars['String']['output'];
   memberWallet?: Maybe<MemberWallet>;
