@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 
 import Paper from '@mui/material/Paper';
 import Drawer from '@mui/material/Drawer';
@@ -36,7 +36,7 @@ type Props = {
   setSelected: Function;
   onSelectRow: VoidFunction;
   setStatisticsId: Function;
-  updateStatistics: Function;
+  confirmStatistics: Function;
 };
 
 export default function StatisticsTableRow({
@@ -48,7 +48,7 @@ export default function StatisticsTableRow({
   setSelected,
   onSelectRow,
   memberStatistics,
-  updateStatistics,
+  confirmStatistics,
   table,
 }: Props) {
   const {
@@ -71,12 +71,43 @@ export default function StatisticsTableRow({
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
+  const reward = useMemo(() => {
+    const rewardData = memberStatistics.reduce(
+      (prev: any, current) =>
+        current?.member?.memberWallets?.reduce(
+          (save: any, item: { address: any; percent: any }) =>
+            save && save[item?.address ?? '']
+              ? {
+                  ...save,
+                  [item?.address ?? '']: {
+                    ...save[item?.address ?? ''],
+                    txcShared:
+                      save[item?.address ?? ''].txcShared +
+                      ((item?.percent ?? 0) * current.txcShared) / 100,
+                  },
+                }
+              : {
+                  ...save,
+                  [item?.address ?? '']: {
+                    address: item?.address,
+                    txcShared: ((item?.percent ?? 0) * current.txcShared) / 100,
+                  },
+                },
+          prev
+        ),
+      {}
+    );
+
+    return Object.values(rewardData);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [memberStatistics]);
+
   const initial = ['sendmany "" "{'];
   const sendmany = [
     ...initial,
-    ...memberStatistics!.map(
-      (item, index) =>
-        `\\"${item?.member?.wallet}\\": ${item?.txcShared.toFixed(8)}${index === memberStatistics.length - 1 ? '}"' : ','}`
+    ...reward!.map(
+      (item: any, index) =>
+        `\\"${item?.address}\\": ${item?.txcShared.toFixed(8)}${index === reward.length - 1 ? '}"' : ','}`
     ),
   ];
 
@@ -252,11 +283,11 @@ export default function StatisticsTableRow({
           <Button
             variant="contained"
             color="error"
-            onClick={() => {
+            onClick={async () => {
               confirm.onFalse();
 
-              updateStatistics({
-                variables: { data: { id: statisticsId, status: true } },
+              await confirmStatistics({
+                variables: { data: { id: statisticsId } },
               });
 
               router.refresh();

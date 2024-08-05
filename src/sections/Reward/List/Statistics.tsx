@@ -35,8 +35,8 @@ import {
 
 import StatisticsTableRow from './StatisticsTableRow';
 import {
-  UPDATE_STATISTICS,
   REMOVE_STATISTICS,
+  CONFIRM_STATISTICS,
   FETCH_STATISTICS_QUERY,
   FETCH_MEMBERSTATISTICS_QUERY,
 } from '../query';
@@ -108,7 +108,7 @@ export default function StatisticsTable() {
     }
   );
 
-  const [updateStatistics] = useMutation(UPDATE_STATISTICS);
+  const [confirmStatistics] = useMutation(CONFIRM_STATISTICS);
 
   const [removeStatistics] = useMutation(REMOVE_STATISTICS, {
     awaitRefetchQueries: true,
@@ -203,7 +203,7 @@ export default function StatisticsTable() {
                           setStatisticsId={setStatisticsId}
                           onSelectRow={() => table.onSelectRow(row!.id)}
                           memberStatistics={memberStatistics!}
-                          updateStatistics={updateStatistics}
+                          confirmStatistics={confirmStatistics}
                         />
                       ))}
                     </TableBody>
