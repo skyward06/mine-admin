@@ -35,8 +35,8 @@ const NewMemberSchema = zod.object({
   city: zod.string({ required_error: 'City is required' }),
   zipCode: zod.string({ required_error: 'ZIPCode is required' }),
   state: zod.string({ required_error: 'State is required' }),
-  primaryAddress: zod.string({ required_error: 'Primary Address is required' }),
-  secondaryAddress: zod.string({ required_error: 'Secondary Address is required' }),
+  primaryAddress: zod.string({ required_error: 'Address is required' }),
+  secondaryAddress: zod.string({ required_error: 'Address Line 2 is required' }),
   sponsorId: zod.string().optional(),
   assetId: zod.string({ required_error: 'AssetID is required' }),
   wallets: zod.array(

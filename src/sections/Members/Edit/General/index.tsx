@@ -48,9 +48,9 @@ const MemberGeneralSchema = zod.object({
   city: zod.string({ required_error: 'City is required' }),
   zipCode: zod.string({ required_error: 'ZIPCode is required' }),
   state: zod.string({ required_error: 'State is required' }),
-  primaryAddress: zod.string({ required_error: 'Primary Address is required' }),
-  secondaryAddress: zod.string({ required_error: 'Secondary Address is required' }),
-  sponsorId: zod.string().optional(),
+  primaryAddress: zod.string({ required_error: 'Address is required' }),
+  secondaryAddress: zod.string({ required_error: 'Address Line 2 is required' }),
+  sponsorId: zod.string().optional().nullable(),
   assetId: zod.string({ required_error: 'AssetID is required' }),
   memberWallets: zod.array(
     zod.object({
@@ -117,6 +117,7 @@ export default function MemberGeneral({ currentMember }: Props) {
             sponsorId: member?.id,
             assetId: newMember.assetId,
             city: newMember.city,
+            state: newMember.state,
             zipCode: newMember.zipCode,
             wallets: newMember.memberWallets,
           },

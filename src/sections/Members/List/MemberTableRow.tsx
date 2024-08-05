@@ -109,7 +109,7 @@ export default function MemberTableRow({
           />
         </TableCell>
 
-        <TableCell>{sponsor?.username}</TableCell>
+        <TableCell>{sponsor?.fullName}</TableCell>
 
         <TableCell>{mobile}</TableCell>
 
