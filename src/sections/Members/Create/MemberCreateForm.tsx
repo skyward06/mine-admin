@@ -184,7 +184,7 @@ export default function MemberCreateForm() {
                   setMember({ id: value?.id ?? '', username: value?.username ?? '' });
                 }}
               />
-              <Field.Text name="primaryAddress" label="Primary Address" />
+              <Field.Text name="primaryAddress" label="Address" />
               <Field.Text name="secondaryAddress" label="Address Line 2" />
               <Field.Text name="city" label="City" />
               <Field.Text name="state" label="State" />

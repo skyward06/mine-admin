@@ -10,10 +10,8 @@ import { ApolloError, useMutation, useLazyQuery, useQuery as useGraphQuery } fro
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
-import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Autocomplete from '@mui/material/Autocomplete';
 
@@ -23,6 +21,7 @@ import { useRouter } from 'src/routes/hooks';
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
 
+import MemberWallets from './MemberWallets';
 import { UPDATE_MEMBER, FETCH_PAYOUTS_QUERY, FETCH_MEMBERS_QUERY } from '../../query';
 
 // ----------------------------------------------------------------------
@@ -46,11 +45,20 @@ const MemberGeneralSchema = zod.object({
     .string({ required_error: 'Email is required' })
     .email({ message: 'Invalid email address is provided' }),
   mobile: zod.string({ required_error: 'Mobile is required' }),
-  primaryAddress: zod.string({ required_error: 'Address is required' }),
-  secondaryAddress: zod.string().optional().nullable(),
-  payoutId: zod.string({ required_error: 'TXC Payout is required' }),
-  sponsorId: zod.string().optional().nullable(),
-  wallet: zod.string({ required_error: 'TXC Cold is required' }),
+  city: zod.string({ required_error: 'City is required' }),
+  zipCode: zod.string({ required_error: 'ZIPCode is required' }),
+  state: zod.string({ required_error: 'State is required' }),
+  primaryAddress: zod.string({ required_error: 'Primary Address is required' }),
+  secondaryAddress: zod.string({ required_error: 'Secondary Address is required' }),
+  sponsorId: zod.string().optional(),
+  assetId: zod.string({ required_error: 'AssetID is required' }),
+  memberWallets: zod.array(
+    zod.object({
+      payoutId: zod.string({ required_error: 'Payout is required' }),
+      address: zod.string({ required_error: 'Address is required' }),
+      percent: zod.number({ required_error: 'Percent is required' }),
+    })
+  ),
 });
 
 export default function MemberGeneral({ currentMember }: Props) {
@@ -107,7 +115,10 @@ export default function MemberGeneral({ currentMember }: Props) {
             primaryAddress: newMember.primaryAddress,
             secondaryAddress: newMember.secondaryAddress,
             sponsorId: member?.id,
-            assetId: newMember.wallet.substring(1, 7),
+            assetId: newMember.assetId,
+            city: newMember.city,
+            zipCode: newMember.zipCode,
+            wallets: newMember.memberWallets,
           },
         },
       });
@@ -139,14 +150,8 @@ export default function MemberGeneral({ currentMember }: Props) {
   return (
     <Form methods={methods} onSubmit={onSubmit}>
       <Grid container spacing={3}>
-        <Grid md={12}>
+        <Grid md={12} xl={6}>
           <Card sx={{ p: 3 }}>
-            <Stack spacing={1} sx={{ mb: 3 }}>
-              <Typography variant="subtitle2">Personal Information</Typography>
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                Personal information here.
-              </Typography>
-            </Stack>
             <Box
               rowGap={3}
               columnGap={2}
@@ -187,30 +192,28 @@ export default function MemberGeneral({ currentMember }: Props) {
                   </li>
                 )}
                 onInputChange={(_, username: string) => {
-                  setMember({ id: '', username });
+                  setMember({ id: currentMember?.sponsorId ?? '', username });
                 }}
                 onChange={(_, value) => {
                   setMember({ id: value?.id ?? '', username: value?.username ?? '' });
                 }}
               />
-              <Field.Text name="primaryAddress" label="Primay Address" />
+              <Field.Text name="primaryAddress" label="Address" />
               <Field.Text name="secondaryAddress" label="Address Line 2" />
-              <Field.Select name="payoutId" label="TXC Payout">
-                {payouts.map((option) => (
-                  <MenuItem key={option?.id} value={option?.id}>
-                    {option?.method}
-                  </MenuItem>
-                ))}
-              </Field.Select>
-              <Field.Text name="wallet" />
+              <Field.Text name="city" label="City" />
+              <Field.Text name="state" label="State" />
+              <Field.Text name="zipCode" label="ZIP Code" />
+              <Field.Text name="assetId" label="Asset ID" />
             </Box>
-
-            <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-              <LoadingButton type="submit" variant="contained" loading={loading}>
-                Save Changes
-              </LoadingButton>
-            </Stack>
           </Card>
+          <Stack alignItems="flex-start" sx={{ mt: 2 }}>
+            <LoadingButton type="submit" variant="contained" loading={loading}>
+              Save Changes
+            </LoadingButton>
+          </Stack>
+        </Grid>
+        <Grid md={12} xl={6}>
+          <MemberWallets payouts={payouts} wallets={currentMember?.memberWallets ?? []} />
         </Grid>
       </Grid>
     </Form>
