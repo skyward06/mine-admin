@@ -104,29 +104,38 @@ export default function MemberGeneral({ currentMember }: Props) {
         return;
       }
 
-      await submit({
-        variables: {
-          data: {
-            id: currentMember.id,
-            username: newMember.username,
-            email: newMember.email,
-            fullName: `${firstName} ${lastName}`,
-            mobile: newMember.mobile,
-            primaryAddress: newMember.primaryAddress,
-            secondaryAddress: newMember.secondaryAddress,
-            sponsorId: member?.id,
-            assetId: newMember.assetId,
-            city: newMember.city,
-            state: newMember.state,
-            zipCode: newMember.zipCode,
-            wallets: newMember.memberWallets,
+      const total = newMember.memberWallets.reduce(
+        (prev: number, save: any) => prev + save.percent,
+        0
+      );
+
+      if (total === 100) {
+        await submit({
+          variables: {
+            data: {
+              id: currentMember.id,
+              username: newMember.username,
+              email: newMember.email,
+              fullName: `${firstName} ${lastName}`,
+              mobile: newMember.mobile,
+              primaryAddress: newMember.primaryAddress,
+              secondaryAddress: newMember.secondaryAddress,
+              sponsorId: member?.id,
+              assetId: newMember.assetId,
+              city: newMember.city,
+              state: newMember.state,
+              zipCode: newMember.zipCode,
+              wallets: newMember.memberWallets,
+            },
           },
-        },
-      });
+        });
 
-      toast.success('Update success!');
+        toast.success('Update success!');
 
-      router.push(paths.dashboard.members.root);
+        router.push(paths.dashboard.members.root);
+      } else {
+        toast.warning('Sum of percent muse be 100%');
+      }
     } catch (err) {
       if (err instanceof ApolloError) {
         const [error] = err.graphQLErrors;
