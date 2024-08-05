@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useMemo, useEffect } from 'react';
 import { useMutation, useLazyQuery } from '@apollo/client';
 
 import Box from '@mui/material/Box';
@@ -13,6 +13,7 @@ import { useBoolean } from 'src/hooks/useBoolean';
 
 import { customizeDate } from 'src/utils/format-time';
 
+import { Iconify } from 'src/components/Iconify';
 import ComponentBlock from 'src/components/Component-Block';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { LoadingScreen } from 'src/components/loading-screen';
@@ -26,6 +27,7 @@ interface Props {
 
 export default function SendMany({ date, handleBack }: Props) {
   const router = useRouter();
+  const copy = useBoolean();
   const confirm = useBoolean();
 
   const [fetchMemberStatistics, { data }] = useLazyQuery(FETCH_MEMBERSTATISTICS_QUERY, {
@@ -36,12 +38,43 @@ export default function SendMany({ date, handleBack }: Props) {
 
   const memberStatistics = data?.memberStatistics.memberStatistics ?? [];
 
+  const reward = useMemo(() => {
+    const rewardData = memberStatistics.reduce(
+      (prev: any, row) =>
+        row?.member?.memberWallets?.reduce(
+          (save: any, item) =>
+            save && save[item?.address ?? '']
+              ? {
+                  ...save,
+                  [item?.address ?? '']: {
+                    ...save[item?.address ?? ''],
+                    txcShared:
+                      save[item?.address ?? ''].txcShared +
+                      ((item?.percent ?? 0) * row.txcShared) / 100,
+                  },
+                }
+              : {
+                  ...save,
+                  [item?.address ?? '']: {
+                    address: item?.address,
+                    txcShared: ((item?.percent ?? 0) * row.txcShared) / 100,
+                  },
+                },
+          prev
+        ),
+      {}
+    );
+
+    return Object.values(rewardData);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data?.memberStatistics]);
+
   const initial = ['sendmany "" "{'];
   const sendmany = [
     ...initial,
-    ...memberStatistics!.map(
-      (item, index) =>
-        `\\"${item?.member?.assetId}\\": ${item?.txcShared}${index === memberStatistics.length - 1 ? '}"' : ','}`
+    ...reward!.map(
+      (item: any, index) =>
+        `\\"${item?.address}\\": ${item?.txcShared}${index === reward.length - 1 ? '}"' : ','}`
     ),
   ];
 
@@ -55,6 +88,23 @@ export default function SendMany({ date, handleBack }: Props) {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
+
+  useEffect(() => {
+    if (copy.value) {
+      setTimeout(() => {
+        copy.onFalse();
+      }, 3000);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [copy]);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(sendmany.join('\n'));
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+    }
+  };
 
   return (
     <>
@@ -83,6 +133,19 @@ export default function SendMany({ date, handleBack }: Props) {
 
       <Stack direction="row" sx={{ mt: 3 }}>
         <Box sx={{ flexGrow: 1 }} />
+        <Button
+          variant="contained"
+          sx={{ mr: 2 }}
+          onClick={() => {
+            handleCopy();
+            copy.onTrue();
+          }}
+          startIcon={
+            copy.value ? <Iconify icon="mingcute:check-fill" /> : <Iconify icon="bxs:copy" />
+          }
+        >
+          {copy.value ? 'Copied' : 'Copy'}
+        </Button>
         <Button color="inherit" onClick={() => handleBack()} sx={{ mr: 1 }}>
           Back
         </Button>

@@ -56,7 +56,7 @@ export default function SelectedSales({
     () =>
       selected
         ? selected?.reduce(
-            (prev, { member: { id, username, email, wallet }, package: product, status }) => {
+            (prev, { member: { id, username, email }, package: product, status }) => {
               const hashPower = (prev[id]?.hashPower || 0) + product.token;
               const percent = hashPower / totalHashPower;
 
@@ -69,7 +69,7 @@ export default function SelectedSales({
                   hashPower,
                   percent: Number((percent * 100).toFixed(2)),
                   txcShared: fLimitDigits(blocks * 254 * percent, 8),
-                  wallet,
+
                   status,
                   memberId: id,
                   issuedAt: customizeDate(date),
@@ -132,7 +132,7 @@ export default function SelectedSales({
                 : memberStatisticsRef.current;
 
             const mutation = memberStatistics?.map(
-              ({ username, email, wallet, status, id, issuedAt, ...rest }) => rest
+              ({ username, email, status, id, issuedAt, ...rest }) => rest
             );
 
             handleCreate(mutation);

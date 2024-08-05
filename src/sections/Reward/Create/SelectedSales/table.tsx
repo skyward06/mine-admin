@@ -37,13 +37,6 @@ const columns: GridColDef[] = [
     renderCell: (params) => Number(params.row.txcShared),
   },
   {
-    field: 'txcCold',
-    width: 400,
-    headerName: 'TXC Cold',
-    filterable: false,
-    renderCell: (params) => params.row.wallet,
-  },
-  {
     field: 'status',
     flex: 1,
     headerName: 'Status',
@@ -107,6 +100,8 @@ export default function MemberStatisticsTable({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [data]
   );
+
+  console.log('data => ', data);
 
   return (
     <Card sx={{ pt: 2 }}>
