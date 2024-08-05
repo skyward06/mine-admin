@@ -73,6 +73,14 @@ export const FETCH_MEMBERSTATISTICS_QUERY = gql(/* GraphQL */ `
   }
 `);
 
+export const CONFIRM_STATISTICS = gql(/* GraphQL */ `
+  mutation ConfirmStatistics($data: IDInput!) {
+    confirmStatistics(data: $data) {
+      id
+    }
+  }
+`);
+
 export const CREATE_STATISTICS = gql(/* GraphQL */ `
   mutation CreateStatistics($data: CreateStatisticsInput!) {
     createStatistics(data: $data) {

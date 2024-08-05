@@ -17,7 +17,7 @@ import ComponentBlock from 'src/components/Component-Block';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { LoadingScreen } from 'src/components/loading-screen';
 
-import { UPDATE_STATISTICS, FETCH_MEMBERSTATISTICS_QUERY } from '../../query';
+import { CONFIRM_STATISTICS, FETCH_MEMBERSTATISTICS_QUERY } from '../../query';
 
 interface Props {
   date: Date;
@@ -32,7 +32,7 @@ export default function SendMany({ date, handleBack }: Props) {
     variables: { filter: { issuedAt: customizeDate(date) } },
   });
 
-  const [updateStatistics] = useMutation(UPDATE_STATISTICS);
+  const [confirmStatistics] = useMutation(CONFIRM_STATISTICS);
 
   const memberStatistics = data?.memberStatistics.memberStatistics ?? [];
 
@@ -104,8 +104,8 @@ export default function SendMany({ date, handleBack }: Props) {
               confirm.onFalse();
 
               if (memberStatistics.length) {
-                await updateStatistics({
-                  variables: { data: { id: memberStatistics[0]!.statisticsId, status: true } },
+                await confirmStatistics({
+                  variables: { data: { id: memberStatistics[0]!.statisticsId } },
                 });
               }
 
