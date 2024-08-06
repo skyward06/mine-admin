@@ -26,7 +26,7 @@ const columns: GridColDef[] = [
     flex: 1,
     headerName: 'Percent',
     filterable: false,
-    renderCell: (params) => `${params.row.percent} %`,
+    renderCell: (params) => `${params.row.percent / 100} %`,
   },
   {
     field: 'txcShared',
