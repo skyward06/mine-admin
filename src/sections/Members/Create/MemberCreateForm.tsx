@@ -111,7 +111,10 @@ export default function MemberCreateForm() {
               ...data,
               fullName: `${firstName} ${lastName}`,
               sponsorId: member?.id,
-              wallets,
+              wallets: wallets.map(({ percent, ...rest }) => ({
+                percent: percent * 100,
+                ...rest,
+              })),
             },
           },
         });
