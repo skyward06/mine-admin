@@ -7,11 +7,9 @@ import { useMemo, useState, useEffect } from 'react';
 import { useMutation, useLazyQuery, useQuery as useGraphQuery } from '@apollo/client';
 
 import Card from '@mui/material/Card';
-import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
-import Skeleton from '@mui/material/Skeleton';
 import Grid from '@mui/material/Unstable_Grid2';
 import TableBody from '@mui/material/TableBody';
 import IconButton from '@mui/material/IconButton';
@@ -28,6 +26,7 @@ import { ScrollBar } from 'src/components/ScrollBar';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import {
   useTable,
+  TableSkeleton,
   TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
@@ -162,52 +161,55 @@ export default function StatisticsTable() {
 
             <ScrollBar>
               <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+                <TableHeadCustom
+                  order={sort && sort[Object.keys(sort)[0]]}
+                  orderBy={sort && Object.keys(sort)[0]}
+                  headLabel={TABLE_HEAD}
+                  rowCount={loading ? 0 : statistics!.length}
+                  numSelected={table.selected.length}
+                  onSort={(id) => {
+                    const isAsc = sort && sort[id] === 'asc';
+                    const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
+                    setQuery({ ...query, sort: newSort });
+                  }}
+                  onSelectAllRows={(checked) =>
+                    table.onSelectAllRows(
+                      checked,
+                      statistics!.map((row) => row!.id)
+                    )
+                  }
+                />
                 {loading ? (
-                  <Paper sx={{ display: 'block', width: '95%', margin: 'auto' }}>
-                    <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
-                    <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
-                    <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
-                    <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
-                    <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
-                  </Paper>
-                ) : (
                   <>
-                    <TableHeadCustom
-                      order={sort && sort[Object.keys(sort)[0]]}
-                      orderBy={sort && Object.keys(sort)[0]}
-                      headLabel={TABLE_HEAD}
-                      rowCount={loading ? 0 : statistics!.length}
-                      numSelected={table.selected.length}
-                      onSort={(id) => {
-                        const isAsc = sort && sort[id] === 'asc';
-                        const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
-                        setQuery({ ...query, sort: newSort });
-                      }}
-                      onSelectAllRows={(checked) =>
-                        table.onSelectAllRows(
-                          checked,
-                          statistics!.map((row) => row!.id)
-                        )
-                      }
-                    />
-                    <TableBody>
-                      {statistics!.map((row) => (
-                        <StatisticsTableRow
-                          key={row!.id}
-                          row={row!}
-                          confirm={confirm}
-                          selected={table.selected.includes(row!.id)}
-                          setSelected={setSelected}
-                          statisticsId={statisticsId}
-                          table={table}
-                          setStatisticsId={setStatisticsId}
-                          onSelectRow={() => table.onSelectRow(row!.id)}
-                          memberStatistics={memberStatistics!}
-                          confirmStatistics={confirmStatistics}
-                        />
-                      ))}
-                    </TableBody>
+                    <TableSkeleton height={24} />
+                    <TableSkeleton height={24} />
+                    <TableSkeleton height={24} />
+                    <TableSkeleton height={24} />
+                    <TableSkeleton height={24} />
+                    <TableSkeleton height={24} />
+                    <TableSkeleton height={24} />
+                    <TableSkeleton height={24} />
+                    <TableSkeleton height={24} />
+                    <TableSkeleton height={24} />
                   </>
+                ) : (
+                  <TableBody>
+                    {statistics!.map((row) => (
+                      <StatisticsTableRow
+                        key={row!.id}
+                        row={row!}
+                        confirm={confirm}
+                        selected={table.selected.includes(row!.id)}
+                        setSelected={setSelected}
+                        statisticsId={statisticsId}
+                        table={table}
+                        setStatisticsId={setStatisticsId}
+                        onSelectRow={() => table.onSelectRow(row!.id)}
+                        memberStatistics={memberStatistics!}
+                        confirmStatistics={confirmStatistics}
+                      />
+                    ))}
+                  </TableBody>
                 )}
               </Table>
             </ScrollBar>

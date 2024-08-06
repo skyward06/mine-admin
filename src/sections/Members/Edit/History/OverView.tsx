@@ -34,7 +34,7 @@ export const OverView = () => {
         </Stack>
 
         <Stack width={1}>
-          {fNumber(data?.memberOverview.totalTXCShared ?? 0)}
+          {fNumber((data?.memberOverview.totalTXCShared ?? 0) / 10 ** 8)}
           <Box component="span" sx={{ color: 'text.secondary', typography: 'body2' }}>
             Total TXC Reward
           </Box>

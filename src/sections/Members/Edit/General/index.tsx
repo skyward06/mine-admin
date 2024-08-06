@@ -125,7 +125,10 @@ export default function MemberGeneral({ currentMember }: Props) {
               city: newMember.city,
               state: newMember.state,
               zipCode: newMember.zipCode,
-              wallets: newMember.memberWallets,
+              wallets: newMember.memberWallets.map(({ percent, ...rest }) => ({
+                percent: percent * 100,
+                ...rest,
+              })),
             },
           },
         });

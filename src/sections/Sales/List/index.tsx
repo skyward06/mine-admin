@@ -7,11 +7,9 @@ import { useMutation, useQuery as useGraphQuery } from '@apollo/client';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
-import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
 import { alpha } from '@mui/material/styles';
-import Skeleton from '@mui/material/Skeleton';
 import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
@@ -35,6 +33,7 @@ import { LoadingScreen } from 'src/components/loading-screen';
 import {
   useTable,
   TableNoData,
+  TableSkeleton,
   TableHeadCustom,
   TablePaginationCustom,
 } from 'src/components/Table';
@@ -209,40 +208,43 @@ export default function SaleListView() {
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <ScrollBar>
             <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+              <TableHeadCustom
+                order={sort && sort[Object.keys(sort)[0]]}
+                orderBy={sort && Object.keys(sort)[0]}
+                headLabel={TABLE_HEAD}
+                rowCount={loading ? 0 : tableData!.sales!.length}
+                onSort={(id) => {
+                  const isAsc = sort && sort[id] === 'asc';
+                  const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
+                  setQuery({ ...query, sort: newSort });
+                }}
+              />
               {loading ? (
-                <Paper sx={{ display: 'block', width: '95%', margin: 'auto' }}>
-                  <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
-                  <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
-                  <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
-                  <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
-                  <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
-                </Paper>
-              ) : (
                 <>
-                  <TableHeadCustom
-                    order={sort && sort[Object.keys(sort)[0]]}
-                    orderBy={sort && Object.keys(sort)[0]}
-                    headLabel={TABLE_HEAD}
-                    rowCount={loading ? 0 : tableData!.sales!.length}
-                    onSort={(id) => {
-                      const isAsc = sort && sort[id] === 'asc';
-                      const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
-                      setQuery({ ...query, sort: newSort });
-                    }}
-                  />
-                  <TableBody>
-                    {tableData!.sales!.map((row) => (
-                      <SaleTableRow
-                        key={row!.id}
-                        row={row!}
-                        confirm={confirm}
-                        setSelected={setSelected}
-                      />
-                    ))}
-
-                    <TableNoData notFound={notFound} />
-                  </TableBody>
+                  <TableSkeleton height={26} />
+                  <TableSkeleton height={26} />
+                  <TableSkeleton height={26} />
+                  <TableSkeleton height={26} />
+                  <TableSkeleton height={26} />
+                  <TableSkeleton height={26} />
+                  <TableSkeleton height={26} />
+                  <TableSkeleton height={26} />
+                  <TableSkeleton height={26} />
+                  <TableSkeleton height={26} />
                 </>
+              ) : (
+                <TableBody>
+                  {tableData!.sales!.map((row) => (
+                    <SaleTableRow
+                      key={row!.id}
+                      row={row!}
+                      confirm={confirm}
+                      setSelected={setSelected}
+                    />
+                  ))}
+
+                  <TableNoData notFound={notFound} />
+                </TableBody>
               )}
             </Table>
           </ScrollBar>

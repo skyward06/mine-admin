@@ -41,7 +41,7 @@ export const Reward = () => {
             series: [
               {
                 name: 'TXC Shared',
-                data: memberStatistics.map((item) => Number(item?.txcShared.toFixed(3))).reverse(),
+                data: memberStatistics.map((item) => (item?.txcShared ?? 0) / 10 ** 8).reverse(),
               },
               {
                 name: 'Hash Power',

@@ -8,10 +8,8 @@ import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
-import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import { alpha } from '@mui/material/styles';
-import Skeleton from '@mui/material/Skeleton';
 import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -35,6 +33,7 @@ import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import {
   useTable,
   TableNoData,
+  TableSkeleton,
   TableHeadCustom,
   TablePaginationCustom,
 } from 'src/components/Table';
@@ -205,41 +204,44 @@ export default function MemberListView() {
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <ScrollBar>
             <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+              <TableHeadCustom
+                order={sort && sort[Object.keys(sort)[0]]}
+                orderBy={sort && Object.keys(sort)[0]}
+                headLabel={TABLE_HEAD}
+                rowCount={loading ? 0 : tableData!.members!.length}
+                onSort={(id) => {
+                  const isAsc = sort && sort[id] === 'asc';
+                  const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
+                  setQuery({ ...query, sort: newSort });
+                }}
+              />
               {loading ? (
-                <Paper sx={{ display: 'block', width: '95%', margin: 'auto' }}>
-                  <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
-                  <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
-                  <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
-                  <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
-                  <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
-                </Paper>
-              ) : (
                 <>
-                  <TableHeadCustom
-                    order={sort && sort[Object.keys(sort)[0]]}
-                    orderBy={sort && Object.keys(sort)[0]}
-                    headLabel={TABLE_HEAD}
-                    rowCount={loading ? 0 : tableData!.members!.length}
-                    onSort={(id) => {
-                      const isAsc = sort && sort[id] === 'asc';
-                      const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
-                      setQuery({ ...query, sort: newSort });
-                    }}
-                  />
-                  <TableBody>
-                    {tableData!.members!.map((row) => (
-                      <MemberTableRow
-                        key={row!.id}
-                        row={row!}
-                        selected={table.selected.includes(row!.id)}
-                        confirm={confirm}
-                        setSelected={setSelected}
-                      />
-                    ))}
-
-                    <TableNoData notFound={notFound} />
-                  </TableBody>
+                  <TableSkeleton height={26} />
+                  <TableSkeleton height={26} />
+                  <TableSkeleton height={26} />
+                  <TableSkeleton height={26} />
+                  <TableSkeleton height={26} />
+                  <TableSkeleton height={26} />
+                  <TableSkeleton height={26} />
+                  <TableSkeleton height={26} />
+                  <TableSkeleton height={26} />
+                  <TableSkeleton height={26} />
                 </>
+              ) : (
+                <TableBody>
+                  {tableData!.members!.map((row) => (
+                    <MemberTableRow
+                      key={row!.id}
+                      row={row!}
+                      selected={table.selected.includes(row!.id)}
+                      confirm={confirm}
+                      setSelected={setSelected}
+                    />
+                  ))}
+
+                  <TableNoData notFound={notFound} />
+                </TableBody>
               )}
             </Table>
           </ScrollBar>

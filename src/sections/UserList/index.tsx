@@ -8,11 +8,9 @@ import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
-import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import { alpha } from '@mui/material/styles';
-import Skeleton from '@mui/material/Skeleton';
 import TableBody from '@mui/material/TableBody';
 import IconButton from '@mui/material/IconButton';
 import TableContainer from '@mui/material/TableContainer';
@@ -35,6 +33,7 @@ import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import {
   useTable,
   TableNoData,
+  TableSkeleton,
   TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
@@ -116,7 +115,7 @@ const REMOVE_USERS = gql(/* GraphQL */ `
 // ----------------------------------------------------------------------
 
 export default function UserListView() {
-  const table = useTable();
+  const table = useTable({ defaultDense: true });
 
   const router = useRouter();
 
@@ -266,47 +265,45 @@ export default function UserListView() {
 
           <ScrollBar>
             <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+              <TableHeadCustom
+                order={sort && sort[Object.keys(sort)[0]]}
+                orderBy={sort && Object.keys(sort)[0]}
+                headLabel={TABLE_HEAD}
+                rowCount={loading ? 0 : tableData!.admins!.length}
+                numSelected={table.selected.length}
+                onSort={(id) => {
+                  const isAsc = sort && sort[id] === 'asc';
+                  const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
+                  setQuery({ ...query, sort: newSort });
+                }}
+                onSelectAllRows={(checked) =>
+                  table.onSelectAllRows(
+                    checked,
+                    tableData!.admins!.map((row) => row!.id)
+                  )
+                }
+              />
               {loading ? (
-                <Paper sx={{ display: 'block', width: '95%', margin: 'auto' }}>
-                  <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
-                  <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
-                  <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
-                  <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
-                  <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
-                </Paper>
-              ) : (
                 <>
-                  <TableHeadCustom
-                    order={sort && sort[Object.keys(sort)[0]]}
-                    orderBy={sort && Object.keys(sort)[0]}
-                    headLabel={TABLE_HEAD}
-                    rowCount={loading ? 0 : tableData!.admins!.length}
-                    numSelected={table.selected.length}
-                    onSort={(id) => {
-                      const isAsc = sort && sort[id] === 'asc';
-                      const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
-                      setQuery({ ...query, sort: newSort });
-                    }}
-                    onSelectAllRows={(checked) =>
-                      table.onSelectAllRows(
-                        checked,
-                        tableData!.admins!.map((row) => row!.id)
-                      )
-                    }
-                  />
-                  <TableBody>
-                    {tableData!.admins!.map((row) => (
-                      <UserTableRow
-                        key={row!.id}
-                        row={row!}
-                        selected={table.selected.includes(row!.id)}
-                        onSelectRow={() => table.onSelectRow(row!.id)}
-                      />
-                    ))}
-
-                    <TableNoData notFound={notFound} />
-                  </TableBody>
+                  <TableSkeleton />
+                  <TableSkeleton />
+                  <TableSkeleton />
+                  <TableSkeleton />
+                  <TableSkeleton />
                 </>
+              ) : (
+                <TableBody>
+                  {tableData!.admins!.map((row) => (
+                    <UserTableRow
+                      key={row!.id}
+                      row={row!}
+                      selected={table.selected.includes(row!.id)}
+                      onSelectRow={() => table.onSelectRow(row!.id)}
+                    />
+                  ))}
+
+                  <TableNoData notFound={notFound} />
+                </TableBody>
               )}
             </Table>
           </ScrollBar>

@@ -139,8 +139,8 @@ export default function StatisticsTableRow({
         <TableCell>{totalBlocks}</TableCell>
         <TableCell>{totalHashPower}</TableCell>
         <TableCell>{totalMembers}</TableCell>
-        <TableCell>{txcShared}</TableCell>
-        <TableCell>{newBlocks * 254 - txcShared}</TableCell>
+        <TableCell>{txcShared / 10 ** 8}</TableCell>
+        <TableCell>{newBlocks * 254 - txcShared / 10 ** 8}</TableCell>
 
         <TableCell>
           <ListItemText
