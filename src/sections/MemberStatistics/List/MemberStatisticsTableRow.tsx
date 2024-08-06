@@ -13,14 +13,13 @@ type Props = {
 };
 
 export default function MemberStatisticsTableRow({ row, selected }: Props) {
-  const { issuedAt, member, hashPower, txcShared, percent } = row;
+  const { issuedAt, hashPower, txcShared, percent } = row;
   return (
     <TableRow hover selected={selected}>
       <TableCell>{formatDate(issuedAt)}</TableCell>
-      <TableCell>{member?.assetId}</TableCell>
       <TableCell>{hashPower}</TableCell>
-      <TableCell>{txcShared}</TableCell>
-      <TableCell>{percent.toFixed(2)} %</TableCell>
+      <TableCell>{txcShared / 10 ** 8}</TableCell>
+      <TableCell>{percent / 100} %</TableCell>
     </TableRow>
   );
 }
