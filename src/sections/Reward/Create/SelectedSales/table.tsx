@@ -34,7 +34,7 @@ const columns: GridColDef[] = [
     headerName: 'TXC Shared',
     editable: true,
     filterable: false,
-    renderCell: (params) => Number(params.row.txcShared),
+    renderCell: (params) => (params.row.txcShared ?? 0) / 10 ** 8,
   },
   {
     field: 'status',
@@ -75,7 +75,7 @@ export default function MemberStatisticsTable({
   const [totalTXC, setTotalTXC] = useState<number>(0);
 
   const estimated = blocks * 254;
-  const diff = (estimated - totalTXC).toFixed(8);
+  const diff = (estimated - totalTXC / 10 ** 8).toFixed(8);
 
   const memberStatisticsData = data?.reduce(
     (prev, { memberId, ...rest }) => ({ ...prev, [memberId]: { memberId, ...rest } }),
@@ -100,8 +100,6 @@ export default function MemberStatisticsTable({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [data]
   );
-
-  console.log('data => ', data);
 
   return (
     <Card sx={{ pt: 2 }}>
@@ -131,7 +129,7 @@ export default function MemberStatisticsTable({
             <Typography sx={{ mr: 5 }}>{estimated}</Typography>
 
             <Typography color="grey">TXC to reward:</Typography>
-            <Typography sx={{ mr: 5 }}>{Number(totalTXC.toFixed(8))}</Typography>
+            <Typography sx={{ mr: 5 }}>{totalTXC / 10 ** 8}</Typography>
 
             <Typography color="grey">Diff:</Typography>
             <Typography sx={{ mr: 20 }} color={Number(diff) > 0 ? 'blue' : 'red'}>

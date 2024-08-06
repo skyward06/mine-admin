@@ -83,14 +83,14 @@ export default function StatisticsTableRow({
                     ...save[item?.address ?? ''],
                     txcShared:
                       save[item?.address ?? ''].txcShared +
-                      ((item?.percent ?? 0) * current.txcShared) / 100,
+                      ((item?.percent ?? 0) * current.txcShared) / 10000,
                   },
                 }
               : {
                   ...save,
                   [item?.address ?? '']: {
                     address: item?.address,
-                    txcShared: ((item?.percent ?? 0) * current.txcShared) / 100,
+                    txcShared: ((item?.percent ?? 0) * current.txcShared) / 10000,
                   },
                 },
           prev
@@ -107,7 +107,7 @@ export default function StatisticsTableRow({
     ...initial,
     ...reward!.map(
       (item: any, index) =>
-        `\\"${item?.address}\\": ${item?.txcShared.toFixed(8)}${index === reward.length - 1 ? '}"' : ','}`
+        `\\"${item?.address}\\": ${(item?.txcShared ?? 0) / 10 ** 8}${index === reward.length - 1 ? '}"' : ','}`
     ),
   ];
 

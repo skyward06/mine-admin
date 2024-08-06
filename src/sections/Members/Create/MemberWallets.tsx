@@ -63,16 +63,17 @@ export default function MemberWallets({ payouts }: Props) {
               InputLabelProps={{ shrink: true }}
               sx={{ width: 200 }}
             />
-          </Stack>
 
-          <Button
-            size="small"
-            color="error"
-            startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
-            onClick={() => handleRemove(index)}
-          >
-            Remove
-          </Button>
+            <Button
+              size="small"
+              color="error"
+              sx={{ mt: 1.5 }}
+              startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
+              onClick={() => handleRemove(index)}
+            >
+              Remove
+            </Button>
+          </Stack>
         </Stack>
       ))}
       <Divider flexItem sx={{ borderStyle: 'dashed', mb: 1 }} />

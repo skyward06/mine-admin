@@ -68,8 +68,7 @@ export default function SelectedSales({
                   email,
                   hashPower,
                   percent: Number((percent * 100).toFixed(2)),
-                  txcShared: fLimitDigits(blocks * 254 * percent, 8),
-
+                  txcShared: fLimitDigits(blocks * 254 * percent, 8) * 10 ** 8,
                   status,
                   memberId: id,
                   issuedAt: customizeDate(date),
@@ -99,7 +98,7 @@ export default function SelectedSales({
             saleIds: ids,
             totalMembers: mutation.length,
             totalHashPower,
-            txcShared: Math.floor(txcShared * 10 ** 8),
+            txcShared,
             issuedAt: customizeDate(date),
           },
         },
@@ -132,10 +131,7 @@ export default function SelectedSales({
                 : memberStatisticsRef.current;
 
             const mutation = memberStatistics?.map(
-              ({ username, email, status, id, issuedAt, txcShared, ...rest }) => ({
-                txcShared: txcShared * 10 ** 8,
-                ...rest,
-              })
+              ({ username, email, status, id, issuedAt, ...rest }) => rest
             );
 
             handleCreate(mutation);
