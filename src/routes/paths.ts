@@ -6,8 +6,8 @@ const ROOTS = {
   STATISTICS: '/statistics',
   SALES: '/sales',
   MEMBERS: '/members',
+  PRODUCTS: '/products',
   REWARD: '/reward',
-  PRODUCT: '/products',
   USERS: '/users',
 };
 
@@ -41,17 +41,17 @@ export const paths = {
       edit: (id: string) => `${ROOTS.SALES}/${id}`,
       new: `${ROOTS.SALES}/new`,
     },
+    products: {
+      root: ROOTS.PRODUCTS,
+      edit: (id: string) => `${ROOTS.PRODUCTS}/new/${id}`,
+      new: `${ROOTS.PRODUCTS}/new`,
+    },
     reward: {
       root: ROOTS.REWARD,
       new: `${ROOTS.REWARD}/new`,
       edit: (id: string) => `${ROOTS.REWARD}/new/${id}`,
       detail: (id: string) => `${ROOTS.REWARD}/${id}`,
       view: (id: string) => `${ROOTS.REWARD}/statistics/${id}`,
-    },
-    products: {
-      root: ROOTS.PRODUCT,
-      edit: (id: string) => `${ROOTS.PRODUCT}/new/${id}`,
-      new: `${ROOTS.PRODUCT}/new`,
     },
   },
   notFound: '/404',
