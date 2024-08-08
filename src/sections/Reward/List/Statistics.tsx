@@ -41,11 +41,11 @@ import {
 } from '../query';
 
 const TABLE_HEAD = [
-  { id: 'issuedAt', label: 'Date', sortable: true },
-  { id: 'newBlocks', label: 'New Blocks', sortable: true },
-  { id: 'totalBlocks', label: 'Total Blocks', sortable: true },
-  { id: 'totalHashPower', label: 'Total Hash Power', sortable: true },
-  { id: 'totalMembers', label: 'Total Members', sortable: true },
+  { id: 'issuedAt', label: 'Date', width: 130, sortable: true },
+  { id: 'newBlocks', label: 'New Blocks', width: 120, sortable: true },
+  { id: 'totalBlocks', label: 'Total Blocks', width: 120, sortable: true },
+  { id: 'totalHashPower', label: 'Total Hash Power', width: 150, sortable: true },
+  { id: 'totalMembers', label: 'Total Members', width: 140, sortable: true },
   { id: 'txcShared', label: 'TXC Shared', sortable: true },
   { id: 'diff', label: 'Diff', sortable: true },
   { id: 'from', label: 'From', sortable: true },

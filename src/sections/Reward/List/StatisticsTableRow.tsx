@@ -140,7 +140,7 @@ export default function StatisticsTableRow({
         <TableCell>{totalHashPower}</TableCell>
         <TableCell>{totalMembers}</TableCell>
         <TableCell>{txcShared / 10 ** 8}</TableCell>
-        <TableCell>{newBlocks * 254 - txcShared / 10 ** 8}</TableCell>
+        <TableCell>{(newBlocks * 254 - txcShared / 10 ** 8).toFixed(8)}</TableCell>
 
         <TableCell>
           <ListItemText
