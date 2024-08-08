@@ -1,8 +1,8 @@
-import SaleEditView from 'src/sections/Sales/Edit';
+import ProductEditView from 'src/sections/Products/Edit';
 // ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
 
-export default function SaleEditPage() {
-  return <SaleEditView />;
+export default function ProductEditPage() {
+  return <ProductEditView />;
 }

@@ -4,7 +4,7 @@ import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 
-import ProductCreateForm from './ProductCreateForm';
+import ProductCreateForm from '../EditForm';
 
 // ----------------------------------------------------------------------
 

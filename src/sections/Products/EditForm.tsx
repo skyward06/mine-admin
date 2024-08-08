@@ -1,5 +1,7 @@
+import type { Package } from 'src/__generated__/graphql';
+
 import { z as zod } from 'zod';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ApolloError, useMutation } from '@apollo/client';
@@ -18,32 +20,46 @@ import { useRouter } from 'src/routes/hooks';
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
 
-import { CREATE_PACKAGE } from '../query';
+import { CREATE_PACKAGE, UPDATE_PACKAGE } from './query';
 
 // ----------------------------------------------------------------------
-export type NewProductSchemaType = zod.infer<typeof NewProductSchema>;
 
-const NewProductSchema = zod.object({
-  amount: zod.number({ required_error: 'Amount is required' }),
-  token: zod.number({ required_error: 'Hash Power is required' }),
-  productName: zod.string({ required_error: 'Payment Method is required' }),
-  status: zod.number({ required_error: 'Status is required' }).default(1),
-});
+interface Props {
+  current?: Package;
+}
 
-export default function ProductCreateForm() {
+export default function EditForm({ current }: Props) {
+  const [status, setStatus] = useState(current?.status ?? true);
+
+  const NewProductSchema = zod.object({
+    amount: zod.number({ required_error: 'Amount is required' }),
+    token: zod.number({ required_error: 'Hash Power is required' }),
+    productName: zod.string({ required_error: 'Payment Method is required' }),
+    status: current
+      ? zod.boolean({ required_error: 'Status is required' }).default(true)
+      : zod.number({ required_error: 'Status is required' }).default(1),
+  });
+
+  type NewProductSchemaType = zod.infer<typeof NewProductSchema>;
+
   const router = useRouter();
 
   const defaultValues = useMemo(
-    () => ({
-      productName: '',
-      amount: 0,
-      token: 0,
-      status: 1,
-    }),
-    []
+    () =>
+      current
+        ? NewProductSchema.safeParse(current)?.data ?? ({} as NewProductSchemaType)
+        : {
+            productName: '',
+            amount: 0,
+            token: 0,
+            status: 1,
+          },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [current]
   );
 
-  const [submit, { loading }] = useMutation(CREATE_PACKAGE);
+  const [create, { loading }] = useMutation(CREATE_PACKAGE);
+  const [update, { loading: updateLoading }] = useMutation(UPDATE_PACKAGE);
 
   const methods = useForm<NewProductSchemaType>({
     resolver: zodResolver(NewProductSchema),
@@ -52,20 +68,32 @@ export default function ProductCreateForm() {
 
   const { reset, setError, handleSubmit } = methods;
 
-  const onSubmit = handleSubmit(async ({ status, ...data }) => {
+  const onSubmit = handleSubmit(async (newData) => {
     try {
-      await submit({
-        variables: {
-          data: {
-            ...data,
-            status: !!status,
+      if (current) {
+        await update({
+          variables: {
+            data: {
+              ...newData,
+              id: current.id,
+              status,
+            },
           },
-        },
-      });
+        });
+      } else {
+        await create({
+          variables: {
+            data: {
+              ...newData,
+              status,
+            },
+          },
+        });
 
-      reset();
+        reset();
+      }
 
-      toast.success('Create success!');
+      toast.success(`${current ? 'Update' : 'Create'} success!`);
 
       router.push(paths.dashboard.products.root);
     } catch (err) {
@@ -99,16 +127,27 @@ export default function ProductCreateForm() {
             >
               <Field.Text name="productName" label="Product Name" />
               <Field.Text name="amount" type="number" label="Amount" />
-              <Field.Text name="hashPower" type="number" label="Hash Power" />
-              <Field.Select name="status" label="Status">
+              <Field.Text name="token" type="number" label="Hash Power" />
+              <Field.Select
+                name="status"
+                label="Status"
+                value={status ? 1 : 0}
+                onChange={(e) =>
+                  Number(e.target.value) === 1 ? setStatus(true) : setStatus(false)
+                }
+              >
                 <MenuItem value={1}>Active</MenuItem>
                 <MenuItem value={0}>Inactive</MenuItem>
               </Field.Select>
             </Box>
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-              <LoadingButton type="submit" variant="contained" loading={loading}>
-                Create Product
+              <LoadingButton
+                type="submit"
+                variant="contained"
+                loading={current ? updateLoading : loading}
+              >
+                {current ? 'Edit' : 'Create'}
               </LoadingButton>
             </Stack>
           </Card>
