@@ -76,7 +76,7 @@ export default function SaleTableRow({ row, confirm, setSelected }: Props) {
           }}
         />
       </TableCell>
-      <TableCell align="center">
+      <TableCell align="center" sx={{ whiteSpace: 'nowrap' }}>
         <Tooltip title="Edit" placement="top" arrow>
           <IconButton
             onClick={() => {

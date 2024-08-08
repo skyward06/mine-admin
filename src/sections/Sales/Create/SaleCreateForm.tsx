@@ -23,8 +23,9 @@ import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
 
 import { FETCH_MEMBERS_QUERY } from 'src/sections/Members/query';
+import { FETCH_PACKAGES_QUERY } from 'src/sections/Products/query';
 
-import { CREATE_SALE, FETCH_SALES_QUERY, FETCH_PACKAGES_QUERY } from '../query';
+import { CREATE_SALE, FETCH_SALES_QUERY } from '../query';
 
 // ----------------------------------------------------------------------
 export type NewSaleSchemaType = zod.infer<typeof NewSaleSchema>;
