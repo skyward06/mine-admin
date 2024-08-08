@@ -43,7 +43,7 @@ export const paths = {
     },
     products: {
       root: ROOTS.PRODUCTS,
-      edit: (id: string) => `${ROOTS.PRODUCTS}/new/${id}`,
+      edit: (id: string) => `${ROOTS.PRODUCTS}/${id}`,
       new: `${ROOTS.PRODUCTS}/new`,
     },
     reward: {

@@ -71,6 +71,14 @@ export const dashboardRoutes = [
         ],
       },
       {
+        path: 'products',
+        children: [
+          { index: true, element: <ProductListPage /> },
+          { path: 'new', element: <ProductCreatePage /> },
+          { path: ':id', element: <ProductEditPage /> },
+        ],
+      },
+      {
         path: 'sales',
         children: [
           { index: true, element: <SaleListPage /> },
@@ -93,14 +101,6 @@ export const dashboardRoutes = [
             path: 'statistics',
             children: [{ path: ':id', element: <StatisticsDetailPage /> }],
           },
-        ],
-      },
-      {
-        path: 'products',
-        children: [
-          { index: true, element: <ProductListPage /> },
-          { index: 'new', element: <ProductCreatePage /> },
-          { index: ':id', element: <ProductEditPage /> },
         ],
       },
       {

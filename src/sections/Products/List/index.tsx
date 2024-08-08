@@ -55,9 +55,8 @@ const TABLE_HEAD = [
   { id: 'date', label: 'Date', width: 200, sortable: true },
   { id: 'amonut', label: 'Amount', width: 200, sortable: true },
   { id: 'productName', label: 'Product Name', sortable: true },
-  { id: 'status', label: 'Status', width: 120, sortable: true },
-  { id: 'token', label: 'Hash Power', width: 150, sortable: true },
-  { id: 'action', label: 'Action', align: 'center', width: 150, sortable: true },
+  { id: 'token', label: 'Hash Power', width: 200, sortable: true },
+  { id: 'action', label: 'Action', align: 'center', width: 200, sortable: true },
 ];
 
 const defaultFilter: IProductTableFilters = {
