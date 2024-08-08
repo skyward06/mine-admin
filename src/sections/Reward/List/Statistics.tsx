@@ -168,9 +168,11 @@ export default function StatisticsTable() {
                   rowCount={loading ? 0 : statistics!.length}
                   numSelected={table.selected.length}
                   onSort={(id) => {
-                    const isAsc = sort && sort[id] === 'asc';
-                    const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
-                    setQuery({ ...query, sort: newSort });
+                    if (id !== 'diff' && id !== 'action') {
+                      const isAsc = sort && sort[id] === 'asc';
+                      const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
+                      setQuery({ ...query, sort: newSort });
+                    }
                   }}
                   onSelectAllRows={(checked) =>
                     table.onSelectAllRows(

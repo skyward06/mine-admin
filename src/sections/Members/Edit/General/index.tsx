@@ -120,7 +120,7 @@ export default function MemberGeneral({ currentMember }: Props) {
               mobile: newMember.mobile,
               primaryAddress: newMember.primaryAddress,
               secondaryAddress: newMember.secondaryAddress,
-              sponsorId: member?.id,
+              sponsorId: member?.id || null,
               assetId: newMember.assetId,
               city: newMember.city,
               state: newMember.state,

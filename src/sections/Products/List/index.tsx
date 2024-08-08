@@ -205,9 +205,11 @@ export default function ProductListView() {
                 headLabel={TABLE_HEAD}
                 rowCount={loading ? 0 : tableData!.packages!.length}
                 onSort={(id) => {
-                  const isAsc = sort && sort[id] === 'asc';
-                  const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
-                  setQuery({ ...query, sort: newSort });
+                  if (id !== 'action') {
+                    const isAsc = sort && sort[id] === 'asc';
+                    const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
+                    setQuery({ ...query, sort: newSort });
+                  }
                 }}
               />
               {loading ? (
