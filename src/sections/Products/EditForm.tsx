@@ -126,8 +126,18 @@ export default function EditForm({ current }: Props) {
               }}
             >
               <Field.Text name="productName" label="Product Name" />
-              <Field.Text name="amount" type="number" label="Amount" />
-              <Field.Text name="token" type="number" label="Hash Power" />
+              <Field.Text
+                name="amount"
+                type="number"
+                label="Amount"
+                disabled={!!(current?.sales ?? []).length}
+              />
+              <Field.Text
+                name="token"
+                type="number"
+                label="Hash Power"
+                disabled={!!(current?.sales ?? []).length}
+              />
               <Field.Select
                 name="status"
                 label="Status"
@@ -135,6 +145,7 @@ export default function EditForm({ current }: Props) {
                 onChange={(e) =>
                   Number(e.target.value) === 1 ? setStatus(true) : setStatus(false)
                 }
+                disabled={!!(current?.sales ?? []).length}
               >
                 <MenuItem value={1}>Active</MenuItem>
                 <MenuItem value={0}>Inactive</MenuItem>
