@@ -25,6 +25,11 @@ interface Props {
   handleBack: Function;
 }
 
+interface Reward {
+  address: string;
+  txcShared: number;
+}
+
 export default function SendMany({ date, handleBack }: Props) {
   const router = useRouter();
   const copy = useBoolean();
@@ -38,7 +43,7 @@ export default function SendMany({ date, handleBack }: Props) {
 
   const memberStatistics = data?.memberStatistics.memberStatistics ?? [];
 
-  const reward = useMemo(() => {
+  const reward: Reward[] = useMemo(() => {
     const rewardData = memberStatistics.reduce(
       (prev: any, row) =>
         row?.member?.memberWallets?.reduce(
@@ -72,10 +77,12 @@ export default function SendMany({ date, handleBack }: Props) {
   const initial = ['sendmany "" "{'];
   const sendmany = [
     ...initial,
-    ...reward!.map(
-      (item: any, index) =>
-        `\\"${item?.address}\\": ${(item?.txcShared ?? 0) / 10 ** 8}${index === reward.length - 1 ? '}"' : ','}`
-    ),
+    ...reward!
+      .filter((item) => item.txcShared !== 0)
+      .map(
+        (item: any, index: any) =>
+          `\\"${item?.address}\\": ${(item?.txcShared ?? 0) / 10 ** 8}${index === reward.length - 1 ? '}"' : ','}`
+      ),
   ];
 
   useEffect(() => {
