@@ -23,6 +23,11 @@ const documents = {
     "\n  query Payouts($filter: JSONObject, $page: String, $sort: String) {\n    payouts(filter: $filter, page: $page, sort: $sort) {\n      payouts {\n        id\n        method\n        display\n        name\n        status\n        createdAt\n        updatedAt\n        deletedAt\n      }\n      total\n    }\n  }\n": types.PayoutsDocument,
     "\n  mutation UpdatePasswordMemberById($data: UpdateMemberPasswordInputById!) {\n    updatePasswordMemberById(data: $data) {\n      id\n    }\n  }\n": types.UpdatePasswordMemberByIdDocument,
     "\n  mutation RemoveMember($data: IDInput!) {\n    removeMember(data: $data) {\n      message\n      result\n    }\n  }\n": types.RemoveMemberDocument,
+    "\n  query Packages($sort: String, $page: String, $filter: JSONObject) {\n    packages(sort: $sort, page: $page, filter: $filter) {\n      packages {\n        createdAt\n        updatedAt\n        deletedAt\n        id\n        productName\n        amount\n        status\n        date\n        token\n        sales {\n          id\n          invoiceNo\n          memberId\n          orderedAt\n          packageId\n          paymentMethod\n          status\n        }\n      }\n      total\n    }\n  }\n": types.PackagesDocument,
+    "\n  query FetchPackageStats($allFilter: JSONObject, $inactiveFilter: JSONObject) {\n    all: packages(filter: $allFilter) {\n      total\n    }\n    inactive: packages(filter: $inactiveFilter) {\n      total\n    }\n  }\n": types.FetchPackageStatsDocument,
+    "\n  mutation CreatePackage($data: CreatePackageInput!) {\n    createPackage(data: $data) {\n      id\n    }\n  }\n": types.CreatePackageDocument,
+    "\n  mutation UpdatePackage($data: UpdatePackageInput!) {\n    updatePackage(data: $data) {\n      id\n    }\n  }\n": types.UpdatePackageDocument,
+    "\n  mutation RemovePackage($data: IDInput!) {\n    removePackage(data: $data) {\n      id\n    }\n  }\n": types.RemovePackageDocument,
     "\n  query Reward($sort: String, $page: String, $filter: JSONObject) {\n    statistics(sort: $sort, page: $page, filter: $filter) {\n      statistics {\n        id\n        issuedAt\n        newBlocks\n        totalBlocks\n        totalHashPower\n        totalMembers\n        txcShared\n        from\n        to\n        status\n        statisticsSales {\n          id\n          saleId\n          issuedAt\n        }\n      }\n      total\n    }\n  }\n": types.RewardDocument,
     "\n  query FetchMemberStatistics($sort: String, $page: String, $filter: JSONObject) {\n    memberStatistics(sort: $sort, page: $page, filter: $filter) {\n      memberStatistics {\n        createdAt\n        updatedAt\n        deletedAt\n        id\n        memberId\n        statisticsId\n        txcShared\n        hashPower\n        percent\n        issuedAt\n        member {\n          createdAt\n          updatedAt\n          deletedAt\n          id\n          username\n          fullName\n          email\n          mobile\n          assetId\n          primaryAddress\n          secondaryAddress\n          memberWallets {\n            createdAt\n            updatedAt\n            deletedAt\n            id\n            memberId\n            payoutId\n            address\n            percent\n            payout {\n              id\n              method\n              status\n              name\n              display\n              createdAt\n              updatedAt\n              deletedAt\n            }\n          }\n        }\n        statistics {\n          createdAt\n          updatedAt\n          deletedAt\n          id\n          newBlocks\n          totalBlocks\n          totalHashPower\n          totalMembers\n          status\n          txcShared\n          issuedAt\n          from\n          to\n        }\n      }\n      total\n    }\n  }\n": types.FetchMemberStatisticsDocument,
     "\n  mutation ConfirmStatistics($data: IDInput!) {\n    confirmStatistics(data: $data) {\n      id\n    }\n  }\n": types.ConfirmStatisticsDocument,
@@ -35,7 +40,6 @@ const documents = {
     "\n  query FetchSaleStats($allFilter: JSONObject, $inactiveFilter: JSONObject) {\n    all: sales(filter: $allFilter) {\n      total\n    }\n    inactive: sales(filter: $inactiveFilter) {\n      total\n    }\n  }\n": types.FetchSaleStatsDocument,
     "\n  mutation CreateSale($data: CreateSaleInput!) {\n    createSale(data: $data) {\n      invoiceNo\n      orderedAt\n      memberId\n      paymentMethod\n      packageId\n      status\n    }\n  }\n": types.CreateSaleDocument,
     "\n  mutation UpdateSale($data: UpdateSaleInput!) {\n    updateSale(data: $data) {\n      id\n      status\n    }\n  }\n": types.UpdateSaleDocument,
-    "\n  query Packages($sort: String, $page: String, $filter: JSONObject) {\n    packages(sort: $sort, page: $page, filter: $filter) {\n      packages {\n        id\n        productName\n      }\n    }\n  }\n": types.PackagesDocument,
     "\n  mutation RemoveSale($data: IDInput!) {\n    removeSale(data: $data) {\n      result\n    }\n  }\n": types.RemoveSaleDocument,
     "\n  mutation Login($data: AdminLoginInput!) {\n    adminLogin(data: $data) {\n      accessToken\n    }\n  }\n": types.LoginDocument,
     "\n  query Query($data: LiveStatsArgs!) {\n    liveBlockStats(data: $data) {\n      dailyData {\n        count\n        field\n      }\n      meta\n      total\n    }\n    liveMiningStats {\n      dailyData {\n        count\n        field\n      }\n      meta\n      total\n    }\n    liveUserStats(data: $data) {\n      dailyData {\n        count\n        field\n      }\n      meta\n      total\n    }\n  }\n": types.QueryDocument,
@@ -108,6 +112,26 @@ export function gql(source: "\n  mutation RemoveMember($data: IDInput!) {\n    r
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function gql(source: "\n  query Packages($sort: String, $page: String, $filter: JSONObject) {\n    packages(sort: $sort, page: $page, filter: $filter) {\n      packages {\n        createdAt\n        updatedAt\n        deletedAt\n        id\n        productName\n        amount\n        status\n        date\n        token\n        sales {\n          id\n          invoiceNo\n          memberId\n          orderedAt\n          packageId\n          paymentMethod\n          status\n        }\n      }\n      total\n    }\n  }\n"): (typeof documents)["\n  query Packages($sort: String, $page: String, $filter: JSONObject) {\n    packages(sort: $sort, page: $page, filter: $filter) {\n      packages {\n        createdAt\n        updatedAt\n        deletedAt\n        id\n        productName\n        amount\n        status\n        date\n        token\n        sales {\n          id\n          invoiceNo\n          memberId\n          orderedAt\n          packageId\n          paymentMethod\n          status\n        }\n      }\n      total\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  query FetchPackageStats($allFilter: JSONObject, $inactiveFilter: JSONObject) {\n    all: packages(filter: $allFilter) {\n      total\n    }\n    inactive: packages(filter: $inactiveFilter) {\n      total\n    }\n  }\n"): (typeof documents)["\n  query FetchPackageStats($allFilter: JSONObject, $inactiveFilter: JSONObject) {\n    all: packages(filter: $allFilter) {\n      total\n    }\n    inactive: packages(filter: $inactiveFilter) {\n      total\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation CreatePackage($data: CreatePackageInput!) {\n    createPackage(data: $data) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation CreatePackage($data: CreatePackageInput!) {\n    createPackage(data: $data) {\n      id\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation UpdatePackage($data: UpdatePackageInput!) {\n    updatePackage(data: $data) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation UpdatePackage($data: UpdatePackageInput!) {\n    updatePackage(data: $data) {\n      id\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation RemovePackage($data: IDInput!) {\n    removePackage(data: $data) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation RemovePackage($data: IDInput!) {\n    removePackage(data: $data) {\n      id\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(source: "\n  query Reward($sort: String, $page: String, $filter: JSONObject) {\n    statistics(sort: $sort, page: $page, filter: $filter) {\n      statistics {\n        id\n        issuedAt\n        newBlocks\n        totalBlocks\n        totalHashPower\n        totalMembers\n        txcShared\n        from\n        to\n        status\n        statisticsSales {\n          id\n          saleId\n          issuedAt\n        }\n      }\n      total\n    }\n  }\n"): (typeof documents)["\n  query Reward($sort: String, $page: String, $filter: JSONObject) {\n    statistics(sort: $sort, page: $page, filter: $filter) {\n      statistics {\n        id\n        issuedAt\n        newBlocks\n        totalBlocks\n        totalHashPower\n        totalMembers\n        txcShared\n        from\n        to\n        status\n        statisticsSales {\n          id\n          saleId\n          issuedAt\n        }\n      }\n      total\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
@@ -153,10 +177,6 @@ export function gql(source: "\n  mutation CreateSale($data: CreateSaleInput!) {\
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  mutation UpdateSale($data: UpdateSaleInput!) {\n    updateSale(data: $data) {\n      id\n      status\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateSale($data: UpdateSaleInput!) {\n    updateSale(data: $data) {\n      id\n      status\n    }\n  }\n"];
-/**
- * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function gql(source: "\n  query Packages($sort: String, $page: String, $filter: JSONObject) {\n    packages(sort: $sort, page: $page, filter: $filter) {\n      packages {\n        id\n        productName\n      }\n    }\n  }\n"): (typeof documents)["\n  query Packages($sort: String, $page: String, $filter: JSONObject) {\n    packages(sort: $sort, page: $page, filter: $filter) {\n      packages {\n        id\n        productName\n      }\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

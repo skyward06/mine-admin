@@ -51,6 +51,7 @@ export const navData = [
       { title: 'Member', path: paths.dashboard.members.root, icon: ICONS.job },
       { title: 'Sale', path: paths.dashboard.sales.root, icon: ICONS.invoice },
       { title: 'Reward', path: paths.dashboard.reward.root, icon: ICONS.label },
+      { title: 'Product', path: paths.dashboard.products.root, icon: ICONS.ecommerce },
       { title: 'Admin', path: paths.dashboard.user.root, icon: ICONS.user },
     ],
   },

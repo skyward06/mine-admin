@@ -7,6 +7,7 @@ const ROOTS = {
   SALES: '/sales',
   MEMBERS: '/members',
   REWARD: '/reward',
+  PRODUCT: '/products',
   USERS: '/users',
 };
 
@@ -46,6 +47,11 @@ export const paths = {
       edit: (id: string) => `${ROOTS.REWARD}/new/${id}`,
       detail: (id: string) => `${ROOTS.REWARD}/${id}`,
       view: (id: string) => `${ROOTS.REWARD}/statistics/${id}`,
+    },
+    products: {
+      root: ROOTS.PRODUCT,
+      edit: (id: string) => `${ROOTS.PRODUCT}/new/${id}`,
+      new: `${ROOTS.PRODUCT}/new`,
     },
   },
   notFound: '/404',
