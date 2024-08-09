@@ -14,7 +14,7 @@ import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
 
-import { fDate, formatDate, customizeDate } from 'src/utils/format-time';
+import { formatDate, customizeDate } from 'src/utils/format-time';
 
 import { varAlpha } from 'src/theme/styles';
 import { DashboardContent } from 'src/layouts/dashboard';
@@ -135,7 +135,7 @@ export default function RewardCreateView() {
             name: 'Reward',
             href: paths.dashboard.reward.root,
           },
-          { name: id ? `${fDate(date)}` : 'New Reward' },
+          { name: id ? `${formatDate(date)}` : 'New Reward' },
         ]}
         sx={{
           mb: { xs: 1, md: 2 },

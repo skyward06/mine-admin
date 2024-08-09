@@ -98,7 +98,7 @@ export default function StatisticsTableRow({
       {}
     );
 
-    return Object.values(rewardData);
+    return Object.values(rewardData).filter((item: any) => item.txcShared !== 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [memberStatistics]);
 
