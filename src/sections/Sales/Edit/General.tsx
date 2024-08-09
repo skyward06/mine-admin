@@ -51,7 +51,9 @@ export default function SaleGeneral({ currentSale }: Props) {
   const [status, setStatus] = useState(currentStatus);
 
   const { data: membersData } = useGraphQuery(FETCH_MEMBERS_QUERY);
-  const { data: packagesData } = useGraphQuery(FETCH_PACKAGES_QUERY);
+  const { data: packagesData } = useGraphQuery(FETCH_PACKAGES_QUERY, {
+    variables: { filter: { status: true } },
+  });
 
   const packages = packagesData?.packages.packages ?? [];
   const members = membersData?.members.members ?? [];

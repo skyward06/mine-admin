@@ -70,7 +70,7 @@ export default function SaleCreateForm() {
   });
 
   const [fetchPackages, { data: packageData }] = useLazyQuery(FETCH_PACKAGES_QUERY, {
-    variables: { filter: {} },
+    variables: { filter: { status: true } },
   });
 
   const { reset, setError, handleSubmit } = methods;
