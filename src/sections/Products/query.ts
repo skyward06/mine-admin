@@ -58,7 +58,7 @@ export const UPDATE_PACKAGE = gql(/* GraphQL */ `
 export const REMOVE_PACKAGE = gql(/* GraphQL */ `
   mutation RemovePackage($data: IDInput!) {
     removePackage(data: $data) {
-      id
+      result
     }
   }
 `);

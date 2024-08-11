@@ -279,7 +279,7 @@ export default function ProductListView() {
             color="error"
             onClick={async () => {
               const promise = await removePackage({ variables: { data: { id: selected } } });
-              const result = promise.data?.removePackage.id;
+              const result = promise.data?.removePackage.result;
 
               if (result === 'success') {
                 toast.success('Product removed successfully');
