@@ -311,10 +311,8 @@ export default function StatisticsTableRow({
                 if (data.confirmStatistics.id) {
                   toast.success('Successfully confirmed!');
 
-                  setTimeout(() => {
-                    confirm.onFalse();
-                    router.refresh();
-                  }, 1000);
+                  confirm.onFalse();
+                  setIsOpen(false);
                 }
               } catch (error) {
                 const [err] = error.graphQLErrors;

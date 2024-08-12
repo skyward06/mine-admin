@@ -107,7 +107,10 @@ export default function StatisticsTable() {
     }
   );
 
-  const [confirmStatistics, { loading: confirmLoading }] = useMutation(CONFIRM_STATISTICS);
+  const [confirmStatistics, { loading: confirmLoading }] = useMutation(CONFIRM_STATISTICS, {
+    awaitRefetchQueries: true,
+    refetchQueries: ['Reward'],
+  });
 
   const [removeStatistics] = useMutation(REMOVE_STATISTICS, {
     awaitRefetchQueries: true,

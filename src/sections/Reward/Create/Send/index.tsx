@@ -178,8 +178,9 @@ export default function SendMany({ date, handleBack }: Props) {
                   if (result?.confirmStatistics.id) {
                     toast.success('Successfully confirmed!');
 
+                    confirm.onFalse();
+
                     setTimeout(() => {
-                      confirm.onFalse();
                       router.push(paths.dashboard.reward.root);
                     }, 1000);
                   }
