@@ -1,10 +1,11 @@
-import { useMemo, useEffect } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { useMutation, useLazyQuery } from '@apollo/client';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
@@ -13,7 +14,9 @@ import { useBoolean } from 'src/hooks/useBoolean';
 
 import { customizeDate } from 'src/utils/format-time';
 
+import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
+import { ConfirmView } from 'src/components/Reward';
 import ComponentBlock from 'src/components/Component-Block';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { LoadingScreen } from 'src/components/loading-screen';
@@ -29,12 +32,13 @@ export default function SendMany({ date, handleBack }: Props) {
   const router = useRouter();
   const copy = useBoolean();
   const confirm = useBoolean();
+  const [transactionId, setTransactionId] = useState<string>('');
 
   const [fetchMemberStatistics, { data }] = useLazyQuery(FETCH_MEMBERSTATISTICS_QUERY, {
     variables: { filter: { issuedAt: customizeDate(date) } },
   });
 
-  const [confirmStatistics] = useMutation(CONFIRM_STATISTICS);
+  const [confirmStatistics, { loading }] = useMutation(CONFIRM_STATISTICS);
 
   const memberStatistics = data?.memberStatistics.memberStatistics ?? [];
 
@@ -158,25 +162,39 @@ export default function SendMany({ date, handleBack }: Props) {
         open={confirm.value}
         onClose={confirm.onFalse}
         title="Confirm"
-        content="Are you sure?"
+        content={<ConfirmView setTransactionId={setTransactionId} />}
         action={
-          <Button
+          <LoadingButton
             variant="contained"
             color="error"
+            loading={loading}
             onClick={async () => {
-              confirm.onFalse();
+              try {
+                if (memberStatistics.length) {
+                  const { data: result } = await confirmStatistics({
+                    variables: { data: { id: memberStatistics[0]!.statisticsId, transactionId } },
+                  });
 
-              if (memberStatistics.length) {
-                await confirmStatistics({
-                  variables: { data: { id: memberStatistics[0]!.statisticsId } },
-                });
+                  if (result?.confirmStatistics.id) {
+                    toast.success('Successfully confirmed!');
+
+                    setTimeout(() => {
+                      confirm.onFalse();
+                      router.push(paths.dashboard.reward.root);
+                    }, 1000);
+                  }
+                }
+              } catch (error) {
+                const [err] = error.graphQLErrors;
+
+                if (err.path?.includes('transactionId')) {
+                  toast.error(err.message);
+                }
               }
-
-              router.push(paths.dashboard.reward.root);
             }}
           >
             Confirm
-          </Button>
+          </LoadingButton>
         }
       />
     </>

@@ -5,6 +5,7 @@ export const FETCH_STATISTICS_QUERY = gql(/* GraphQL */ `
     statistics(sort: $sort, page: $page, filter: $filter) {
       statistics {
         id
+        transactionId
         issuedAt
         newBlocks
         totalBlocks
@@ -77,6 +78,7 @@ export const FETCH_MEMBERSTATISTICS_QUERY = gql(/* GraphQL */ `
           updatedAt
           deletedAt
           id
+          transactionId
           newBlocks
           totalBlocks
           totalHashPower
@@ -94,7 +96,7 @@ export const FETCH_MEMBERSTATISTICS_QUERY = gql(/* GraphQL */ `
 `);
 
 export const CONFIRM_STATISTICS = gql(/* GraphQL */ `
-  mutation ConfirmStatistics($data: IDInput!) {
+  mutation ConfirmStatistics($data: ConfirmStatistics!) {
     confirmStatistics(data: $data) {
       id
     }

@@ -5,8 +5,6 @@ import Grid from '@mui/material/Unstable_Grid2';
 
 import { paths } from 'src/routes/paths';
 
-import { fDateTime } from 'src/utils/format-time';
-
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
@@ -30,7 +28,7 @@ export default function DetailView() {
         heading="Statistics"
         links={[
           { name: 'Reward', href: paths.dashboard.reward.root },
-          { name: `Statistics : ${fDateTime(current?.from)} - ${fDateTime(current?.to)}` },
+          { name: `Statistics : ${current?.transactionId ?? ''}` },
         ]}
         sx={{
           mb: { xs: 2, md: 3 },

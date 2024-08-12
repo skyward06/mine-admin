@@ -8,6 +8,7 @@ import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
+import LoadingButton from '@mui/lab/LoadingButton';
 import ListItemText from '@mui/material/ListItemText';
 
 import { paths } from 'src/routes/paths';
@@ -17,8 +18,12 @@ import { useBoolean, type UseBooleanReturn } from 'src/hooks/useBoolean';
 
 import { fDate, fTime, formatDate } from 'src/utils/format-time';
 
+import { EXPLORER_PATH } from 'src/consts';
+
 import { Label } from 'src/components/Label';
+import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
+import { ConfirmView } from 'src/components/Reward';
 import ComponentBlock from 'src/components/Component-Block';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { LoadingScreen } from 'src/components/loading-screen';
@@ -29,6 +34,7 @@ type Props = {
   // Todo: Update type to Statistics
   row: any;
   confirm: UseBooleanReturn;
+  loading: boolean;
   selected: boolean;
   memberStatistics: any[];
   statisticsId: string;
@@ -42,6 +48,7 @@ type Props = {
 export default function StatisticsTableRow({
   row,
   confirm: removeConfirm,
+  loading,
   selected,
   statisticsId,
   setStatisticsId,
@@ -53,6 +60,7 @@ export default function StatisticsTableRow({
 }: Props) {
   const {
     id,
+    transactionId,
     issuedAt,
     newBlocks,
     totalBlocks,
@@ -70,6 +78,7 @@ export default function StatisticsTableRow({
   const router = useRouter();
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [tId, setTId] = useState<string>('');
 
   const reward = useMemo(() => {
     const rewardData = memberStatistics.reduce(
@@ -179,36 +188,45 @@ export default function StatisticsTableRow({
         </TableCell>
         <TableCell align="center">
           {status ? (
-            <Tooltip title="View" placement="top" arrow>
-              <IconButton
-                color="success"
-                onClick={() => router.push(paths.dashboard.reward.view(id))}
-              >
-                <Iconify icon="solar:eye-bold" />
-              </IconButton>
-            </Tooltip>
+            <>
+              <Tooltip title="View" placement="top" arrow>
+                <IconButton
+                  color="success"
+                  onClick={() => router.push(paths.dashboard.reward.view(id))}
+                >
+                  <Iconify icon="solar:eye-bold" />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Explorer" placement="top" arrow>
+                <IconButton color="info" href={`${EXPLORER_PATH}${transactionId}`} target="_blank">
+                  <Iconify icon="bxs:right-top-arrow-circle" />
+                </IconButton>
+              </Tooltip>
+            </>
           ) : (
-            <Tooltip title="Edit" placement="top" arrow>
-              <IconButton
-                color="default"
-                onClick={() => router.push(paths.dashboard.reward.edit(id))}
-              >
-                <Iconify icon="solar:pen-2-bold" />
-              </IconButton>
-            </Tooltip>
+            <>
+              <Tooltip title="Edit" placement="top" arrow>
+                <IconButton
+                  color="default"
+                  onClick={() => router.push(paths.dashboard.reward.edit(id))}
+                >
+                  <Iconify icon="solar:pen-2-bold" />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Confirm" placement="top" arrow>
+                <IconButton
+                  color="success"
+                  disabled={false}
+                  onClick={() => {
+                    setStatisticsId(id);
+                    setIsOpen(true);
+                  }}
+                >
+                  <Iconify icon="bxs:check-circle" />
+                </IconButton>
+              </Tooltip>
+            </>
           )}
-          <Tooltip title="Confirm" placement="top" arrow>
-            <IconButton
-              color="success"
-              disabled={status}
-              onClick={() => {
-                setStatisticsId(id);
-                setIsOpen(true);
-              }}
-            >
-              <Iconify icon="bxs:check-circle" />
-            </IconButton>
-          </Tooltip>
           <Tooltip title="Delete" placement="top" arrow>
             <IconButton
               color="error"
@@ -278,23 +296,37 @@ export default function StatisticsTableRow({
         open={confirm.value}
         onClose={confirm.onFalse}
         title="Confirm"
-        content="Are you sure?"
+        content={<ConfirmView setTransactionId={setTId} />}
         action={
-          <Button
+          <LoadingButton
             variant="contained"
             color="error"
+            loading={loading}
             onClick={async () => {
-              confirm.onFalse();
+              try {
+                const { data } = await confirmStatistics({
+                  variables: { data: { id: statisticsId, transactionId: tId } },
+                });
 
-              await confirmStatistics({
-                variables: { data: { id: statisticsId } },
-              });
+                if (data.confirmStatistics.id) {
+                  toast.success('Successfully confirmed!');
 
-              router.refresh();
+                  setTimeout(() => {
+                    confirm.onFalse();
+                    router.refresh();
+                  }, 1000);
+                }
+              } catch (error) {
+                const [err] = error.graphQLErrors;
+
+                if (err.path?.includes('transactionId')) {
+                  toast.error(err.message);
+                }
+              }
             }}
           >
             Confirm
-          </Button>
+          </LoadingButton>
         }
       />
     </>

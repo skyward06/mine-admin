@@ -107,7 +107,7 @@ export default function StatisticsTable() {
     }
   );
 
-  const [confirmStatistics] = useMutation(CONFIRM_STATISTICS);
+  const [confirmStatistics, { loading: confirmLoading }] = useMutation(CONFIRM_STATISTICS);
 
   const [removeStatistics] = useMutation(REMOVE_STATISTICS, {
     awaitRefetchQueries: true,
@@ -201,6 +201,7 @@ export default function StatisticsTable() {
                         key={row!.id}
                         row={row!}
                         confirm={confirm}
+                        loading={confirmLoading}
                         selected={table.selected.includes(row!.id)}
                         setSelected={setSelected}
                         statisticsId={statisticsId}
