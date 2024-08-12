@@ -1,6 +1,5 @@
-import { paths } from 'src/routes/paths';
+import { CONFIG } from '../../config';
 
-import { STORAGE_TOKEN_KEY } from 'src/consts';
 // ----------------------------------------------------------------------
 
 function jwtDecode(token: string) {
@@ -32,32 +31,44 @@ export const isValidToken = (token: string) => {
 
 // ----------------------------------------------------------------------
 
-export const setTokenTimer: (token: string) => any = (token: string) => {
-  const { exp } = jwtDecode(token);
-  const currentTime = Date.now();
-  const timeLeft = exp * 1000 - currentTime;
-
-  // if it exceeds setTimeout's maximum limit, don't createTimer
-  if (timeLeft >= 2147483647) {
-    return null;
+export function getTimeToLive(accessToken: string | null | undefined) {
+  if (!accessToken) {
+    return 0;
   }
 
-  return setTimeout(() => {
-    // TODO: Show user friendly token expired message
-    alert('Token expired');
+  try {
+    const decoded = jwtDecode(accessToken);
 
-    localStorage.removeItem(STORAGE_TOKEN_KEY);
+    if (!decoded || !('exp' in decoded)) {
+      return 0;
+    }
 
-    window.location.href = paths.signIn;
-  }, timeLeft);
-};
+    const timeToLive = decoded.exp * 1000 - Date.now();
+    // if it exceeds setTimeout's maximum limit, don't createTimer
+    if (timeToLive >= 2147483646) {
+      return 2147483646;
+    }
+
+    return timeToLive;
+  } catch (error) {
+    console.error('Error during token validation:', error);
+    return 0;
+  }
+}
 
 // ----------------------------------------------------------------------
 
-export const setToken = (token: string | null) => {
-  if (token) {
-    localStorage.setItem(STORAGE_TOKEN_KEY, token);
+export async function setSession(accessToken: string | null) {
+  if (accessToken) {
+    localStorage.setItem(CONFIG.storageTokenKey, accessToken);
   } else {
-    localStorage.removeItem(STORAGE_TOKEN_KEY);
+    localStorage.removeItem(CONFIG.storageTokenKey);
   }
-};
+}
+
+// ----------------------------------------------------------------------
+
+export function getSession() {
+  const accessToken = localStorage.getItem(CONFIG.storageTokenKey);
+  return accessToken;
+}

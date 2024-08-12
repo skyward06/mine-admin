@@ -1,17 +1,14 @@
-import { useLazyQuery } from '@apollo/client';
-import { useMemo, useEffect, useCallback } from 'react';
+import type { Admin } from 'src/__generated__/graphql';
 
-import { paths } from 'src/routes/paths';
-import { useRouter } from 'src/routes/hooks';
+import { useLazyQuery } from '@apollo/client';
+import { useRef, useMemo, useState, useEffect, useCallback } from 'react';
 
 import { gql } from 'src/__generated__/gql';
-import { STORAGE_TOKEN_KEY } from 'src/consts';
 
 import { toast } from 'src/components/SnackBar';
 
-import { setSession } from '../utils';
 import { AuthContext } from './AuthContext';
-import { setToken, isValidToken, setTokenTimer } from './utils';
+import { setSession, getSession, getTimeToLive } from './utils';
 
 import type { AuthContextValue } from '../types';
 // ----------------------------------------------------------------------
@@ -33,49 +30,73 @@ const FETCH_ME_QUERY = gql(/* GraphQL */ `
 `);
 
 // ----------------------------------------------------------------------
+const initialToken = getSession();
 
 export function AuthProvider({ children }: Props) {
-  const token = localStorage.getItem(STORAGE_TOKEN_KEY);
+  const [user, setUser] = useState<Admin | null>();
+  const [error, setError] = useState<Error | null>(null);
 
-  const router = useRouter();
+  const [token, setToken] = useState<string | undefined | null>(initialToken);
+  const timeToLive = useMemo(() => getTimeToLive(token), [token]);
+  const timerId = useRef<NodeJS.Timeout | undefined>();
 
-  const [fetchMe, { loading, error, data }] = useLazyQuery(FETCH_ME_QUERY);
-
-  const signIn = useCallback(
-    (newToken: string) => {
-      setSession(newToken);
-      setToken(newToken);
-      toast.success('Successfully logged in');
-      router.push(paths.dashboard.history.root);
+  const [fetchMe, { loading }] = useLazyQuery(FETCH_ME_QUERY, {
+    onCompleted: (data) => {
+      setUser(data.adminMe);
+      setError(null);
     },
-    [router]
-  );
+    onError: (err) => {
+      setError(err);
+      setUser(null);
+    },
+  });
+
+  const expireToken = useCallback(() => {
+    setToken(null);
+    setSession(null);
+    setError(null);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const signIn = useCallback((newToken: string) => {
+    setSession(newToken);
+    setToken(newToken);
+    toast.success('Successfully logged in');
+  }, []);
+
+  const signOut = useCallback(() => {
+    setSession(null);
+    setToken(null);
+    toast.success('Successfully logged out');
+  }, []);
 
   useEffect(() => {
-    let timerId: NodeJS.Timeout | undefined;
-    if (token && isValidToken(token)) {
+    if (token) {
+      if (timeToLive <= 0) {
+        expireToken();
+      }
       fetchMe();
-      timerId = setTokenTimer(token);
     }
-    return () => {
-      clearTimeout(timerId);
-    };
-  }, [token, fetchMe]);
+  }, [token, timeToLive, expireToken, fetchMe]);
 
   useEffect(() => {
     if (error) {
-      // TODO: Show alert token is invalid
-      setToken(null);
+      expireToken();
+      return;
     }
-  }, [error]);
 
-  // LOGOUT ACTION
-  const signOut = useCallback(() => {
-    setToken(null);
-    router.push(paths.statistics.root);
-  }, [router]);
+    if (!timerId.current) {
+      timerId.current = setTimeout(() => {
+        expireToken();
+      }, timeToLive);
+    }
 
-  const user = data?.adminMe;
+    // eslint-disable-next-line consistent-return
+    return () => {
+      clearTimeout(timerId.current);
+    };
+  }, [timeToLive, error, expireToken]);
 
   const memoizedValue: AuthContextValue = useMemo(
     () => ({ user, token, isAuthenticated: !!token, loading, signIn, signOut }),
