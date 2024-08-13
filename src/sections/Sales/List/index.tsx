@@ -8,6 +8,7 @@ import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
+import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { alpha } from '@mui/material/styles';
 import TableBody from '@mui/material/TableBody';
@@ -20,6 +21,7 @@ import { RouterLink } from 'src/routes/components';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
+import { CONFIG } from 'src/config';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Label } from 'src/components/Label';
@@ -27,6 +29,7 @@ import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 import { ScrollBar } from 'src/components/ScrollBar';
 import { ConfirmDialog } from 'src/components/Dialog';
+import ExportButton from 'src/components/ExportButton';
 import { SearchInput } from 'src/components/SearchInput';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import { LoadingScreen } from 'src/components/loading-screen';
@@ -137,6 +140,8 @@ export default function SaleListView() {
 
   const notFound = (canReset && !tableData?.sales?.length) || !tableData?.sales?.length;
 
+  const token = localStorage.getItem(CONFIG.storageTokenKey) ?? '';
+
   const handleTabChange = (event: React.SyntheticEvent, newValue: SaleRole) => {
     setQuery({
       ...query,
@@ -199,7 +204,14 @@ export default function SaleListView() {
           ))}
         </Tabs>
 
-        <SearchInput search={filter.search} onSearchChange={handleSearchChange} />
+        <Stack direction="row">
+          <Stack width={1}>
+            <SearchInput search={filter.search} onSearchChange={handleSearchChange} />
+          </Stack>
+          <Stack width={0.1} sx={{ p: 2.5 }}>
+            <ExportButton target="sales" token={token} />
+          </Stack>
+        </Stack>
 
         {canReset && !loading && (
           <SaleTableFiltersResult results={tableData!.total!} sx={{ p: 2.5, pt: 0 }} />

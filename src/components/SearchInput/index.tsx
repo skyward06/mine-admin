@@ -55,6 +55,7 @@ export function SearchInput({ search, placeholder, onSearchChange }: Props) {
         value={keyword}
         onChange={handleSearchChange}
         placeholder={placeholder || 'Search ...'}
+        size="small"
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">

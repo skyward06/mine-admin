@@ -34,7 +34,7 @@ export default function ExportButton({ target, token }: Props) {
 
     const a = document.createElement('a');
     a.href = url;
-    a.download = `rewards-${fDate(new Date(), 'YYYYMMDD')}${fTime(new Date(), 'hhmmss')}.xlsx`;
+    a.download = `${target}-${fDate(new Date(), 'YYYYMMDD')}${fTime(new Date(), 'hhmmss')}.xlsx`;
 
     document.body.appendChild(a);
     a.click();
