@@ -8,10 +8,12 @@ import { useMutation, useLazyQuery, useQuery as useGraphQuery } from '@apollo/cl
 
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
+import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import Grid from '@mui/material/Unstable_Grid2';
 import TableBody from '@mui/material/TableBody';
+import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import CardHeader from '@mui/material/CardHeader';
 import TableContainer from '@mui/material/TableContainer';
@@ -20,9 +22,12 @@ import { useQuery, type SortOrder } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
+import { CONFIG } from 'src/config';
+
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 import { ScrollBar } from 'src/components/ScrollBar';
+import ExportButton from 'src/components/ExportButton';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import {
   useTable,
@@ -130,6 +135,15 @@ export default function StatisticsTable() {
 
   const memberStatistics = sendmanyData?.memberStatistics.memberStatistics ?? [];
 
+  const token = localStorage.getItem(CONFIG.storageTokenKey) ?? '';
+
+  const cardHeader = (
+    <Stack direction="row" justifyContent="space-between">
+      <Typography variant="h6">Reward</Typography>
+      <ExportButton target="rewards" token={token} />
+    </Stack>
+  );
+
   return (
     <>
       <Grid container spacing={1}>
@@ -137,11 +151,11 @@ export default function StatisticsTable() {
           sx={{
             width: '100%',
             m: 0.5,
-            mt: 2,
+            mt: 1,
             borderRadius: 1.5,
           }}
         >
-          <CardHeader title="Reward" sx={{ mb: 3 }} />
+          <CardHeader title={cardHeader} sx={{ pt: 2, mb: 1.5 }} />
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
               dense={table.dense}
