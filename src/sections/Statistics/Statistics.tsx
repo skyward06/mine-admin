@@ -59,8 +59,11 @@ export default function StatisticsTable({ status = false }: Props) {
         width: 100,
         sortable: false,
         filterable: false,
-        renderCell: (params) =>
-          (params.row.newBlocks * 254 * 10 ** 8 - (params.row.txcShared ?? 0)) / 10 ** 8,
+        renderCell: (params) => {
+          const diff = params.row.newBlocks * 254 - (params.row.txcShared ?? 0) / 10 ** 8;
+
+          return diff.toFixed(8).endsWith('0') ? diff : diff.toFixed(8);
+        },
       },
       {
         field: 'from',
@@ -205,7 +208,11 @@ export default function StatisticsTable({ status = false }: Props) {
           paginationMode="server"
           pageSizeOptions={[10, 25, 50, 100]}
           paginationModel={paginationModel}
-          onRowClick={(params) => window.open(paths.dashboard.reward.detail(params.row.id))}
+          onRowClick={(params) => {
+            if (token) {
+              window.open(paths.dashboard.reward.detail(params.row.id));
+            }
+          }}
           onPaginationModelChange={({ page: newPage, pageSize }) => {
             if (newPage + 1 !== page.page) {
               setPage(newPage + 1);

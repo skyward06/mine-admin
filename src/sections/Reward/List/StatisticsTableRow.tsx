@@ -80,6 +80,8 @@ export default function StatisticsTableRow({
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [tId, setTId] = useState<string>('');
 
+  const diff = newBlocks * 254 - txcShared / 10 ** 8;
+
   const reward = useMemo(() => {
     const rewardData = memberStatistics.reduce(
       (prev: any, current) =>
@@ -149,7 +151,7 @@ export default function StatisticsTableRow({
         <TableCell>{totalHashPower}</TableCell>
         <TableCell>{totalMembers}</TableCell>
         <TableCell>{txcShared / 10 ** 8}</TableCell>
-        <TableCell>{(newBlocks * 254 * 10 ** 8 - txcShared) / 10 ** 8}</TableCell>
+        <TableCell>{diff.toFixed(8).endsWith('0') ? diff : diff.toFixed(8)}</TableCell>
 
         <TableCell>
           <ListItemText
