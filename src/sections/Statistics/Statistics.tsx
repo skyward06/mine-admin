@@ -21,6 +21,8 @@ import { debounce } from 'src/utils/debounce';
 import { parseFilter } from 'src/utils/parseFilter';
 import { fDate, fTime, formatDate } from 'src/utils/format-time';
 
+import { CONFIG } from 'src/config';
+
 import { Label } from 'src/components/Label';
 import { EmptyContent } from 'src/components/EmptyContent';
 import { DataGridSkeleton, DataGridPagination } from 'src/components/DataGrid';
@@ -177,6 +179,8 @@ export default function StatisticsTable({ status = false }: Props) {
 
   const paginationModel = useMemo(() => ({ page: page.page - 1, pageSize: page.pageSize }), [page]);
 
+  const token = localStorage.getItem(CONFIG.storageTokenKey);
+
   return (
     <Grid container spacing={1}>
       <Card
@@ -218,6 +222,9 @@ export default function StatisticsTable({ status = false }: Props) {
             noResultsOverlay: () => <EmptyContent title="No statistics found" />,
             loadingOverlay: DataGridSkeleton,
             pagination: DataGridPagination,
+          }}
+          slotProps={{
+            toolbar: { target: 'rewards', token },
           }}
           sx={{
             [`& .${gridClasses.cell}`]: { alignItems: 'center', display: 'inline-flex' },
