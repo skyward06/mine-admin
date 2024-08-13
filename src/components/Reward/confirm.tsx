@@ -11,6 +11,7 @@ export const ConfirmView = ({ setTransactionId }: Props) => (
       variant="outlined"
       fullWidth
       label="Transaction ID"
+      required
       onChange={(e) => setTransactionId(e.target.value)}
     />
   </Paper>

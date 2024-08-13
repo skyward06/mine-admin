@@ -304,15 +304,19 @@ export default function StatisticsTableRow({
             loading={loading}
             onClick={async () => {
               try {
-                const { data } = await confirmStatistics({
-                  variables: { data: { id: statisticsId, transactionId: tId } },
-                });
+                if (tId) {
+                  const { data } = await confirmStatistics({
+                    variables: { data: { id: statisticsId, transactionId: tId } },
+                  });
 
-                if (data.confirmStatistics.id) {
-                  toast.success('Successfully confirmed!');
+                  if (data.confirmStatistics.id) {
+                    toast.success('Successfully confirmed!');
 
-                  confirm.onFalse();
-                  setIsOpen(false);
+                    confirm.onFalse();
+                    setIsOpen(false);
+                  }
+                } else {
+                  toast.error('TransactionId is required');
                 }
               } catch (error) {
                 const [err] = error.graphQLErrors;
