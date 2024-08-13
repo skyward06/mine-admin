@@ -10,6 +10,7 @@ export type ConfigValue = {
     basePath: string;
     version: string;
   };
+  SITE_URL: string;
   SERVER_URL: string;
   ASSET_URL: string;
   redirectPath: string;
@@ -24,6 +25,7 @@ export const CONFIG: ConfigValue = {
     basePath: import.meta.env.VITE_BASE_PATH ?? '',
     version: packageJson.version,
   },
+  SITE_URL: 'https://dev.api.minetxc.com',
   SERVER_URL: import.meta.env.VITE_SERVER_URL ?? '',
   ASSET_URL: import.meta.env.VITE_ASSET_URL ?? '',
   redirectPath: paths.statistics.root,
