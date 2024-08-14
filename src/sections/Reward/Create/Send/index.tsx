@@ -52,16 +52,17 @@ export default function SendMany({ date, handleBack }: Props) {
                   ...save,
                   [item?.address ?? '']: {
                     ...save[item?.address ?? ''],
-                    txcShared:
+                    txcShared: Math.ceil(
                       save[item?.address ?? ''].txcShared +
-                      ((item?.percent ?? 0) * row.txcShared) / 10000,
+                        ((item?.percent ?? 0) * row.txcShared) / 10000
+                    ),
                   },
                 }
               : {
                   ...save,
                   [item?.address ?? '']: {
                     address: item?.address,
-                    txcShared: ((item?.percent ?? 0) * row.txcShared) / 10000,
+                    txcShared: Math.ceil(((item?.percent ?? 0) * row.txcShared) / 10000),
                   },
                 },
           prev
@@ -72,6 +73,8 @@ export default function SendMany({ date, handleBack }: Props) {
     return Object.values(rewardData).filter((item: any) => item.txcShared !== 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data?.memberStatistics]);
+
+  console.log('reward => ', reward);
 
   const initial = ['sendmany "" "{'];
   const sendmany = [
