@@ -10,7 +10,7 @@ export default function Page() {
   return (
     <>
       <Helmet>
-        <title>{`${CONFIG.site.name} - Users`}</title>
+        <title>{`${CONFIG.site.name} / Admins`}</title>
       </Helmet>
 
       <UserList />

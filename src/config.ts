@@ -21,7 +21,7 @@ export type ConfigValue = {
 
 export const CONFIG: ConfigValue = {
   site: {
-    name: 'Texitcoin',
+    name: 'mineTXC Admin',
     basePath: import.meta.env.VITE_BASE_PATH ?? '',
     version: packageJson.version,
   },

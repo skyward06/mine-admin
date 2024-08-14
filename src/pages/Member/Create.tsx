@@ -5,7 +5,7 @@ import { CONFIG } from 'src/config';
 import MemberCreate from 'src/sections/Members/Create';
 
 // ----------------------------------------------------------------------
-const metadata = { title: `${CONFIG.site.name} - New member` };
+const metadata = { title: `${CONFIG.site.name} / New member` };
 
 export default function Page() {
   return (
