@@ -52,12 +52,14 @@ export default function Chart() {
           loading={loading}
           key="hashRate"
           title="Hashrate"
+          tooltipCategory="Block"
+          unit="GH/s"
           chart={{
             series: [
               {
                 name: 'Hashrate',
                 data: blocks!
-                  .blocks!.map((item) => Number(((item?.hashRate! || 1) / 10 ** 9).toFixed(3)))
+                  .blocks!.map((item) => Number(((item?.hashRate! || 1) / 10 ** 9).toFixed(2)))
                   .reverse(),
               },
             ],
@@ -76,6 +78,7 @@ export default function Chart() {
           loading={loading}
           key="difficulty"
           title="Network Difficulty"
+          tooltipCategory="Block"
           chart={{
             colors: ['#ffb136'],
             categories: blocks!.blocks!.map((item) => `${item?.blockNo}`).reverse(),
