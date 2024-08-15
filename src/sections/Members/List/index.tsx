@@ -55,7 +55,7 @@ const STATUS_OPTIONS: { value: MemberRole; label: string; color: LabelColor }[] 
 ];
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', sortable: true },
+  { id: 'username', label: 'Name', sortable: true },
   { id: 'sponsor.username', label: 'Sponsor Name', width: 150, sortable: true },
   { id: 'mobile', label: 'Mobile', width: 150, sortable: true },
   { id: 'primaryAddress', label: 'Address', sortable: true },
