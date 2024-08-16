@@ -37,6 +37,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           mobile
           assetId
         }
+        placementParentId
         sales {
           id
           invoiceNo
@@ -153,6 +154,15 @@ export const UPDATE_PASSWORD_QUERY = gql(/* GraphQL */ `
 export const REMOVE_MEMBER_QUERY = gql(/* GraphQL */ `
   mutation RemoveMember($data: IDInput!) {
     removeMember(data: $data) {
+      message
+      result
+    }
+  }
+`);
+
+export const REMOVE_MEMBER_PLACEMENT = gql(/* GraphQL */ `
+  mutation RemoveCompleteMemberPlacement($data: IDInput!) {
+    removeCompleteMemberPlacement(data: $data) {
       message
       result
     }

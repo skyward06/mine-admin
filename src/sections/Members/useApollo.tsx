@@ -1,0 +1,76 @@
+import { useRef, useMemo } from 'react';
+import { useMutation, useLazyQuery } from '@apollo/client';
+
+import {
+  UPDATE_MEMBER,
+  FETCH_MEMBERS_QUERY,
+  REMOVE_MEMBER_QUERY,
+  UPDATE_PASSWORD_QUERY,
+  REMOVE_MEMBER_PLACEMENT,
+  FETCH_MEMBER_STATS_QUERY,
+} from './query';
+
+export function useFetchMembers() {
+  const [fetchMembers, { loading, data }] = useLazyQuery(FETCH_MEMBERS_QUERY);
+
+  const rowCountRef = useRef(data?.members.total ?? 0);
+
+  const rowCount = useMemo(() => {
+    const newTotal = data?.members.total ?? undefined;
+
+    if (newTotal !== undefined) {
+      rowCountRef.current = newTotal;
+    }
+
+    return rowCountRef.current;
+  }, [data]);
+
+  return {
+    loading,
+    rowCount,
+    members: data?.members.members ?? [],
+    fetchMembers,
+  };
+}
+
+export function useFetchMembersStats() {
+  const [fetchMemberStats, { data }] = useLazyQuery(FETCH_MEMBER_STATS_QUERY);
+
+  return { data, fetchMemberStats };
+}
+
+export function useUpdateMember() {
+  const [updateMember, { loading }] = useMutation(UPDATE_MEMBER, {
+    awaitRefetchQueries: true,
+    refetchQueries: ['FetchMembers'],
+  });
+
+  return { loading, updateMember };
+}
+
+export function useUpdatePassword() {
+  const [updatePassword] = useMutation(UPDATE_PASSWORD_QUERY, {
+    awaitRefetchQueries: true,
+    refetchQueries: ['FetchMembers'],
+  });
+
+  return { updatePassword };
+}
+
+export function useRemoveMember() {
+  const [removeMember, { loading, error }] = useMutation(REMOVE_MEMBER_QUERY, {
+    awaitRefetchQueries: true,
+    refetchQueries: ['FetchMembers'],
+  });
+
+  return { loading, error, removeMember };
+}
+
+export function useRemoveMemberPlacement() {
+  const [removeMemberPlacement, { loading, error }] = useMutation(REMOVE_MEMBER_PLACEMENT, {
+    awaitRefetchQueries: true,
+    refetchQueries: ['FetchMembers'],
+  });
+
+  return { loading, error, removeMemberPlacement };
+}

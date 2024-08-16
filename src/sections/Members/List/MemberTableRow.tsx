@@ -1,7 +1,6 @@
 import type { Member } from 'src/__generated__/graphql';
 
 import { useState } from 'react';
-import { useMutation } from '@apollo/client';
 
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
@@ -24,7 +23,7 @@ import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 import { ConfirmDialog } from 'src/components/Dialog';
 
-import { UPDATE_PASSWORD_QUERY } from '../query';
+import { useUpdatePassword } from '../useApollo';
 
 // ----------------------------------------------------------------------
 
@@ -51,7 +50,7 @@ export default function MemberTableRow({
 
   const { id, username, email, mobile, primaryAddress, assetId, sponsor, createdAt, sales } = row;
 
-  const [updatePassword] = useMutation(UPDATE_PASSWORD_QUERY);
+  const { updatePassword } = useUpdatePassword();
 
   const resetContent = (
     <Paper sx={{ py: 2 }}>

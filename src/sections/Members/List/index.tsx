@@ -1,8 +1,7 @@
 import type { LabelColor } from 'src/components/Label';
 import type { SortOrder } from 'src/routes/hooks/useQuery';
 
-import { useMemo, useState, useCallback } from 'react';
-import { useMutation, useQuery as useGraphQuery } from '@apollo/client';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
@@ -43,7 +42,7 @@ import {
 
 import MemberTableRow from './MemberTableRow';
 import MemberTableFiltersResult from './MemberTableFiltersResult';
-import { REMOVE_MEMBER_QUERY, FETCH_MEMBERS_QUERY, FETCH_MEMBER_STATS_QUERY } from '../query';
+import { useRemoveMember, useFetchMembers, useFetchMembersStats } from '../useApollo';
 
 import type { MemberRole, IMemberPrismaFilter, IMemberTableFilters } from './types';
 
@@ -113,28 +112,28 @@ export default function MemberListView() {
 
   const canReset = !!filter.search;
 
-  const { data: statsData } = useGraphQuery(FETCH_MEMBER_STATS_QUERY, {
-    variables: {
-      inactiveFilter: { deletedAt: { not: null } },
-    },
-  });
+  const { loading, members, rowCount, fetchMembers } = useFetchMembers();
 
-  const { loading, data } = useGraphQuery(FETCH_MEMBERS_QUERY, {
-    variables: {
-      page: page && `${page.page},${page.pageSize}`,
-      filter: graphQueryFilter,
-      sort: graphQuerySort,
-    },
-  });
+  const { data: statsData, fetchMemberStats } = useFetchMembersStats();
 
-  const [removeMember, { loading: removeLoading }] = useMutation(REMOVE_MEMBER_QUERY, {
-    awaitRefetchQueries: true,
-    refetchQueries: ['FetchMembers'],
-  });
+  useEffect(() => {
+    fetchMembers({
+      variables: {
+        page: page && `${page.page},${page.pageSize}`,
+        filter: graphQueryFilter,
+        sort: graphQuerySort,
+      },
+    });
 
-  const tableData = data?.members;
+    fetchMemberStats({
+      variables: { inactiveFilter: { deletedAt: { not: null } } },
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const notFound = (canReset && !tableData?.members?.length) || !tableData?.members?.length;
+  const { removeMember, loading: removeLoading } = useRemoveMember();
+
+  const notFound = (canReset && !members?.length) || !members?.length;
 
   const token = localStorage.getItem(CONFIG.storageTokenKey) ?? '';
 
@@ -210,7 +209,7 @@ export default function MemberListView() {
         </Stack>
 
         {canReset && !loading && (
-          <MemberTableFiltersResult results={tableData!.total!} sx={{ p: 2.5, pt: 0 }} />
+          <MemberTableFiltersResult results={rowCount} sx={{ p: 2.5, pt: 0 }} />
         )}
 
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
@@ -220,7 +219,7 @@ export default function MemberListView() {
                 order={sort && sort[Object.keys(sort)[0]]}
                 orderBy={sort && Object.keys(sort)[0]}
                 headLabel={TABLE_HEAD}
-                rowCount={loading ? 0 : tableData!.members!.length}
+                rowCount={loading ? 0 : members!.length}
                 onSort={(id) => {
                   if (id !== 'action') {
                     const isAsc = sort && sort[id] === 'asc';
@@ -244,7 +243,7 @@ export default function MemberListView() {
                 </>
               ) : (
                 <TableBody>
-                  {tableData!.members!.map((row) => (
+                  {members!.map((row) => (
                     <MemberTableRow
                       key={row!.id}
                       row={row!}
@@ -262,7 +261,7 @@ export default function MemberListView() {
         </TableContainer>
 
         <TablePaginationCustom
-          count={loading ? 0 : tableData!.total!}
+          count={loading ? 0 : rowCount!}
           page={loading ? 0 : page!.page - 1}
           rowsPerPage={page?.pageSize}
           onPageChange={(_, curPage) => {
