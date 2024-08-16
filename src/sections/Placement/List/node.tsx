@@ -1,0 +1,242 @@
+import { useState, useEffect } from 'react';
+
+import Card from '@mui/material/Card';
+import Paper from '@mui/material/Paper';
+import Checkbox from '@mui/material/Checkbox';
+import MenuList from '@mui/material/MenuList';
+import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import LoadingButton from '@mui/lab/LoadingButton';
+import Autocomplete from '@mui/material/Autocomplete';
+import FormControlLabel from '@mui/material/FormControlLabel';
+
+import { useBoolean } from 'src/hooks/useBoolean';
+
+import { fDate } from 'src/utils/format-time';
+
+import { toast } from 'src/components/SnackBar';
+import { Iconify } from 'src/components/Iconify';
+import { ConfirmDialog } from 'src/components/Dialog';
+import { usePopover, CustomPopover } from 'src/components/custom-popover';
+
+import {
+  useFetchMembers,
+  useUpdateMember,
+  useRemoveMemberPlacement,
+} from 'src/sections/Members/useApollo';
+
+import type { NodeProps } from './type';
+
+// ----------------------------------------------------------------------
+
+interface Member {
+  id: string;
+  username: string;
+}
+
+export function StandardNode({ id, placementParentId, username, fullName, createdAt }: NodeProps) {
+  const addModal = useBoolean();
+  const removeModal = useBoolean();
+
+  const popover = usePopover();
+
+  const [checked, setChecked] = useState<boolean>(false);
+  const [member, setMember] = useState<Member>();
+
+  const { loading, updateMember } = useUpdateMember();
+  const { loading: memberLoading, members, fetchMembers } = useFetchMembers();
+  const { loading: removeLoading, removeMemberPlacement } = useRemoveMemberPlacement();
+
+  const onRemove = () => {
+    popover.onClose();
+    removeModal.onTrue();
+  };
+
+  const onAdd = () => {
+    popover.onClose();
+    addModal.onTrue();
+
+    fetchMembers({
+      variables: {
+        filter: { placementParentId: null },
+        page: '1,10',
+      },
+    });
+  };
+
+  useEffect(() => {
+    fetchMembers({
+      variables: {
+        filter: { placementParentId: null, username: { contains: member?.username } },
+        page: '1,10',
+      },
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [member]);
+
+  const addContent = (
+    <Paper sx={{ py: 1 }}>
+      <Autocomplete
+        fullWidth
+        options={members}
+        loading={memberLoading}
+        loadingText={<LoadingButton loading={memberLoading} />}
+        getOptionLabel={(option) => option!.username}
+        renderInput={(params) => <TextField {...params} label="Sponsor Name" margin="none" />}
+        renderOption={(props, option) => (
+          <li {...props} key={option!.username}>
+            {option!.username}
+          </li>
+        )}
+        onInputChange={(_, name: string) => {
+          setMember({ id: '', username: name });
+        }}
+        onChange={(_, value) => {
+          setMember({ id: value?.id ?? '', username: value?.username ?? '' });
+        }}
+      />
+    </Paper>
+  );
+
+  const removeContent = (
+    <Paper>
+      <FormControlLabel
+        key="checkbox"
+        label="Will you remove the sub-tree data?"
+        labelPlacement="end"
+        control={
+          <Checkbox
+            name="removeId"
+            onChange={(event) => {
+              setChecked(event.target.checked);
+            }}
+          />
+        }
+      />
+    </Paper>
+  );
+
+  return (
+    <>
+      <Card
+        sx={{
+          p: 2,
+          minWidth: 200,
+          borderRadius: 1.5,
+          textAlign: 'left',
+          position: 'relative',
+          display: 'inline-flex',
+          flexDirection: 'column',
+        }}
+      >
+        <IconButton
+          color={popover.open ? 'inherit' : 'default'}
+          onClick={popover.onOpen}
+          sx={{ position: 'absolute', top: 8, right: 8 }}
+        >
+          <Iconify icon="eva:more-horizontal-fill" />
+        </IconButton>
+
+        <Typography variant="subtitle2" noWrap sx={{ mb: 0.5 }}>
+          {username}
+        </Typography>
+
+        <Typography variant="caption" component="div" noWrap sx={{ color: 'text.secondary' }}>
+          {fullName}
+        </Typography>
+
+        <Typography variant="caption" component="div" noWrap sx={{ color: 'text.secondary' }}>
+          {fDate(createdAt)}
+        </Typography>
+      </Card>
+
+      <CustomPopover
+        open={popover.open}
+        anchorEl={popover.anchorEl}
+        onClose={popover.onClose}
+        slotProps={{ arrow: { placement: 'left-center' } }}
+      >
+        <MenuList>
+          <MenuItem
+            disabled={id === placementParentId}
+            onClick={onRemove}
+            sx={{ color: 'error.main' }}
+          >
+            <Iconify icon="solar:trash-bin-trash-bold" />
+            Delete
+          </MenuItem>
+
+          <MenuItem onClick={onAdd}>
+            <Iconify icon="mdi:plus-circle-outline" />
+            Add
+          </MenuItem>
+        </MenuList>
+      </CustomPopover>
+
+      <ConfirmDialog
+        open={addModal.value}
+        title="Add placement"
+        onClose={() => addModal.onFalse()}
+        content={addContent}
+        action={
+          <LoadingButton
+            variant="contained"
+            color="success"
+            loading={loading}
+            onClick={async () => {
+              try {
+                const { data } = await updateMember({
+                  variables: { data: { id: member?.id, placementParentId: id } },
+                });
+
+                if (data?.updateMember.id && !loading) {
+                  toast.success('Successfully added!');
+                  addModal.onFalse();
+                }
+              } catch (err) {
+                console.log('err => ', err);
+              }
+            }}
+          >
+            OK
+          </LoadingButton>
+        }
+      />
+
+      <ConfirmDialog
+        open={removeModal.value}
+        onClose={() => removeModal.onFalse()}
+        title="Remove placement"
+        content={removeContent}
+        action={
+          <LoadingButton
+            variant="contained"
+            color="success"
+            loading={removeLoading}
+            onClick={async () => {
+              if (checked) {
+                const { data } = await removeMemberPlacement({ variables: { data: { id } } });
+                if (data?.removeCompleteMemberPlacement.result === 'success') {
+                  toast.success('Successfully removed placement including sub-tree data!');
+                  removeModal.onFalse();
+                }
+              } else {
+                const { data } = await updateMember({
+                  variables: { data: { id, placementParentId: null } },
+                });
+                if (data?.updateMember.id && !loading) {
+                  toast.success('Successfully removed placement!');
+                  removeModal.onFalse();
+                }
+              }
+            }}
+          >
+            OK
+          </LoadingButton>
+        }
+      />
+    </>
+  );
+}

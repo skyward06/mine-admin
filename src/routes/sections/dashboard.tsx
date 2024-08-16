@@ -44,6 +44,10 @@ const ProductCreatePage = lazy(() => import('src/pages/Product/Create'));
 const ProductEditPage = lazy(() => import('src/pages/Product/Edit'));
 // ----------------------------------------------------------------------
 
+// ----------------------------------------------------------------------
+const PlacementListPage = lazy(() => import('src/pages/Placement/List'));
+// ----------------------------------------------------------------------
+
 export const dashboardRoutes = [
   {
     path: '',
@@ -85,6 +89,10 @@ export const dashboardRoutes = [
           { path: 'new', element: <SaleCreatePage /> },
           { path: ':id', element: <SaleEditPage /> },
         ],
+      },
+      {
+        path: 'placement',
+        children: [{ index: true, element: <PlacementListPage /> }],
       },
       {
         path: 'reward',

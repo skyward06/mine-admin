@@ -7,6 +7,7 @@ const ROOTS = {
   SALES: '/sales',
   MEMBERS: '/members',
   PRODUCTS: '/products',
+  PLACEMENT: '/placement',
   REWARD: '/reward',
   USERS: '/users',
 };
@@ -45,6 +46,9 @@ export const paths = {
       root: ROOTS.PRODUCTS,
       edit: (id: string) => `${ROOTS.PRODUCTS}/${id}`,
       new: `${ROOTS.PRODUCTS}/new`,
+    },
+    placement: {
+      root: ROOTS.PLACEMENT,
     },
     reward: {
       root: ROOTS.REWARD,
