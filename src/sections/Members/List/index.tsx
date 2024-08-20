@@ -129,7 +129,7 @@ export default function MemberListView() {
       variables: { inactiveFilter: { deletedAt: { not: null } } },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [query]);
 
   const { removeMember, loading: removeLoading } = useRemoveMember();
 
