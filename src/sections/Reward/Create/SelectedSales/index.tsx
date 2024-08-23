@@ -12,6 +12,7 @@ import { useBoolean } from 'src/hooks/useBoolean';
 
 import { customizeDate } from 'src/utils/format-time';
 
+import { toast } from 'src/components/SnackBar';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 
 import { FETCH_SALES_QUERY } from 'src/sections/Sales/query';
@@ -102,8 +103,12 @@ export default function SelectedSales({
           },
         },
       });
+
+      if (!loading) {
+        handleNext();
+      }
     } catch (err) {
-      console.log('error => ', err.message);
+      toast.error(err.message);
     }
   };
 
@@ -134,10 +139,6 @@ export default function SelectedSales({
             );
 
             handleCreate(mutation);
-
-            if (!loading) {
-              handleNext();
-            }
           }}
         >
           Next

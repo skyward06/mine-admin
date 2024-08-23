@@ -74,8 +74,6 @@ export default function SendMany({ date, handleBack }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data?.memberStatistics]);
 
-  console.log('reward => ', reward);
-
   const initial = ['sendmany "" "{'];
   const sendmany = [
     ...initial,
