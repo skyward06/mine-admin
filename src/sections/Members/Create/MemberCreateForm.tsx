@@ -82,8 +82,6 @@ export default function MemberCreateForm() {
       sponsorId: '',
       wallets: [
         {
-          payoutId: '',
-          address: '',
           percent: 100,
         },
       ],
@@ -195,15 +193,15 @@ export default function MemberCreateForm() {
               <Field.Text name="assetId" label="Asset ID" />
             </Box>
           </Card>
+        </Grid>
+        <Grid md={12} xl={6}>
+          <MemberWallets payouts={payouts} />
 
-          <Stack alignItems="flex-start">
+          <Stack alignItems="flex-end">
             <LoadingButton type="submit" variant="contained" loading={loading}>
               Create Member
             </LoadingButton>
           </Stack>
-        </Grid>
-        <Grid md={12} xl={6}>
-          <MemberWallets payouts={payouts} />
         </Grid>
       </Grid>
     </Form>

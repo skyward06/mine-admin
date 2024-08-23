@@ -1,7 +1,7 @@
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
+import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
@@ -33,48 +33,50 @@ export default function MemberWallets({ payouts }: Props) {
   };
 
   return (
-    <Card sx={{ p: 3 }}>
+    <Card sx={{ p: 3, mb: 2 }}>
       {fields.map((item, index) => (
-        <Stack key={item.id} alignItems="flex-end" spacing={0.5} sx={{ mb: 1 }}>
-          <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
-            <Field.Select
-              name={`wallets[${index}].payoutId`}
-              label="Payout"
-              InputLabelProps={{ shrink: true }}
-              sx={{ width: 300 }}
-            >
-              {payouts.map((option) => (
-                <MenuItem key={option?.id} value={option?.id}>
-                  {option?.method}
-                </MenuItem>
-              ))}
-            </Field.Select>
+        <Box
+          key={item.id}
+          rowGap={3}
+          columnGap={1}
+          display="grid"
+          sx={{ mb: 1, gridTemplateColumns: '20% 50% 15% auto' }}
+        >
+          <Field.Select
+            name={`wallets[${index}].payoutId`}
+            label="Payout"
+            InputLabelProps={{ shrink: true }}
+          >
+            {payouts.map((option) => (
+              <MenuItem key={option?.id} value={option?.id}>
+                {option?.method}
+              </MenuItem>
+            ))}
+          </Field.Select>
 
-            <Field.Text
-              name={`wallets[${index}].address`}
-              label="Address"
-              InputLabelProps={{ shrink: true }}
-            />
+          <Field.Text
+            name={`wallets[${index}].address`}
+            label="Address"
+            InputLabelProps={{ shrink: true }}
+          />
 
-            <Field.Text
-              name={`wallets[${index}].percent`}
-              label="Percent"
-              type="number"
-              InputLabelProps={{ shrink: true }}
-              sx={{ width: 200 }}
-            />
+          <Field.Text
+            name={`wallets[${index}].percent`}
+            label="Percent"
+            type="number"
+            InputLabelProps={{ shrink: true }}
+          />
 
-            <Button
-              size="small"
-              color="error"
-              sx={{ mt: 1.5 }}
-              startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
-              onClick={() => handleRemove(index)}
-            >
-              Remove
-            </Button>
-          </Stack>
-        </Stack>
+          <Button
+            size="small"
+            color="error"
+            sx={{ mt: 1.5, width: 80 }}
+            startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
+            onClick={() => handleRemove(index)}
+          >
+            Remove
+          </Button>
+        </Box>
       ))}
       <Divider flexItem sx={{ borderStyle: 'dashed', mb: 1 }} />
       <IconButton
