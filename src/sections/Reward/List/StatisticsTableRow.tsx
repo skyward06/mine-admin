@@ -151,7 +151,7 @@ export default function StatisticsTableRow({
         <TableCell>{totalHashPower}</TableCell>
         <TableCell>{totalMembers}</TableCell>
         <TableCell>{txcShared / 10 ** 8}</TableCell>
-        <TableCell>{diff.toFixed(8).endsWith('0') ? diff : diff.toFixed(8)}</TableCell>
+        <TableCell>{diff.toFixed(8).endsWith('0') ? diff.toFixed(8) : diff.toFixed(8)}</TableCell>
 
         <TableCell>
           <ListItemText

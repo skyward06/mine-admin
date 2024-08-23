@@ -62,7 +62,7 @@ export default function StatisticsTable({ status = false }: Props) {
         renderCell: (params) => {
           const diff = params.row.newBlocks * 254 - (params.row.txcShared ?? 0) / 10 ** 8;
 
-          return diff.toFixed(8).endsWith('0') ? diff : diff.toFixed(8);
+          return diff.toFixed(8).endsWith('0') ? diff.toFixed(8) : diff.toFixed(8);
         },
       },
       {
