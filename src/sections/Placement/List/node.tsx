@@ -49,6 +49,8 @@ export function StandardNode({ id, placementParentId, username, fullName, create
   const { loading: memberLoading, members, fetchMembers } = useFetchMembers();
   const { loading: removeLoading, removeMemberPlacement } = useRemoveMemberPlacement();
 
+  const [firstName, lastName] = fullName.split(' ');
+
   const onRemove = () => {
     popover.onClose();
     removeModal.onTrue();
@@ -69,7 +71,10 @@ export function StandardNode({ id, placementParentId, username, fullName, create
   useEffect(() => {
     fetchMembers({
       variables: {
-        filter: { placementParentId: null, username: { contains: member?.username } },
+        filter: {
+          placementParentId: null,
+          username: { contains: member?.username, mode: 'insensitive' },
+        },
         page: '1,10',
       },
     });
@@ -84,7 +89,7 @@ export function StandardNode({ id, placementParentId, username, fullName, create
         loading={memberLoading}
         loadingText={<LoadingButton loading={memberLoading} />}
         getOptionLabel={(option) => option!.username}
-        renderInput={(params) => <TextField {...params} label="Sponsor Name" margin="none" />}
+        renderInput={(params) => <TextField {...params} label="Member Name" margin="none" />}
         renderOption={(props, option) => (
           <li {...props} key={option!.username}>
             {option!.username}
@@ -144,7 +149,7 @@ export function StandardNode({ id, placementParentId, username, fullName, create
         </Typography>
 
         <Typography variant="caption" component="div" noWrap sx={{ color: 'text.secondary' }}>
-          {fullName}
+          {`${firstName} ${lastName[0].toUpperCase()}.`}
         </Typography>
 
         <Typography variant="caption" component="div" noWrap sx={{ color: 'text.secondary' }}>
