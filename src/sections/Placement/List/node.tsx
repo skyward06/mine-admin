@@ -49,7 +49,7 @@ export function StandardNode({ id, placementParentId, username, fullName, create
   const { loading: memberLoading, members, fetchMembers } = useFetchMembers();
   const { loading: removeLoading, removeMemberPlacement } = useRemoveMemberPlacement();
 
-  const [firstName, lastName] = fullName.split(' ');
+  const [firstName, lastName] = fullName ? fullName.split(' ') : ['', ''];
 
   const onRemove = () => {
     popover.onClose();
@@ -149,7 +149,7 @@ export function StandardNode({ id, placementParentId, username, fullName, create
         </Typography>
 
         <Typography variant="caption" component="div" noWrap sx={{ color: 'text.secondary' }}>
-          {`${firstName} ${lastName[0].toUpperCase()}.`}
+          {`${firstName} ${lastName.length && lastName[0].toUpperCase()}.`}
         </Typography>
 
         <Typography variant="caption" component="div" noWrap sx={{ color: 'text.secondary' }}>
