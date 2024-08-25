@@ -56,11 +56,10 @@ const STATUS_OPTIONS: { value: MemberRole; label: string; color: LabelColor }[] 
 const TABLE_HEAD = [
   { id: 'username', label: 'Username', sortable: true },
   { id: 'fullName', label: 'Full Name', sortable: true },
-  { id: 'mobile', label: 'Mobile', width: 150, sortable: true },
-  { id: 'primaryAddress', label: 'Address', sortable: true },
-  { id: 'assetId', label: 'AssetID', width: 100, sortable: true },
-  { id: 'createdAt', label: 'Created At', width: 150, sortable: true },
-  { id: 'action', label: 'Action', align: 'center', width: 50 },
+  { id: 'mobile', label: 'Mobile', sortable: true },
+  { id: 'assetId', label: 'AssetID', sortable: true },
+  { id: 'createdAt', label: 'Created At', sortable: true },
+  { id: 'action', label: 'Action', align: 'center' },
 ];
 
 const defaultFilter: IMemberTableFilters = {
