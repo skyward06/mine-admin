@@ -65,6 +65,8 @@ export default function MemberCreateForm() {
   const members = memberData?.members.members ?? [];
 
   const [member, setMember] = useState<Member>();
+  const [email, setEmail] = useState<string>();
+  const [assetId, setAssetId] = useState<string>();
 
   const router = useRouter();
 
@@ -135,6 +137,20 @@ export default function MemberCreateForm() {
     }
   });
 
+  const handleSearchChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      const { data } = await fetchMembers({
+        variables: { filter: { [event.target.name]: event.target.value } },
+      });
+
+      if (data?.members.total !== 0) {
+        toast.warning(`This ${event.target.name} is already exist`);
+      }
+    } catch (err) {
+      console.log('err => ', err);
+    }
+  };
+
   useEffect(() => {
     fetchMembers({
       variables: {
@@ -160,7 +176,16 @@ export default function MemberCreateForm() {
               }}
             >
               <Field.Text name="username" label="Username" />
-              <Field.Text name="email" label="Email" />
+              <Field.Text
+                name="email"
+                label="Email"
+                value={email}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  handleSearchChange(event);
+
+                  setEmail(event.target.value);
+                }}
+              />
               <Field.Text name="firstName" label="First Name" />
               <Field.Text name="lastName" label="Last Name" />
               <Field.Phone name="mobile" label="Mobile" />
@@ -190,7 +215,16 @@ export default function MemberCreateForm() {
               <Field.Text name="city" label="City" />
               <Field.Text name="state" label="State" />
               <Field.Text name="zipCode" label="ZIP Code" />
-              <Field.Text name="assetId" label="Asset ID" />
+              <Field.Text
+                name="assetId"
+                label="Asset ID"
+                value={assetId}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  handleSearchChange(event);
+
+                  setAssetId(event.target.value);
+                }}
+              />
             </Box>
           </Card>
         </Grid>

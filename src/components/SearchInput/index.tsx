@@ -42,6 +42,7 @@ export function SearchInput({ search, placeholder, onSearchChange }: Props) {
     },
     [debouncedFilterChange]
   );
+
   return (
     <Stack
       direction="row"

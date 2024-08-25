@@ -20,11 +20,11 @@ import { FETCH_MEMBERSTATISTICS_QUERY } from '../query';
 import type { IMemberStatisticsTableFilters } from './types';
 
 const TABLE_HEAD = [
-  { id: 'issuedAt', label: 'Date', width: 200, sortable: true },
-  { id: 'username', label: 'Username', width: 200, sortable: true },
-  { id: 'hashPower', label: 'Hash Power', width: 200, sortable: true },
-  { id: 'reward', label: 'Rewarded TXC', width: 200, sortable: true },
-  { id: 'percent', label: 'Percent', width: 130, sortable: true },
+  { id: 'issuedAt', label: 'Date', sortable: true },
+  { id: 'username', label: 'Username', sortable: true },
+  { id: 'hashPower', label: 'Hash Power', sortable: true },
+  { id: 'reward', label: 'Rewarded TXC', sortable: true },
+  { id: 'percent', label: 'Percent', sortable: true },
 ];
 
 interface Props {
@@ -84,7 +84,7 @@ export default function BlocksTable({ id }: Props) {
                     }
                     onSort={(currentId) => {
                       const isAsc = sort && sort[currentId] === 'asc';
-                      const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
+                      const newSort = { [currentId]: isAsc ? 'desc' : ('asc' as SortOrder) };
                       setQuery({ ...query, sort: newSort });
                     }}
                   />
