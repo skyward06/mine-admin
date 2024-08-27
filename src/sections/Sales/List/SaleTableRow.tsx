@@ -10,7 +10,7 @@ import ListItemText from '@mui/material/ListItemText';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { fDate, fTime } from 'src/utils/format-time';
+import { formatDate } from 'src/utils/format-time';
 
 import { Iconify } from 'src/components/Iconify';
 
@@ -66,8 +66,7 @@ export default function SaleTableRow({ row, confirm, setSelected }: Props) {
       <TableCell align="left">{product?.token}</TableCell>
       <TableCell align="left">
         <ListItemText
-          primary={fDate(orderedAt)}
-          secondary={fTime(orderedAt)}
+          primary={formatDate(orderedAt)}
           primaryTypographyProps={{ typography: 'caption', noWrap: true }}
           secondaryTypographyProps={{
             mt: 0.5,
