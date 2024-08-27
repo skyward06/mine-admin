@@ -282,7 +282,7 @@ export default function MemberListView() {
         title="Delete"
         content={
           <>
-            <Typography>This sale will be removed permanently!</Typography>
+            <Typography>This member will be removed permanently!</Typography>
             <Typography>Are you sure?</Typography>
           </>
         }
