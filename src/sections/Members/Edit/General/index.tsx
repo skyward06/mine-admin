@@ -64,8 +64,6 @@ const MemberGeneralSchema = zod.object({
 export default function MemberGeneral({ currentMember }: Props) {
   const router = useRouter();
 
-  const [email, setEmail] = useState<string>();
-  const [assetId, setAssetId] = useState<string>();
   const [firstName, setFirstName] = useState<string>(currentMember.fullName.split(' ')[0]);
   const [lastName, setLastName] = useState<string>(currentMember.fullName.split(' ')[1]);
 
@@ -144,28 +142,18 @@ export default function MemberGeneral({ currentMember }: Props) {
     } catch (err) {
       if (err instanceof ApolloError) {
         const [error] = err.graphQLErrors;
+
         if (error.path?.includes('email')) {
           setError('email', { type: 'manual', message: error?.message || '' });
+        }
+
+        if (error.path?.includes('assetId')) {
+          setError('assetId', { type: 'manual', message: error?.message || '' });
         }
       }
       toast.error(err.message);
     }
   });
-
-  const handleSearchChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    try {
-      const { data } = await fetchMembers({
-        variables: { filter: { [event.target.name]: event.target.value } },
-      });
-
-      if (data?.members?.members?.length) {
-        if (data?.members?.members[0]?.id !== currentMember.id)
-          toast.warning(`This ${event.target.name} is already exist`);
-      }
-    } catch (err) {
-      console.log('err => ', err);
-    }
-  };
 
   useEffect(() => {
     fetchMembers({
@@ -192,17 +180,7 @@ export default function MemberGeneral({ currentMember }: Props) {
               }}
             >
               <Field.Text name="username" label="Username" />
-              <Field.Text
-                name="email"
-                label="Email"
-                defaultValue={currentMember.email}
-                value={email}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                  handleSearchChange(event);
-
-                  setEmail(event.target.value);
-                }}
-              />
+              <Field.Text name="email" label="Email" defaultValue={currentMember.email} />
               <Field.Text
                 name="firstName"
                 label="First Name"
@@ -243,16 +221,7 @@ export default function MemberGeneral({ currentMember }: Props) {
               <Field.Text name="city" label="City" />
               <Field.Text name="state" label="State" />
               <Field.Text name="zipCode" label="ZIP Code" />
-              <Field.Text
-                name="assetId"
-                label="Asset ID"
-                value={assetId}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                  handleSearchChange(event);
-
-                  setAssetId(event.target.value);
-                }}
-              />
+              <Field.Text name="assetId" label="Asset ID" />
             </Box>
           </Card>
         </Grid>
