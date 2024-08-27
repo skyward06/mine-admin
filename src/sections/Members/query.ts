@@ -38,6 +38,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           assetId
         }
         placementParentId
+        placementPosition
         sales {
           id
           invoiceNo

@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react';
 
 import Card from '@mui/material/Card';
 import Paper from '@mui/material/Paper';
+import Radio from '@mui/material/Radio';
 import Checkbox from '@mui/material/Checkbox';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
+import RadioGroup from '@mui/material/RadioGroup';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -36,12 +38,20 @@ interface Member {
   username: string;
 }
 
-export function StandardNode({ id, placementParentId, username, fullName, createdAt }: NodeProps) {
+export function StandardNode({
+  id,
+  placementParentId,
+  placementPosition,
+  username,
+  fullName,
+  createdAt,
+}: NodeProps) {
   const addModal = useBoolean();
   const removeModal = useBoolean();
 
   const popover = usePopover();
 
+  const [position, setPosition] = useState<string>('left');
   const [checked, setChecked] = useState<boolean>(false);
   const [member, setMember] = useState<Member>();
 
@@ -102,6 +112,20 @@ export function StandardNode({ id, placementParentId, username, fullName, create
           setMember({ id: value?.id ?? '', username: value?.username ?? '' });
         }}
       />
+      <RadioGroup
+        row
+        defaultValue="LEFT"
+        sx={{ px: 1 }}
+        onChange={(event) => setPosition(event.target.value)}
+      >
+        <FormControlLabel
+          value="LEFT"
+          label="Left"
+          color="#00b8d9"
+          control={<Radio size="medium" />}
+        />
+        <FormControlLabel value="RIGHT" label="Right" control={<Radio size="medium" />} />
+      </RadioGroup>
     </Paper>
   );
 
@@ -145,7 +169,7 @@ export function StandardNode({ id, placementParentId, username, fullName, create
         </IconButton>
 
         <Typography variant="subtitle2" noWrap sx={{ mb: 0.5 }}>
-          {username}
+          {username} {placementPosition}
         </Typography>
 
         <Typography variant="caption" component="div" noWrap sx={{ color: 'text.secondary' }}>
@@ -193,7 +217,9 @@ export function StandardNode({ id, placementParentId, username, fullName, create
             onClick={async () => {
               try {
                 const { data } = await updateMember({
-                  variables: { data: { id: member?.id, placementParentId: id } },
+                  variables: {
+                    data: { id: member?.id, placementParentId: id, placementPosition: position },
+                  },
                 });
 
                 if (data?.updateMember.id && !loading) {
