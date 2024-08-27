@@ -47,7 +47,7 @@ export default function PlacementListView() {
   const { fetchMembers, members, loading } = useFetchMembers();
 
   useEffect(() => {
-    fetchMembers();
+    fetchMembers({ variables: { sort: '-placementPosition' } });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

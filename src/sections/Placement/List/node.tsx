@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 
 import Card from '@mui/material/Card';
 import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
 import Radio from '@mui/material/Radio';
 import Checkbox from '@mui/material/Checkbox';
 import MenuList from '@mui/material/MenuList';
@@ -18,6 +19,7 @@ import { useBoolean } from 'src/hooks/useBoolean';
 
 import { fDate } from 'src/utils/format-time';
 
+import { Label } from 'src/components/Label';
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 import { ConfirmDialog } from 'src/components/Dialog';
@@ -51,7 +53,7 @@ export function StandardNode({
 
   const popover = usePopover();
 
-  const [position, setPosition] = useState<string>('left');
+  const [position, setPosition] = useState<string>('LEFT');
   const [checked, setChecked] = useState<boolean>(false);
   const [member, setMember] = useState<Member>();
 
@@ -169,16 +171,31 @@ export function StandardNode({
         </IconButton>
 
         <Typography variant="subtitle2" noWrap sx={{ mb: 0.5 }}>
-          {username} {placementPosition}
-        </Typography>
-
-        <Typography variant="caption" component="div" noWrap sx={{ color: 'text.secondary' }}>
           {`${firstName} ${lastName.length && lastName[0].toUpperCase()}.`}
         </Typography>
 
         <Typography variant="caption" component="div" noWrap sx={{ color: 'text.secondary' }}>
-          {fDate(createdAt)}
+          {username}
         </Typography>
+
+        <Stack direction="row" justifyContent="space-between" sx={{ background: 'translation' }}>
+          <Typography
+            variant="caption"
+            component="div"
+            noWrap
+            sx={{ color: 'text.secondary', mt: 0.5 }}
+          >
+            {fDate(createdAt)}
+          </Typography>
+
+          <Label
+            variant={placementPosition === 'LEFT' ? 'soft' : 'outlined'}
+            color="info"
+            sx={{ fontSize: 10, border: placementPosition === 'LEFT' ? 'none' : 1 }}
+          >
+            {placementPosition}
+          </Label>
+        </Stack>
       </Card>
 
       <CustomPopover
