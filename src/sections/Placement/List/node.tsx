@@ -49,6 +49,7 @@ export function StandardNode({
   createdAt,
 }: NodeProps) {
   const addModal = useBoolean();
+  const editModal = useBoolean();
   const removeModal = useBoolean();
 
   const popover = usePopover();
@@ -68,6 +69,13 @@ export function StandardNode({
     removeModal.onTrue();
   };
 
+  const onEdit = () => {
+    popover.onClose();
+    editModal.onTrue();
+
+    fetchMembers({ variables: { page: '1,10' } });
+  };
+
   const onAdd = () => {
     popover.onClose();
     addModal.onTrue();
@@ -84,7 +92,6 @@ export function StandardNode({
     fetchMembers({
       variables: {
         filter: {
-          placementParentId: null,
           username: { contains: member?.username, mode: 'insensitive' },
         },
         page: '1,10',
@@ -214,6 +221,11 @@ export function StandardNode({
             Delete
           </MenuItem>
 
+          <MenuItem onClick={onEdit}>
+            <Iconify icon="bxs:pencil" />
+            Edit
+          </MenuItem>
+
           <MenuItem onClick={onAdd}>
             <Iconify icon="mdi:plus-circle-outline" />
             Add
@@ -242,6 +254,42 @@ export function StandardNode({
                 if (data?.updateMember.id && !loading) {
                   toast.success('Successfully added!');
                   addModal.onFalse();
+                }
+              } catch (err) {
+                console.log('err => ', err);
+              }
+            }}
+          >
+            OK
+          </LoadingButton>
+        }
+      />
+
+      <ConfirmDialog
+        open={editModal.value}
+        title="Edit placement"
+        onClose={() => editModal.onFalse()}
+        content={addContent}
+        action={
+          <LoadingButton
+            variant="contained"
+            color="success"
+            loading={loading}
+            onClick={async () => {
+              try {
+                const { data } = await updateMember({
+                  variables: {
+                    data: {
+                      id,
+                      placementParentId: member?.id,
+                      placementPosition: position,
+                    },
+                  },
+                });
+
+                if (data?.updateMember.id && !loading) {
+                  toast.success('Successfully added!');
+                  editModal.onFalse();
                 }
               } catch (err) {
                 console.log('err => ', err);
