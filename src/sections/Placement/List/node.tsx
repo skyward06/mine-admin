@@ -44,6 +44,7 @@ export function StandardNode({
   id,
   placementParentId,
   placementPosition,
+  placementParent,
   username,
   fullName,
   createdAt,
@@ -92,6 +93,9 @@ export function StandardNode({
     fetchMembers({
       variables: {
         filter: {
+          ...(addModal.value && {
+            placementParentId: null,
+          }),
           username: { contains: member?.username, mode: 'insensitive' },
         },
         page: '1,10',
@@ -108,7 +112,7 @@ export function StandardNode({
         loading={memberLoading}
         loadingText={<LoadingButton loading={memberLoading} />}
         getOptionLabel={(option) => option!.username}
-        renderInput={(params) => <TextField {...params} label="Member Name" margin="none" />}
+        renderInput={(params) => <TextField {...params} label="Member Name(Child)" margin="none" />}
         renderOption={(props, option) => (
           <li {...props} key={option!.username}>
             {option!.username}
@@ -124,6 +128,47 @@ export function StandardNode({
       <RadioGroup
         row
         defaultValue="LEFT"
+        sx={{ px: 1 }}
+        onChange={(event) => setPosition(event.target.value)}
+      >
+        <FormControlLabel
+          value="LEFT"
+          label="Left"
+          color="#00b8d9"
+          control={<Radio size="medium" />}
+        />
+        <FormControlLabel value="RIGHT" label="Right" control={<Radio size="medium" />} />
+      </RadioGroup>
+    </Paper>
+  );
+
+  const editContent = (
+    <Paper sx={{ py: 1 }}>
+      <Autocomplete
+        fullWidth
+        options={members}
+        loading={memberLoading}
+        loadingText={<LoadingButton loading={memberLoading} />}
+        getOptionLabel={(option) => option!.username}
+        value={placementParent}
+        renderInput={(params) => (
+          <TextField {...params} label="Member Name(Parent)" margin="none" />
+        )}
+        renderOption={(props, option) => (
+          <li {...props} key={option!.username}>
+            {option!.username}
+          </li>
+        )}
+        onInputChange={(_, name: string) => {
+          setMember({ id: placementParent?.id ?? '', username: name });
+        }}
+        onChange={(_, value) => {
+          setMember({ id: value?.id ?? '', username: value?.username ?? '' });
+        }}
+      />
+      <RadioGroup
+        row
+        defaultValue={placementPosition}
         sx={{ px: 1 }}
         onChange={(event) => setPosition(event.target.value)}
       >
@@ -269,7 +314,7 @@ export function StandardNode({
         open={editModal.value}
         title="Edit placement"
         onClose={() => editModal.onFalse()}
-        content={addContent}
+        content={editContent}
         action={
           <LoadingButton
             variant="contained"

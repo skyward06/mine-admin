@@ -39,6 +39,16 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         }
         placementParentId
         placementPosition
+        placementParent {
+          id
+          username
+          fullName
+          email
+          primaryAddress
+          secondaryAddress
+          mobile
+          assetId
+        }
         sales {
           id
           invoiceNo
