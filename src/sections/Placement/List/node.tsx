@@ -240,13 +240,15 @@ export function StandardNode({
             {fDate(createdAt)}
           </Typography>
 
-          <Label
-            variant={placementPosition === 'LEFT' ? 'soft' : 'outlined'}
-            color="info"
-            sx={{ fontSize: 10, border: placementPosition === 'LEFT' ? 'none' : 1 }}
-          >
-            {placementPosition}
-          </Label>
+          {placementPosition && (
+            <Label
+              variant={placementPosition === 'LEFT' ? 'soft' : 'outlined'}
+              color="info"
+              sx={{ fontSize: 10, border: placementPosition === 'LEFT' ? 'none' : 1 }}
+            >
+              {placementPosition}
+            </Label>
+          )}
         </Stack>
       </Card>
 
