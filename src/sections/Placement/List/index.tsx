@@ -71,6 +71,7 @@ function buildTree(node: any, baseX: number, depth: number, tree: any[]) {
       style: {
         padding: 0,
         border: 'none',
+        borderRadius: '12px',
         width: PLACEMENTTREE_NODE_WIDTH,
         height: PLACEMENTTREE_NODE_HEIGHT,
       },
@@ -99,6 +100,7 @@ function buildTree(node: any, baseX: number, depth: number, tree: any[]) {
     style: {
       padding: 0,
       border: 'none',
+      borderRadius: '12px',
       width: PLACEMENTTREE_NODE_WIDTH,
       height: PLACEMENTTREE_NODE_HEIGHT,
     },
