@@ -88,14 +88,17 @@ function buildTree(node: any, baseX: number, depth: number, tree: any[]) {
   children
     .filter((child: any) => child.placementPosition === 'LEFT')
     .forEach((child: any) => {
-      const resNode = buildTree(child, maxX, depth + 1, tree);
-      maxX = resNode.maxX + PLACEMENTTREE_NODE_X_SPACE;
+      const { maxX: tempX } = buildTree(child, maxX + PLACEMENTTREE_NODE_X_SPACE, depth + 1, tree);
+      maxX = tempX;
     });
 
   const res = {
     id: node.id,
     data: { label: <StandardNode {...node} /> },
-    position: { x: maxX, y: depth * (PLACEMENTTREE_NODE_HEIGHT + PLACEMENTTREE_NODE_Y_SPACE) },
+    position: {
+      x: Math.max(baseX, maxX - (PLACEMENTTREE_NODE_WIDTH - PLACEMENTTREE_NODE_X_SPACE) / 2),
+      y: depth * (PLACEMENTTREE_NODE_HEIGHT + PLACEMENTTREE_NODE_Y_SPACE),
+    },
     draggable: true,
     style: {
       padding: 0,
@@ -106,18 +109,18 @@ function buildTree(node: any, baseX: number, depth: number, tree: any[]) {
     },
   };
 
-  maxX = maxX + PLACEMENTTREE_NODE_WIDTH + PLACEMENTTREE_NODE_X_SPACE;
+  maxX = res.position.x + (PLACEMENTTREE_NODE_WIDTH - PLACEMENTTREE_NODE_X_SPACE) / 2;
 
   children
     .filter((child: any) => child.placementPosition === 'RIGHT')
     .forEach((child: any) => {
-      const resNode = buildTree(child, maxX, depth + 1, tree);
-      maxX = resNode.maxX + PLACEMENTTREE_NODE_X_SPACE;
+      const { maxX: tempX } = buildTree(child, maxX + PLACEMENTTREE_NODE_X_SPACE, depth + 1, tree);
+      maxX = tempX;
     });
 
   const element = {
     ...res,
-    maxX,
+    maxX: Math.max(maxX, res.position.x + PLACEMENTTREE_NODE_WIDTH),
   };
 
   tree.push(element);
