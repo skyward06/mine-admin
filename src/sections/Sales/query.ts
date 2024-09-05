@@ -13,6 +13,7 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
           username
           fullName
           email
+          point
           mobile
           assetId
           primaryAddress
@@ -25,6 +26,7 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
           date
           token
           status
+          point
         }
         statisticsSales {
           id

@@ -12,6 +12,7 @@ export const FETCH_PACKAGES_QUERY = gql(/* GraphQL */ `
         amount
         status
         date
+        point
         token
         sales {
           id

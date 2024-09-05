@@ -26,12 +26,14 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         city
         state
         zipCode
+        point
         sponsorId
         sponsor {
           id
           username
           fullName
           email
+          point
           primaryAddress
           secondaryAddress
           mobile
@@ -44,6 +46,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           username
           fullName
           email
+          point
           primaryAddress
           secondaryAddress
           mobile
