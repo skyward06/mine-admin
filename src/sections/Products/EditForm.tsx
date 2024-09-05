@@ -38,6 +38,7 @@ export default function EditForm({ current }: Props) {
     status: current
       ? zod.boolean({ required_error: 'Status is required' }).default(true)
       : zod.number({ required_error: 'Status is required' }).default(1),
+    point: zod.number({ required_error: 'Point is required' }),
   });
 
   type NewProductSchemaType = zod.infer<typeof NewProductSchema>;
@@ -53,6 +54,7 @@ export default function EditForm({ current }: Props) {
             amount: 0,
             token: 0,
             status: 1,
+            point: 0,
           },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [current]
@@ -125,7 +127,11 @@ export default function EditForm({ current }: Props) {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <Field.Text name="productName" label="Product Name" />
+              <Field.Text
+                name="productName"
+                label="Product Name"
+                sx={{ gridRow: 1, gridColumn: '1 / 3' }}
+              />
               <Field.Text
                 name="amount"
                 type="number"
@@ -138,6 +144,7 @@ export default function EditForm({ current }: Props) {
                 label="Hash Power"
                 disabled={!!(current?.sales ?? []).length}
               />
+              <Field.Text name="point" type="number" label="Point" />
               <Field.Select
                 name="status"
                 label="Status"
