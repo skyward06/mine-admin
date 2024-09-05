@@ -24,13 +24,14 @@ type Props = {
 export default function ProductTableRow({ row, confirm, setSelected }: Props) {
   const router = useRouter();
 
-  const { id, amount, date, productName, token, sales } = row;
+  const { id, amount, date, productName, point, token, sales } = row;
 
   return (
     <TableRow hover>
       <TableCell align="left">{formatDate(date)}</TableCell>
       <TableCell align="left">{amount}</TableCell>
       <TableCell align="left">{productName}</TableCell>
+      <TableCell align="left">{point}</TableCell>
       <TableCell align="left">{token}</TableCell>
       <TableCell align="center">
         <Tooltip title="Edit" placement="top" arrow>
