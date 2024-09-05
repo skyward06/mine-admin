@@ -146,7 +146,7 @@ export default function SaleCreateForm() {
                 fullWidth
                 options={members}
                 getOptionLabel={(option) => option!.username}
-                renderInput={(params) => <TextField {...params} label="Member" margin="none" />}
+                renderInput={(params) => <TextField {...params} label="Miner" margin="none" />}
                 renderOption={(props, option) => (
                   <li {...props} key={option!.username}>
                     {option!.username}

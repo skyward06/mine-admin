@@ -75,10 +75,7 @@ export default function MemberEditView() {
       <DashboardContent>
         <Breadcrumbs
           heading={member.username}
-          links={[
-            { name: 'Member', href: paths.dashboard.members.root },
-            { name: member.username },
-          ]}
+          links={[{ name: 'Miner', href: paths.dashboard.members.root }, { name: member.username }]}
           sx={{
             mb: { xs: 2, md: 3 },
           }}

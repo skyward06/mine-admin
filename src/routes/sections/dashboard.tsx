@@ -67,7 +67,7 @@ export const dashboardRoutes = [
         children: [{ index: true, element: <DashboardPage /> }],
       },
       {
-        path: 'members',
+        path: 'miners',
         children: [
           { index: true, element: <MemberListPage /> },
           { path: 'new', element: <MemberCreatePage /> },

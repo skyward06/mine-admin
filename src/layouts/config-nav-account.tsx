@@ -36,8 +36,8 @@ export const _account = [
     ),
   },
   {
-    label: 'Member',
-    href: '/members',
+    label: 'Miner',
+    href: '/miners',
     icon: <Iconify icon="heroicons:user" />,
   },
   {

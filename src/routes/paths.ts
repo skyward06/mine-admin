@@ -5,7 +5,7 @@ const ROOTS = {
   DASHBOARD: '/dashboard',
   STATISTICS: '/statistics',
   SALES: '/sales',
-  MEMBERS: '/members',
+  MEMBERS: '/miners',
   PRODUCTS: '/products',
   PLACEMENT: '/placement',
   REWARD: '/reward',

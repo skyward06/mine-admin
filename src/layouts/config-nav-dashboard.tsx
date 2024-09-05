@@ -53,7 +53,7 @@ export const navData = [
     subheader: 'mineTXC Administration',
     items: [
       { title: 'Dashboard', path: paths.dashboard.history.root, icon: ICONS.analytics },
-      { title: 'Member', path: paths.dashboard.members.root, icon: ICONS.user },
+      { title: 'Miner', path: paths.dashboard.members.root, icon: ICONS.user },
       { title: 'Sale', path: paths.dashboard.sales.root, icon: ICONS.sale },
       { title: 'Product', path: paths.dashboard.products.root, icon: ICONS.package },
       { title: 'Placement', path: paths.dashboard.placement.root, icon: ICONS.diagram },

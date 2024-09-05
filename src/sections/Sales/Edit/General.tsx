@@ -40,7 +40,7 @@ const SaleGeneralSchema = zod.object({
   paymentMethod: zod.string({ required_error: 'Payment Method is required' }),
   status: zod.boolean({ required_error: 'Status is required' }).default(true),
   packageId: zod.string({ required_error: 'Package is required' }),
-  memberId: zod.string({ required_error: 'Member is required' }),
+  memberId: zod.string({ required_error: 'Miner is required' }),
 });
 
 export default function SaleGeneral({ currentSale }: Props) {
@@ -125,7 +125,7 @@ export default function SaleGeneral({ currentSale }: Props) {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <Field.Select name="memberId" label="Member">
+              <Field.Select name="memberId" label="Miner">
                 {members.map((option) => (
                   <MenuItem key={option?.id} value={option?.id}>
                     {option?.username}

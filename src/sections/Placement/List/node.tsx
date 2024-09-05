@@ -112,7 +112,7 @@ export function StandardNode({
         loading={memberLoading}
         loadingText={<LoadingButton loading={memberLoading} />}
         getOptionLabel={(option) => option!.username}
-        renderInput={(params) => <TextField {...params} label="Member Name(Child)" margin="none" />}
+        renderInput={(params) => <TextField {...params} label="Miner Name(Child)" margin="none" />}
         renderOption={(props, option) => (
           <li {...props} key={option!.username}>
             {option!.username}
@@ -151,9 +151,7 @@ export function StandardNode({
         loadingText={<LoadingButton loading={memberLoading} />}
         getOptionLabel={(option) => option!.username}
         value={placementParent}
-        renderInput={(params) => (
-          <TextField {...params} label="Member Name(Parent)" margin="none" />
-        )}
+        renderInput={(params) => <TextField {...params} label="Miner Name(Parent)" margin="none" />}
         renderOption={(props, option) => (
           <li {...props} key={option!.username}>
             {option!.username}

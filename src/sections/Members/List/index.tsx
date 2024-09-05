@@ -156,8 +156,8 @@ export default function MemberListView() {
   return (
     <DashboardContent>
       <Breadcrumbs
-        heading="Member"
-        links={[{ name: 'Member', href: paths.dashboard.members.root }, { name: 'List' }]}
+        heading="Miner"
+        links={[{ name: 'Miner', href: paths.dashboard.members.root }, { name: 'List' }]}
         action={
           <Button
             component={RouterLink}
@@ -165,7 +165,7 @@ export default function MemberListView() {
             variant="contained"
             startIcon={<Iconify icon="mingcute:add-line" />}
           >
-            New Member
+            New Miner
           </Button>
         }
         sx={{
@@ -297,9 +297,9 @@ export default function MemberListView() {
               const result = promise.data?.removeMember.result;
 
               if (result === 'success') {
-                toast.success('Member removed successfully');
+                toast.success('Miner removed successfully');
               } else {
-                toast.error('You are not allowed to remove this member');
+                toast.error('You are not allowed to remove this miner');
               }
 
               confirm.onFalse();
