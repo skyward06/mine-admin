@@ -48,7 +48,8 @@ export default function MemberTableRow({
   const confirm = useBoolean();
   const password = useBoolean();
 
-  const { id, username, email, mobile, assetId, fullName, createdAt, sales } = row;
+  const { id, username, email, mobile, assetId, point, fullName, createdAt, sales } = row;
+  console.log('point => ', point);
 
   const { updatePassword } = useUpdatePassword();
 
@@ -113,6 +114,8 @@ export default function MemberTableRow({
         <TableCell>{mobile}</TableCell>
 
         <TableCell>{assetId}</TableCell>
+
+        <TableCell>{point}</TableCell>
 
         <TableCell>
           <ListItemText

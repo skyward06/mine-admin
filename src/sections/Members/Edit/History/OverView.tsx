@@ -1,3 +1,5 @@
+import type { Member } from 'src/__generated__/graphql';
+
 import { useParams } from 'react-router-dom';
 import { useQuery as useGraphQuery } from '@apollo/client';
 
@@ -11,7 +13,11 @@ import { fNumber } from 'src/utils/formatNumber';
 
 import { FETCH_MEMBER_HISTORY } from '../../query';
 
-export const OverView = () => {
+interface Props {
+  currentMember: Member;
+}
+
+export const OverView = ({ currentMember }: Props) => {
   const { id } = useParams();
 
   const { data } = useGraphQuery(FETCH_MEMBER_HISTORY, {
@@ -30,6 +36,13 @@ export const OverView = () => {
           {fNumber(data?.memberOverview.currentHashPower ?? 0)}
           <Box component="span" sx={{ color: 'text.secondary', typography: 'body2' }}>
             Hash Power
+          </Box>
+        </Stack>
+
+        <Stack width={1}>
+          {currentMember.point}
+          <Box component="span" sx={{ color: 'text.secondary', typography: 'body2' }}>
+            Point
           </Box>
         </Stack>
 

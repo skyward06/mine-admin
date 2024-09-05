@@ -58,6 +58,7 @@ const TABLE_HEAD = [
   { id: 'fullName', label: 'Full Name', sortable: true },
   { id: 'mobile', label: 'Mobile', sortable: true },
   { id: 'assetId', label: 'AssetID', sortable: true },
+  { id: 'point', label: 'Point', sortable: true },
   { id: 'createdAt', label: 'Created At', sortable: true },
   { id: 'action', label: 'Action', align: 'center' },
 ];
