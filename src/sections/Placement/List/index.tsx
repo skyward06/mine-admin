@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect } from 'react';
+import { useMemo, useEffect } from 'react';
 import { ReactFlow, type Node, type Edge, type FitViewOptions } from '@xyflow/react';
 
 import Stack from '@mui/material/Stack';
@@ -25,10 +25,10 @@ import CustomEdge from './customEdge';
 const fitViewOptions: FitViewOptions = {
   padding: 0.2,
 };
+
 const edgeTypes = {
   customEdge: CustomEdge,
 };
-const edgeStyle: React.CSSProperties = {};
 
 function buildPlacementTree(members: any[]) {
   const memberMap: Record<string, any> = {};
@@ -156,7 +156,6 @@ export default function PlacementListView() {
           source: member?.placementParentId ?? '',
           target: member?.id ?? '',
           type: 'customEdge',
-          style: edgeStyle,
         })),
     [members]
   );
