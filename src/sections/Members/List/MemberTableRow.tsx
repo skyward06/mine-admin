@@ -128,7 +128,7 @@ export default function MemberTableRow({
         </TableCell>
 
         {action && (
-          <TableCell sx={{ whiteSpace: 'nowrap' }}>
+          <TableCell sx={{ whiteSpace: 'nowrap' }} align="center">
             <Tooltip title="View" placement="top" arrow>
               <IconButton
                 color="default"
