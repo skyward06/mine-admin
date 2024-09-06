@@ -63,9 +63,12 @@ const MemberGeneralSchema = zod.object({
 
 export default function MemberGeneral({ currentMember }: Props) {
   const router = useRouter();
+  const { fullName } = currentMember;
 
-  const [firstName, setFirstName] = useState<string>(currentMember.fullName.split(' ')[0]);
-  const [lastName, setLastName] = useState<string>(currentMember.fullName.split(' ')[1]);
+  const [, first, last]: any = fullName.match(/^(\S+)\s+(.*)/);
+
+  const [firstName, setFirstName] = useState<string>(first);
+  const [lastName, setLastName] = useState<string>(last);
 
   const { data: payoutsData } = useGraphQuery(FETCH_PAYOUTS_QUERY, {
     variables: {},
@@ -82,13 +85,10 @@ export default function MemberGeneral({ currentMember }: Props) {
   const [submit, { loading }] = useMutation(UPDATE_MEMBER);
 
   const defaultValues = useMemo(() => {
-    const { fullName } = currentMember;
     const { data } = MemberGeneralSchema.safeParse(currentMember);
 
-    return data
-      ? { ...data, firstName: fullName.split(' ')[0], lastName: fullName.split(' ')[1] }
-      : ({} as MemberGeneralSchemaType);
-  }, [currentMember]);
+    return data ? { ...data, firstName: first, lastName: last } : ({} as MemberGeneralSchemaType);
+  }, [currentMember, first, last]);
 
   const methods = useForm<MemberGeneralSchemaType>({
     resolver: zodResolver(MemberGeneralSchema),
