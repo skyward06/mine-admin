@@ -15,6 +15,9 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import Autocomplete from '@mui/material/Autocomplete';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
+
 import { useBoolean } from 'src/hooks/useBoolean';
 
 import { fDate } from 'src/utils/format-time';
@@ -53,6 +56,7 @@ export function StandardNode({
   const editModal = useBoolean();
   const removeModal = useBoolean();
 
+  const router = useRouter();
   const popover = usePopover();
 
   const [position, setPosition] = useState<string>('LEFT');
@@ -211,6 +215,7 @@ export function StandardNode({
           display: 'inline-flex',
           flexDirection: 'column',
         }}
+        onClick={() => router.push(paths.dashboard.members.edit(id))}
       >
         <IconButton
           color={popover.open ? 'inherit' : 'default'}

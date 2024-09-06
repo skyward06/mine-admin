@@ -2,14 +2,19 @@ import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
+
 import { fDate } from 'src/utils/format-time';
 
 import { Label } from 'src/components/Label';
 
 import type { NodeProps } from './type';
 
-export function StandardNode({ placementPosition, username, fullName, createdAt }: NodeProps) {
+export function StandardNode({ id, placementPosition, username, fullName, createdAt }: NodeProps) {
   const [firstName, lastName] = fullName ? fullName.split(' ') : ['', ''];
+
+  const router = useRouter();
 
   return (
     <Card
@@ -22,6 +27,7 @@ export function StandardNode({ placementPosition, username, fullName, createdAt 
         display: 'inline-flex',
         flexDirection: 'column',
       }}
+      onClick={() => router.push(paths.dashboard.members.edit(id))}
     >
       <Typography variant="subtitle2" noWrap sx={{ mb: 0.5 }}>
         {`${firstName} ${lastName.length && lastName[0].toUpperCase()}.`}
