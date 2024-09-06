@@ -127,11 +127,7 @@ export default function EditForm({ current }: Props) {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <Field.Text
-                name="productName"
-                label="Product Name"
-                sx={{ gridRow: 1, gridColumn: '1 / 3' }}
-              />
+              <Field.Text name="productName" label="Product Name" />
               <Field.Text
                 name="amount"
                 type="number"
@@ -144,7 +140,12 @@ export default function EditForm({ current }: Props) {
                 label="Hash Power"
                 disabled={!!(current?.sales ?? []).length}
               />
-              <Field.Text name="point" type="number" label="Point" />
+              <Field.Text
+                name="point"
+                type="number"
+                label="Point"
+                disabled={!!(current?.sales ?? []).length}
+              />
               <Field.Select
                 name="status"
                 label="Status"
