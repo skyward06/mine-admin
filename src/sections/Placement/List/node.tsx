@@ -215,7 +215,6 @@ export function StandardNode({
           display: 'inline-flex',
           flexDirection: 'column',
         }}
-        onClick={() => router.push(paths.dashboard.members.edit(id))}
       >
         <IconButton
           color={popover.open ? 'inherit' : 'default'}
@@ -225,7 +224,16 @@ export function StandardNode({
           <Iconify icon="eva:more-horizontal-fill" />
         </IconButton>
 
-        <Typography variant="subtitle2" noWrap sx={{ mb: 0.5 }}>
+        <Typography
+          variant="subtitle2"
+          noWrap
+          sx={{
+            mb: 0.5,
+            cursor: 'pointer',
+            '&:hover': { color: (theme) => theme.vars.palette.Alert.errorIconColor },
+          }}
+          onClick={() => router.push(paths.dashboard.members.edit(id))}
+        >
           {`${firstName} ${lastName.length && lastName[0].toUpperCase()}.`}
         </Typography>
 
