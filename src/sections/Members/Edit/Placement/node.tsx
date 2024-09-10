@@ -43,7 +43,10 @@ export function StandardNode({ id, placementPosition, username, fullName, create
           cursor: 'pointer',
           '&:hover': { color: (theme) => theme.vars.palette.Alert.errorIconColor },
         }}
-        onClick={() => router.push(paths.dashboard.members.edit(id))}
+        onClick={() => {
+          router.push(paths.dashboard.members.edit(id));
+          router.refresh();
+        }}
       >
         {`${firstName} ${lastName.length && lastName[0].toUpperCase()}.`}
       </Typography>
