@@ -1,3 +1,5 @@
+import { useContext } from 'react';
+
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -8,13 +10,18 @@ import { useRouter } from 'src/routes/hooks';
 import { fDate } from 'src/utils/format-time';
 
 import { Label } from 'src/components/Label';
+import { Iconify } from 'src/components/Iconify';
+
+import NodeContext from './nodeContext';
 
 import type { NodeProps } from './type';
 
 export function StandardNode({ id, placementPosition, username, fullName, createdAt }: NodeProps) {
+  const router = useRouter();
+
   const [firstName, lastName] = fullName ? fullName.split(' ') : ['', ''];
 
-  const router = useRouter();
+  const { visibleMap, expandTree, collapseTree } = useContext(NodeContext);
 
   return (
     <Card
@@ -36,10 +43,7 @@ export function StandardNode({ id, placementPosition, username, fullName, create
           cursor: 'pointer',
           '&:hover': { color: (theme) => theme.vars.palette.Alert.errorIconColor },
         }}
-        onClick={() => {
-          router.push(paths.dashboard.members.edit(id));
-          router.refresh();
-        }}
+        onClick={() => router.push(paths.dashboard.members.edit(id))}
       >
         {`${firstName} ${lastName.length && lastName[0].toUpperCase()}.`}
       </Typography>
@@ -58,15 +62,31 @@ export function StandardNode({ id, placementPosition, username, fullName, create
           {fDate(createdAt)}
         </Typography>
 
-        {placementPosition && (
-          <Label
-            variant={placementPosition === 'LEFT' ? 'soft' : 'outlined'}
-            color="info"
-            sx={{ fontSize: 10, border: placementPosition === 'LEFT' ? 'none' : 1 }}
-          >
-            {placementPosition}
-          </Label>
-        )}
+        <Stack direction="row" columnGap={1}>
+          <Stack>
+            {placementPosition && (
+              <Label
+                variant={placementPosition === 'LEFT' ? 'soft' : 'outlined'}
+                color="info"
+                sx={{ fontSize: 10, border: placementPosition === 'LEFT' ? 'none' : 1 }}
+              >
+                {placementPosition}
+              </Label>
+            )}
+          </Stack>
+          <Stack>
+            {visibleMap[id] !== 3 && (
+              <Iconify
+                icon={`mdi:${visibleMap[id] === 1 ? 'plus' : 'minus'}-circle-outline`}
+                sx={{ mt: 0.15, cursor: 'pointer' }}
+                onClick={() => {
+                  if (visibleMap[id] === 1) expandTree(id);
+                  else if (visibleMap[id] === 2) collapseTree(id);
+                }}
+              />
+            )}
+          </Stack>
+        </Stack>
       </Stack>
     </Card>
   );
