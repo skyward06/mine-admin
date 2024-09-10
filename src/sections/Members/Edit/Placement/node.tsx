@@ -27,9 +27,20 @@ export function StandardNode({ id, placementPosition, username, fullName, create
         display: 'inline-flex',
         flexDirection: 'column',
       }}
-      onClick={() => router.push(paths.dashboard.members.edit(id))}
     >
-      <Typography variant="subtitle2" noWrap sx={{ mb: 0.5 }}>
+      <Typography
+        variant="subtitle2"
+        noWrap
+        sx={{
+          mb: 0.5,
+          cursor: 'pointer',
+          '&:hover': { color: (theme) => theme.vars.palette.Alert.errorIconColor },
+        }}
+        onClick={() => {
+          router.push(paths.dashboard.members.edit(id));
+          router.refresh();
+        }}
+      >
         {`${firstName} ${lastName.length && lastName[0].toUpperCase()}.`}
       </Typography>
 
