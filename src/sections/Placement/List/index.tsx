@@ -1,4 +1,5 @@
-import { useMemo, useEffect } from 'react';
+import _ from 'lodash';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 import { ReactFlow, type Node, type Edge, type FitViewOptions } from '@xyflow/react';
 
 import Stack from '@mui/material/Stack';
@@ -21,6 +22,7 @@ import { useFetchMembers } from 'src/sections/Members/useApollo';
 
 import { StandardNode } from './node';
 import CustomEdge from './customEdge';
+import NodeContext from './nodeContext';
 
 const fitViewOptions: FitViewOptions = {
   padding: 0.2,
@@ -56,7 +58,7 @@ function buildPlacementTree(members: any[]) {
   return result;
 }
 
-function buildTree(node: any, baseX: number, depth: number, tree: any[]) {
+function buildTree(node: any, baseX: number, depth: number, tree: any[], visibleMap: any = null) {
   const children = node.children.sort(
     (child1: any, child2: any) =>
       child1.placementPosition === 'LEFT' || child2.placementPosition === 'RIGHT'
@@ -85,12 +87,20 @@ function buildTree(node: any, baseX: number, depth: number, tree: any[]) {
 
   let maxX = baseX;
 
-  children
-    .filter((child: any) => child.placementPosition === 'LEFT')
-    .forEach((child: any) => {
-      const { maxX: tempX } = buildTree(child, maxX + PLACEMENTTREE_NODE_X_SPACE, depth + 1, tree);
-      maxX = tempX;
-    });
+  if (!visibleMap || visibleMap[node.id] === 2) {
+    children
+      .filter((child: any) => child.placementPosition === 'LEFT')
+      .forEach((child: any) => {
+        const { maxX: tempX } = buildTree(
+          child,
+          maxX + PLACEMENTTREE_NODE_X_SPACE,
+          depth + 1,
+          tree,
+          visibleMap
+        );
+        maxX = tempX;
+      });
+  }
 
   const res = {
     id: node.id,
@@ -111,12 +121,20 @@ function buildTree(node: any, baseX: number, depth: number, tree: any[]) {
 
   maxX = res.position.x + (PLACEMENTTREE_NODE_WIDTH - PLACEMENTTREE_NODE_X_SPACE) / 2;
 
-  children
-    .filter((child: any) => child.placementPosition === 'RIGHT')
-    .forEach((child: any) => {
-      const { maxX: tempX } = buildTree(child, maxX + PLACEMENTTREE_NODE_X_SPACE, depth + 1, tree);
-      maxX = tempX;
-    });
+  if (!visibleMap || visibleMap[node.id] === 2) {
+    children
+      .filter((child: any) => child.placementPosition === 'RIGHT')
+      .forEach((child: any) => {
+        const { maxX: tempX } = buildTree(
+          child,
+          maxX + PLACEMENTTREE_NODE_X_SPACE,
+          depth + 1,
+          tree,
+          visibleMap
+        );
+        maxX = tempX;
+      });
+  }
 
   const element = {
     ...res,
@@ -128,8 +146,22 @@ function buildTree(node: any, baseX: number, depth: number, tree: any[]) {
   return element;
 }
 
+function getMemberIdsWithDepth(node: any, depth: number, targetDepth: number) {
+  if (depth === targetDepth) {
+    if (node.children.length) return [{ id: node.id, value: 1 }];
+    return [{ id: node.id, value: 3 }];
+  }
+  const res: any[] = [];
+  node.children.forEach((child: any) => {
+    res.push(...getMemberIdsWithDepth(child, depth + 1, targetDepth));
+  });
+
+  return res.length === 0 ? [{ id: node.id, value: 3 }] : [...res, { id: node.id, value: 2 }];
+}
+
 export default function PlacementListView() {
   const { fetchMembers, members, loading } = useFetchMembers();
+  const [visibleMap, setVisibleMap] = useState<Record<string, number>>({});
 
   useEffect(() => {
     fetchMembers({ variables: { sort: '-placementPosition' } });
@@ -142,10 +174,10 @@ export default function PlacementListView() {
 
     const resultTree: any[] = [];
 
-    buildTree(placementTree, 0, 0, resultTree);
+    buildTree(placementTree, 0, 0, resultTree, visibleMap);
 
     return resultTree;
-  }, [members]);
+  }, [members, visibleMap]);
 
   const edges: Edge[] = useMemo(
     () =>
@@ -159,6 +191,80 @@ export default function PlacementListView() {
         })),
     [members]
   );
+
+  const expandTree = useCallback(
+    (id: string) => {
+      const newVisibleMap: Record<string, number> = { ...visibleMap };
+
+      members
+        .filter((mb) => mb?.placementParentId === id)
+        .forEach((mb) => {
+          if (!newVisibleMap[mb?.id ?? '']) {
+            newVisibleMap[mb?.id ?? ''] =
+              members.findIndex((mber) => mber?.placementParentId === mb?.id) === -1 ? 3 : 1;
+          }
+        });
+
+      newVisibleMap[id] = 2;
+
+      setVisibleMap(newVisibleMap);
+
+      localStorage.setItem('placementVisibleMap', JSON.stringify(visibleMap));
+    },
+    [members, visibleMap]
+  );
+
+  const collapseTree = useCallback(
+    (id: string) => {
+      const newVisibleMap: Record<string, number> = { ...visibleMap };
+
+      newVisibleMap[id] = 1;
+
+      setVisibleMap(newVisibleMap);
+
+      localStorage.setItem('placementVisibleMap', JSON.stringify(newVisibleMap));
+    },
+    [visibleMap]
+  );
+
+  const contextValue = useMemo(
+    () => ({
+      visibleMap,
+      expandTree,
+      collapseTree,
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [visibleMap]
+  );
+
+  const resetVisibleMap = useCallback(() => {
+    if (!members || members.length === 0) {
+      setVisibleMap({});
+
+      localStorage.setItem('placementVisibleMap', JSON.stringify({}));
+
+      return;
+    }
+
+    const placementTree = buildPlacementTree(members.filter((member) => member?.placementParentId));
+    const maps = getMemberIdsWithDepth(placementTree, 0, 3);
+    const newVisibleMap: Record<string, number> = {};
+
+    maps.forEach((mp: any) => {
+      newVisibleMap[mp.id] = mp.value;
+    });
+
+    setVisibleMap(newVisibleMap);
+
+    localStorage.setItem('placementVisibleMap', JSON.stringify(newVisibleMap));
+  }, [members]);
+
+  useEffect(() => {
+    const storageVisibleMap = localStorage.getItem('placementVisibleMap');
+
+    if (!storageVisibleMap || _.isEmpty(JSON.parse(storageVisibleMap))) resetVisibleMap();
+    else setVisibleMap(JSON.parse(storageVisibleMap));
+  }, [resetVisibleMap]);
 
   return (
     <DashboardContent sx={{ overflowX: 'hidden' }}>
@@ -175,13 +281,15 @@ export default function PlacementListView() {
       ) : (
         <ComponentBlock sx={{ px: 0, pb: 0 }}>
           <Stack sx={{ overflow: 'auto', height: '600px', width: '100%' }}>
-            <ReactFlow
-              nodes={nodes}
-              edges={edges}
-              fitView
-              fitViewOptions={fitViewOptions}
-              edgeTypes={edgeTypes}
-            />
+            <NodeContext.Provider value={contextValue}>
+              <ReactFlow
+                nodes={nodes}
+                edges={edges}
+                fitView
+                fitViewOptions={fitViewOptions}
+                edgeTypes={edgeTypes}
+              />
+            </NodeContext.Provider>
           </Stack>
         </ComponentBlock>
       )}

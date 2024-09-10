@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 
 import Card from '@mui/material/Card';
 import Paper from '@mui/material/Paper';
@@ -33,6 +33,8 @@ import {
   useUpdateMember,
   useRemoveMemberPlacement,
 } from 'src/sections/Members/useApollo';
+
+import NodeContext from './nodeContext';
 
 import type { NodeProps } from './type';
 
@@ -107,6 +109,8 @@ export function StandardNode({
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [member]);
+
+  const { visibleMap, expandTree, collapseTree } = useContext(NodeContext);
 
   const addContent = (
     <Paper sx={{ py: 1 }}>
@@ -251,15 +255,31 @@ export function StandardNode({
             {fDate(createdAt)}
           </Typography>
 
-          {placementPosition && (
-            <Label
-              variant={placementPosition === 'LEFT' ? 'soft' : 'outlined'}
-              color="info"
-              sx={{ fontSize: 10, border: placementPosition === 'LEFT' ? 'none' : 1 }}
-            >
-              {placementPosition}
-            </Label>
-          )}
+          <Stack direction="row" columnGap={1}>
+            <Stack>
+              {placementPosition && (
+                <Label
+                  variant={placementPosition === 'LEFT' ? 'soft' : 'outlined'}
+                  color="info"
+                  sx={{ fontSize: 10, border: placementPosition === 'LEFT' ? 'none' : 1 }}
+                >
+                  {placementPosition}
+                </Label>
+              )}
+            </Stack>
+            <Stack>
+              {visibleMap[id] !== 3 && (
+                <Iconify
+                  icon={`mdi:${visibleMap[id] === 1 ? 'plus' : 'minus'}-circle-outline`}
+                  sx={{ mt: 0.15, cursor: 'pointer' }}
+                  onClick={() => {
+                    if (visibleMap[id] === 1) expandTree(id);
+                    else if (visibleMap[id] === 2) collapseTree(id);
+                  }}
+                />
+              )}
+            </Stack>
+          </Stack>
         </Stack>
       </Card>
 
