@@ -15,6 +15,7 @@ import {
 } from 'src/consts';
 
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
+import { SearchInput } from 'src/components/SearchInput';
 import ComponentBlock from 'src/components/Component-Block';
 import { LoadingScreen } from 'src/components/loading-screen';
 
@@ -274,6 +275,14 @@ export default function PlacementListView() {
         sx={{
           mb: { xs: 1, md: 2 },
         }}
+        action={
+          <SearchInput
+            search=""
+            onSearchChange={(value: string) => {
+              throw new Error('Function not implemented.');
+            }}
+          />
+        }
       />
 
       {loading ? (
