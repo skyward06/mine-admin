@@ -15,7 +15,6 @@ import {
 } from 'src/consts';
 
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
-import { SearchInput } from 'src/components/SearchInput';
 import ComponentBlock from 'src/components/Component-Block';
 import { LoadingScreen } from 'src/components/loading-screen';
 
@@ -24,6 +23,7 @@ import { useFetchMembers } from 'src/sections/Members/useApollo';
 import { StandardNode } from './node';
 import CustomEdge from './customEdge';
 import NodeContext from './nodeContext';
+import SearchMiner from './searchMiner';
 
 const fitViewOptions: FitViewOptions = {
   padding: 0.2,
@@ -162,6 +162,7 @@ function getMemberIdsWithDepth(node: any, depth: number, targetDepth: number) {
 
 export default function PlacementListView() {
   const { fetchMembers, members, loading } = useFetchMembers();
+
   const [visibleMap, setVisibleMap] = useState<Record<string, number>>({});
 
   useEffect(() => {
@@ -260,6 +261,10 @@ export default function PlacementListView() {
     localStorage.setItem('placementVisibleMap', JSON.stringify(newVisibleMap));
   }, [members]);
 
+  const onMinerChange = (minerId: string) => {
+    console.log('miner => ', minerId);
+  };
+
   useEffect(() => {
     const storageVisibleMap = localStorage.getItem('placementVisibleMap');
 
@@ -275,14 +280,7 @@ export default function PlacementListView() {
         sx={{
           mb: { xs: 1, md: 2 },
         }}
-        action={
-          <SearchInput
-            search=""
-            onSearchChange={(value: string) => {
-              throw new Error('Function not implemented.');
-            }}
-          />
-        }
+        action={<SearchMiner onMinerChange={onMinerChange} />}
       />
 
       {loading ? (
