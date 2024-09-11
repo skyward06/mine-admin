@@ -1,6 +1,13 @@
 import _ from 'lodash';
 import { useMemo, useState, useEffect, useCallback } from 'react';
-import { ReactFlow, type Node, type Edge, type FitViewOptions } from '@xyflow/react';
+import {
+  ReactFlow,
+  type Node,
+  type Edge,
+  useReactFlow,
+  ReactFlowProvider,
+  type FitViewOptions,
+} from '@xyflow/react';
 
 import Stack from '@mui/material/Stack';
 
@@ -160,7 +167,7 @@ function getMemberIdsWithDepth(node: any, depth: number, targetDepth: number) {
   return res.length === 0 ? [{ id: node.id, value: 3 }] : [...res, { id: node.id, value: 2 }];
 }
 
-export default function PlacementListView() {
+function PlacementListView() {
   const { fetchMembers, members, loading } = useFetchMembers();
 
   const [visibleMap, setVisibleMap] = useState<Record<string, number>>({});
@@ -261,8 +268,19 @@ export default function PlacementListView() {
     localStorage.setItem('placementVisibleMap', JSON.stringify(newVisibleMap));
   }, [members]);
 
+  const { fitView } = useReactFlow();
+
   const onMinerChange = (minerId: string) => {
-    console.log('miner => ', minerId);
+    const targetNode = nodes.find((nd) => nd.id === minerId);
+    if (targetNode) {
+      fitView({
+        nodes: [
+          {
+            id: minerId,
+          },
+        ],
+      });
+    }
   };
 
   useEffect(() => {
@@ -301,5 +319,13 @@ export default function PlacementListView() {
         </ComponentBlock>
       )}
     </DashboardContent>
+  );
+}
+
+export default function PlacementListViewWithReactFlowProvider() {
+  return (
+    <ReactFlowProvider>
+      <PlacementListView />
+    </ReactFlowProvider>
   );
 }
