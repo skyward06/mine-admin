@@ -114,7 +114,7 @@ export default function StatisticsTableRow({
     window.open(`${EXPLORER_PATH}${tId}`, '_blank');
   };
 
-  const tIds = transactionId.split(',');
+  const tIds = transactionId ? transactionId.split(',') : [];
 
   return (
     <>

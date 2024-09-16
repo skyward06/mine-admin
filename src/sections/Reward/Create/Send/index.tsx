@@ -78,7 +78,7 @@ export default function SendMany({ date, handleBack }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data?.memberStatistics]);
 
-  const initial = ['sendmany "" "{'];
+  const initial = ['texitcoin-cli sendmany "" "{'];
   const sendmany = splitArray(reward, CONFIG.TRANSACTION_COUNT);
 
   useEffect(() => {
@@ -117,7 +117,7 @@ export default function SendMany({ date, handleBack }: Props) {
             ...initial,
             ...sendmany[no]!.map(
               (item: any, index: any) =>
-                `\\"${item?.address}\\": ${(item?.txcShared ?? 0) / 10 ** 8}${index === reward.length - 1 ? '}"' : ','}`
+                `\\"${item?.address}\\": ${(item?.txcShared ?? 0) / 10 ** 8}${index === sendmany[no].length - 1 ? '}"' : ','}`
             ),
           ];
 
