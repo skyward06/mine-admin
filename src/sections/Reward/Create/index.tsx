@@ -153,6 +153,7 @@ export default function RewardCreateView() {
           if (isStepSkipped(index)) {
             stepProps.completed = false;
           }
+
           return (
             <Step key={label} {...stepProps}>
               <StepLabel {...labelProps}>{label}</StepLabel>
@@ -175,7 +176,6 @@ export default function RewardCreateView() {
           </Paper>
 
           <Box sx={{ display: 'flex' }}>
-            <Box sx={{ flexGrow: 1 }} />
             <Button onClick={handleReset}>Reset</Button>
           </Box>
         </>
@@ -191,7 +191,6 @@ export default function RewardCreateView() {
           </Paper>
 
           <Stack direction="row">
-            <Box sx={{ flexGrow: 1 }} />
             {activeStep === 0 && (
               <>
                 <Button color="inherit" disabled onClick={handleBack} sx={{ mr: 1 }}>

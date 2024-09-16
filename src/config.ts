@@ -13,6 +13,7 @@ export type ConfigValue = {
   SITE_URL: string;
   SERVER_URL: string;
   ASSET_URL: string;
+  TRANSACTION_COUNT: number;
   redirectPath: string;
   storageTokenKey: string;
 };
@@ -28,6 +29,7 @@ export const CONFIG: ConfigValue = {
   SITE_URL: 'https://dev.api.minetxc.com',
   SERVER_URL: import.meta.env.VITE_SERVER_URL ?? '',
   ASSET_URL: import.meta.env.VITE_ASSET_URL ?? '',
+  TRANSACTION_COUNT: import.meta.env.TRANSACTION_COUNT ?? 150,
   redirectPath: paths.statistics.root,
   storageTokenKey: 'token',
 };

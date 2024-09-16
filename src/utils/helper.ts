@@ -106,6 +106,20 @@ export function isEqual(a: any, b: any): boolean {
 }
 
 // ----------------------------------------------------------------------
+export function splitArray(data: any[], chunkSize: number) {
+  const result: any[] = [];
+
+  data.forEach((_, index) => {
+    // If the index is divisible by chunkSize, start a new chunk
+    if (index % chunkSize === 0) {
+      result.push(data.slice(index, index + chunkSize)); // Slice the array into chunks
+    }
+  });
+
+  return result;
+}
+
+// ----------------------------------------------------------------------
 
 function isObject(item: any) {
   return item && typeof item === 'object' && !Array.isArray(item);

@@ -1,10 +1,9 @@
 import { useMemo, useState, useEffect } from 'react';
 import { useMutation, useLazyQuery } from '@apollo/client';
 
-import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
+import Grid from '@mui/material/Unstable_Grid2';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 import { paths } from 'src/routes/paths';
@@ -12,11 +11,15 @@ import { useRouter } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
+import { splitArray } from 'src/utils/helper';
 import { customizeDate } from 'src/utils/format-time';
+
+import { CONFIG } from 'src/config';
 
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 import { ConfirmView } from 'src/components/Reward';
+import { ScrollBar } from 'src/components/ScrollBar';
 import ComponentBlock from 'src/components/Component-Block';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { LoadingScreen } from 'src/components/loading-screen';
@@ -30,15 +33,16 @@ interface Props {
 
 export default function SendMany({ date, handleBack }: Props) {
   const router = useRouter();
-  const copy = useBoolean();
   const confirm = useBoolean();
-  const [transactionId, setTransactionId] = useState<string>('');
 
-  const [fetchMemberStatistics, { data }] = useLazyQuery(FETCH_MEMBERSTATISTICS_QUERY, {
+  const [copy, setCopy] = useState<any>();
+  const [transactionId, setTransactionId] = useState<any>();
+
+  const [fetchMemberStatistics, { loading, data }] = useLazyQuery(FETCH_MEMBERSTATISTICS_QUERY, {
     variables: { filter: { issuedAt: customizeDate(date) } },
   });
 
-  const [confirmStatistics, { loading }] = useMutation(CONFIRM_STATISTICS);
+  const [confirmStatistics, { loading: confirmLoading }] = useMutation(CONFIRM_STATISTICS);
 
   const memberStatistics = data?.memberStatistics.memberStatistics ?? [];
 
@@ -75,13 +79,7 @@ export default function SendMany({ date, handleBack }: Props) {
   }, [data?.memberStatistics]);
 
   const initial = ['sendmany "" "{'];
-  const sendmany = [
-    ...initial,
-    ...reward!.map(
-      (item: any, index: any) =>
-        `\\"${item?.address}\\": ${(item?.txcShared ?? 0) / 10 ** 8}${index === reward.length - 1 ? '}"' : ','}`
-    ),
-  ];
+  const sendmany = splitArray(reward, CONFIG.TRANSACTION_COUNT);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -95,17 +93,17 @@ export default function SendMany({ date, handleBack }: Props) {
   }, [data]);
 
   useEffect(() => {
-    if (copy.value) {
-      setTimeout(() => {
-        copy.onFalse();
-      }, 3000);
-    }
+    setCopy(
+      new Array(sendmany.length)
+        .fill('sendmany')
+        .reduce((prev, _, index) => ({ ...prev, [index]: false }), {})
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [copy]);
+  }, [reward]);
 
-  const handleCopy = async () => {
+  const handleCopy = async (result: any[]) => {
     try {
-      await navigator.clipboard.writeText(sendmany.join('\n'));
+      await navigator.clipboard.writeText(result.join('\n'));
     } catch (err) {
       console.error('Failed to copy text: ', err);
     }
@@ -113,44 +111,74 @@ export default function SendMany({ date, handleBack }: Props) {
 
   return (
     <>
-      <Paper>
-        <ComponentBlock
-          sx={{
-            display: 'block',
-            alignItems: 'unset',
-            overflow: 'auto',
-            maxHeight: 550,
-            backgroundColor: '#f2f2f2',
-          }}
-        >
-          {sendmany.length === 1 ? (
-            <LoadingScreen />
-          ) : (
-            sendmany.map((item) => (
-              <>
-                {item}
-                <br />
-              </>
-            ))
-          )}
-        </ComponentBlock>
-      </Paper>
+      <Grid container>
+        {new Array(sendmany.length).fill('sendmany').map((_, no) => {
+          const result = [
+            ...initial,
+            ...sendmany[no]!.map(
+              (item: any, index: any) =>
+                `\\"${item?.address}\\": ${(item?.txcShared ?? 0) / 10 ** 8}${index === reward.length - 1 ? '}"' : ','}`
+            ),
+          ];
 
-      <Stack direction="row" sx={{ mt: 3 }}>
-        <Box sx={{ flexGrow: 1 }} />
-        <Button
-          variant="contained"
-          sx={{ mr: 2 }}
-          onClick={() => {
-            handleCopy();
-            copy.onTrue();
-          }}
-          startIcon={
-            copy.value ? <Iconify icon="mingcute:check-fill" /> : <Iconify icon="bxs:copy" />
-          }
-        >
-          {copy.value ? 'Copied' : 'Copy'}
-        </Button>
+          return (
+            <Grid lg={6} md={12} sx={{ padding: 1 }}>
+              <ComponentBlock
+                sx={{
+                  display: 'block',
+                  alignItems: 'unset',
+                  overflow: 'auto',
+                  backgroundColor: '#f2f2f2',
+                  px: 3,
+                  py: 2,
+                }}
+              >
+                <Stack direction="row" justifyContent="flex-end" columnGap={2}>
+                  <ConfirmView
+                    setTransactionId={(value: any) =>
+                      setTransactionId({ ...transactionId, [no]: value })
+                    }
+                  />
+                  <Iconify
+                    icon={copy[no] ? 'mingcute:check-fill' : 'bxs:copy'}
+                    color="#00a76f"
+                    sx={{ mt: 1 }}
+                    onClick={() => {
+                      handleCopy(result);
+                      setCopy({ ...copy, [no]: true });
+
+                      setTimeout(() => {
+                        setCopy({ ...copy, [no]: false });
+                      }, 3000);
+                    }}
+                  />
+                </Stack>
+
+                <ScrollBar
+                  sx={{
+                    maxHeight: 550,
+                    borderRadius: 1,
+                    py: 2,
+                  }}
+                >
+                  {loading ? (
+                    <LoadingScreen />
+                  ) : (
+                    result.map((item) => (
+                      <>
+                        {item}
+                        <br />
+                      </>
+                    ))
+                  )}
+                </ScrollBar>
+              </ComponentBlock>
+            </Grid>
+          );
+        })}
+      </Grid>
+
+      <Stack direction="row" sx={{ mt: 2 }}>
         <Button color="inherit" onClick={() => handleBack()} sx={{ mr: 1 }}>
           Back
         </Button>
@@ -163,29 +191,38 @@ export default function SendMany({ date, handleBack }: Props) {
         open={confirm.value}
         onClose={confirm.onFalse}
         title="Confirm"
-        content={<ConfirmView setTransactionId={setTransactionId} />}
+        content="Are you sure?"
         action={
           <LoadingButton
             variant="contained"
             color="error"
-            loading={loading}
+            loading={confirmLoading}
             onClick={async () => {
               try {
                 if (memberStatistics.length) {
-                  const { data: result } = await confirmStatistics({
-                    variables: { data: { id: memberStatistics[0]!.statisticsId, transactionId } },
+                  new Array(sendmany.length).fill('sendmany').forEach(async (_, index) => {
+                    if (!transactionId[index]) {
+                      toast.error('Transaction ID is required!');
+                    }
+
+                    await confirmStatistics({
+                      variables: {
+                        data: {
+                          id: memberStatistics[0]!.statisticsId,
+                          transactionId: transactionId[index],
+                        },
+                      },
+                    });
                   });
-
-                  if (result?.confirmStatistics.id) {
-                    toast.success('Successfully confirmed!');
-
-                    confirm.onFalse();
-
-                    setTimeout(() => {
-                      router.push(paths.dashboard.reward.root);
-                    }, 1000);
-                  }
                 }
+
+                toast.success('Successfully confirmed!');
+
+                confirm.onFalse();
+
+                setTimeout(() => {
+                  router.push(paths.dashboard.reward.root);
+                }, 1000);
               } catch (error) {
                 const [err] = error.graphQLErrors;
 

@@ -4,7 +4,6 @@ import { isEmpty } from 'lodash';
 import { useRef, useMemo } from 'react';
 import { useMutation, useQuery as useGraphQuery } from '@apollo/client';
 
-import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 
@@ -121,8 +120,7 @@ export default function SelectedSales({
         memberStatistics={memberStatisticsRef.current}
       />
 
-      <Stack direction="row" sx={{ mt: 3 }}>
-        <Box sx={{ flexGrow: 1 }} />
+      <Stack direction="row" sx={{ mt: 2 }}>
         <Button color="inherit" onClick={() => handleBack()} sx={{ mr: 1 }}>
           Back
         </Button>

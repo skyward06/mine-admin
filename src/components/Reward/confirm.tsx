@@ -1,4 +1,3 @@
-import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 
 interface Props {
@@ -6,13 +5,12 @@ interface Props {
 }
 
 export const ConfirmView = ({ setTransactionId }: Props) => (
-  <Paper sx={{ py: 2 }}>
-    <TextField
-      variant="outlined"
-      fullWidth
-      label="Transaction ID"
-      required
-      onChange={(e) => setTransactionId(e.target.value)}
-    />
-  </Paper>
+  <TextField
+    variant="outlined"
+    label="Transaction ID"
+    size="small"
+    fullWidth
+    required
+    onChange={(e) => setTransactionId(e.target.value)}
+  />
 );
