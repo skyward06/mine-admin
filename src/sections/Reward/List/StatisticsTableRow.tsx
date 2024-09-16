@@ -28,6 +28,7 @@ type Props = {
   row: any;
   confirm: UseBooleanReturn;
   loading: boolean;
+  sendmanyLoading: boolean;
   selected: boolean;
   memberStatistics: any[];
   statisticsId: string;
@@ -49,6 +50,7 @@ export default function StatisticsTableRow({
   onSelectRow,
   memberStatistics,
   confirmStatistics,
+  sendmanyLoading,
   table,
 }: Props) {
   const {
@@ -212,7 +214,8 @@ export default function StatisticsTableRow({
       <ConfirmDrawer
         reward={reward}
         isOpen={isOpen}
-        loading={loading}
+        loading={sendmanyLoading}
+        confirmLoading={loading}
         confirm={confirm}
         setIsOpen={setIsOpen}
         statisticsId={statisticsId}

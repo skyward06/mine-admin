@@ -105,7 +105,7 @@ export default function StatisticsTable() {
     },
   });
 
-  const [fetchMemberStatistics, { data: sendmanyData }] = useLazyQuery(
+  const [fetchMemberStatistics, { loading: sendmanyLoading, data: sendmanyData }] = useLazyQuery(
     FETCH_MEMBERSTATISTICS_QUERY,
     {
       variables: { filter: { statisticsId } },
@@ -226,6 +226,7 @@ export default function StatisticsTable() {
                         setStatisticsId={setStatisticsId}
                         onSelectRow={() => table.onSelectRow(row!.id)}
                         memberStatistics={memberStatistics!}
+                        sendmanyLoading={sendmanyLoading}
                         confirmStatistics={confirmStatistics}
                       />
                     ))}
