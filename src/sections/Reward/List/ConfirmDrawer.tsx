@@ -158,26 +158,30 @@ export default function ConfirmDrawer({
             onClick={async () => {
               try {
                 if (tId) {
-                  new Array(sendmany.length).fill('sendmany').forEach(async (_, index) => {
-                    if (!tId[index]) {
-                      toast.error('Transaction ID is required!');
-                    }
+                  const tIds = Object.values(tId);
 
-                    await confirmStatistics({
-                      variables: {
-                        data: {
-                          id: statisticsId,
-                          transactionId: tId[index],
-                        },
+                  if (tIds.length < sendmany.length) {
+                    toast.error('Transaction ID is required!');
+                    return;
+                  }
+
+                  const transactionId = Object.values(tId).join(',');
+
+                  await confirmStatistics({
+                    variables: {
+                      data: {
+                        id: statisticsId,
+                        transactionId,
                       },
-                    });
+                    },
                   });
+                  toast.success('Successfully confirmed!');
+
+                  confirm.onFalse();
+                  setIsOpen(false);
+                } else {
+                  toast.error('Transaction ID is required!');
                 }
-
-                toast.success('Successfully confirmed!');
-
-                confirm.onFalse();
-                setIsOpen(false);
               } catch (error) {
                 const [err] = error.graphQLErrors;
 

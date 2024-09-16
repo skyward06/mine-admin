@@ -199,30 +199,33 @@ export default function SendMany({ date, handleBack }: Props) {
             loading={confirmLoading}
             onClick={async () => {
               try {
-                if (memberStatistics.length) {
-                  new Array(sendmany.length).fill('sendmany').forEach(async (_, index) => {
-                    if (!transactionId[index]) {
-                      toast.error('Transaction ID is required!');
-                    }
+                if (transactionId) {
+                  const transactionIds = Object.values(transactionId);
 
-                    await confirmStatistics({
-                      variables: {
-                        data: {
-                          id: memberStatistics[0]!.statisticsId,
-                          transactionId: transactionId[index],
-                        },
+                  if (transactionIds.length < sendmany.length) {
+                    toast.error('Transaction ID is required!');
+                    return;
+                  }
+
+                  await confirmStatistics({
+                    variables: {
+                      data: {
+                        id: memberStatistics[0]!.statisticsId,
+                        transactionId: Object.values(transactionId).join(','),
                       },
-                    });
+                    },
                   });
+
+                  toast.success('Successfully confirmed!');
+
+                  confirm.onFalse();
+
+                  setTimeout(() => {
+                    router.push(paths.dashboard.reward.root);
+                  }, 1000);
+                } else {
+                  toast.error('Transaction ID is required!');
                 }
-
-                toast.success('Successfully confirmed!');
-
-                confirm.onFalse();
-
-                setTimeout(() => {
-                  router.push(paths.dashboard.reward.root);
-                }, 1000);
               } catch (error) {
                 const [err] = error.graphQLErrors;
 

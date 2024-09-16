@@ -3,6 +3,8 @@ import { useMemo, useState } from 'react';
 import Tooltip from '@mui/material/Tooltip';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
+import MenuList from '@mui/material/MenuList';
+import MenuItem from '@mui/material/MenuItem';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import ListItemText from '@mui/material/ListItemText';
@@ -18,6 +20,7 @@ import { EXPLORER_PATH } from 'src/consts';
 
 import { Label } from 'src/components/Label';
 import { Iconify } from 'src/components/Iconify';
+import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
 import ConfirmDrawer from './ConfirmDrawer';
 
@@ -68,6 +71,7 @@ export default function StatisticsTableRow({
   } = row;
 
   const confirm = useBoolean();
+  const popover = usePopover();
 
   const router = useRouter();
 
@@ -105,6 +109,12 @@ export default function StatisticsTableRow({
     return Object.values(rewardData).filter((item: any) => item.txcShared !== 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [memberStatistics]);
+
+  const openTransaction = (tId: string) => {
+    window.open(`${EXPLORER_PATH}${tId}`, '_blank');
+  };
+
+  const tIds = transactionId.split(',');
 
   return (
     <>
@@ -167,7 +177,7 @@ export default function StatisticsTableRow({
                 </IconButton>
               </Tooltip>
               <Tooltip title="Explorer" placement="top" arrow>
-                <IconButton color="info" href={`${EXPLORER_PATH}${transactionId}`} target="_blank">
+                <IconButton color="info" onClick={popover.onOpen}>
                   <Iconify icon="bxs:right-top-arrow-circle" />
                 </IconButton>
               </Tooltip>
@@ -221,6 +231,22 @@ export default function StatisticsTableRow({
         statisticsId={statisticsId}
         confirmStatistics={confirmStatistics}
       />
+
+      <CustomPopover
+        open={popover.open}
+        anchorEl={popover.anchorEl}
+        onClose={popover.onClose}
+        slotProps={{ arrow: { placement: 'right-top' } }}
+      >
+        <MenuList>
+          {tIds.map((tId: string, index: number) => (
+            <MenuItem onClick={() => openTransaction(tId)}>
+              <Iconify icon="bxs:right-top-arrow-circle" />
+              Transaction {index + 1}
+            </MenuItem>
+          ))}
+        </MenuList>
+      </CustomPopover>
     </>
   );
 }
