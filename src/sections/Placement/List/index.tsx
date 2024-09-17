@@ -34,6 +34,7 @@ import SearchMiner from './searchMiner';
 
 const fitViewOptions: FitViewOptions = {
   padding: 0.2,
+  duration: 1000,
 };
 
 const edgeTypes = {
@@ -218,7 +219,7 @@ function PlacementListView() {
 
       setVisibleMap(newVisibleMap);
 
-      localStorage.setItem('placementVisibleMap', JSON.stringify(visibleMap));
+      localStorage.setItem('placementVisibleMap', JSON.stringify(newVisibleMap));
     },
     [members, visibleMap]
   );
@@ -271,16 +272,46 @@ function PlacementListView() {
   const { fitView } = useReactFlow();
 
   const onMinerChange = (minerId: string) => {
-    const targetNode = nodes.find((nd) => nd.id === minerId);
-    if (targetNode) {
+    const newVisibleMap = { ...visibleMap };
+    let iMinerId: string | null | undefined = minerId;
+
+    while (iMinerId) {
+      newVisibleMap[iMinerId] = 2;
+
+      const currentMinerId: string = iMinerId;
+      const newIMinerId = members.find((mb) => mb?.id === currentMinerId)?.placementParentId;
+
+      if (newIMinerId === iMinerId) break;
+
+      iMinerId = newIMinerId;
+
+      if (iMinerId) {
+        members
+          .filter((mb) => mb?.placementParentId === newIMinerId)
+          .forEach((mb) => {
+            if (!newVisibleMap[mb?.id ?? '']) {
+              newVisibleMap[mb?.id ?? ''] =
+                members.findIndex((mber) => mber?.placementParentId === mb?.id) === -1 ? 3 : 1;
+            }
+          });
+      }
+    }
+
+    if (iMinerId) {
+      setVisibleMap(newVisibleMap);
+      localStorage.setItem('placementVisibleMap', JSON.stringify(newVisibleMap));
+    }
+
+    setTimeout(() => {
       fitView({
+        ...fitViewOptions,
         nodes: [
           {
             id: minerId,
           },
         ],
       });
-    }
+    }, 100);
   };
 
   useEffect(() => {
