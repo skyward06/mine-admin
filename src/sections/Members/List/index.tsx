@@ -91,6 +91,7 @@ export default function MemberListView() {
         { username: { contains: filter.search, mode: 'insensitive' } },
         { fullName: { contains: filter.search, mode: 'insensitive' } },
         { primaryAddress: { contains: filter.search, mode: 'insensitive' } },
+        { memberWallets: { every: { address: { contains: filter.search, mode: 'insensitive' } } } },
       ];
     }
 
