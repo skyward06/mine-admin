@@ -67,7 +67,6 @@ export default function MemberWallets({ payouts, wallets }: Props) {
             <Field.Select
               name={`memberWallets[${index}].payoutId`}
               label="Payout"
-              InputLabelProps={{ shrink: true }}
               sx={{ width: 300 }}
               defaultValue={item.payoutId}
             >
@@ -81,14 +80,12 @@ export default function MemberWallets({ payouts, wallets }: Props) {
             <Field.Text
               name={`memberWallets[${index}].address`}
               label="Address"
-              InputLabelProps={{ shrink: true }}
               defaultValue={item.address}
             />
 
             <Field.Text
               name={`memberWallets[${index}].percent`}
               label="Percent"
-              InputLabelProps={{ shrink: true }}
               type="number"
               sx={{ width: 200 }}
               defaultValue={item.percent}
@@ -100,9 +97,7 @@ export default function MemberWallets({ payouts, wallets }: Props) {
               sx={{ mt: 1.5 }}
               startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
               onClick={() => handleRemove(index)}
-            >
-              Remove
-            </Button>
+            />
           </Stack>
         </Stack>
       ))}

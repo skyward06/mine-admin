@@ -42,11 +42,7 @@ export default function MemberWallets({ payouts }: Props) {
           display="grid"
           sx={{ mb: 1, gridTemplateColumns: '20% 50% 15% auto' }}
         >
-          <Field.Select
-            name={`wallets[${index}].payoutId`}
-            label="Payout"
-            InputLabelProps={{ shrink: true }}
-          >
+          <Field.Select name={`wallets[${index}].payoutId`} label="Payout">
             {payouts.map((option) => (
               <MenuItem key={option?.id} value={option?.id}>
                 {option?.method}
@@ -54,18 +50,9 @@ export default function MemberWallets({ payouts }: Props) {
             ))}
           </Field.Select>
 
-          <Field.Text
-            name={`wallets[${index}].address`}
-            label="Address"
-            InputLabelProps={{ shrink: true }}
-          />
+          <Field.Text name={`wallets[${index}].address`} label="Address" />
 
-          <Field.Text
-            name={`wallets[${index}].percent`}
-            label="Percent"
-            type="number"
-            InputLabelProps={{ shrink: true }}
-          />
+          <Field.Text name={`wallets[${index}].percent`} label="Percent" type="number" />
 
           <Button
             size="small"
@@ -73,9 +60,7 @@ export default function MemberWallets({ payouts }: Props) {
             sx={{ mt: 1.5, width: 80 }}
             startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
             onClick={() => handleRemove(index)}
-          >
-            Remove
-          </Button>
+          />
         </Box>
       ))}
       <Divider flexItem sx={{ borderStyle: 'dashed', mb: 1 }} />
