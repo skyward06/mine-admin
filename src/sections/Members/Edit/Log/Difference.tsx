@@ -29,8 +29,8 @@ export default function Difference({
 }: Props) {
   const theme = useTheme();
 
-  const { sponsor: beforeSponsor, memberWallets: beforeMemberWallets, ...beforeRest } = before;
   const { sponsor: afterSponsor, memberWallets: afterMemberWallets, ...afterRest } = after;
+  const { sponsor: beforeSponsor, memberWallets: beforeMemberWallets, ...beforeRest } = before;
 
   const rest = action === 'after' ? afterRest : beforeRest;
   const sponsor = action === 'after' ? afterSponsor : beforeSponsor;

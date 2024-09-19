@@ -14,9 +14,9 @@ import { ScrollBar } from 'src/components/ScrollBar';
 import Difference from './Difference';
 
 interface Props {
-  open: UseBooleanReturn;
-  defaultStyles: any;
   log: MemberLog;
+  defaultStyles: any;
+  open: UseBooleanReturn;
 }
 
 export default function LogDrawer({ open, defaultStyles, log }: Props) {
