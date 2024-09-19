@@ -59,6 +59,7 @@ export default function Summary() {
       <Grid xs={12} md={6}>
         <Card>
           {renderTabs}
+
           <ChartWidget
             loading={blocksLoading}
             chart={{

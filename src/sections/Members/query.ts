@@ -12,7 +12,7 @@ export const FETCH_MEMBER_STATS_QUERY = gql(/* GraphQL */ `
 `);
 
 export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
-  query FetchMembers($page: String, $filter: JSONObject, $sort: String) {
+  query FetchMembers($page: String, $filter: JSONObject, $sort: String, $logsize: Float) {
     members(page: $page, filter: $filter, sort: $sort) {
       members {
         id
@@ -80,6 +80,17 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
             updatedAt
             deletedAt
           }
+        }
+        logs(logsize: $logsize) {
+          id
+          who
+          role
+          when
+          entity
+          action
+          status
+          before
+          after
         }
         createdAt
         updatedAt

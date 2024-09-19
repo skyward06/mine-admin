@@ -17,6 +17,7 @@ import { Iconify } from 'src/components/Iconify';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import { LoadingScreen } from 'src/components/loading-screen';
 
+import Log from './Log';
 import Sale from './Sale';
 import History from './History';
 import Placement from './Placement';
@@ -32,6 +33,7 @@ const TABS = [
   { value: 'edit', label: 'Edit', icon: <Iconify icon="solar:pen-2-bold" width={24} /> },
   { value: 'sale', label: 'Sale', icon: <Iconify icon="bi:currency-exchange" /> },
   { value: 'placement', label: 'Placement', icon: <Iconify icon="clarity:flow-chart-line" /> },
+  { value: 'log', label: 'Log', icon: <Iconify icon="ri:history-line" /> },
 ];
 
 // ----------------------------------------------------------------------
@@ -96,6 +98,8 @@ export default function MemberEditView() {
         {tabs.value === 'sale' && <Sale />}
 
         {tabs.value === 'placement' && <Placement currentMember={member} />}
+
+        {tabs.value === 'log' && <Log loading={loading} currentMember={member} />}
       </DashboardContent>
     </>
   );

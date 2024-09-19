@@ -49,7 +49,6 @@ export default function MemberTableRow({
   const password = useBoolean();
 
   const { id, username, email, mobile, assetId, point, fullName, createdAt, sales } = row;
-  console.log('point => ', point);
 
   const { updatePassword } = useUpdatePassword();
 
