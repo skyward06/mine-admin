@@ -141,7 +141,7 @@ export default function MemberTableRow({
                 <Iconify icon="solar:eye-bold" />
               </IconButton>
             </Tooltip>
-            <Tooltip title="Password" placement="top" arrow>
+            <Tooltip title="Reset Password" placement="top" arrow>
               <IconButton
                 color="default"
                 onClick={() => {
