@@ -276,8 +276,6 @@ function PlacementListView() {
     let iMinerId: string | null | undefined = minerId;
 
     while (iMinerId) {
-      newVisibleMap[iMinerId] = 2;
-
       const currentMinerId: string = iMinerId;
       const newIMinerId = members.find((mb) => mb?.id === currentMinerId)?.placementParentId;
 
@@ -286,6 +284,7 @@ function PlacementListView() {
       iMinerId = newIMinerId;
 
       if (iMinerId) {
+        newVisibleMap[iMinerId] = 2;
         members
           .filter((mb) => mb?.placementParentId === newIMinerId)
           .forEach((mb) => {
