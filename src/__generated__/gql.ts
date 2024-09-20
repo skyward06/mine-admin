@@ -14,6 +14,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  */
 const documents = {
     "\n  query FetchMe {\n    adminMe {\n      id\n      avatar\n      username\n      email\n    }\n  }\n": types.FetchMeDocument,
+    "\n  query GenerateReferenceLink {\n    generateReferenceLink {\n      link\n    }\n  }\n": types.GenerateReferenceLinkDocument,
     "\n  query FetchMemberStats($inactiveFilter: JSONObject) {\n    all: members {\n      total\n    }\n    inactive: members(filter: $inactiveFilter) {\n      total\n    }\n  }\n": types.FetchMemberStatsDocument,
     "\n  query FetchMembers($page: String, $filter: JSONObject, $sort: String, $logsize: Float) {\n    members(page: $page, filter: $filter, sort: $sort) {\n      members {\n        id\n        username\n        fullName\n        email\n        primaryAddress\n        secondaryAddress\n        assetId\n        mobile\n        city\n        state\n        zipCode\n        point\n        sponsorId\n        sponsor {\n          id\n          username\n          fullName\n          email\n          point\n          primaryAddress\n          secondaryAddress\n          mobile\n          assetId\n        }\n        placementParentId\n        placementPosition\n        placementParent {\n          id\n          username\n          fullName\n          email\n          point\n          primaryAddress\n          secondaryAddress\n          mobile\n          assetId\n        }\n        sales {\n          id\n          invoiceNo\n          memberId\n          packageId\n          paymentMethod\n          status\n          orderedAt\n        }\n        memberWallets {\n          createdAt\n          updatedAt\n          deletedAt\n          id\n          memberId\n          payoutId\n          address\n          percent\n          payout {\n            id\n            method\n            status\n            name\n            display\n            createdAt\n            updatedAt\n            deletedAt\n          }\n        }\n        logs(logsize: $logsize) {\n          id\n          who\n          role\n          when\n          entity\n          action\n          status\n          before\n          after\n        }\n        createdAt\n        updatedAt\n        deletedAt\n      }\n      total\n    }\n  }\n": types.FetchMembersDocument,
     "\n  mutation CreateMember($data: CreateMemberInput!) {\n    createMember(data: $data) {\n      username\n      fullName\n      email\n      mobile\n      primaryAddress\n      secondaryAddress\n      assetId\n    }\n  }\n": types.CreateMemberDocument,
@@ -75,6 +76,10 @@ export function gql(source: string): unknown;
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  query FetchMe {\n    adminMe {\n      id\n      avatar\n      username\n      email\n    }\n  }\n"): (typeof documents)["\n  query FetchMe {\n    adminMe {\n      id\n      avatar\n      username\n      email\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  query GenerateReferenceLink {\n    generateReferenceLink {\n      link\n    }\n  }\n"): (typeof documents)["\n  query GenerateReferenceLink {\n    generateReferenceLink {\n      link\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
