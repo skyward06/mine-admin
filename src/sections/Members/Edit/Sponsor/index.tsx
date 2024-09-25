@@ -1,3 +1,5 @@
+import type { Member } from 'src/__generated__/graphql';
+
 import _ from 'lodash';
 import { useMemo, useState, useEffect, useCallback } from 'react';
 import {
@@ -25,7 +27,6 @@ import { useFetchMembers } from 'src/sections/Members/useApollo';
 import { StandardNode } from './node';
 import CustomEdge from './customEdge';
 import NodeContext from './nodeContext';
-import { Member } from 'src/__generated__/graphql';
 
 interface Props {
   currentMember: Member;
@@ -41,10 +42,6 @@ const edgeTypes = {
 };
 
 function PlacementListView({ currentMember }: Props) {
-  const { fetchMembers, members, loading } = useFetchMembers();
-
-  const [visibleMap, setVisibleMap] = useState<Record<string, number>>({});
-
   function buildSponsorTree(members: any[]) {
     const memberMap: Record<string, any> = {};
     const result: any = { id: 'root', children: [] };
@@ -157,6 +154,10 @@ function PlacementListView({ currentMember }: Props) {
     return res.length === 0 ? [{ id: node.id, value: 3 }] : [...res, { id: node.id, value: 2 }];
   }
 
+  const { fetchMembers, members, loading } = useFetchMembers();
+
+  const [visibleMap, setVisibleMap] = useState<Record<string, number>>({});
+
   useEffect(() => {
     fetchMembers({
       variables: { filter: { OR: [{ id: currentMember.id }, { sponsorId: currentMember.id }] } },
@@ -173,6 +174,7 @@ function PlacementListView({ currentMember }: Props) {
     buildTree(sponsorTree, 0, 0, resultTree, visibleMap);
 
     return resultTree;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [members, visibleMap]);
 
   const edges: Edge[] = useMemo(
@@ -214,6 +216,7 @@ function PlacementListView({ currentMember }: Props) {
     setVisibleMap(newVisibleMap);
 
     localStorage.setItem('sponsorVisibleMap', JSON.stringify(newVisibleMap));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [members]);
 
   useEffect(() => {
