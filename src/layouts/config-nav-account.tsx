@@ -51,6 +51,11 @@ export const _account = [
     icon: <Iconify icon="mdi:package-outline" width="0.8em" />,
   },
   {
+    label: 'Sponsor',
+    href: '/sponsor',
+    icon: <Iconify icon="bi:diagram-3" />,
+  },
+  {
     label: 'Placement',
     href: '/placement',
     icon: <Iconify icon="clarity:flow-chart-line" />,
