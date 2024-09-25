@@ -28,6 +28,8 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         zipCode
         point
         sponsorId
+        status
+        emailVerified
         sponsor {
           id
           username
@@ -38,6 +40,8 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           secondaryAddress
           mobile
           assetId
+          status
+          emailVerified
         }
         placementParentId
         placementPosition
@@ -51,6 +55,8 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           secondaryAddress
           mobile
           assetId
+          status
+          emailVerified
         }
         sales {
           id
