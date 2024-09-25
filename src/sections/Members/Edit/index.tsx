@@ -20,6 +20,7 @@ import { LoadingScreen } from 'src/components/loading-screen';
 import Log from './Log';
 import Sale from './Sale';
 import History from './History';
+import Sponsor from './Sponsor';
 import Placement from './Placement';
 import MemberGeneral from './General';
 import { FETCH_MEMBERS_QUERY } from '../query';
@@ -32,6 +33,7 @@ const TABS = [
   },
   { value: 'edit', label: 'Edit', icon: <Iconify icon="solar:pen-2-bold" width={24} /> },
   { value: 'sale', label: 'Sale', icon: <Iconify icon="bi:currency-exchange" /> },
+  { value: 'sponsor', label: 'Sponsor', icon: <Iconify icon="bi:diagram-3" /> },
   { value: 'placement', label: 'Placement', icon: <Iconify icon="clarity:flow-chart-line" /> },
   { value: 'log', label: 'Log', icon: <Iconify icon="ri:history-line" /> },
 ];
@@ -96,6 +98,8 @@ export default function MemberEditView() {
         {tabs.value === 'history' && <History currentMember={member} />}
 
         {tabs.value === 'sale' && <Sale />}
+
+        {tabs.value === 'sponsor' && <Sponsor currentMember={member} />}
 
         {tabs.value === 'placement' && <Placement currentMember={member} />}
 

@@ -41,26 +41,21 @@ const edgeTypes = {
   customEdge: CustomEdge,
 };
 
-function buildPlacementTree(members: any[]) {
+function buildSponsorTree(members: any[]) {
   const memberMap: Record<string, any> = {};
-  const memberProcess: any[] = [];
-  let result: any = {};
+  const result: any = { id: 'root', children: [] };
 
   members.forEach((member) => {
     memberMap[member.id] = { ...member, children: [] };
 
-    if (member.placementParentId) {
-      memberProcess.push(member);
-    }
-
-    if (member.id === member.placementParentId) {
-      result = memberMap[member.id];
+    if (!member.sponsorId || member.sponsorId === member.id) {
+      result.children.push(memberMap[member.id]);
     }
   });
 
-  memberProcess.forEach((member) => {
-    if (memberMap[member.placementParentId] && member.id !== member.placementParentId) {
-      memberMap[member.placementParentId!].children.push(memberMap[member.id]);
+  members.forEach((member) => {
+    if (member.sponsorId && memberMap[member.sponsorId] && member.sponsorId !== member.id) {
+      memberMap[member.sponsorId!].children.push(memberMap[member.id]);
     }
   });
 
@@ -68,16 +63,16 @@ function buildPlacementTree(members: any[]) {
 }
 
 function buildTree(node: any, baseX: number, depth: number, tree: any[], visibleMap: any = null) {
-  const children = node.children.sort(
-    (child1: any, child2: any) =>
-      child1.placementPosition === 'LEFT' || child2.placementPosition === 'RIGHT'
-  );
+  const { children } = node;
 
   if (children.length === 0) {
     const element = {
       id: node.id,
       data: { label: <StandardNode {...node} /> },
-      position: { x: baseX, y: depth * (PLACEMENTTREE_NODE_HEIGHT + PLACEMENTTREE_NODE_Y_SPACE) },
+      position: {
+        x: baseX,
+        y: (depth - 1) * (PLACEMENTTREE_NODE_HEIGHT + PLACEMENTTREE_NODE_Y_SPACE),
+      },
       draggable: true,
       style: {
         padding: 0,
@@ -89,34 +84,43 @@ function buildTree(node: any, baseX: number, depth: number, tree: any[], visible
       maxX: baseX + PLACEMENTTREE_NODE_WIDTH,
     };
 
-    tree.push(element);
+    if (depth !== 0) {
+      tree.push(element);
+    }
 
     return element;
   }
 
   let maxX = baseX;
+  const positions: any[] = [];
 
   if (!visibleMap || visibleMap[node.id] === 2) {
-    children
-      .filter((child: any) => child.placementPosition === 'LEFT')
-      .forEach((child: any, idx: number) => {
-        const { maxX: tempX } = buildTree(
-          child,
-          maxX + (idx === 0 ? 0 : PLACEMENTTREE_NODE_X_SPACE),
-          depth + 1,
-          tree,
-          visibleMap
-        );
-        maxX = tempX;
-      });
+    children.forEach((child: any, idx: number) => {
+      const { maxX: tempX, position } = buildTree(
+        child,
+        maxX + (idx === 0 ? 0 : PLACEMENTTREE_NODE_X_SPACE),
+        depth + 1,
+        tree,
+        visibleMap
+      );
+      maxX = tempX;
+      positions.push(position);
+    });
   }
 
+  let resPositionX = maxX;
+  if (!visibleMap || visibleMap[node.id] === 2) {
+    resPositionX = (maxX + baseX - PLACEMENTTREE_NODE_WIDTH) / 2;
+  } else {
+    resPositionX = baseX;
+    maxX = resPositionX + PLACEMENTTREE_NODE_WIDTH;
+  }
   const res = {
     id: node.id,
     data: { label: <StandardNode {...node} /> },
     position: {
-      x: Math.max(baseX, maxX - (PLACEMENTTREE_NODE_WIDTH - PLACEMENTTREE_NODE_X_SPACE) / 2),
-      y: depth * (PLACEMENTTREE_NODE_HEIGHT + PLACEMENTTREE_NODE_Y_SPACE),
+      x: resPositionX,
+      y: (depth - 1) * (PLACEMENTTREE_NODE_HEIGHT + PLACEMENTTREE_NODE_Y_SPACE),
     },
     draggable: true,
     style: {
@@ -126,33 +130,14 @@ function buildTree(node: any, baseX: number, depth: number, tree: any[], visible
       width: PLACEMENTTREE_NODE_WIDTH,
       height: PLACEMENTTREE_NODE_HEIGHT,
     },
+    maxX,
   };
 
-  maxX = res.position.x + (PLACEMENTTREE_NODE_WIDTH - PLACEMENTTREE_NODE_X_SPACE) / 2;
-
-  if (!visibleMap || visibleMap[node.id] === 2) {
-    children
-      .filter((child: any) => child.placementPosition === 'RIGHT')
-      .forEach((child: any) => {
-        const { maxX: tempX } = buildTree(
-          child,
-          maxX + PLACEMENTTREE_NODE_X_SPACE,
-          depth + 1,
-          tree,
-          visibleMap
-        );
-        maxX = tempX;
-      });
+  if (depth !== 0) {
+    tree.push(res);
   }
 
-  const element = {
-    ...res,
-    maxX: Math.max(maxX, res.position.x + PLACEMENTTREE_NODE_WIDTH),
-  };
-
-  tree.push(element);
-
-  return element;
+  return res;
 }
 
 function getMemberIdsWithDepth(node: any, depth: number, targetDepth: number) {
@@ -174,17 +159,17 @@ function PlacementListView() {
   const [visibleMap, setVisibleMap] = useState<Record<string, number>>({});
 
   useEffect(() => {
-    fetchMembers({ variables: { sort: '-placementPosition' } });
+    fetchMembers({ variables: {} });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const nodes: Node[] = useMemo(() => {
     if (!members || members.length === 0) return [];
-    const placementTree = buildPlacementTree(members.filter((member) => member?.placementParentId));
+    const sponsorTree = buildSponsorTree(members);
 
     const resultTree: any[] = [];
 
-    buildTree(placementTree, 0, 0, resultTree, visibleMap);
+    buildTree(sponsorTree, 0, 0, resultTree, visibleMap);
 
     return resultTree;
   }, [members, visibleMap]);
@@ -192,10 +177,10 @@ function PlacementListView() {
   const edges: Edge[] = useMemo(
     () =>
       members
-        .filter((member) => member?.placementParentId)
+        .filter((member) => member?.sponsorId)
         .map((member) => ({
-          id: `${member?.placementParentId}:${member?.id}`,
-          source: member?.placementParentId ?? '',
+          id: `${member?.sponsorId}:${member?.id}`,
+          source: member?.sponsorId ?? '',
           target: member?.id ?? '',
           type: 'customEdge',
         })),
@@ -207,11 +192,11 @@ function PlacementListView() {
       const newVisibleMap: Record<string, number> = { ...visibleMap };
 
       members
-        .filter((mb) => mb?.placementParentId === id)
+        .filter((mb) => mb?.sponsorId === id)
         .forEach((mb) => {
           if (!newVisibleMap[mb?.id ?? '']) {
             newVisibleMap[mb?.id ?? ''] =
-              members.findIndex((mber) => mber?.placementParentId === mb?.id) === -1 ? 3 : 1;
+              members.findIndex((mber) => mber?.sponsorId === mb?.id) === -1 ? 3 : 1;
           }
         });
 
@@ -219,7 +204,7 @@ function PlacementListView() {
 
       setVisibleMap(newVisibleMap);
 
-      localStorage.setItem('placementVisibleMap', JSON.stringify(newVisibleMap));
+      localStorage.setItem('sponsorVisibleMap', JSON.stringify(newVisibleMap));
     },
     [members, visibleMap]
   );
@@ -232,7 +217,7 @@ function PlacementListView() {
 
       setVisibleMap(newVisibleMap);
 
-      localStorage.setItem('placementVisibleMap', JSON.stringify(newVisibleMap));
+      localStorage.setItem('sponsorVisibleMap', JSON.stringify(newVisibleMap));
     },
     [visibleMap]
   );
@@ -251,13 +236,13 @@ function PlacementListView() {
     if (!members || members.length === 0) {
       setVisibleMap({});
 
-      localStorage.setItem('placementVisibleMap', JSON.stringify({}));
+      localStorage.setItem('sponsorVisibleMap', JSON.stringify({}));
 
       return;
     }
 
-    const placementTree = buildPlacementTree(members.filter((member) => member?.placementParentId));
-    const maps = getMemberIdsWithDepth(placementTree, 0, 3);
+    const placementTree = buildSponsorTree(members);
+    const maps = getMemberIdsWithDepth(placementTree, 0, 2);
     const newVisibleMap: Record<string, number> = {};
 
     maps.forEach((mp: any) => {
@@ -266,7 +251,7 @@ function PlacementListView() {
 
     setVisibleMap(newVisibleMap);
 
-    localStorage.setItem('placementVisibleMap', JSON.stringify(newVisibleMap));
+    localStorage.setItem('sponsorVisibleMap', JSON.stringify(newVisibleMap));
   }, [members]);
 
   const { fitView } = useReactFlow();
@@ -277,7 +262,7 @@ function PlacementListView() {
 
     while (iMinerId) {
       const currentMinerId: string = iMinerId;
-      const newIMinerId = members.find((mb) => mb?.id === currentMinerId)?.placementParentId;
+      const newIMinerId = members.find((mb) => mb?.id === currentMinerId)?.sponsorId;
 
       if (newIMinerId === iMinerId) break;
 
@@ -286,11 +271,11 @@ function PlacementListView() {
       if (iMinerId) {
         newVisibleMap[iMinerId] = 2;
         members
-          .filter((mb) => mb?.placementParentId === newIMinerId)
+          .filter((mb) => mb?.sponsorId === newIMinerId)
           .forEach((mb) => {
             if (!newVisibleMap[mb?.id ?? '']) {
               newVisibleMap[mb?.id ?? ''] =
-                members.findIndex((mber) => mber?.placementParentId === mb?.id) === -1 ? 3 : 1;
+                members.findIndex((mber) => mber?.sponsorId === mb?.id) === -1 ? 3 : 1;
             }
           });
       }
@@ -298,7 +283,7 @@ function PlacementListView() {
 
     if (iMinerId) {
       setVisibleMap(newVisibleMap);
-      localStorage.setItem('placementVisibleMap', JSON.stringify(newVisibleMap));
+      localStorage.setItem('sponsorVisibleMap', JSON.stringify(newVisibleMap));
     }
 
     setTimeout(() => {
@@ -314,7 +299,7 @@ function PlacementListView() {
   };
 
   useEffect(() => {
-    const storageVisibleMap = localStorage.getItem('placementVisibleMap');
+    const storageVisibleMap = localStorage.getItem('sponsorVisibleMap');
 
     if (!storageVisibleMap || _.isEmpty(JSON.parse(storageVisibleMap))) resetVisibleMap();
     else setVisibleMap(JSON.parse(storageVisibleMap));
@@ -323,8 +308,8 @@ function PlacementListView() {
   return (
     <DashboardContent sx={{ overflowX: 'hidden' }}>
       <Breadcrumbs
-        heading="Placement"
-        links={[{ name: 'Placement', href: paths.dashboard.placement.root }, { name: 'List' }]}
+        heading="Sponsor"
+        links={[{ name: 'Sponsor', href: paths.dashboard.placement.root }, { name: 'List' }]}
         sx={{
           mb: { xs: 1, md: 2 },
         }}
