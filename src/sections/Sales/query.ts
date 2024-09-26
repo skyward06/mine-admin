@@ -30,7 +30,9 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
           status
           point
           isFreeShare
-          primaryFreeShare
+          isFreeShare
+          freePeriodFrom
+          freePeriodTo
         }
         statisticsSales {
           id

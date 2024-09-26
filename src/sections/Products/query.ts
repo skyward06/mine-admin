@@ -14,7 +14,8 @@ export const FETCH_PACKAGES_QUERY = gql(/* GraphQL */ `
         date
         point
         isFreeShare
-        primaryFreeShare
+        freePeriodFrom
+        freePeriodTo
         token
         sales {
           id
@@ -62,15 +63,6 @@ export const REMOVE_PACKAGE = gql(/* GraphQL */ `
   mutation RemovePackage($data: IDInput!) {
     removePackage(data: $data) {
       result
-    }
-  }
-`);
-
-export const MAKE_PRIMARY_FREE_SHARE = gql(/* GraphQL */ `
-  mutation MakePrimaryFreeShare($data: IDInput!) {
-    makePrimaryFreeShare(data: $data) {
-      id
-      primaryFreeShare
     }
   }
 `);

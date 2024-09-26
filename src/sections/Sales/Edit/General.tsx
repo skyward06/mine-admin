@@ -18,6 +18,8 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { formatDate } from 'src/utils/format-time';
+
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
 
@@ -63,7 +65,9 @@ export default function SaleGeneral({ currentSale }: Props) {
   const defaultValues = useMemo(() => {
     const { data } = SaleGeneralSchema.safeParse(currentSale);
 
-    return data ?? ({} as SaleGeneralSchemaType);
+    return (
+      { ...data, orderedAt: formatDate(currentSale.orderedAt) } ?? ({} as SaleGeneralSchemaType)
+    );
   }, [currentSale]);
 
   const methods = useForm<SaleGeneralSchemaType>({

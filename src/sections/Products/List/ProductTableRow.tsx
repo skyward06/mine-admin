@@ -5,12 +5,14 @@ import Tooltip from '@mui/material/Tooltip';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
+import ListItemText from '@mui/material/ListItemText';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
 import { formatDate } from 'src/utils/format-time';
 
+import { Label } from 'src/components/Label';
 import { Iconify } from 'src/components/Iconify';
 
 // ----------------------------------------------------------------------
@@ -24,13 +26,59 @@ type Props = {
 export default function ProductTableRow({ row, confirm, setSelected }: Props) {
   const router = useRouter();
 
-  const { id, amount, date, productName, point, token, sales } = row;
+  const {
+    id,
+    amount,
+    date,
+    productName,
+    isFreeShare,
+    point,
+    freePeriodFrom,
+    freePeriodTo,
+    token,
+    sales,
+  } = row;
 
   return (
     <TableRow hover>
       <TableCell align="left">{formatDate(date)}</TableCell>
       <TableCell align="left">{amount}</TableCell>
       <TableCell align="left">{productName}</TableCell>
+      <TableCell align="left">
+        {isFreeShare ? (
+          <Label variant="soft" color="primary">
+            Free
+          </Label>
+        ) : (
+          <Label variant="soft" color="success">
+            Premium
+          </Label>
+        )}
+      </TableCell>
+      <TableCell align="left">
+        {isFreeShare && (
+          <ListItemText
+            primary={formatDate(freePeriodFrom)}
+            primaryTypographyProps={{ typography: 'caption', noWrap: true }}
+            secondaryTypographyProps={{
+              mt: 0.5,
+              component: 'span',
+              typography: 'caption',
+            }}
+          />
+        )}
+      </TableCell>
+      <TableCell align="left">
+        <ListItemText
+          primary={formatDate(freePeriodTo)}
+          primaryTypographyProps={{ typography: 'caption', noWrap: true }}
+          secondaryTypographyProps={{
+            mt: 0.5,
+            component: 'span',
+            typography: 'caption',
+          }}
+        />
+      </TableCell>
       <TableCell align="left">{point}</TableCell>
       <TableCell align="left">{token}</TableCell>
       <TableCell align="center">
