@@ -29,6 +29,8 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
           token
           status
           point
+          isFreeShare
+          primaryFreeShare
         }
         statisticsSales {
           id
@@ -77,17 +79,6 @@ export const UPDATE_SALE = gql(/* GraphQL */ `
     }
   }
 `);
-
-// export const FETCH_PACKAGES_QUERY = gql(/* GraphQL */ `
-//   query FetchPackages($sort: String, $page: String, $filter: JSONObject) {
-//     packages(sort: $sort, page: $page, filter: $filter) {
-//       packages {
-//         id
-//         productName
-//       }
-//     }
-//   }
-// `);
 
 export const REMOVE_SALE = gql(/* GraphQL */ `
   mutation RemoveSale($data: IDInput!) {
