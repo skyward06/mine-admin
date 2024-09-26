@@ -159,7 +159,10 @@ export default function MemberGeneral({ currentMember }: Props) {
     fetchMembers({
       variables: {
         page: '1,5',
-        filter: { OR: [{ username: { contains: member?.username ?? '', mode: 'insensitive' } }] },
+        filter: {
+          OR: [{ username: { contains: member?.username ?? '', mode: 'insensitive' } }],
+          status: true,
+        },
       },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
