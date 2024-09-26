@@ -3,6 +3,7 @@ import { useMutation, useLazyQuery } from '@apollo/client';
 
 import {
   UPDATE_MEMBER,
+  APPROVE_MEMBER,
   FETCH_MEMBERS_QUERY,
   REMOVE_MEMBER_QUERY,
   UPDATE_PASSWORD_QUERY,
@@ -73,4 +74,13 @@ export function useRemoveMemberPlacement() {
   });
 
   return { loading, error, removeMemberPlacement };
+}
+
+export function useApproveMember() {
+  const [approveMember, { loading, error }] = useMutation(APPROVE_MEMBER, {
+    awaitRefetchQueries: true,
+    refetchQueries: ['FetchMembers'],
+  });
+
+  return { loading, error, approveMember };
 }

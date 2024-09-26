@@ -23,7 +23,7 @@ import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 import { ConfirmDialog } from 'src/components/Dialog';
 
-import { useUpdatePassword } from '../useApollo';
+import { useApproveMember, useUpdatePassword } from '../useApollo';
 
 // ----------------------------------------------------------------------
 
@@ -48,9 +48,10 @@ export default function MemberTableRow({
   const confirm = useBoolean();
   const password = useBoolean();
 
-  const { id, username, email, mobile, assetId, point, fullName, createdAt, sales } = row;
+  const { id, username, email, mobile, assetId, point, fullName, status, createdAt, sales } = row;
 
   const { updatePassword } = useUpdatePassword();
+  const { approveMember } = useApproveMember();
 
   const resetContent = (
     <Paper sx={{ py: 2 }}>
@@ -131,6 +132,17 @@ export default function MemberTableRow({
 
         {action && (
           <TableCell sx={{ whiteSpace: 'nowrap' }} align="center">
+            <Tooltip title="Approve" placement="top" arrow>
+              <IconButton
+                color="success"
+                onClick={() => {
+                  approveMember({ variables: { data: { id } } });
+                }}
+                disabled={!!status}
+              >
+                <Iconify icon="fa6-solid:circle-check" />
+              </IconButton>
+            </Tooltip>
             <Tooltip title="View" placement="top" arrow>
               <IconButton
                 color="default"

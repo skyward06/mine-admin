@@ -199,3 +199,13 @@ export const REMOVE_MEMBER_PLACEMENT = gql(/* GraphQL */ `
     }
   }
 `);
+
+export const APPROVE_MEMBER = gql(/* GraphQL */ `
+  mutation Mutation($data: IDInput!) {
+    approveMember(data: $data) {
+      message
+      result
+      result
+    }
+  }
+`);
