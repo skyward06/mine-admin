@@ -65,9 +65,9 @@ export default function SaleGeneral({ currentSale }: Props) {
   const defaultValues = useMemo(() => {
     const { data } = SaleGeneralSchema.safeParse(currentSale);
 
-    return (
-      { ...data, orderedAt: formatDate(currentSale.orderedAt) } ?? ({} as SaleGeneralSchemaType)
-    );
+    return currentSale
+      ? { ...data, orderedAt: formatDate(currentSale.orderedAt) }
+      : ({} as SaleGeneralSchemaType);
   }, [currentSale]);
 
   const methods = useForm<SaleGeneralSchemaType>({
