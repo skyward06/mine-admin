@@ -13,9 +13,6 @@ export const FETCH_PACKAGES_QUERY = gql(/* GraphQL */ `
         status
         date
         point
-        isFreeShare
-        freePeriodFrom
-        freePeriodTo
         token
         sales {
           id
