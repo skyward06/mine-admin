@@ -3,7 +3,6 @@ import type { Package } from 'src/__generated__/graphql';
 import { z as zod } from 'zod';
 import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { ApolloError } from '@apollo/client';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import Box from '@mui/material/Box';
@@ -83,7 +82,7 @@ export default function EditForm({ current }: Props) {
     defaultValues,
   });
 
-  const { reset, setError, handleSubmit } = methods;
+  const { reset, handleSubmit } = methods;
 
   const onSubmit = handleSubmit(async (newData) => {
     try {
@@ -120,14 +119,7 @@ export default function EditForm({ current }: Props) {
 
       router.push(paths.dashboard.products.root);
     } catch (err) {
-      if (err instanceof ApolloError) {
-        const [error] = err.graphQLErrors;
-        if (error.path?.includes('email')) {
-          setError('productName', { type: 'manual', message: error?.message || '' });
-        }
-      } else {
-        toast.error(err.message);
-      }
+      toast.error(err.message);
     }
   });
 
