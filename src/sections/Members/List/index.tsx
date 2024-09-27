@@ -50,7 +50,7 @@ import type { MemberRole, IMemberPrismaFilter, IMemberTableFilters } from './typ
 
 const STATUS_OPTIONS: { value: MemberRole; label: string; color: LabelColor }[] = [
   { value: 'all', label: 'All', color: 'info' },
-  { value: 'pending', label: 'Pending', color: 'success' },
+  { value: 'pending', label: 'Waiting for approval', color: 'success' },
   { value: 'inactive', label: 'Inactive', color: 'error' },
 ];
 
@@ -60,6 +60,7 @@ const TABLE_HEAD = [
   { id: 'mobile', label: 'Mobile', sortable: true },
   { id: 'assetId', label: 'AssetID', sortable: true },
   { id: 'point', label: 'Point', sortable: true },
+  { id: 'emailVerified', label: 'Status', sortable: true },
   { id: 'createdAt', label: 'Created At', sortable: true },
   { id: 'action', label: 'Action', align: 'center' },
 ];
@@ -97,7 +98,7 @@ export default function MemberListView() {
     }
 
     if (filter.status === 'pending') {
-      filterObj.emailVerified = false;
+      filterObj.status = false;
     }
 
     if (filter.status === 'inactive') {
@@ -134,7 +135,7 @@ export default function MemberListView() {
 
     fetchMemberStats({
       variables: {
-        approveFilter: { emailVerified: false },
+        pendingFilter: { status: false },
         inactiveFilter: { deletedAt: { not: null } },
       },
     });

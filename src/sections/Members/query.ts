@@ -1,11 +1,11 @@
 import { gql } from 'src/__generated__/gql';
 
 export const FETCH_MEMBER_STATS_QUERY = gql(/* GraphQL */ `
-  query FetchMemberStats($approveFilter: JSONObject, $inactiveFilter: JSONObject) {
+  query FetchMemberStats($pendingFilter: JSONObject, $inactiveFilter: JSONObject) {
     all: members {
       total
     }
-    pending: members(filter: $approveFilter) {
+    pending: members(filter: $pendingFilter) {
       total
     }
     inactive: members(filter: $inactiveFilter) {
