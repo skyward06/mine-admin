@@ -50,6 +50,7 @@ import type { MemberRole, IMemberPrismaFilter, IMemberTableFilters } from './typ
 
 const STATUS_OPTIONS: { value: MemberRole; label: string; color: LabelColor }[] = [
   { value: 'all', label: 'All', color: 'info' },
+  { value: 'pending', label: 'Pending', color: 'success' },
   { value: 'inactive', label: 'Inactive', color: 'error' },
 ];
 
@@ -95,6 +96,10 @@ export default function MemberListView() {
       ];
     }
 
+    if (filter.status === 'pending') {
+      filterObj.emailVerified = false;
+    }
+
     if (filter.status === 'inactive') {
       filterObj.deletedAt = { not: null };
     }
@@ -128,7 +133,10 @@ export default function MemberListView() {
     });
 
     fetchMemberStats({
-      variables: { inactiveFilter: { deletedAt: { not: null } } },
+      variables: {
+        approveFilter: { emailVerified: false },
+        inactiveFilter: { deletedAt: { not: null } },
+      },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);

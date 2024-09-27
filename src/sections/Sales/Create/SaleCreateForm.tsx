@@ -22,7 +22,7 @@ import { today, customizeDate } from 'src/utils/format-time';
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
 
-import { FETCH_MEMBERS_QUERY } from 'src/sections/Members/query';
+import { useFetchMembers } from 'src/sections/Members/useApollo';
 import { FETCH_PACKAGES_QUERY } from 'src/sections/Products/query';
 
 import { CREATE_SALE, FETCH_SALES_QUERY } from '../query';
@@ -65,9 +65,7 @@ export default function SaleCreateForm() {
 
   const sales = salesData?.sales.sales ?? [{ invoiceNo: 0 }];
 
-  const [fetchMembers, { data: membersData }] = useLazyQuery(FETCH_MEMBERS_QUERY, {
-    variables: { filter: {} },
-  });
+  const { fetchMembers, members } = useFetchMembers();
 
   const [fetchPackages, { data: packageData }] = useLazyQuery(FETCH_PACKAGES_QUERY, {
     variables: { filter: { status: true } },
@@ -107,13 +105,10 @@ export default function SaleCreateForm() {
     }
   });
 
-  // const selectedMembers = (ids: string[]) => {};
-
-  const members = membersData?.members.members ?? [];
   const packages = packageData?.packages.packages ?? [];
 
   useEffect(() => {
-    fetchMembers();
+    fetchMembers({ variables: { filter: { emailVerified: true } } });
     fetchPackages();
   }, [fetchMembers, fetchPackages]);
 

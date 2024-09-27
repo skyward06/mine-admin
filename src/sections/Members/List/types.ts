@@ -1,6 +1,6 @@
 // ----------------------------------------------------------------------
 
-export type MemberRole = 'all' | 'inactive';
+export type MemberRole = 'all' | 'pending' | 'inactive';
 
 export type IMemberTableFilters = {
   search: string;
@@ -10,5 +10,7 @@ export type IMemberTableFilters = {
 export type IMemberPrismaFilter = {
   OR?: any;
   sponsorId?: any;
+  status?: boolean;
+  emailVerified?: boolean;
   deletedAt?: any;
 };
