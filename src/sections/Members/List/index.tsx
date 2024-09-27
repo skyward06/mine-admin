@@ -50,7 +50,7 @@ import type { MemberRole, IMemberPrismaFilter, IMemberTableFilters } from './typ
 
 const STATUS_OPTIONS: { value: MemberRole; label: string; color: LabelColor }[] = [
   { value: 'all', label: 'All', color: 'info' },
-  { value: 'pending', label: 'Waiting for approval', color: 'success' },
+  { value: 'pending', label: 'Pending', color: 'success' },
   { value: 'inactive', label: 'Inactive', color: 'error' },
 ];
 

@@ -164,12 +164,12 @@ export default function MemberTableRow({
                 {!status && (
                   <Tooltip title="Approve" placement="top" arrow>
                     <IconButton
-                      color="default"
+                      color="success"
                       onClick={() => {
                         approveMember({ variables: { data: { id } } });
                       }}
                     >
-                      <Iconify icon="clarity:circle-arrow-solid" />
+                      <Iconify icon="fa6-solid:circle-check" />
                     </IconButton>
                   </Tooltip>
                 )}
