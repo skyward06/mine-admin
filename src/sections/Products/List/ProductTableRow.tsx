@@ -37,7 +37,7 @@ export default function ProductTableRow({ row, confirm, setSelected }: Props) {
       <TableCell align="left">
         {(id === FREE_SHARE_ID_1 || id === FREE_SHARE_ID_2) && (
           <Label variant="soft" color="primary">
-            Bonus
+            Free Share
           </Label>
         )}
       </TableCell>

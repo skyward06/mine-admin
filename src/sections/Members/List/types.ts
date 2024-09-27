@@ -9,5 +9,6 @@ export type IMemberTableFilters = {
 
 export type IMemberPrismaFilter = {
   OR?: any;
+  sponsorId?: any;
   deletedAt?: any;
 };
