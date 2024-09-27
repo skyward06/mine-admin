@@ -158,7 +158,7 @@ export function StandardNode({
         loading={memberLoading}
         loadingText={<LoadingButton loading={memberLoading} />}
         getOptionLabel={(option) => option!.username}
-        value={placementParent}
+        value={member || placementParent}
         renderInput={(params) => <TextField {...params} label="Miner Name(Parent)" margin="none" />}
         renderOption={(props, option) => (
           <li {...props} key={option!.username}>
@@ -331,6 +331,8 @@ export function StandardNode({
 
                 if (data?.updateMember.id && !loading) {
                   toast.success('Successfully added!');
+
+                  expandTree(id);
                   addModal.onFalse();
                 }
               } catch (err) {
