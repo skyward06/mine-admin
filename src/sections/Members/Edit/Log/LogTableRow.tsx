@@ -65,7 +65,7 @@ export default function LogTableRow({ row }: Props) {
         <TableCell>{action}</TableCell>
         <TableCell>{fDateTime(when, 'MM/DD/YYYY hh:mm:ss')}</TableCell>
         <TableCell>
-          {status ? (
+          {status === 'success' ? (
             <Iconify icon="ep:success-filled" color="#22C55E" />
           ) : (
             <Iconify icon="uis:times-circle" color="#B71D18" />

@@ -1,6 +1,8 @@
 import type { MemberLog } from 'src/__generated__/graphql';
 import type { UseBooleanReturn } from 'src/hooks/useBoolean';
 
+import { isEmpty } from 'lodash';
+
 import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
 import Drawer from '@mui/material/Drawer';
@@ -11,6 +13,7 @@ import { fDateTime } from 'src/utils/format-time';
 import { Iconify } from 'src/components/Iconify';
 import { ScrollBar } from 'src/components/ScrollBar';
 
+import Empty from './Empty';
 import Difference from './Difference';
 
 interface Props {
@@ -51,22 +54,30 @@ export default function LogDrawer({ open, defaultStyles, log }: Props) {
           {action === 'update' ? (
             <Stack direction="row" columnGap={2}>
               <Stack width={0.5}>
-                <Difference
-                  before={before}
-                  after={after}
-                  action="before"
-                  compare
-                  defaultStyles={defaultStyles}
-                />
+                {isEmpty(after) ? (
+                  <Empty before={before} action="before" />
+                ) : (
+                  <Difference
+                    before={before}
+                    after={after}
+                    action="before"
+                    compare
+                    defaultStyles={defaultStyles}
+                  />
+                )}
               </Stack>
               <Stack width={0.5}>
-                <Difference
-                  before={before}
-                  after={after}
-                  action="after"
-                  compare
-                  defaultStyles={defaultStyles}
-                />
+                {isEmpty(after) ? (
+                  <Empty before={before} action="after" />
+                ) : (
+                  <Difference
+                    before={before}
+                    after={after}
+                    action="after"
+                    compare
+                    defaultStyles={defaultStyles}
+                  />
+                )}
               </Stack>
             </Stack>
           ) : (

@@ -29,11 +29,23 @@ export default function Difference({
 }: Props) {
   const theme = useTheme();
 
-  const { sponsor: afterSponsor, memberWallets: afterMemberWallets, ...afterRest } = after;
-  const { sponsor: beforeSponsor, memberWallets: beforeMemberWallets, ...beforeRest } = before;
+  const {
+    placementParent: afterPlacement,
+    sponsor: afterSponsor,
+    memberWallets: afterMemberWallets,
+    ...afterRest
+  } = after;
+
+  const {
+    placementParent: beforePlacement,
+    sponsor: beforeSponsor,
+    memberWallets: beforeMemberWallets,
+    ...beforeRest
+  } = before;
 
   const rest = action === 'after' ? afterRest : beforeRest;
   const sponsor = action === 'after' ? afterSponsor : beforeSponsor;
+  const placement = action === 'after' ? afterPlacement : beforePlacement;
   const memberWallets = action === 'after' ? afterMemberWallets : beforeMemberWallets;
 
   return (
@@ -62,10 +74,10 @@ export default function Difference({
 
           {compare && before[item] !== after[item] ? (
             <Label variant="soft" color="info">
-              {rest[item]}
+              {rest[item] ?? ''}
             </Label>
           ) : (
-            <Typography>{rest[item]}</Typography>
+            <Typography>{rest[item] ?? ''}</Typography>
           )}
         </Stack>
       ))}
@@ -79,6 +91,18 @@ export default function Difference({
           </Label>
         ) : (
           <Typography>{sponsor?.fullName}</Typography>
+        )}
+      </Stack>
+
+      <Stack direction="row" columnGap={2}>
+        <Typography fontWeight="bold">placement:</Typography>
+
+        {compare && !isEqual(beforePlacement, afterPlacement) ? (
+          <Label variant="soft" color="info">
+            {placement?.fullName}
+          </Label>
+        ) : (
+          <Typography>{placement?.fullName}</Typography>
         )}
       </Stack>
 
@@ -97,7 +121,6 @@ export default function Difference({
               ) : (
                 <Typography>{row === 'payout' ? item[row].method : item[row]}</Typography>
               )}
-              {/* <Typography>{row === 'payout' ? item[row].method : item[row]}</Typography> */}
             </Stack>
           ))}
         </Paper>
