@@ -113,7 +113,8 @@ export default function Difference({
           {Object.keys(item).map((row: any, index: number) => (
             <Stack direction="row" columnGap={2}>
               <Typography fontWeight="bold">{row}:</Typography>
-              {beforeMemberWallets[no] &&
+              {beforeMemberWallets &&
+              beforeMemberWallets[no] &&
               afterMemberWallets[no] &&
               compare &&
               !isEqual(beforeMemberWallets[no][row], afterMemberWallets[no][row]) ? (
@@ -122,7 +123,7 @@ export default function Difference({
                 </Label>
               ) : (
                 <>
-                  {!beforeMemberWallets[no] || !afterMemberWallets[no] ? (
+                  {beforeMemberWallets && (!beforeMemberWallets[no] || !afterMemberWallets[no]) ? (
                     <Label variant="soft" color="info">
                       {row === 'payout' ? item[row].method : item[row]}
                     </Label>
