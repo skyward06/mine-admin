@@ -98,9 +98,28 @@ export default function MemberCreateForm() {
 
   const { reset, setError, handleSubmit } = methods;
 
+  const hasDuplicates = (arr: any[]) => {
+    const seen = new Set();
+
+    return arr.some((item: any) => {
+      if (seen.has(item.address)) {
+        return true;
+      }
+
+      seen.add(item.address);
+
+      return false;
+    });
+  };
+
   const onSubmit = handleSubmit(async ({ firstName, lastName, wallets, ...data }) => {
     try {
       const total = wallets.reduce((prev: number, save: any) => prev + save.percent, 0);
+
+      if (hasDuplicates(wallets)) {
+        toast.warning('Duplicated wallet address!');
+        return;
+      }
 
       if (total === 100) {
         await submit({
