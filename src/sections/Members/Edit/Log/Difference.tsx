@@ -121,7 +121,15 @@ export default function Difference({
                   {row === 'payout' ? item[row].method : item[row]}
                 </Label>
               ) : (
-                <Typography>{row === 'payout' ? item[row].method : item[row]}</Typography>
+                <>
+                  {!beforeMemberWallets[no] || !afterMemberWallets[no] ? (
+                    <Label variant="soft" color="info">
+                      {row === 'payout' ? item[row].method : item[row]}
+                    </Label>
+                  ) : (
+                    <Typography>{row === 'payout' ? item[row].method : item[row]}</Typography>
+                  )}
+                </>
               )}
             </Stack>
           ))}
