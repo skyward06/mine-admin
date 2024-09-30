@@ -15,8 +15,8 @@ import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 import { paths } from 'src/routes/paths';
-import { useQuery } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
+import { useQuery, useSearchParams } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
@@ -73,8 +73,12 @@ export default function MemberListView() {
   const table = useTable({ defaultDense: true });
   const [selected, setSelected] = useState<string>('');
 
+  const searchParams = useSearchParams();
+
   const [query, { setQueryParams: setQuery, setPage, setPageSize }] =
     useQuery<IMemberTableFilters>();
+
+  const sponsorId = searchParams.get('sponsorId');
 
   const {
     page = { page: 1, pageSize: 10 },
@@ -108,8 +112,12 @@ export default function MemberListView() {
       filterObj.deletedAt = { not: null };
     }
 
+    if (sponsorId) {
+      filterObj.sponsorId = sponsorId;
+    }
+
     return filterObj;
-  }, [filter]);
+  }, [sponsorId, filter]);
 
   const graphQuerySort = useMemo(() => {
     if (!sort) return undefined;

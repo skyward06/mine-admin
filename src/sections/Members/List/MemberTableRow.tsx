@@ -98,6 +98,10 @@ export default function MemberTableRow({
     </Paper>
   );
 
+  const handleSponsors = () => {
+    window.open(`${paths.dashboard.members.root}?sponsorId=${id}`, '_blank');
+  };
+
   return (
     <>
       <TableRow hover selected={selected}>
@@ -130,6 +134,16 @@ export default function MemberTableRow({
         <TableCell>{assetId}</TableCell>
 
         <TableCell>{point}</TableCell>
+
+        <TableCell
+          sx={{
+            cursor: 'pointer',
+            '&:hover': { bgcolor: (theme) => theme.vars.palette.action.hover },
+          }}
+          onClick={() => handleSponsors()}
+        >
+          {introduceMembers?.length ?? 0}
+        </TableCell>
 
         <TableCell>
           {!emailVerified && (
