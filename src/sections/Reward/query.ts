@@ -56,6 +56,7 @@ export const FETCH_MEMBERSTATISTICS_QUERY = gql(/* GraphQL */ `
           totalIntroducers
           primaryAddress
           secondaryAddress
+          totalIntroducers
           memberWallets {
             createdAt
             updatedAt
