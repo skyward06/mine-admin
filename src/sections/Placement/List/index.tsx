@@ -218,32 +218,38 @@ function PlacementListView() {
   );
 
   const expandTree = useCallback(
-    (id: string) => {
+    async (id: string) => {
       const newVisibleMap: Record<string, number> = { ...visibleMap };
+      const { data } = await fetchMembers();
+      const newMembers = data?.members.members ? data.members.members : [];
 
-      members
+      newMembers
         .filter((mb) => mb?.placementParentId === id)
         .forEach((mb) => {
           if (!newVisibleMap[mb?.id ?? '']) {
             newVisibleMap[mb?.id ?? ''] =
-              members.findIndex((mber) => mber?.placementParentId === mb?.id) === -1 ? 3 : 1;
+              newMembers.findIndex((mber) => mber?.placementParentId === mb?.id) === -1 ? 3 : 1;
           }
         });
 
-      newVisibleMap[id] = members.findIndex((mb) => mb?.placementParentId === id) === -1 ? 3 : 2;
+      newVisibleMap[id] = newMembers.findIndex((mb) => mb?.placementParentId === id) === -1 ? 3 : 2;
 
       setVisibleMap(newVisibleMap);
 
       localStorage.setItem('placementVisibleMap', JSON.stringify(newVisibleMap));
     },
-    [members, visibleMap]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [visibleMap]
   );
 
   const collapseTree = useCallback(
-    (id: string) => {
+    async (id: string) => {
       const newVisibleMap: Record<string, number> = { ...visibleMap };
 
-      newVisibleMap[id] = members.findIndex((mb) => mb?.placementParentId === id) === -1 ? 3 : 1;
+      const { data } = await fetchMembers();
+      const newMembers = data?.members.members ? data.members.members : [];
+
+      newVisibleMap[id] = newMembers.findIndex((mb) => mb?.placementParentId === id) === -1 ? 3 : 1;
 
       setVisibleMap(newVisibleMap);
 
