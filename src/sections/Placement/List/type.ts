@@ -6,4 +6,5 @@ export type NodeProps = OrgChartBaseNode &
   Member & {
     children?: any;
     sx?: SxProps<Theme>;
+    commissions: any;
   };

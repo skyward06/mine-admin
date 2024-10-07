@@ -272,6 +272,15 @@ export function formatDate(date: string | Date) {
   return new Date(date).toISOString().split('T')[0];
 }
 
+export function formatTime(date: string | Date) {
+  return new Date(date).toISOString().split(/[T.]/)[1];
+}
+
+export function formatDateTime(data: string | Date) {
+  const [date, time] = new Date(data).toISOString().split(/[T.]/);
+  return `${date} ${time}`;
+}
+
 export function customizeDate(date: string | Date) {
   return `${formatDate(date)}T00:00:00Z`;
 }

@@ -20,6 +20,7 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
           secondaryAddress
           status
           emailVerified
+          totalIntroducers
         }
         package {
           id

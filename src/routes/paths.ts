@@ -9,6 +9,7 @@ const ROOTS = {
   PRODUCTS: '/products',
   SPONSOR: '/sponsor',
   PLACEMENT: '/placement',
+  COMMISSION: '/commission',
   REWARD: '/reward',
   USERS: '/users',
 };
@@ -50,6 +51,7 @@ export const paths = {
     },
     sponsor: { root: ROOTS.SPONSOR },
     placement: { root: ROOTS.PLACEMENT },
+    commission: { root: ROOTS.COMMISSION },
     reward: {
       root: ROOTS.REWARD,
       new: `${ROOTS.REWARD}/new`,

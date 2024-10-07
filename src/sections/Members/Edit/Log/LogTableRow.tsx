@@ -6,7 +6,7 @@ import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
-import { fDateTime } from 'src/utils/format-time';
+import { formatDateTime } from 'src/utils/format-time';
 
 import { varAlpha } from 'src/theme/styles';
 
@@ -63,7 +63,7 @@ export default function LogTableRow({ row }: Props) {
         <TableCell>{who}</TableCell>
         <TableCell>{role}</TableCell>
         <TableCell>{action}</TableCell>
-        <TableCell>{fDateTime(when, 'MM/DD/YYYY hh:mm:ss')}</TableCell>
+        <TableCell>{formatDateTime(when)}</TableCell>
         <TableCell>
           {status === 'success' ? (
             <Iconify icon="ep:success-filled" color="#22C55E" />

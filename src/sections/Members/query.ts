@@ -33,6 +33,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         sponsorId
         status
         emailVerified
+        totalIntroducers
         sponsor {
           id
           username
@@ -45,6 +46,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           assetId
           status
           emailVerified
+          totalIntroducers
         }
         placementParentId
         placementPosition
@@ -60,6 +62,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           assetId
           status
           emailVerified
+          totalIntroducers
         }
         sales {
           id

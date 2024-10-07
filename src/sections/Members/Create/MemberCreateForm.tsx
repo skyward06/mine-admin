@@ -153,6 +153,15 @@ export default function MemberCreateForm() {
         if (error.path?.includes('assetId')) {
           setError('assetId', { type: 'manual', message: error?.message || '' });
         }
+
+        error.path?.forEach((item: any, index: number) => {
+          if (item.includes('wallets')) {
+            setError(`wallets.${index}.address`, {
+              type: 'manual',
+              message: 'Invalid Address',
+            });
+          }
+        });
       } else {
         toast.error(err.message);
       }

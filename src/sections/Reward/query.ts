@@ -53,6 +53,7 @@ export const FETCH_MEMBERSTATISTICS_QUERY = gql(/* GraphQL */ `
           assetId
           status
           emailVerified
+          totalIntroducers
           primaryAddress
           secondaryAddress
           memberWallets {

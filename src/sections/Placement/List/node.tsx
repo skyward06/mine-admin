@@ -20,8 +20,6 @@ import { useRouter } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
-import { fDate } from 'src/utils/format-time';
-
 import { Label } from 'src/components/Label';
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
@@ -53,6 +51,7 @@ export function StandardNode({
   username,
   fullName,
   createdAt,
+  commissions,
 }: NodeProps) {
   const addModal = useBoolean();
   const editModal = useBoolean();
@@ -241,10 +240,6 @@ export function StandardNode({
           {`${firstName} ${lastName.length && lastName[0].toUpperCase()}.`}
         </Typography>
 
-        <Typography variant="caption" component="div" noWrap sx={{ color: 'text.secondary' }}>
-          {username}
-        </Typography>
-
         <Stack direction="row" justifyContent="space-between" sx={{ background: 'translation' }}>
           <Typography
             variant="caption"
@@ -252,7 +247,7 @@ export function StandardNode({
             noWrap
             sx={{ color: 'text.secondary', mt: 0.5 }}
           >
-            {fDate(createdAt)}
+            {username}
           </Typography>
 
           <Stack direction="row" columnGap={1}>
@@ -280,6 +275,61 @@ export function StandardNode({
               )}
             </Stack>
           </Stack>
+        </Stack>
+
+        <Stack direction="row" justifyContent="space-between" sx={{ background: 'translation' }}>
+          <Stack direction="row" columnGap={1}>
+            <Typography
+              variant="caption"
+              color="red"
+              fontWeight="bold"
+              component="div"
+              noWrap
+              sx={{ mt: 1 }}
+            >
+              Left:
+            </Typography>
+            <Typography variant="caption" color="gray" component="div" noWrap sx={{ mt: 1 }}>
+              {commissions[id]?.leftPoint || 0}
+            </Typography>
+          </Stack>
+          <Stack direction="row" columnGap={1}>
+            <Typography
+              variant="caption"
+              color="#006899"
+              fontWeight="bold"
+              component="div"
+              noWrap
+              sx={{ mt: 1 }}
+            >
+              Right:
+            </Typography>
+            <Typography variant="caption" color="gray" component="div" noWrap sx={{ mt: 1 }}>
+              {commissions[id]?.rightPoint || 0}
+            </Typography>
+          </Stack>
+        </Stack>
+
+        <Stack direction="row" sx={{ background: 'translation' }} columnGap={1}>
+          <Typography
+            variant="caption"
+            color="#006899"
+            fontWeight="bold"
+            component="div"
+            noWrap
+            sx={{ mt: 1 }}
+          >
+            Commissions:
+          </Typography>
+
+          <Typography
+            variant="caption"
+            component="div"
+            noWrap
+            sx={{ color: 'text.secondary', mt: 1 }}
+          >
+            {commissions[id]?.commissions || 0}
+          </Typography>
         </Stack>
       </Card>
 
@@ -369,6 +419,15 @@ export function StandardNode({
 
                 if (data?.updateMember.id && !loading) {
                   toast.success('Successfully added!');
+
+                  if (placementParentId) {
+                    expandTree(placementParentId);
+                  }
+
+                  if (member?.id) {
+                    expandTree(member.id);
+                  }
+
                   editModal.onFalse();
                 }
               } catch (err) {

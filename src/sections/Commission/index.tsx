@@ -1,35 +1,31 @@
 import type { LabelColor } from 'src/components/Label';
 import type { SortOrder } from 'src/routes/hooks/useQuery';
 
+import dayjs from 'dayjs';
 import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
-import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { alpha } from '@mui/material/styles';
 import TableBody from '@mui/material/TableBody';
-import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 import TableContainer from '@mui/material/TableContainer';
 
 import { paths } from 'src/routes/paths';
 import { useQuery } from 'src/routes/hooks';
-import { RouterLink } from 'src/routes/components';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
-import { CONFIG } from 'src/config';
+import { customizeDate } from 'src/utils/format-time';
+
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Label } from 'src/components/Label';
-import { toast } from 'src/components/SnackBar';
-import { Iconify } from 'src/components/Iconify';
 import { ScrollBar } from 'src/components/ScrollBar';
 import { ConfirmDialog } from 'src/components/Dialog';
-import ExportButton from 'src/components/ExportButton';
 import { SearchInput } from 'src/components/SearchInput';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import {
@@ -40,42 +36,45 @@ import {
   TablePaginationCustom,
 } from 'src/components/Table';
 
-import MemberTableRow from './MemberTableRow';
-import MemberTableFiltersResult from './MemberTableFiltersResult';
-import { useRemoveMember, useFetchMembers, useFetchMembersStats } from '../useApollo';
+import ProductTableRow from './CommissionTableRow';
+import SearchPeriod from '../Placement/List/searchPeriod';
+import ProductTableFiltersResult from './CommissionTableFiltersResult';
+import { useFetchCommissions, useFetchCommissionStats } from './useApollo';
 
-import type { MemberRole, IMemberPrismaFilter, IMemberTableFilters } from './types';
+import type { CommissionRole, ICommissionPrismaFilter, ICommissionTableFilters } from './types';
 
 // ----------------------------------------------------------------------
 
-const STATUS_OPTIONS: { value: MemberRole; label: string; color: LabelColor }[] = [
-  { value: 'all', label: 'All', color: 'info' },
-  { value: 'pending', label: 'Pending', color: 'success' },
-  { value: 'inactive', label: 'Inactive', color: 'error' },
+const STATUS_OPTIONS: { value: CommissionRole; label: string; color: LabelColor }[] = [
+  { value: 'pending', label: 'Pending', color: 'info' },
+  { value: 'sent', label: 'Sent', color: 'error' },
 ];
 
 const TABLE_HEAD = [
-  { id: 'username', label: 'Username', sortable: true },
-  { id: 'fullName', label: 'Full Name', sortable: true },
-  { id: 'mobile', label: 'Mobile', sortable: true },
-  { id: 'assetId', label: 'AssetID', sortable: true },
-  { id: 'point', label: 'Point', sortable: true },
-  { id: 'emailVerified', label: 'Status', sortable: true },
-  { id: 'createdAt', label: 'Created At', sortable: true },
-  { id: 'action', label: 'Action', align: 'center' },
+  { id: 'member.username', label: 'Username', sortable: true },
+  { id: 'leftPoint', label: 'Left Point', sortable: true },
+  { id: 'rightPoint', label: 'Right Point', sortable: true },
+  { id: 'commission', label: 'Commissions', sortable: true },
+  { id: 'createdAt', label: 'Created At', width: 200, sortable: true },
+  { id: 'weekStartDate', label: 'Week Start Date', width: 200, sortable: true },
 ];
 
-const defaultFilter: IMemberTableFilters = {
+const defaultFilter: ICommissionTableFilters = {
   search: '',
-  status: 'all',
+  status: 'pending',
 };
 
-export default function MemberListView() {
+export default function CommissionListView() {
   const table = useTable({ defaultDense: true });
-  const [selected, setSelected] = useState<string>('');
+  const openWeek = useBoolean();
+
+  const [selectedDay, setSelectedDay] = useState<any>();
+
+  const { fetchCommissionStats, data: statsData } = useFetchCommissionStats();
+  const { fetchCommissions, loading, rowCount, weeklyCommissions } = useFetchCommissions();
 
   const [query, { setQueryParams: setQuery, setPage, setPageSize }] =
-    useQuery<IMemberTableFilters>();
+    useQuery<ICommissionTableFilters>();
 
   const {
     page = { page: 1, pageSize: 10 },
@@ -84,29 +83,15 @@ export default function MemberListView() {
   } = query;
 
   const graphQueryFilter = useMemo(() => {
-    const filterObj: IMemberPrismaFilter = {};
+    const filterObj: ICommissionPrismaFilter = {};
     if (filter.search) {
-      filterObj.OR = [
-        { email: { contains: filter.search, mode: 'insensitive' } },
-        { assetId: { contains: filter.search, mode: 'insensitive' } },
-        { mobile: { contains: filter.search, mode: 'insensitive' } },
-        { username: { contains: filter.search, mode: 'insensitive' } },
-        { fullName: { contains: filter.search, mode: 'insensitive' } },
-        { primaryAddress: { contains: filter.search, mode: 'insensitive' } },
-        {
-          memberWallets: {
-            some: { address: { contains: filter.search, mode: 'insensitive' }, deletedAt: null },
-          },
-        },
-      ];
+      filterObj.OR = [{ member: { username: { contains: filter.search, mode: 'insensitive' } } }];
     }
 
     if (filter.status === 'pending') {
       filterObj.status = false;
-    }
-
-    if (filter.status === 'inactive') {
-      filterObj.deletedAt = { not: null };
+    } else {
+      filterObj.status = true;
     }
 
     return filterObj;
@@ -120,39 +105,29 @@ export default function MemberListView() {
       .join(',');
   }, [sort]);
 
-  const confirm = useBoolean();
-
   const canReset = !!filter.search;
 
-  const { loading, members, rowCount, fetchMembers } = useFetchMembers();
-
-  const { data: statsData, fetchMemberStats } = useFetchMembersStats();
-
   useEffect(() => {
-    fetchMembers({
+    fetchCommissionStats({
+      variables: {
+        pendingFilter: { status: false },
+        sentFilter: { status: true },
+      },
+    });
+
+    fetchCommissions({
       variables: {
         page: page && `${page.page},${page.pageSize}`,
         filter: graphQueryFilter,
         sort: graphQuerySort,
       },
     });
-
-    fetchMemberStats({
-      variables: {
-        pendingFilter: { status: false },
-        inactiveFilter: { deletedAt: { not: null } },
-      },
-    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
 
-  const { removeMember, loading: removeLoading } = useRemoveMember();
+  const notFound = (canReset && !weeklyCommissions?.length) || !weeklyCommissions?.length;
 
-  const notFound = (canReset && !members?.length) || !members?.length;
-
-  const token = localStorage.getItem(CONFIG.storageTokenKey) ?? '';
-
-  const handleTabChange = (event: React.SyntheticEvent, newValue: MemberRole) => {
+  const handleTabChange = (event: React.SyntheticEvent, newValue: CommissionRole) => {
     setQuery({
       ...query,
       filter: { ...filter, status: newValue },
@@ -167,19 +142,18 @@ export default function MemberListView() {
     [setQuery, query, filter]
   );
 
+  const onPeriodChange = (value: any) => {
+    setSelectedDay(value);
+  };
+
   return (
     <DashboardContent>
       <Breadcrumbs
-        heading="Miner"
-        links={[{ name: 'Miner', href: paths.dashboard.members.root }, { name: 'List' }]}
+        heading="Commission"
+        links={[{ name: 'Commission', href: paths.dashboard.commission.root }]}
         action={
-          <Button
-            component={RouterLink}
-            href={paths.dashboard.members.new}
-            variant="contained"
-            startIcon={<Iconify icon="mingcute:add-line" />}
-          >
-            New Miner
+          <Button variant="contained" color="primary" onClick={() => openWeek.onTrue()}>
+            Select Week
           </Button>
         }
         sx={{
@@ -214,17 +188,10 @@ export default function MemberListView() {
           ))}
         </Tabs>
 
-        <Stack direction="row">
-          <Stack width={1}>
-            <SearchInput search={filter.search} onSearchChange={handleSearchChange} />
-          </Stack>
-          <Stack width={0.1} sx={{ p: 2.5 }}>
-            <ExportButton target="members" token={token} />
-          </Stack>
-        </Stack>
+        <SearchInput search={filter.search} onSearchChange={handleSearchChange} />
 
         {canReset && !loading && (
-          <MemberTableFiltersResult results={rowCount} sx={{ p: 2.5, pt: 0 }} />
+          <ProductTableFiltersResult results={rowCount!} sx={{ p: 2.5, pt: 0 }} />
         )}
 
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
@@ -234,7 +201,7 @@ export default function MemberListView() {
                 order={sort && sort[Object.keys(sort)[0]]}
                 orderBy={sort && Object.keys(sort)[0]}
                 headLabel={TABLE_HEAD}
-                rowCount={loading ? 0 : members!.length}
+                rowCount={loading ? 0 : weeklyCommissions!.length}
                 onSort={(id) => {
                   if (id !== 'action') {
                     const isAsc = sort && sort[id] === 'asc';
@@ -258,14 +225,8 @@ export default function MemberListView() {
                 </>
               ) : (
                 <TableBody>
-                  {members!.map((row) => (
-                    <MemberTableRow
-                      key={row!.id}
-                      row={row!}
-                      selected={table.selected.includes(row!.id)}
-                      confirm={confirm}
-                      setSelected={setSelected}
-                    />
+                  {weeklyCommissions!.map((row: any) => (
+                    <ProductTableRow key={row!.id} row={row!} />
                   ))}
 
                   <TableNoData notFound={notFound} />
@@ -292,34 +253,32 @@ export default function MemberListView() {
       </Card>
 
       <ConfirmDialog
-        open={confirm.value}
-        onClose={confirm.onFalse}
-        title="Delete"
-        content={
-          <>
-            <Typography>This member will be removed permanently!</Typography>
-            <Typography>Are you sure?</Typography>
-          </>
-        }
+        open={openWeek.value}
+        onClose={openWeek.onFalse}
+        title="Select Week"
+        content={<SearchPeriod onChange={onPeriodChange} />}
         action={
           <LoadingButton
             variant="contained"
-            color="error"
-            loading={removeLoading}
+            color="primary"
+            loading={loading}
             onClick={async () => {
-              const promise = await removeMember({ variables: { data: { id: selected } } });
-              const result = promise.data?.removeMember.result;
+              fetchCommissions({
+                variables: {
+                  filter: {
+                    weekStartDate: {
+                      lt: customizeDate(`${dayjs(selectedDay).endOf('week').add(1, 'day')}`),
+                    },
+                  },
+                  page: page && `${page.page},${page.pageSize}`,
+                  sort: graphQuerySort,
+                },
+              });
 
-              if (result === 'success') {
-                toast.success('Miner removed successfully');
-              } else {
-                toast.error('You are not allowed to remove this miner');
-              }
-
-              confirm.onFalse();
+              openWeek.onFalse();
             }}
           >
-            Confirm
+            OK
           </LoadingButton>
         }
       />

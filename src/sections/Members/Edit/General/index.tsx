@@ -169,6 +169,15 @@ export default function MemberGeneral({ currentMember }: Props) {
         if (error.path?.includes('assetId')) {
           setError('assetId', { type: 'manual', message: error?.message || '' });
         }
+
+        error.path?.forEach((item: any, index: number) => {
+          if (item.includes('wallets')) {
+            setError(`memberWallets.${index}.address`, {
+              type: 'manual',
+              message: 'Invalid Address',
+            });
+          }
+        });
       }
       toast.error(err.message);
     }
