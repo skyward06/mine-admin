@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import dayjs from 'dayjs';
 import { useMemo, useState, useEffect, useCallback } from 'react';
 import {
   ReactFlow,
@@ -11,17 +10,11 @@ import {
 } from '@xyflow/react';
 
 import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
-import LoadingButton from '@mui/lab/LoadingButton';
 
 import { paths } from 'src/routes/paths';
-
-import { useBoolean } from 'src/hooks/useBoolean';
-
-import { customizeDate } from 'src/utils/format-time';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 import {
@@ -32,20 +25,17 @@ import {
 } from 'src/consts';
 
 import { Iconify } from 'src/components/Iconify';
-import { ConfirmDialog } from 'src/components/Dialog';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import ComponentBlock from 'src/components/Component-Block';
 import { LoadingScreen } from 'src/components/loading-screen';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
 import { useFetchMembers } from 'src/sections/Members/useApollo';
-import { useFetchCommissions } from 'src/sections/Commission/useApollo';
 
 import { StandardNode } from './node';
 import CustomEdge from './customEdge';
 import NodeContext from './nodeContext';
 import SearchMiner from './searchMiner';
-import SearchPeriod from './searchPeriod';
 
 const fitViewOptions: FitViewOptions = {
   padding: 0.2,
@@ -82,14 +72,7 @@ function buildPlacementTree(members: any[]) {
   return result;
 }
 
-function buildTree(
-  node: any,
-  baseX: number,
-  depth: number,
-  tree: any[],
-  commissions: any,
-  visibleMap: any = null
-) {
+function buildTree(node: any, baseX: number, depth: number, tree: any[], visibleMap: any = null) {
   const children = node.children.sort(
     (child1: any, child2: any) =>
       child1.placementPosition === 'LEFT' || child2.placementPosition === 'RIGHT'
@@ -98,7 +81,7 @@ function buildTree(
   if (children.length === 0) {
     const element = {
       id: node.id,
-      data: { label: <StandardNode commissions={commissions} {...node} /> },
+      data: { label: <StandardNode {...node} /> },
       position: { x: baseX, y: depth * (PLACEMENTTREE_NODE_HEIGHT + PLACEMENTTREE_NODE_Y_SPACE) },
       draggable: true,
       style: {
@@ -127,7 +110,6 @@ function buildTree(
           maxX + (idx === 0 ? 0 : PLACEMENTTREE_NODE_X_SPACE),
           depth + 1,
           tree,
-          commissions,
           visibleMap
         );
         maxX = tempX;
@@ -136,7 +118,7 @@ function buildTree(
 
   const res = {
     id: node.id,
-    data: { label: <StandardNode commissions={commissions} {...node} /> },
+    data: { label: <StandardNode {...node} /> },
     position: {
       x: Math.max(baseX, maxX - (PLACEMENTTREE_NODE_WIDTH - PLACEMENTTREE_NODE_X_SPACE) / 2),
       y: depth * (PLACEMENTTREE_NODE_HEIGHT + PLACEMENTTREE_NODE_Y_SPACE),
@@ -162,7 +144,6 @@ function buildTree(
           maxX + PLACEMENTTREE_NODE_X_SPACE,
           depth + 1,
           tree,
-          commissions,
           visibleMap
         );
         maxX = tempX;
@@ -193,14 +174,9 @@ function getMemberIdsWithDepth(node: any, depth: number, targetDepth: number) {
 }
 
 function PlacementListView() {
-  const openWeek = useBoolean();
   const popover = usePopover();
 
-  const [selectedDay, setSelectedDay] = useState<any>();
-  const [commissions, setCommission] = useState<any>();
-
   const { fetchMembers, members, loading } = useFetchMembers();
-  const { fetchCommissions, weeklyCommissions } = useFetchCommissions();
 
   const [visibleMap, setVisibleMap] = useState<Record<string, number>>({});
 
@@ -208,16 +184,8 @@ function PlacementListView() {
     fetchMembers({
       variables: { sort: '-placementPosition' },
     });
-
-    fetchCommissions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {
-    setCommission(
-      weeklyCommissions.reduce((prev, save) => ({ ...prev, [save?.memberId ?? '']: save }), {})
-    );
-  }, [weeklyCommissions]);
 
   const nodes: Node[] = useMemo(() => {
     if (!members || members.length === 0) return [];
@@ -225,7 +193,7 @@ function PlacementListView() {
 
     const resultTree: any[] = [];
 
-    buildTree(placementTree, 0, 0, resultTree, commissions, visibleMap);
+    buildTree(placementTree, 0, 0, resultTree, visibleMap);
 
     return resultTree;
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -360,10 +328,6 @@ function PlacementListView() {
 
   const refresh = () => {};
 
-  const onPeriodChange = (value: any) => {
-    setSelectedDay(value);
-  };
-
   useEffect(() => {
     const storageVisibleMap = localStorage.getItem('placementVisibleMap');
 
@@ -382,9 +346,6 @@ function PlacementListView() {
         action={
           <Stack direction="row" columnGap={1}>
             <SearchMiner onMinerChange={onMinerChange} />
-            <Button variant="contained" color="primary" onClick={() => openWeek.onTrue()}>
-              Select Week
-            </Button>
             <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
               <Iconify icon="eva:more-horizontal-fill" />
             </IconButton>
@@ -409,47 +370,6 @@ function PlacementListView() {
           </Stack>
         </ComponentBlock>
       )}
-
-      <ConfirmDialog
-        open={openWeek.value}
-        onClose={openWeek.onFalse}
-        title="Select Week"
-        content={<SearchPeriod onChange={onPeriodChange} />}
-        action={
-          <LoadingButton
-            variant="contained"
-            color="primary"
-            loading={loading}
-            onClick={async () => {
-              fetchMembers({
-                variables: {
-                  filter: {
-                    createdAt: {
-                      lt: customizeDate(`${dayjs(selectedDay).endOf('week').add(1, 'day')}`),
-                    },
-                  },
-                  sort: '-placementPosition',
-                },
-              });
-
-              fetchCommissions({
-                variables: {
-                  filter: {
-                    weekStartDate: {
-                      gte: customizeDate(`${dayjs(selectedDay).startOf('week')}`),
-                      lt: customizeDate(`${dayjs(selectedDay).endOf('week').add(1, 'day')}`),
-                    },
-                  },
-                },
-              });
-
-              openWeek.onFalse();
-            }}
-          >
-            OK
-          </LoadingButton>
-        }
-      />
 
       <CustomPopover
         open={popover.open}
