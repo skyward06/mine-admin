@@ -86,6 +86,13 @@ export default function CommissionListView({ openWeek, setSelected }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
 
+  useEffect(() => {
+    setSelected(
+      `${dayjs(weekStartDate).format('MMM-ww')} (${dayjs(weekStartDate).add(1, 'day').format('MM/DD')} - ${dayjs(weekStartDate).add(7, 'day').format('MM/DD')})`
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [weekStartDate]);
+
   const notFound = !weeklyCommissions?.length;
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: CommissionRole) => {
@@ -108,10 +115,6 @@ export default function CommissionListView({ openWeek, setSelected }: Props) {
       ...query,
       weekStartDate: customizeDate(`${dayjs(value).startOf('week')}`),
     });
-
-    setSelected(
-      `${dayjs().format('MMM-ww')} (${dayjs().add(1, 'day').format('MM/DD')} - ${dayjs().add(7, 'day').format('MM/DD')})`
-    );
 
     openWeek.onFalse();
   };
@@ -197,7 +200,7 @@ export default function CommissionListView({ openWeek, setSelected }: Props) {
         open={openWeek.value}
         onClose={openWeek.onFalse}
         title="Select Week"
-        content={<SearchPeriod onChange={onPeriodChange} />}
+        content={<SearchPeriod current={weekStartDate} onChange={onPeriodChange} />}
         action={null}
       />
     </>

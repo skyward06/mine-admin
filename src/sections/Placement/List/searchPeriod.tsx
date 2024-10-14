@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useEffect } from 'react';
 import dayjs, { type Dayjs } from 'dayjs';
 import isBetweenPlugin from 'dayjs/plugin/isBetween';
 
@@ -16,6 +17,7 @@ interface CustomPickerDayProps extends PickersDayProps<Dayjs> {
 }
 
 interface Props {
+  current: string;
   onChange: Function;
 }
 
@@ -81,9 +83,13 @@ function Day(
   );
 }
 
-export default function WeekPicker({ onChange }: Props) {
+export default function WeekPicker({ current, onChange }: Props) {
   const [hoveredDay, setHoveredDay] = React.useState<Dayjs | null>(null);
   const [value, setValue] = React.useState<Dayjs | null>(dayjs());
+
+  useEffect(() => {
+    setValue(dayjs(current));
+  }, [current]);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
