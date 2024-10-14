@@ -223,7 +223,7 @@ export default function CommissionListView({ openWeek, setSelected }: Props) {
                 headLabel={TABLE_HEAD}
                 rowCount={loading ? 0 : weeklyCommissions!.length}
                 onSort={(id) => {
-                  if (id !== 'action') {
+                  if (id === 'weekStartDate' || id === 'member.username' || id === 'commission') {
                     const isAsc = sort && sort[id] === 'asc';
                     const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
                     setQuery({ ...query, sort: newSort });

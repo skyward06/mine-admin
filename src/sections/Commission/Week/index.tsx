@@ -1,5 +1,4 @@
 import type { LabelColor } from 'src/components/Label';
-import type { SortOrder } from 'src/routes/hooks/useQuery';
 import type { UseBooleanReturn } from 'src/hooks/useBoolean';
 
 import dayjs from 'dayjs';
@@ -41,11 +40,11 @@ const STATUS_OPTIONS: { value: CommissionRole; label: string; color: LabelColor 
 ];
 
 const TABLE_HEAD = [
-  { id: 'weekStartDate', label: 'Week', width: 300, sortable: true },
+  { id: 'weekStartDate', label: 'Week', width: 300, sortable: false },
   { id: 'total sales', label: 'Total Sales', sortable: false },
   { id: 'total members', label: 'Total Members', sortable: false },
   { id: 'total amount', label: 'Total Amount', sortable: false },
-  { id: 'action', label: 'Action', width: 150, sortable: true, align: 'center' },
+  { id: 'action', label: 'Action', width: 150, sortable: false, align: 'center' },
 ];
 
 interface Props {
@@ -151,13 +150,6 @@ export default function CommissionListView({ openWeek, setSelected }: Props) {
                 orderBy={sort && Object.keys(sort)[0]}
                 headLabel={TABLE_HEAD}
                 rowCount={loading ? 0 : weeklyCommissions!.length}
-                onSort={(id) => {
-                  if (id !== 'action') {
-                    const isAsc = sort && sort[id] === 'asc';
-                    const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
-                    setQuery({ ...query, sort: newSort });
-                  }
-                }}
               />
               {loading ? (
                 <>
