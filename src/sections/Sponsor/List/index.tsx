@@ -10,8 +10,12 @@ import {
 } from '@xyflow/react';
 
 import Stack from '@mui/material/Stack';
+import Drawer from '@mui/material/Drawer';
+import IconButton from '@mui/material/IconButton';
 
 import { paths } from 'src/routes/paths';
+
+import { useBoolean } from 'src/hooks/useBoolean';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 import {
@@ -21,11 +25,13 @@ import {
   PLACEMENTTREE_NODE_Y_SPACE,
 } from 'src/consts';
 
+import { Iconify } from 'src/components/Iconify';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import ComponentBlock from 'src/components/Component-Block';
 import { LoadingScreen } from 'src/components/loading-screen';
 
 import { useFetchMembers } from 'src/sections/Members/useApollo';
+import IndividualMembers from 'src/sections/Placement/List/individualMembers';
 
 import { StandardNode } from './node';
 import CustomEdge from './customEdge';
@@ -154,6 +160,8 @@ function getMemberIdsWithDepth(node: any, depth: number, targetDepth: number) {
 }
 
 function PlacementListView() {
+  const open = useBoolean();
+
   const { fetchMembers, members, loading } = useFetchMembers();
 
   const [visibleMap, setVisibleMap] = useState<Record<string, number>>({});
@@ -313,7 +321,14 @@ function PlacementListView() {
         sx={{
           mb: { xs: 1, md: 2 },
         }}
-        action={<SearchMiner onMinerChange={onMinerChange} />}
+        action={
+          <Stack direction="row" columnGap={2}>
+            <SearchMiner onMinerChange={onMinerChange} />
+            <IconButton onClick={() => open.onTrue()}>
+              <Iconify icon="solar:eye-bold" />
+            </IconButton>
+          </Stack>
+        }
       />
 
       {loading ? (
@@ -333,6 +348,18 @@ function PlacementListView() {
           </Stack>
         </ComponentBlock>
       )}
+
+      <Drawer
+        open={open.value}
+        anchor="right"
+        onClose={open.onFalse}
+        slotProps={{ backdrop: { invisible: true } }}
+        PaperProps={{ sx: { width: { xs: 1, sm: 700 }, p: 2 } }}
+      >
+        <IndividualMembers
+          members={members?.filter((item: any) => item.placementParentId === null) ?? []}
+        />
+      </Drawer>
     </DashboardContent>
   );
 }

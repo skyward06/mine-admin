@@ -45,7 +45,9 @@ export default function PlacementListView({ onMinerChange }: Props) {
       loading={loading}
       loadingText={<LoadingButton loading={loading} />}
       getOptionLabel={(option) => option!.username}
-      renderInput={(params) => <TextField {...params} label="Miner Name" margin="none" />}
+      renderInput={(params) => (
+        <TextField {...params} label="Miner Name" margin="none" size="small" />
+      )}
       renderOption={(props, option) => (
         <li {...props} key={option!.username}>
           {option!.username}
