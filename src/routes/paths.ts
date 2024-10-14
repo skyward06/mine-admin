@@ -51,7 +51,10 @@ export const paths = {
     },
     sponsor: { root: ROOTS.SPONSOR },
     placement: { root: ROOTS.PLACEMENT },
-    commission: { root: ROOTS.COMMISSION },
+    commission: {
+      root: ROOTS.COMMISSION,
+      detail: (id: string) => `${ROOTS.COMMISSION}/${id}`,
+    },
     reward: {
       root: ROOTS.REWARD,
       new: `${ROOTS.REWARD}/new`,
