@@ -22,6 +22,8 @@ import { useBoolean } from 'src/hooks/useBoolean';
 
 import { fDate } from 'src/utils/format-time';
 
+import { PlacementPosition } from 'src/__generated__/graphql';
+
 import { Label } from 'src/components/Label';
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
@@ -61,7 +63,7 @@ export function StandardNode({
   const router = useRouter();
   const popover = usePopover();
 
-  const [position, setPosition] = useState<string>('LEFT');
+  const [position, setPosition] = useState<PlacementPosition>(PlacementPosition.Left);
   const [checked, setChecked] = useState<boolean>(false);
   const [member, setMember] = useState<Member>();
 
@@ -137,7 +139,12 @@ export function StandardNode({
         row
         defaultValue="LEFT"
         sx={{ px: 1 }}
-        onChange={(event) => setPosition(event.target.value)}
+        onChange={(event) => {
+          const value = event.target.value as PlacementPosition;
+          if (value === PlacementPosition.Left || value === PlacementPosition.Right) {
+            setPosition(value);
+          }
+        }}
       >
         <FormControlLabel
           value="LEFT"
@@ -176,7 +183,12 @@ export function StandardNode({
         row
         defaultValue={placementPosition}
         sx={{ px: 1 }}
-        onChange={(event) => setPosition(event.target.value)}
+        onChange={(event) => {
+          const value = event.target.value as PlacementPosition;
+          if (value === PlacementPosition.Left || value === PlacementPosition.Right) {
+            setPosition(value);
+          }
+        }}
       >
         <FormControlLabel
           value="LEFT"
