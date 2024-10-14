@@ -10,11 +10,14 @@ import {
 } from '@xyflow/react';
 
 import Stack from '@mui/material/Stack';
+import Drawer from '@mui/material/Drawer';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 
 import { paths } from 'src/routes/paths';
+
+import { useBoolean } from 'src/hooks/useBoolean';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 import {
@@ -36,6 +39,7 @@ import { StandardNode } from './node';
 import CustomEdge from './customEdge';
 import NodeContext from './nodeContext';
 import SearchMiner from './searchMiner';
+import IndividualMembers from './individualMembers';
 
 const fitViewOptions: FitViewOptions = {
   padding: 0.2,
@@ -175,6 +179,7 @@ function getMemberIdsWithDepth(node: any, depth: number, targetDepth: number) {
 
 function PlacementListView() {
   const popover = usePopover();
+  const open = useBoolean();
 
   const { fetchMembers, members, loading } = useFetchMembers();
 
@@ -380,8 +385,28 @@ function PlacementListView() {
         <MenuList>
           <MenuItem onClick={reset}>Reset</MenuItem>
           <MenuItem onClick={refresh}>Refresh</MenuItem>
+          <MenuItem
+            onClick={() => {
+              open.onTrue();
+              popover.onClose();
+            }}
+          >
+            Individual Members
+          </MenuItem>
         </MenuList>
       </CustomPopover>
+
+      <Drawer
+        open={open.value}
+        anchor="right"
+        onClose={open.onFalse}
+        slotProps={{ backdrop: { invisible: true } }}
+        PaperProps={{ sx: { width: { xs: 1, sm: 700 }, p: 2 } }}
+      >
+        <IndividualMembers
+          members={members?.filter((item: any) => item.placementParentId === null) ?? []}
+        />
+      </Drawer>
     </DashboardContent>
   );
 }
