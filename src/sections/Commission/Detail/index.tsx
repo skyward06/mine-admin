@@ -32,7 +32,7 @@ import {
 
 import ProductTableRow from './CommissionTableRow';
 import ProductTableFiltersResult from './CommissionTableFiltersResult';
-import { useFetchCommissions, useFetchCommissionStats } from '../useApollo';
+import { useFetchCommissionStats, useFetchCommissionStatus } from '../useApollo';
 
 import type { CommissionRole, ICommissionPrismaFilter, ICommissionTableFilters } from './types';
 
@@ -64,7 +64,8 @@ export default function CommissionDetail() {
   const { id: weekStartDate } = useParams();
 
   const { fetchCommissionStats, data: statsData } = useFetchCommissionStats();
-  const { fetchCommissions, loading, rowCount, weeklyCommissions } = useFetchCommissions();
+  const { fetchCommissionStatus, loading, rowCount, weeklyCommissions } =
+    useFetchCommissionStatus();
 
   const [query, { setQueryParams: setQuery, setPage, setPageSize }] =
     useQuery<ICommissionTableFilters>();
@@ -126,7 +127,7 @@ export default function CommissionDetail() {
       },
     });
 
-    fetchCommissions({
+    fetchCommissionStatus({
       variables: {
         page: page && `${page.page},${page.pageSize}`,
         filter: graphQueryFilter,
@@ -160,7 +161,7 @@ export default function CommissionDetail() {
         links={[
           { name: 'Commission', href: paths.dashboard.commission.root },
           {
-            name: `${dayjs(weekStartDate).format('MMM-ww')} (${dayjs().add(1, 'day').format('MM/DD')} - ${dayjs(weekStartDate).add(7, 'day').format('MM/DD')})`,
+            name: `${dayjs(weekStartDate).format('MMM-ww')} (${dayjs(weekStartDate).add(1, 'day').format('MM/DD')} - ${dayjs(weekStartDate).add(7, 'day').format('MM/DD')})`,
           },
         ]}
         sx={{

@@ -58,6 +58,27 @@ export const FETCH_COMMISSION_QUERY = gql(/* GraphQL */ `
   }
 `);
 
+export const FETCH_COMMISSION_STATUS_QUERY = gql(/* GraphQL */ `
+  query WeeklyCommissionStatuses($sort: String, $page: String, $filter: JSONObject) {
+    weeklyCommissionStatuses(sort: $sort, page: $page, filter: $filter) {
+      weeklyCommissions {
+        createdAt
+        updatedAt
+        deletedAt
+        id
+        weeklyCommissionId
+        beforeLeftPoint
+        beforeRightPoint
+        afterLeftPoint
+        afterRightPoint
+        memberId
+        weekStartDate
+      }
+      total
+    }
+  }
+`);
+
 export const FETCH_COMMISSION_STATS_QUERY = gql(/* GraphQL */ `
   query FetchCommissionStats(
     $allFilter: JSONObject

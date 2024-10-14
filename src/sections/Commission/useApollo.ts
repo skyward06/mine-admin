@@ -6,6 +6,7 @@ import {
   FETCH_COMMISSION_BY_WEEK,
   UPDATE_COMMISSION_STATUS,
   FETCH_COMMISSION_STATS_QUERY,
+  FETCH_COMMISSION_STATUS_QUERY,
 } from './query';
 
 export function useFetchCommissions() {
@@ -28,6 +29,29 @@ export function useFetchCommissions() {
     rowCount,
     weeklyCommissions: data?.weeklyCommissions.weeklyCommissions ?? [],
     fetchCommissions,
+  };
+}
+
+export function useFetchCommissionStatus() {
+  const [fetchCommissionStatus, { loading, data }] = useLazyQuery(FETCH_COMMISSION_STATUS_QUERY);
+
+  const rowCountRef = useRef(data?.weeklyCommissionStatuses.total ?? 0);
+
+  const rowCount: any = useMemo(() => {
+    const newTotal = data?.weeklyCommissionStatuses.total ?? undefined;
+
+    if (newTotal !== undefined) {
+      rowCountRef.current = newTotal;
+    }
+
+    return rowCountRef.current;
+  }, [data]);
+
+  return {
+    loading,
+    rowCount,
+    weeklyCommissions: data?.weeklyCommissionStatuses.weeklyCommissions ?? [],
+    fetchCommissionStatus,
   };
 }
 
