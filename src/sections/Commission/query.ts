@@ -36,6 +36,19 @@ export const FETCH_COMMISSION_QUERY = gql(/* GraphQL */ `
           status
           totalIntroducers
         }
+        weeklyCommissionStatus {
+          createdAt
+          updatedAt
+          deletedAt
+          id
+          weeklyCommissionId
+          beforeLeftPoint
+          beforeRightPoint
+          afterLeftPoint
+          afterRightPoint
+          memberId
+          weekStartDate
+        }
         createdAt
         updatedAt
         deletedAt
@@ -46,12 +59,45 @@ export const FETCH_COMMISSION_QUERY = gql(/* GraphQL */ `
 `);
 
 export const FETCH_COMMISSION_STATS_QUERY = gql(/* GraphQL */ `
-  query FetchCommissionStats($pendingFilter: JSONObject, $sentFilter: JSONObject) {
+  query FetchCommissionStats(
+    $allFilter: JSONObject
+    $pendingFilter: JSONObject
+    $declineFilter: JSONObject
+    $sentFilter: JSONObject
+  ) {
+    all: weeklyCommissions(filter: $allFilter) {
+      total
+    }
     pending: weeklyCommissions(filter: $pendingFilter) {
+      total
+    }
+    decline: weeklyCommissions(filter: $declineFilter) {
       total
     }
     sent: weeklyCommissions(filter: $sentFilter) {
       total
+    }
+  }
+`);
+
+export const FETCH_COMMISSION_BY_WEEK = gql(/* GraphQL */ `
+  query CommissionsByWeek($sort: String, $page: String, $weekStartDate: DateTimeISO) {
+    commissionsByWeek(sort: $sort, page: $page, weekStartDate: $weekStartDate) {
+      commissions {
+        weekStartDate
+        totalSale
+        totalMember
+        totalAmount
+      }
+      total
+    }
+  }
+`);
+
+export const UPDATE_COMMISSION_STATUS = gql(/* GraphQL */ `
+  mutation UpdateCommissionStatus($data: WeeklyCommissionUpdateInput!) {
+    updateCommissionStatus(data: $data) {
+      id
     }
   }
 `);

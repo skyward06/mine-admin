@@ -1,6 +1,6 @@
 // ----------------------------------------------------------------------
 
-export type CommissionRole = 'pending' | 'sent';
+export type CommissionRole = 'pending' | 'decline' | 'sent';
 
 export type ICommissionTableFilters = {
   search: string;
@@ -10,4 +10,6 @@ export type ICommissionTableFilters = {
 export type ICommissionPrismaFilter = {
   OR?: any;
   status?: any;
+  commission?: any;
+  weekStartDate?: any;
 };
