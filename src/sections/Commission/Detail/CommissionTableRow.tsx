@@ -1,4 +1,4 @@
-import type { WeeklyCommission } from 'src/__generated__/graphql';
+import type { WeeklyCommissionStatus } from 'src/__generated__/graphql';
 
 import dayjs from 'dayjs';
 
@@ -16,7 +16,7 @@ import { Iconify } from 'src/components/Iconify';
 // ----------------------------------------------------------------------
 
 type Props = {
-  row: WeeklyCommission;
+  row: WeeklyCommissionStatus;
 };
 
 export default function CommissionTableRow({ row }: Props) {
@@ -25,13 +25,12 @@ export default function CommissionTableRow({ row }: Props) {
   const {
     member,
     memberId,
-    leftPoint,
-    rightPoint,
-    commission,
     weekStartDate,
-    calculatedLeftPoint,
-    calculatedRightPoint,
-    weeklyCommissionStatus,
+    beforeLeftPoint,
+    beforeRightPoint,
+    afterLeftPoint,
+    afterRightPoint,
+    weeklyCommission,
   } = row;
 
   return (
@@ -61,10 +60,14 @@ export default function CommissionTableRow({ row }: Props) {
           }}
         />
       </TableCell>
-      <TableCell align="left">{`L${leftPoint}, R${rightPoint}`}</TableCell>
-      <TableCell align="left">{`L${calculatedLeftPoint}, R${calculatedRightPoint}`}</TableCell>
-      <TableCell align="left">{commission}</TableCell>
-      <TableCell align="left">{`L${weeklyCommissionStatus?.afterLeftPoint}, R${weeklyCommissionStatus?.afterRightPoint}`}</TableCell>
+      <TableCell align="left">{`L${beforeLeftPoint}, R${beforeRightPoint}`}</TableCell>
+      <TableCell align="left">
+        {weeklyCommission
+          ? `L${weeklyCommission?.calculatedLeftPoint}, R${weeklyCommission?.calculatedRightPoint}`
+          : 'None'}
+      </TableCell>
+      <TableCell align="left">{weeklyCommission?.commission ?? 0}</TableCell>
+      <TableCell align="left">{`L${afterLeftPoint}, R${afterRightPoint}`}</TableCell>
       <TableCell align="center">
         <Tooltip title="View" placement="top" arrow>
           <IconButton

@@ -15,7 +15,6 @@ import TableContainer from '@mui/material/TableContainer';
 import { paths } from 'src/routes/paths';
 import { useQuery, useParams } from 'src/routes/hooks';
 
-import { COMMISSION_TYPE } from 'src/consts';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Label } from 'src/components/Label';
@@ -31,17 +30,15 @@ import {
 } from 'src/components/Table';
 
 import ProductTableRow from './CommissionTableRow';
+import { useFetchCommissionStatus } from '../useApollo';
 import ProductTableFiltersResult from './CommissionTableFiltersResult';
-import { useFetchCommissionStats, useFetchCommissionStatus } from '../useApollo';
 
 import type { CommissionRole, ICommissionPrismaFilter, ICommissionTableFilters } from './types';
 
 // ----------------------------------------------------------------------
 
 const STATUS_OPTIONS: { value: CommissionRole; label: string; color: LabelColor }[] = [
-  { value: 'pending', label: 'Pending', color: 'info' },
-  { value: 'sent', label: 'Sent', color: 'success' },
-  { value: 'decline', label: 'Declined', color: 'error' },
+  { value: 'all', label: 'All', color: 'info' },
 ];
 
 const TABLE_HEAD = [
@@ -49,21 +46,20 @@ const TABLE_HEAD = [
   { id: 'member.username', label: 'Username', sortable: true },
   { id: 'before', label: 'Before', sortable: false },
   { id: 'package', label: 'Package', sortable: false },
-  { id: 'commission', label: 'Commissions', width: 200, sortable: true },
+  { id: 'weeklyCommission.commission', label: 'Commissions', width: 200, sortable: true },
   { id: 'after', label: 'After', width: 200, sortable: true },
   { id: 'action', label: 'Action', width: 150, sortable: true, align: 'center' },
 ];
 
 const defaultFilter: ICommissionTableFilters = {
   search: '',
-  status: 'pending',
+  status: 'all',
 };
 
 export default function CommissionDetail() {
   const table = useTable({ defaultDense: true });
   const { id: weekStartDate } = useParams();
 
-  const { fetchCommissionStats, data: statsData } = useFetchCommissionStats();
   const { fetchCommissionStatus, loading, rowCount, weeklyCommissions } =
     useFetchCommissionStatus();
 
@@ -82,15 +78,6 @@ export default function CommissionDetail() {
       filterObj.OR = [{ member: { username: { contains: filter.search, mode: 'insensitive' } } }];
     }
 
-    if (filter.status === 'pending') {
-      filterObj.status = COMMISSION_TYPE.PENDING;
-    } else if (filter.status === 'sent') {
-      filterObj.status = COMMISSION_TYPE.CONFIRM;
-    } else {
-      filterObj.status = COMMISSION_TYPE.BLOCK;
-    }
-
-    filterObj.commission = { gt: 0 };
     filterObj.weekStartDate = weekStartDate;
 
     return filterObj;
@@ -107,26 +94,6 @@ export default function CommissionDetail() {
   const canReset = !!filter.search;
 
   useEffect(() => {
-    fetchCommissionStats({
-      variables: {
-        declineFilter: {
-          status: COMMISSION_TYPE.BLOCK,
-          commission: { gt: 0 },
-          weekStartDate,
-        },
-        pendingFilter: {
-          status: COMMISSION_TYPE.PENDING,
-          commission: { gt: 0 },
-          weekStartDate,
-        },
-        sentFilter: {
-          status: COMMISSION_TYPE.CONFIRM,
-          commission: { gt: 0 },
-          weekStartDate,
-        },
-      },
-    });
-
     fetchCommissionStatus({
       variables: {
         page: page && `${page.page},${page.pageSize}`,
@@ -171,7 +138,7 @@ export default function CommissionDetail() {
 
       <Card>
         <Tabs
-          value={filter.status}
+          value="all"
           onChange={handleTabChange}
           sx={{
             px: 2.5,
@@ -185,11 +152,8 @@ export default function CommissionDetail() {
               value={tab.value}
               label={tab.label}
               icon={
-                <Label
-                  variant={(tab.value === filter.status && 'filled') || 'soft'}
-                  color={tab.color}
-                >
-                  {statsData ? statsData[tab.value].total! : 0}
+                <Label variant="filled" color={tab.color}>
+                  {rowCount}
                 </Label>
               }
             />
@@ -211,7 +175,11 @@ export default function CommissionDetail() {
                 headLabel={TABLE_HEAD}
                 rowCount={loading ? 0 : weeklyCommissions!.length}
                 onSort={(id) => {
-                  if (id !== 'action') {
+                  if (
+                    id === 'weekStartDate' ||
+                    id === 'member.username' ||
+                    id === 'weeklyCommission.commission'
+                  ) {
                     const isAsc = sort && sort[id] === 'asc';
                     const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
                     setQuery({ ...query, sort: newSort });

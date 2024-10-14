@@ -61,7 +61,7 @@ export const FETCH_COMMISSION_QUERY = gql(/* GraphQL */ `
 export const FETCH_COMMISSION_STATUS_QUERY = gql(/* GraphQL */ `
   query WeeklyCommissionStatuses($sort: String, $page: String, $filter: JSONObject) {
     weeklyCommissionStatuses(sort: $sort, page: $page, filter: $filter) {
-      weeklyCommissions {
+      weeklyCommissionStatuses {
         createdAt
         updatedAt
         deletedAt
@@ -73,6 +73,43 @@ export const FETCH_COMMISSION_STATUS_QUERY = gql(/* GraphQL */ `
         afterRightPoint
         memberId
         weekStartDate
+        member {
+          createdAt
+          updatedAt
+          deletedAt
+          id
+          username
+          fullName
+          sponsorId
+          email
+          mobile
+          assetId
+          primaryAddress
+          secondaryAddress
+          city
+          state
+          zipCode
+          placementParentId
+          placementPosition
+          point
+          emailVerified
+          status
+          totalIntroducers
+        }
+        weeklyCommission {
+          createdAt
+          updatedAt
+          deletedAt
+          id
+          memberId
+          weekStartDate
+          leftPoint
+          rightPoint
+          calculatedLeftPoint
+          calculatedRightPoint
+          commission
+          status
+        }
       }
       total
     }

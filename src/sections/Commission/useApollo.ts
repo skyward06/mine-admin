@@ -50,7 +50,7 @@ export function useFetchCommissionStatus() {
   return {
     loading,
     rowCount,
-    weeklyCommissions: data?.weeklyCommissionStatuses.weeklyCommissions ?? [],
+    weeklyCommissions: data?.weeklyCommissionStatuses.weeklyCommissionStatuses ?? [],
     fetchCommissionStatus,
   };
 }
