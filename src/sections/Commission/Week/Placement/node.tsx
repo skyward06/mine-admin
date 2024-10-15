@@ -32,8 +32,6 @@ export function StandardNode({
     {}
   );
 
-  console.log('commission => ', commission);
-
   return (
     <Card
       sx={{
@@ -109,7 +107,7 @@ export function StandardNode({
             Left:
           </Typography>
           <Typography variant="caption" color="gray" component="div" noWrap sx={{ mt: 1 }}>
-            {commission[id]?.calculatedLeftPoint || 0}
+            {commission[id]?.beforeLeftPoint || 0}
           </Typography>
         </Stack>
         <Stack direction="row" columnGap={1}>
@@ -124,7 +122,7 @@ export function StandardNode({
             Right:
           </Typography>
           <Typography variant="caption" color="gray" component="div" noWrap sx={{ mt: 1 }}>
-            {commission[id]?.calculatedRightPoint || 0}
+            {commission[id]?.beforeRightPoint || 0}
           </Typography>
         </Stack>
       </Stack>
