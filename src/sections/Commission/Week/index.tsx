@@ -6,7 +6,6 @@ import { useMemo, useEffect } from 'react';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
-import TableContainer from '@mui/material/TableContainer';
 
 import { useQuery } from 'src/routes/hooks';
 
@@ -96,40 +95,38 @@ export default function CommissionListView({ openWeek }: Props) {
   return (
     <>
       <Card>
-        <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-          <ScrollBar>
-            <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
-              <TableHeadCustom
-                order={sort && sort[Object.keys(sort)[0]]}
-                orderBy={sort && Object.keys(sort)[0]}
-                headLabel={TABLE_HEAD}
-                rowCount={loading ? 0 : weeklyCommissions!.length}
-              />
-              {loading ? (
-                <>
-                  <TableSkeleton height={26} />
-                  <TableSkeleton height={26} />
-                  <TableSkeleton height={26} />
-                  <TableSkeleton height={26} />
-                  <TableSkeleton height={26} />
-                  <TableSkeleton height={26} />
-                  <TableSkeleton height={26} />
-                  <TableSkeleton height={26} />
-                  <TableSkeleton height={26} />
-                  <TableSkeleton height={26} />
-                </>
-              ) : (
-                <TableBody>
-                  {weeklyCommissions!.map((row: any) => (
-                    <ProductTableRow key={row!.id} row={row!} />
-                  ))}
+        <ScrollBar sx={{ maxHeight: 530 }}>
+          <Table stickyHeader size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+            <TableHeadCustom
+              order={sort && sort[Object.keys(sort)[0]]}
+              orderBy={sort && Object.keys(sort)[0]}
+              headLabel={TABLE_HEAD}
+              rowCount={loading ? 0 : weeklyCommissions!.length}
+            />
+            {loading ? (
+              <>
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+              </>
+            ) : (
+              <TableBody>
+                {weeklyCommissions!.map((row: any) => (
+                  <ProductTableRow key={row!.id} row={row!} />
+                ))}
 
-                  <TableNoData notFound={notFound} />
-                </TableBody>
-              )}
-            </Table>
-          </ScrollBar>
-        </TableContainer>
+                <TableNoData notFound={notFound} />
+              </TableBody>
+            )}
+          </Table>
+        </ScrollBar>
 
         <TablePaginationCustom
           count={loading ? 0 : rowCount!}

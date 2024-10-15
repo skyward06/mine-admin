@@ -35,20 +35,21 @@ export default function CommissionTableRow({ row }: Props) {
     member,
     status,
     memberId,
-    leftPoint,
-    rightPoint,
+    beforeLeftPoint,
+    beforeRightPoint,
+    afterLeftPoint,
+    afterRightPoint,
     commission,
     weekStartDate,
     calculatedLeftPoint,
     calculatedRightPoint,
-    weeklyCommissionStatus,
   } = row;
 
   return (
     <TableRow hover>
       <TableCell align="left">
         <ListItemText
-          primary={`Week - ${dayjs(weekStartDate).format('ww')}`}
+          primary={`week / ${dayjs(weekStartDate).format('ww')}`}
           secondary={`${dayjs(weekStartDate).add(1, 'day').format('MM/DD')} - ${dayjs(weekStartDate).add(7, 'day').format('MM/DD')}`}
           primaryTypographyProps={{ typography: 'body2' }}
           secondaryTypographyProps={{
@@ -71,10 +72,10 @@ export default function CommissionTableRow({ row }: Props) {
           }}
         />
       </TableCell>
-      <TableCell align="left">{`L${leftPoint}, R${rightPoint}`}</TableCell>
+      <TableCell align="left">{`L${beforeLeftPoint}, R${beforeRightPoint}`}</TableCell>
       <TableCell align="left">{`L${calculatedLeftPoint}, R${calculatedRightPoint}`}</TableCell>
       <TableCell align="left">{commission}</TableCell>
-      <TableCell align="left">{`L${weeklyCommissionStatus?.afterLeftPoint}, R${weeklyCommissionStatus?.afterRightPoint}`}</TableCell>
+      <TableCell align="left">{`L${afterLeftPoint}, R${afterRightPoint}`}</TableCell>
       <TableCell align="center">
         <Tooltip title="View" placement="top" arrow>
           <IconButton

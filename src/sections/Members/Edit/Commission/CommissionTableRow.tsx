@@ -20,8 +20,8 @@ export default function CommissionTableRow({ row }: Props) {
 
   const {
     member,
-    leftPoint,
-    rightPoint,
+    beforeLeftPoint,
+    beforeRightPoint,
     commission,
     weekStartDate,
     calculatedLeftPoint,
@@ -55,7 +55,7 @@ export default function CommissionTableRow({ row }: Props) {
           }}
         />
       </TableCell>
-      <TableCell align="left">{`L${leftPoint}, R${rightPoint}`}</TableCell>
+      <TableCell align="left">{`L${beforeLeftPoint}, R${beforeRightPoint}`}</TableCell>
       <TableCell align="left">{`L${calculatedLeftPoint}, R${calculatedRightPoint}`}</TableCell>
       <TableCell align="left">{commission}</TableCell>
       <TableCell align="left">after</TableCell>

@@ -176,8 +176,8 @@ export default function StatisticsTable() {
               }
             />
 
-            <ScrollBar>
-              <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+            <ScrollBar sx={{ maxHeight: 530 }}>
+              <Table stickyHeader size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
                 <TableHeadCustom
                   order={sort && sort[Object.keys(sort)[0]]}
                   orderBy={sort && Object.keys(sort)[0]}

@@ -16,4 +16,5 @@ export const COMMISSION_TYPE = {
   PENDING: 'PENDING',
   CONFIRM: 'CONFIRM',
   BLOCK: 'BLOCK',
+  NONE: 'NONE',
 };

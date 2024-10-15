@@ -1,4 +1,4 @@
-import type { WeeklyCommissionStatus } from 'src/__generated__/graphql';
+import type { WeeklyCommission } from 'src/__generated__/graphql';
 
 import dayjs from 'dayjs';
 
@@ -11,12 +11,14 @@ import ListItemText from '@mui/material/ListItemText';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { COMMISSION_TYPE } from 'src/consts';
+
 import { Iconify } from 'src/components/Iconify';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  row: WeeklyCommissionStatus;
+  row: WeeklyCommission;
 };
 
 export default function CommissionTableRow({ row }: Props) {
@@ -30,14 +32,17 @@ export default function CommissionTableRow({ row }: Props) {
     beforeRightPoint,
     afterLeftPoint,
     afterRightPoint,
-    weeklyCommission,
+    commission,
+    status,
+    calculatedLeftPoint,
+    calculatedRightPoint,
   } = row;
 
   return (
     <TableRow hover>
       <TableCell align="left">
         <ListItemText
-          primary={`Week - ${dayjs(weekStartDate).format('ww')}`}
+          primary={`week / ${dayjs(weekStartDate).add(1, 'day').format('ww')}`}
           secondary={`${dayjs(weekStartDate).add(1, 'day').format('MM/DD')} - ${dayjs(weekStartDate).add(7, 'day').format('MM/DD')}`}
           primaryTypographyProps={{ typography: 'body2' }}
           secondaryTypographyProps={{
@@ -62,11 +67,11 @@ export default function CommissionTableRow({ row }: Props) {
       </TableCell>
       <TableCell align="left">{`L${beforeLeftPoint}, R${beforeRightPoint}`}</TableCell>
       <TableCell align="left">
-        {weeklyCommission
-          ? `L${weeklyCommission?.calculatedLeftPoint}, R${weeklyCommission?.calculatedRightPoint}`
+        {status !== COMMISSION_TYPE.NONE
+          ? `L${calculatedLeftPoint}, R${calculatedRightPoint}`
           : 'None'}
       </TableCell>
-      <TableCell align="left">{weeklyCommission?.commission ?? 0}</TableCell>
+      <TableCell align="left">{commission ?? 0}</TableCell>
       <TableCell align="left">{`L${afterLeftPoint}, R${afterRightPoint}`}</TableCell>
       <TableCell align="center">
         <Tooltip title="View" placement="top" arrow>

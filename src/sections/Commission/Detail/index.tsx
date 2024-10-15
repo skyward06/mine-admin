@@ -6,7 +6,6 @@ import { useMemo, useEffect, useCallback } from 'react';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
-import TableContainer from '@mui/material/TableContainer';
 
 import { paths } from 'src/routes/paths';
 import { useQuery, useParams } from 'src/routes/hooks';
@@ -27,7 +26,7 @@ import {
 } from 'src/components/Table';
 
 import ProductTableRow from './CommissionTableRow';
-import { useFetchCommissionStatus } from '../useApollo';
+import { useFetchCommissions } from '../useApollo';
 import ProductTableFiltersResult from './CommissionTableFiltersResult';
 
 import type { ICommissionPrismaFilter, ICommissionTableFilters } from './types';
@@ -37,7 +36,7 @@ const TABLE_HEAD = [
   { id: 'member.username', label: 'Username', sortable: true },
   { id: 'before', label: 'Before', sortable: false },
   { id: 'package', label: 'Package', sortable: false },
-  { id: 'weeklyCommission.commission', label: 'Commissions', width: 200, sortable: true },
+  { id: 'commission', label: 'Commissions', width: 200, sortable: true },
   { id: 'after', label: 'After', width: 200, sortable: true },
   { id: 'action', label: 'Action', width: 150, sortable: true, align: 'center' },
 ];
@@ -51,15 +50,14 @@ export default function CommissionDetail() {
   const table = useTable({ defaultDense: true });
   const { id: weekStartDate } = useParams();
 
-  const { fetchCommissionStatus, loading, rowCount, weeklyCommissions } =
-    useFetchCommissionStatus();
+  const { fetchCommissions, loading, rowCount, weeklyCommissions } = useFetchCommissions();
 
   const [query, { setQueryParams: setQuery, setPage, setPageSize }] =
     useQuery<ICommissionTableFilters>();
 
   const {
     page = { page: 1, pageSize: 10 },
-    sort = { weekStartDate: 'asc' },
+    sort = { commission: 'asc' },
     filter = defaultFilter,
   } = query;
 
@@ -85,7 +83,7 @@ export default function CommissionDetail() {
   const canReset = !!filter.search;
 
   useEffect(() => {
-    fetchCommissionStatus({
+    fetchCommissions({
       variables: {
         page: page && `${page.page},${page.pageSize}`,
         filter: graphQueryFilter,
@@ -107,11 +105,12 @@ export default function CommissionDetail() {
   return (
     <DashboardContent>
       <Breadcrumbs
-        heading="Commission"
+        heading={`Commission (Week / ${dayjs(weekStartDate).format('ww')})`}
         links={[
           { name: 'Commission', href: paths.dashboard.commission.root },
+          { name: 'Detail' },
           {
-            name: `${dayjs(weekStartDate).format('MMM-ww')} (${dayjs(weekStartDate).format('MM/DD')} - ${dayjs(weekStartDate).add(6, 'day').format('MM/DD')})`,
+            name: `${dayjs(weekStartDate).format('MM/DD')} - ${dayjs(weekStartDate).add(6, 'day').format('MM/DD')}`,
           },
         ]}
         sx={{
@@ -126,51 +125,45 @@ export default function CommissionDetail() {
           <ProductTableFiltersResult results={rowCount!} sx={{ p: 2.5, pt: 0 }} />
         )}
 
-        <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-          <ScrollBar>
-            <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
-              <TableHeadCustom
-                order={sort && sort[Object.keys(sort)[0]]}
-                orderBy={sort && Object.keys(sort)[0]}
-                headLabel={TABLE_HEAD}
-                rowCount={loading ? 0 : weeklyCommissions!.length}
-                onSort={(id) => {
-                  if (
-                    id === 'weekStartDate' ||
-                    id === 'member.username' ||
-                    id === 'weeklyCommission.commission'
-                  ) {
-                    const isAsc = sort && sort[id] === 'asc';
-                    const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
-                    setQuery({ ...query, sort: newSort });
-                  }
-                }}
-              />
-              {loading ? (
-                <>
-                  <TableSkeleton height={26} />
-                  <TableSkeleton height={26} />
-                  <TableSkeleton height={26} />
-                  <TableSkeleton height={26} />
-                  <TableSkeleton height={26} />
-                  <TableSkeleton height={26} />
-                  <TableSkeleton height={26} />
-                  <TableSkeleton height={26} />
-                  <TableSkeleton height={26} />
-                  <TableSkeleton height={26} />
-                </>
-              ) : (
-                <TableBody>
-                  {weeklyCommissions!.map((row: any) => (
-                    <ProductTableRow key={row!.id} row={row!} />
-                  ))}
+        <ScrollBar sx={{ maxHeight: 520 }}>
+          <Table stickyHeader size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+            <TableHeadCustom
+              order={sort && sort[Object.keys(sort)[0]]}
+              orderBy={sort && Object.keys(sort)[0]}
+              headLabel={TABLE_HEAD}
+              rowCount={loading ? 0 : weeklyCommissions!.length}
+              onSort={(id) => {
+                if (id === 'weekStartDate' || id === 'member.username' || id === 'commission') {
+                  const isAsc = sort && sort[id] === 'asc';
+                  const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
+                  setQuery({ ...query, sort: newSort });
+                }
+              }}
+            />
+            {loading ? (
+              <>
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+              </>
+            ) : (
+              <TableBody>
+                {weeklyCommissions!.map((row: any) => (
+                  <ProductTableRow key={row!.id} row={row!} />
+                ))}
 
-                  <TableNoData notFound={notFound} />
-                </TableBody>
-              )}
-            </Table>
-          </ScrollBar>
-        </TableContainer>
+                <TableNoData notFound={notFound} />
+              </TableBody>
+            )}
+          </Table>
+        </ScrollBar>
 
         <TablePaginationCustom
           count={loading ? 0 : rowCount!}

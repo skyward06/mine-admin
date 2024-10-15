@@ -13,7 +13,6 @@ import Button from '@mui/material/Button';
 import { alpha } from '@mui/material/styles';
 import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
-import TableContainer from '@mui/material/TableContainer';
 
 import { paths } from 'src/routes/paths';
 import { useQuery } from 'src/routes/hooks';
@@ -217,52 +216,50 @@ export default function SaleListView() {
           <SaleTableFiltersResult results={tableData!.total!} sx={{ p: 2.5, pt: 0 }} />
         )}
 
-        <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-          <ScrollBar>
-            <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
-              <TableHeadCustom
-                order={sort && sort[Object.keys(sort)[0]]}
-                orderBy={sort && Object.keys(sort)[0]}
-                headLabel={TABLE_HEAD}
-                rowCount={loading ? 0 : tableData!.sales!.length}
-                onSort={(id) => {
-                  if (id !== 'action') {
-                    const isAsc = sort && sort[id] === 'asc';
-                    const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
-                    setQuery({ ...query, sort: newSort });
-                  }
-                }}
-              />
-              {loading ? (
-                <>
-                  <TableSkeleton height={26} />
-                  <TableSkeleton height={26} />
-                  <TableSkeleton height={26} />
-                  <TableSkeleton height={26} />
-                  <TableSkeleton height={26} />
-                  <TableSkeleton height={26} />
-                  <TableSkeleton height={26} />
-                  <TableSkeleton height={26} />
-                  <TableSkeleton height={26} />
-                  <TableSkeleton height={26} />
-                </>
-              ) : (
-                <TableBody>
-                  {tableData!.sales!.map((row) => (
-                    <SaleTableRow
-                      key={row!.id}
-                      row={row!}
-                      confirm={confirm}
-                      setSelected={setSelected}
-                    />
-                  ))}
+        <ScrollBar sx={{ maxHeight: 480 }}>
+          <Table stickyHeader size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+            <TableHeadCustom
+              order={sort && sort[Object.keys(sort)[0]]}
+              orderBy={sort && Object.keys(sort)[0]}
+              headLabel={TABLE_HEAD}
+              rowCount={loading ? 0 : tableData!.sales!.length}
+              onSort={(id) => {
+                if (id !== 'action') {
+                  const isAsc = sort && sort[id] === 'asc';
+                  const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
+                  setQuery({ ...query, sort: newSort });
+                }
+              }}
+            />
+            {loading ? (
+              <>
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+              </>
+            ) : (
+              <TableBody>
+                {tableData!.sales!.map((row) => (
+                  <SaleTableRow
+                    key={row!.id}
+                    row={row!}
+                    confirm={confirm}
+                    setSelected={setSelected}
+                  />
+                ))}
 
-                  <TableNoData notFound={notFound} />
-                </TableBody>
-              )}
-            </Table>
-          </ScrollBar>
-        </TableContainer>
+                <TableNoData notFound={notFound} />
+              </TableBody>
+            )}
+          </Table>
+        </ScrollBar>
 
         <TablePaginationCustom
           count={loading ? 0 : tableData!.total!}

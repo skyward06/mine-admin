@@ -11,7 +11,6 @@ import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
 import { alpha } from '@mui/material/styles';
 import TableBody from '@mui/material/TableBody';
-import TableContainer from '@mui/material/TableContainer';
 
 import { useQuery } from 'src/routes/hooks';
 
@@ -213,47 +212,45 @@ export default function CommissionListView({ openWeek }: Props) {
           <ProductTableFiltersResult results={rowCount!} sx={{ p: 2.5, pt: 0 }} />
         )}
 
-        <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-          <ScrollBar>
-            <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
-              <TableHeadCustom
-                order={sort && sort[Object.keys(sort)[0]]}
-                orderBy={sort && Object.keys(sort)[0]}
-                headLabel={TABLE_HEAD}
-                rowCount={loading ? 0 : weeklyCommissions!.length}
-                onSort={(id) => {
-                  if (id === 'weekStartDate' || id === 'member.username' || id === 'commission') {
-                    const isAsc = sort && sort[id] === 'asc';
-                    const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
-                    setQuery({ ...query, sort: newSort });
-                  }
-                }}
-              />
-              {loading ? (
-                <>
-                  <TableSkeleton height={26} />
-                  <TableSkeleton height={26} />
-                  <TableSkeleton height={26} />
-                  <TableSkeleton height={26} />
-                  <TableSkeleton height={26} />
-                  <TableSkeleton height={26} />
-                  <TableSkeleton height={26} />
-                  <TableSkeleton height={26} />
-                  <TableSkeleton height={26} />
-                  <TableSkeleton height={26} />
-                </>
-              ) : (
-                <TableBody>
-                  {weeklyCommissions!.map((row: any) => (
-                    <ProductTableRow key={row!.id} row={row!} />
-                  ))}
+        <ScrollBar sx={{ maxHeight: 400 }}>
+          <Table stickyHeader size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+            <TableHeadCustom
+              order={sort && sort[Object.keys(sort)[0]]}
+              orderBy={sort && Object.keys(sort)[0]}
+              headLabel={TABLE_HEAD}
+              rowCount={loading ? 0 : weeklyCommissions!.length}
+              onSort={(id) => {
+                if (id === 'weekStartDate' || id === 'member.username' || id === 'commission') {
+                  const isAsc = sort && sort[id] === 'asc';
+                  const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
+                  setQuery({ ...query, sort: newSort });
+                }
+              }}
+            />
+            {loading ? (
+              <>
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+              </>
+            ) : (
+              <TableBody>
+                {weeklyCommissions!.map((row: any) => (
+                  <ProductTableRow key={row!.id} row={row!} />
+                ))}
 
-                  <TableNoData notFound={notFound} />
-                </TableBody>
-              )}
-            </Table>
-          </ScrollBar>
-        </TableContainer>
+                <TableNoData notFound={notFound} />
+              </TableBody>
+            )}
+          </Table>
+        </ScrollBar>
 
         <TablePaginationCustom
           count={loading ? 0 : rowCount!}
