@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import dayjs from 'dayjs';
 import { useMemo, useState, useEffect, useCallback } from 'react';
 import {
   ReactFlow,
@@ -10,36 +10,35 @@ import {
 } from '@xyflow/react';
 
 import Stack from '@mui/material/Stack';
-import Drawer from '@mui/material/Drawer';
+import Paper from '@mui/material/Paper';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
-import IconButton from '@mui/material/IconButton';
-
-import { paths } from 'src/routes/paths';
+import Typography from '@mui/material/Typography';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
-import { DashboardContent } from 'src/layouts/dashboard';
 import {
+  ROOT_ID,
   PLACEMENTTREE_NODE_WIDTH,
   PLACEMENTTREE_NODE_HEIGHT,
   PLACEMENTTREE_NODE_X_SPACE,
   PLACEMENTTREE_NODE_Y_SPACE,
 } from 'src/consts';
 
-import { Iconify } from 'src/components/Iconify';
-import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import ComponentBlock from 'src/components/Component-Block';
 import { LoadingScreen } from 'src/components/loading-screen';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
-import { useFetchMembers } from 'src/sections/Members/useApollo';
+import CustomEdge from 'src/sections/Placement/List/customEdge';
+import NodeContext from 'src/sections/Placement/List/nodeContext';
 
 import { StandardNode } from './node';
-import CustomEdge from './customEdge';
-import NodeContext from './nodeContext';
 import SearchMiner from './searchMiner';
-import IndividualMembers from './individualMembers';
+import { useFetchCommissions } from '../../useApollo';
+
+interface Props {
+  weekStartDate: string;
+}
 
 const fitViewOptions: FitViewOptions = {
   padding: 0.2,
@@ -67,6 +66,11 @@ function buildPlacementTree(members: any[]) {
     }
   });
 
+  if (Object.keys(result).length === 0) {
+    const rootMember = memberProcess.find((mbp) => mbp.placementParentId === ROOT_ID);
+    result = memberMap[rootMember.id];
+  }
+
   memberProcess.forEach((member) => {
     if (memberMap[member.placementParentId] && member.id !== member.placementParentId) {
       memberMap[member.placementParentId!].children.push(memberMap[member.id]);
@@ -76,7 +80,14 @@ function buildPlacementTree(members: any[]) {
   return result;
 }
 
-function buildTree(node: any, baseX: number, depth: number, tree: any[], visibleMap: any = null) {
+function buildTree(
+  node: any,
+  baseX: number,
+  depth: number,
+  tree: any[],
+  commissions: any,
+  visibleMap: any = null
+) {
   const children = node.children.sort(
     (child1: any, child2: any) =>
       child1.placementPosition === 'LEFT' || child2.placementPosition === 'RIGHT'
@@ -85,7 +96,7 @@ function buildTree(node: any, baseX: number, depth: number, tree: any[], visible
   if (children.length === 0) {
     const element = {
       id: node.id,
-      data: { label: <StandardNode {...node} /> },
+      data: { label: <StandardNode commissions={commissions} {...node} /> },
       position: { x: baseX, y: depth * (PLACEMENTTREE_NODE_HEIGHT + PLACEMENTTREE_NODE_Y_SPACE) },
       draggable: true,
       style: {
@@ -114,6 +125,7 @@ function buildTree(node: any, baseX: number, depth: number, tree: any[], visible
           maxX + (idx === 0 ? 0 : PLACEMENTTREE_NODE_X_SPACE),
           depth + 1,
           tree,
+          commissions,
           visibleMap
         );
         maxX = tempX;
@@ -122,7 +134,7 @@ function buildTree(node: any, baseX: number, depth: number, tree: any[], visible
 
   const res = {
     id: node.id,
-    data: { label: <StandardNode {...node} /> },
+    data: { label: <StandardNode commissions={commissions} {...node} /> },
     position: {
       x: Math.max(baseX, maxX - (PLACEMENTTREE_NODE_WIDTH - PLACEMENTTREE_NODE_X_SPACE) / 2),
       y: depth * (PLACEMENTTREE_NODE_HEIGHT + PLACEMENTTREE_NODE_Y_SPACE),
@@ -148,6 +160,7 @@ function buildTree(node: any, baseX: number, depth: number, tree: any[], visible
           maxX + PLACEMENTTREE_NODE_X_SPACE,
           depth + 1,
           tree,
+          commissions,
           visibleMap
         );
         maxX = tempX;
@@ -177,17 +190,27 @@ function getMemberIdsWithDepth(node: any, depth: number, targetDepth: number) {
   return res.length === 0 ? [{ id: node.id, value: 3 }] : [...res, { id: node.id, value: 2 }];
 }
 
-function PlacementListView() {
+function PlacementListView({ weekStartDate }: Props) {
   const popover = usePopover();
   const open = useBoolean();
 
-  const { fetchMembers, members, loading } = useFetchMembers();
+  const { fetchCommissions, weeklyCommissions, loading } = useFetchCommissions();
+
+  const members = weeklyCommissions
+    ?.map((commission) => commission?.member)
+    .sort((mb1, mb2) =>
+      (mb1?.placementPosition as string)?.localeCompare(mb2?.placementPosition as string)
+    );
 
   const [visibleMap, setVisibleMap] = useState<Record<string, number>>({});
 
   useEffect(() => {
-    fetchMembers({
-      variables: { sort: '-placementPosition' },
+    fetchCommissions({
+      variables: {
+        filter: {
+          weekStartDate,
+        },
+      },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -198,7 +221,7 @@ function PlacementListView() {
 
     const resultTree: any[] = [];
 
-    buildTree(placementTree, 0, 0, resultTree, visibleMap);
+    buildTree(placementTree, 0, 0, resultTree, weeklyCommissions, visibleMap);
 
     return resultTree;
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -233,8 +256,6 @@ function PlacementListView() {
       newVisibleMap[id] = members.findIndex((mb) => mb?.placementParentId === id) === -1 ? 3 : 2;
 
       setVisibleMap(newVisibleMap);
-
-      localStorage.setItem('placementVisibleMap', JSON.stringify(newVisibleMap));
     },
     [members, visibleMap]
   );
@@ -246,8 +267,6 @@ function PlacementListView() {
       newVisibleMap[id] = members.findIndex((mb) => mb?.placementParentId === id) === -1 ? 3 : 1;
 
       setVisibleMap(newVisibleMap);
-
-      localStorage.setItem('placementVisibleMap', JSON.stringify(newVisibleMap));
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [visibleMap]
@@ -269,8 +288,6 @@ function PlacementListView() {
     if (!members || members.length === 0) {
       setVisibleMap({});
 
-      localStorage.setItem('placementVisibleMap', JSON.stringify({}));
-
       return;
     }
 
@@ -283,8 +300,6 @@ function PlacementListView() {
     });
 
     setVisibleMap(newVisibleMap);
-
-    localStorage.setItem('placementVisibleMap', JSON.stringify(newVisibleMap));
 
     setTimeout(() => {
       fitView({
@@ -321,7 +336,6 @@ function PlacementListView() {
 
     if (iMinerId) {
       setVisibleMap(newVisibleMap);
-      localStorage.setItem('placementVisibleMap', JSON.stringify(newVisibleMap));
     }
 
     setTimeout(() => {
@@ -341,29 +355,18 @@ function PlacementListView() {
   const refresh = () => {};
 
   useEffect(() => {
-    const storageVisibleMap = localStorage.getItem('placementVisibleMap');
-
-    if (!storageVisibleMap || _.isEmpty(JSON.parse(storageVisibleMap))) resetVisibleMap();
-    else setVisibleMap(JSON.parse(storageVisibleMap));
-  }, [resetVisibleMap]);
+    if (!loading) resetVisibleMap();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading]);
 
   return (
-    <DashboardContent sx={{ overflowX: 'hidden' }}>
-      <Breadcrumbs
-        heading="Placement"
-        links={[{ name: 'Placement', href: paths.dashboard.placement.root }, { name: 'List' }]}
-        sx={{
-          mb: { xs: 1, md: 2 },
-        }}
-        action={
-          <Stack direction="row" columnGap={1}>
-            <SearchMiner onMinerChange={onMinerChange} />
-            <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
-              <Iconify icon="eva:more-horizontal-fill" />
-            </IconButton>
-          </Stack>
-        }
-      />
+    <Paper sx={{ overflowX: 'hidden', p: 2 }}>
+      <Stack direction="row" justifyContent="space-between" sx={{ pb: 2 }}>
+        <Typography variant="subtitle1" sx={{ pt: 1 }}>
+          Placement (Week #{dayjs(weekStartDate).add(1, 'day').format('ww')})
+        </Typography>
+        <SearchMiner onMinerChange={onMinerChange} weekStartDate={weekStartDate} />
+      </Stack>
 
       {loading ? (
         <LoadingScreen />
@@ -402,26 +405,14 @@ function PlacementListView() {
           </MenuItem>
         </MenuList>
       </CustomPopover>
-
-      <Drawer
-        open={open.value}
-        anchor="right"
-        onClose={open.onFalse}
-        slotProps={{ backdrop: { invisible: true } }}
-        PaperProps={{ sx: { width: { xs: 1, sm: 700 }, p: 2 } }}
-      >
-        <IndividualMembers
-          members={members?.filter((item: any) => item.placementParentId === null) ?? []}
-        />
-      </Drawer>
-    </DashboardContent>
+    </Paper>
   );
 }
 
-export default function PlacementListViewWithReactFlowProvider() {
+export default function PlacementListViewWithReactFlowProvider({ weekStartDate }: Props) {
   return (
     <ReactFlowProvider>
-      <PlacementListView />
+      <PlacementListView weekStartDate={weekStartDate} />
     </ReactFlowProvider>
   );
 }

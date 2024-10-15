@@ -52,7 +52,7 @@ const TABLE_HEAD = [
   { id: 'package', label: 'Package', sortable: false },
   { id: 'commission', label: 'Commissions', width: 200, sortable: true },
   { id: 'after', label: 'After', width: 200, sortable: true },
-  { id: 'action', label: 'Action', width: 150, sortable: true, align: 'center' },
+  { id: 'action', label: 'Action', width: 200, sortable: true, align: 'center' },
 ];
 
 const defaultFilter: ICommissionTableFilters = {

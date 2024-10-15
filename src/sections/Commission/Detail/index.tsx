@@ -105,7 +105,7 @@ export default function CommissionDetail() {
   return (
     <DashboardContent>
       <Breadcrumbs
-        heading={`Commission (Week / ${dayjs(weekStartDate).format('ww')})`}
+        heading={`Commission (Week #${dayjs(weekStartDate).format('ww')})`}
         links={[
           { name: 'Commission', href: paths.dashboard.commission.root },
           { name: 'Detail' },
