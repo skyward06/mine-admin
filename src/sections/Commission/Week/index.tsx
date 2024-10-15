@@ -1,14 +1,10 @@
-import type { LabelColor } from 'src/components/Label';
 import type { UseBooleanReturn } from 'src/hooks/useBoolean';
 
 import dayjs from 'dayjs';
 import { useMemo, useEffect } from 'react';
 
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
-import { alpha } from '@mui/material/styles';
 import TableBody from '@mui/material/TableBody';
 import TableContainer from '@mui/material/TableContainer';
 
@@ -16,7 +12,6 @@ import { useQuery } from 'src/routes/hooks';
 
 import { customizeDate } from 'src/utils/format-time';
 
-import { Label } from 'src/components/Label';
 import { ScrollBar } from 'src/components/ScrollBar';
 import { ConfirmDialog } from 'src/components/Dialog';
 import {
@@ -31,13 +26,7 @@ import ProductTableRow from './CommissionTableRow';
 import { useFetchCommissionsByWeek } from '../useApollo';
 import SearchPeriod from '../../Placement/List/searchPeriod';
 
-import type { CommissionRole, ICommissionTableFilters } from './types';
-
-// ----------------------------------------------------------------------
-
-const STATUS_OPTIONS: { value: CommissionRole; label: string; color: LabelColor }[] = [
-  { value: 'all', label: 'All', color: 'info' },
-];
+import type { ICommissionTableFilters } from './types';
 
 const TABLE_HEAD = [
   { id: 'weekStartDate', label: 'Week', width: 300, sortable: false },
@@ -49,10 +38,9 @@ const TABLE_HEAD = [
 
 interface Props {
   openWeek: UseBooleanReturn;
-  setSelected: Function;
 }
 
-export default function CommissionListView({ openWeek, setSelected }: Props) {
+export default function CommissionListView({ openWeek }: Props) {
   const table = useTable({ defaultDense: true });
 
   const { fetchWeekCommissions, loading, rowCount, weeklyCommissions } =
@@ -86,21 +74,7 @@ export default function CommissionListView({ openWeek, setSelected }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
 
-  useEffect(() => {
-    setSelected(
-      `${dayjs(weekStartDate).format('MMM-ww')} (${dayjs(weekStartDate).add(1, 'day').format('MM/DD')} - ${dayjs(weekStartDate).add(7, 'day').format('MM/DD')})`
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [weekStartDate]);
-
   const notFound = !weeklyCommissions?.length;
-
-  const handleTabChange = (event: React.SyntheticEvent, newValue: CommissionRole) => {
-    setQuery({
-      ...query,
-      page: { page: 1, pageSize: query.page?.pageSize ?? 10 },
-    });
-  };
 
   const onPeriodChange = (value: any) => {
     fetchWeekCommissions({
@@ -122,29 +96,6 @@ export default function CommissionListView({ openWeek, setSelected }: Props) {
   return (
     <>
       <Card>
-        <Tabs
-          value="all"
-          onChange={handleTabChange}
-          sx={{
-            px: 2.5,
-            boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
-          }}
-        >
-          {STATUS_OPTIONS.map((tab) => (
-            <Tab
-              key={tab.value}
-              iconPosition="end"
-              value={tab.value}
-              label={tab.label}
-              icon={
-                <Label variant="filled" color={tab.color}>
-                  {rowCount}
-                </Label>
-              }
-            />
-          ))}
-        </Tabs>
-
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <ScrollBar>
             <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>

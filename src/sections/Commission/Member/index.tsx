@@ -63,10 +63,9 @@ const defaultFilter: ICommissionTableFilters = {
 
 interface Props {
   openWeek: UseBooleanReturn;
-  setSelected: Function;
 }
 
-export default function CommissionListView({ openWeek, setSelected }: Props) {
+export default function CommissionListView({ openWeek }: Props) {
   const table = useTable({ defaultDense: true });
 
   const { fetchCommissionStats, data: statsData } = useFetchCommissionStats();
@@ -140,13 +139,6 @@ export default function CommissionListView({ openWeek, setSelected }: Props) {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
-
-  useEffect(() => {
-    setSelected(
-      `${dayjs(weekStartDate).format('MMM-ww')} (${dayjs(weekStartDate).add(1, 'day').format('MM/DD')} - ${dayjs(weekStartDate).add(7, 'day').format('MM/DD')})`
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [weekStartDate]);
 
   const notFound = (canReset && !weeklyCommissions?.length) || !weeklyCommissions?.length;
 

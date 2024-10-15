@@ -15,6 +15,8 @@ import TableContainer from '@mui/material/TableContainer';
 import { paths } from 'src/routes/paths';
 import { useQuery, useParams } from 'src/routes/hooks';
 
+import { customizeDate } from 'src/utils/format-time';
+
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Label } from 'src/components/Label';
@@ -78,7 +80,7 @@ export default function CommissionDetail() {
       filterObj.OR = [{ member: { username: { contains: filter.search, mode: 'insensitive' } } }];
     }
 
-    filterObj.weekStartDate = weekStartDate;
+    filterObj.weekStartDate = customizeDate(weekStartDate ?? '');
 
     return filterObj;
   }, [filter, weekStartDate]);
@@ -128,7 +130,7 @@ export default function CommissionDetail() {
         links={[
           { name: 'Commission', href: paths.dashboard.commission.root },
           {
-            name: `${dayjs(weekStartDate).format('MMM-ww')} (${dayjs(weekStartDate).add(1, 'day').format('MM/DD')} - ${dayjs(weekStartDate).add(7, 'day').format('MM/DD')})`,
+            name: `${dayjs(weekStartDate).format('MMM-ww')} (${dayjs(weekStartDate).format('MM/DD')} - ${dayjs(weekStartDate).add(6, 'day').format('MM/DD')})`,
           },
         ]}
         sx={{

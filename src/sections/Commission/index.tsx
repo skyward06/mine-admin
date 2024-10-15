@@ -1,6 +1,3 @@
-import dayjs from 'dayjs';
-import { useState } from 'react';
-
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Button from '@mui/material/Button';
@@ -29,9 +26,6 @@ const TABS = [
 
 export default function CommissionListView() {
   const tabs = useTabs('week');
-  const [selected, setSelected] = useState<string>(
-    `${dayjs().format('MMM-ww')} (${dayjs().add(1, 'day').format('MM/DD')} - ${dayjs().add(7, 'day').format('MM/DD')})`
-  );
 
   const openWeek = useBoolean();
 
@@ -39,7 +33,7 @@ export default function CommissionListView() {
     <DashboardContent>
       <Breadcrumbs
         heading="Commission"
-        links={[{ name: 'Commission', href: paths.dashboard.commission.root }, { name: selected }]}
+        links={[{ name: 'Commission', href: paths.dashboard.commission.root }, { name: 'All' }]}
         action={
           <Button variant="contained" color="primary" onClick={() => openWeek.onTrue()}>
             Select Week
@@ -56,9 +50,9 @@ export default function CommissionListView() {
         ))}
       </Tabs>
 
-      {tabs.value === 'week' && <Week openWeek={openWeek} setSelected={setSelected} />}
+      {tabs.value === 'week' && <Week openWeek={openWeek} />}
 
-      {tabs.value === 'member' && <Member openWeek={openWeek} setSelected={setSelected} />}
+      {tabs.value === 'member' && <Member openWeek={openWeek} />}
     </DashboardContent>
   );
 }

@@ -9,7 +9,8 @@ import IconButton from '@mui/material/IconButton';
 import ListItemText from '@mui/material/ListItemText';
 
 import { paths } from 'src/routes/paths';
-import { useRouter } from 'src/routes/hooks';
+
+import { formatDate } from 'src/utils/format-time';
 
 import { Iconify } from 'src/components/Iconify';
 
@@ -21,13 +22,12 @@ type Props = {
 
 export default function CommissionTableRow({ row }: Props) {
   const { totalAmount, totalMember, totalSale, weekStartDate } = row;
-  const router = useRouter();
 
   return (
     <TableRow hover>
       <TableCell align="left">
         <ListItemText
-          primary={dayjs(weekStartDate).format('MMM-ww')}
+          primary={`Week - ${dayjs(weekStartDate).format('ww')}`}
           secondary={`${dayjs(weekStartDate).add(1, 'day').format('MM/DD')} - ${dayjs(weekStartDate).add(7, 'day').format('MM/DD')}`}
           primaryTypographyProps={{ typography: 'body2' }}
           secondaryTypographyProps={{
@@ -43,7 +43,9 @@ export default function CommissionTableRow({ row }: Props) {
         <Tooltip title="View" placement="top" arrow>
           <IconButton
             color="default"
-            onClick={() => router.push(paths.dashboard.commission.detail(weekStartDate))}
+            onClick={() =>
+              window.open(paths.dashboard.commission.detail(formatDate(weekStartDate)), '_blank')
+            }
           >
             <Iconify icon="solar:eye-bold" />
           </IconButton>
