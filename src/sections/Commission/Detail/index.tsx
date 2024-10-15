@@ -1,14 +1,10 @@
-import type { LabelColor } from 'src/components/Label';
 import type { SortOrder } from 'src/routes/hooks/useQuery';
 
 import dayjs from 'dayjs';
 import { useMemo, useEffect, useCallback } from 'react';
 
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
-import { alpha } from '@mui/material/styles';
 import TableBody from '@mui/material/TableBody';
 import TableContainer from '@mui/material/TableContainer';
 
@@ -19,7 +15,6 @@ import { customizeDate } from 'src/utils/format-time';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 
-import { Label } from 'src/components/Label';
 import { ScrollBar } from 'src/components/ScrollBar';
 import { SearchInput } from 'src/components/SearchInput';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
@@ -35,13 +30,7 @@ import ProductTableRow from './CommissionTableRow';
 import { useFetchCommissionStatus } from '../useApollo';
 import ProductTableFiltersResult from './CommissionTableFiltersResult';
 
-import type { CommissionRole, ICommissionPrismaFilter, ICommissionTableFilters } from './types';
-
-// ----------------------------------------------------------------------
-
-const STATUS_OPTIONS: { value: CommissionRole; label: string; color: LabelColor }[] = [
-  { value: 'all', label: 'All', color: 'info' },
-];
+import type { ICommissionPrismaFilter, ICommissionTableFilters } from './types';
 
 const TABLE_HEAD = [
   { id: 'weekStartDate', label: 'Week', width: 300, sortable: true },
@@ -108,14 +97,6 @@ export default function CommissionDetail() {
 
   const notFound = (canReset && !weeklyCommissions?.length) || !weeklyCommissions?.length;
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: CommissionRole) => {
-    setQuery({
-      ...query,
-      filter: { ...filter, status: newValue },
-      page: { page: 1, pageSize: query.page?.pageSize ?? 10 },
-    });
-  };
-
   const handleSearchChange = useCallback(
     (value: string) => {
       setQuery({ ...query, filter: { ...filter, search: value } });
@@ -139,29 +120,6 @@ export default function CommissionDetail() {
       />
 
       <Card>
-        <Tabs
-          value="all"
-          onChange={handleTabChange}
-          sx={{
-            px: 2.5,
-            boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
-          }}
-        >
-          {STATUS_OPTIONS.map((tab) => (
-            <Tab
-              key={tab.value}
-              iconPosition="end"
-              value={tab.value}
-              label={tab.label}
-              icon={
-                <Label variant="filled" color={tab.color}>
-                  {rowCount}
-                </Label>
-              }
-            />
-          ))}
-        </Tabs>
-
         <SearchInput search={filter.search} onSearchChange={handleSearchChange} />
 
         {canReset && !loading && (
