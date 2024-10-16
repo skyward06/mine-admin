@@ -1,4 +1,5 @@
 import { z as zod } from 'zod';
+import states from 'states-us';
 import { useForm } from 'react-hook-form';
 import { useMemo, useState, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -65,6 +66,7 @@ export default function MemberCreateForm() {
   const members = memberData?.members.members ?? [];
 
   const [member, setMember] = useState<Member>();
+  const [state, setState] = useState<string>();
 
   const router = useRouter();
 
@@ -121,6 +123,8 @@ export default function MemberCreateForm() {
         return;
       }
 
+      console.log('state => ', state);
+
       if (total === 100) {
         await submit({
           variables: {
@@ -128,6 +132,7 @@ export default function MemberCreateForm() {
               ...data,
               fullName: `${firstName} ${lastName}`,
               sponsorId: member?.id,
+              state,
               wallets: wallets.map(({ percent, ...rest }) => ({
                 percent: percent * 100,
                 ...rest,
@@ -230,7 +235,22 @@ export default function MemberCreateForm() {
               <Field.Text name="primaryAddress" label="Address" />
               <Field.Text name="secondaryAddress" label="Address Line 2" />
               <Field.Text name="city" label="City" />
-              <Field.Text name="state" label="State" />
+              <Autocomplete
+                freeSolo
+                fullWidth
+                options={states}
+                getOptionLabel={(option: any) => option.name}
+                renderInput={(params) => (
+                  <TextField {...params} name="state" label="States" margin="none" />
+                )}
+                renderOption={(props, option) => (
+                  <li {...props} key={option!.name}>
+                    {option.name}
+                  </li>
+                )}
+                onChange={(_, value: any) => setState(value.name)}
+                onInputChange={(_, value: any) => setState(value)}
+              />
               <Field.Text name="zipCode" label="ZIP Code" />
               <Field.Text name="assetId" label="Asset ID" />
             </Box>

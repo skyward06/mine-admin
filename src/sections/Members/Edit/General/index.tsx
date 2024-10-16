@@ -1,6 +1,7 @@
 import type { Member } from 'src/__generated__/graphql';
 
 import { z as zod } from 'zod';
+import states from 'states-us';
 import isEqual from 'lodash/isEqual';
 import { useForm } from 'react-hook-form';
 import { useMemo, useState, useEffect } from 'react';
@@ -70,6 +71,9 @@ export default function MemberGeneral({ currentMember }: Props) {
 
   const [firstName, setFirstName] = useState<string>(first);
   const [lastName, setLastName] = useState<string>(last);
+  const [state, setState] = useState<string>();
+
+  console.log('state => ', currentMember.state);
 
   const { data: payoutsData } = useGraphQuery(FETCH_PAYOUTS_QUERY, {
     variables: {},
@@ -143,7 +147,7 @@ export default function MemberGeneral({ currentMember }: Props) {
               sponsorId: member?.id || null,
               assetId: newMember.assetId,
               city: newMember.city,
-              state: newMember.state,
+              state,
               zipCode: newMember.zipCode,
               wallets: newMember.memberWallets.map(({ percent, ...rest }) => ({
                 percent: percent * 100,
@@ -256,7 +260,23 @@ export default function MemberGeneral({ currentMember }: Props) {
               <Field.Text name="primaryAddress" label="Address" />
               <Field.Text name="secondaryAddress" label="Address Line 2" />
               <Field.Text name="city" label="City" />
-              <Field.Text name="state" label="State" />
+              <Autocomplete
+                freeSolo
+                fullWidth
+                options={states}
+                getOptionLabel={(option: any) => option.name}
+                value={{ name: state ?? currentMember.state }}
+                renderInput={(params) => (
+                  <TextField {...params} name="state" label="States" margin="none" />
+                )}
+                renderOption={(props, option) => (
+                  <li {...props} key={option!.name}>
+                    {option.name}
+                  </li>
+                )}
+                onChange={(_, value: any) => setState(value.name)}
+                onInputChange={(_, value: any) => setState(value)}
+              />
               <Field.Text name="zipCode" label="ZIP Code" />
               <Field.Text name="assetId" label="Asset ID" />
             </Box>
