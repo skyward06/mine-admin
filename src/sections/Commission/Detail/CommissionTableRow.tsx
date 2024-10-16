@@ -1,7 +1,5 @@
 import type { WeeklyCommission } from 'src/__generated__/graphql';
 
-import dayjs from 'dayjs';
-
 import Tooltip from '@mui/material/Tooltip';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
@@ -27,7 +25,6 @@ export default function CommissionTableRow({ row }: Props) {
   const {
     member,
     memberId,
-    weekStartDate,
     beforeLeftPoint,
     beforeRightPoint,
     afterLeftPoint,
@@ -40,17 +37,6 @@ export default function CommissionTableRow({ row }: Props) {
 
   return (
     <TableRow hover>
-      <TableCell align="left">
-        <ListItemText
-          primary={`week #${dayjs(weekStartDate).add(1, 'day').format('ww')}`}
-          secondary={`${dayjs(weekStartDate).add(1, 'day').format('MM/DD')} - ${dayjs(weekStartDate).add(7, 'day').format('MM/DD')}`}
-          primaryTypographyProps={{ typography: 'body2' }}
-          secondaryTypographyProps={{
-            component: 'span',
-            color: 'text.disabled',
-          }}
-        />
-      </TableCell>
       <TableCell
         align="left"
         onClick={() => router.push(paths.dashboard.members.edit(member?.id ?? ''))}

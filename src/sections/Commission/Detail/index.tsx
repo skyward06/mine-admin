@@ -32,7 +32,6 @@ import ProductTableFiltersResult from './CommissionTableFiltersResult';
 import type { ICommissionPrismaFilter, ICommissionTableFilters } from './types';
 
 const TABLE_HEAD = [
-  { id: 'weekStartDate', label: 'Week', width: 300, sortable: true },
   { id: 'member.username', label: 'Username', sortable: true },
   { id: 'before', label: 'Before', sortable: false },
   { id: 'package', label: 'Package', sortable: false },
