@@ -33,6 +33,7 @@ type Props = {
 interface Edit {
   id: string;
   username: string;
+  fullName?: string;
 }
 
 // ----------------------------------------------------------------------
@@ -237,7 +238,7 @@ export default function MemberGeneral({ currentMember }: Props) {
                 )}
                 renderOption={(props, option) => (
                   <li {...props} key={option!.username}>
-                    {option!.username}
+                    {`${option!.username} (${option!.fullName})`}
                   </li>
                 )}
                 onInputChange={(_, username: string) => {

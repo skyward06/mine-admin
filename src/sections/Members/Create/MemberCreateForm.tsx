@@ -211,7 +211,7 @@ export default function MemberCreateForm() {
                 )}
                 renderOption={(props, option) => (
                   <li {...props} key={option!.username}>
-                    {option!.username}
+                    {`${option!.username} (${option!.fullName})`}
                   </li>
                 )}
                 onInputChange={(_, username: string) => {
