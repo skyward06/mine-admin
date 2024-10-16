@@ -19,8 +19,8 @@ import { useBoolean } from 'src/hooks/useBoolean';
 
 import {
   ROOT_ID,
+  COMMISSION_NODE_HEIGHT,
   PLACEMENTTREE_NODE_WIDTH,
-  PLACEMENTTREE_NODE_HEIGHT,
   PLACEMENTTREE_NODE_X_SPACE,
   PLACEMENTTREE_NODE_Y_SPACE,
 } from 'src/consts';
@@ -103,14 +103,14 @@ function buildTree(
     const element = {
       id: node.id,
       data: { label: <StandardNode commissions={commissions} {...node} /> },
-      position: { x: baseX, y: depth * (PLACEMENTTREE_NODE_HEIGHT + PLACEMENTTREE_NODE_Y_SPACE) },
+      position: { x: baseX, y: depth * (COMMISSION_NODE_HEIGHT + PLACEMENTTREE_NODE_Y_SPACE) },
       draggable: true,
       style: {
         padding: 0,
         border: 'none',
         borderRadius: '12px',
         width: PLACEMENTTREE_NODE_WIDTH,
-        height: PLACEMENTTREE_NODE_HEIGHT,
+        height: COMMISSION_NODE_HEIGHT,
       },
       maxX: baseX + PLACEMENTTREE_NODE_WIDTH,
     };
@@ -143,7 +143,7 @@ function buildTree(
     data: { label: <StandardNode commissions={commissions} {...node} /> },
     position: {
       x: Math.max(baseX, maxX - (PLACEMENTTREE_NODE_WIDTH - PLACEMENTTREE_NODE_X_SPACE) / 2),
-      y: depth * (PLACEMENTTREE_NODE_HEIGHT + PLACEMENTTREE_NODE_Y_SPACE),
+      y: depth * (COMMISSION_NODE_HEIGHT + PLACEMENTTREE_NODE_Y_SPACE),
     },
     draggable: true,
     style: {
@@ -151,7 +151,7 @@ function buildTree(
       border: 'none',
       borderRadius: '12px',
       width: PLACEMENTTREE_NODE_WIDTH,
-      height: PLACEMENTTREE_NODE_HEIGHT,
+      height: COMMISSION_NODE_HEIGHT,
     },
   };
 
