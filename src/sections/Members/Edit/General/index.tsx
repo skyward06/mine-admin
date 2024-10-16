@@ -163,6 +163,10 @@ export default function MemberGeneral({ currentMember }: Props) {
       if (err instanceof ApolloError) {
         const [error] = err.graphQLErrors;
 
+        if (error.path?.includes('username')) {
+          setError('username', { type: 'manual', message: error?.message || '' });
+        }
+
         if (error.path?.includes('email')) {
           setError('email', { type: 'manual', message: error?.message || '' });
         }
@@ -180,6 +184,7 @@ export default function MemberGeneral({ currentMember }: Props) {
           }
         });
       }
+
       toast.error(err.message);
     }
   });

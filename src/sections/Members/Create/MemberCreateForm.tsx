@@ -146,6 +146,10 @@ export default function MemberCreateForm() {
       if (err instanceof ApolloError) {
         const [error] = err.graphQLErrors;
 
+        if (error.path?.includes('username')) {
+          setError('username', { type: 'manual', message: error?.message || '' });
+        }
+
         if (error.path?.includes('email')) {
           setError('email', { type: 'manual', message: error?.message || '' });
         }
@@ -165,6 +169,8 @@ export default function MemberCreateForm() {
       } else {
         toast.error(err.message);
       }
+
+      toast.error(err.message);
     }
   });
 
