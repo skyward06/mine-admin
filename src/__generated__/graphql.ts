@@ -167,7 +167,6 @@ export type CreateMemberStatisticsInput = {
 export type CreatePackageInput = {
   amount: Scalars['Float']['input'];
   date?: InputMaybe<Scalars['DateTimeISO']['input']>;
-  isFreeShare: Scalars['Boolean']['input'];
   point?: InputMaybe<Scalars['Float']['input']>;
   productName: Scalars['String']['input'];
   status: Scalars['Boolean']['input'];
@@ -485,7 +484,6 @@ export type Mutation = {
   createStatistics: Statistics;
   createStatisticsSale: StatisticsSale;
   emailVerify: SuccessResponse;
-  makePrimaryFreeShare: Package;
   memberLogin: MemberLoginResponse;
   removeAdmins: ManySuccessResponse;
   removeCompleteMemberPlacement: SuccessResponse;
@@ -694,9 +692,7 @@ export type Package = {
   date: Scalars['DateTimeISO']['output'];
   deletedAt?: Maybe<Scalars['DateTimeISO']['output']>;
   id: Scalars['ID']['output'];
-  isFreeShare: Scalars['Boolean']['output'];
   point: Scalars['Float']['output'];
-  primaryFreeShare: Scalars['Boolean']['output'];
   productName: Scalars['String']['output'];
   sales?: Maybe<Array<Maybe<Sale>>>;
   status: Scalars['Boolean']['output'];
@@ -1087,7 +1083,6 @@ export type UpdatePackageInput = {
   amount?: InputMaybe<Scalars['Float']['input']>;
   date?: InputMaybe<Scalars['DateTimeISO']['input']>;
   id: Scalars['ID']['input'];
-  isFreeShare?: InputMaybe<Scalars['Boolean']['input']>;
   point?: InputMaybe<Scalars['Float']['input']>;
   productName?: InputMaybe<Scalars['String']['input']>;
   status?: InputMaybe<Scalars['Boolean']['input']>;

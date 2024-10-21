@@ -87,7 +87,6 @@ export default function EditForm({ current }: Props) {
             data: {
               ...newData,
               status,
-              isFreeShare: false,
             },
           },
         });
