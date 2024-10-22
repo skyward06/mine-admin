@@ -8,6 +8,7 @@ import { ApolloError, useMutation, useLazyQuery, useQuery as useGraphQuery } fro
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
+import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Unstable_Grid2';
 import IconButton from '@mui/material/IconButton';
@@ -19,6 +20,8 @@ import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/useBoolean';
+
+import { CONTACT } from 'src/consts';
 
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
@@ -45,8 +48,8 @@ const NewMemberSchema = zod.object({
   secondaryAddress: zod.string({ required_error: 'Address Line 2 is required' }),
   sponsorId: zod.string().optional(),
   assetId: zod.string({ required_error: 'AssetID is required' }),
-  preferredContact: zod.string().optional(),
-  preferredContactDetail: zod.string().optional(),
+  preferredContact: zod.string().optional().nullable(),
+  preferredContactDetail: zod.string().optional().nullable(),
   wallets: zod.array(
     zod.object({
       payoutId: zod.string({ required_error: 'Payout is required' }),
@@ -279,7 +282,13 @@ export default function MemberCreateForm() {
               />
               <Field.Text name="zipCode" label="ZIP Code" />
               <Field.Text name="assetId" label="Asset ID" />
-              <Field.Text name="preferredContact" label="Preferred Contact" />
+              <Field.Select name="preferredContact" label="Preferred Contact">
+                {CONTACT.map((option) => (
+                  <MenuItem key={option.label} value={option.value}>
+                    {option.value}
+                  </MenuItem>
+                ))}
+              </Field.Select>
               <Field.Text name="preferredContactDetail" label="Preferred Contact Detail" />
             </Box>
           </Card>

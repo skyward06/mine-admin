@@ -11,6 +11,7 @@ import { ApolloError, useMutation, useLazyQuery, useQuery as useGraphQuery } fro
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
+import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Unstable_Grid2';
 import IconButton from '@mui/material/IconButton';
@@ -22,6 +23,8 @@ import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/useBoolean';
+
+import { CONTACT } from 'src/consts';
 
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
@@ -59,8 +62,8 @@ const MemberGeneralSchema = zod.object({
   secondaryAddress: zod.string().optional().nullable(),
   sponsorId: zod.string().optional().nullable(),
   assetId: zod.string({ required_error: 'AssetID is required' }),
-  preferredContact: zod.string().optional(),
-  preferredContactDetail: zod.string().optional(),
+  preferredContact: zod.string().optional().nullable(),
+  preferredContactDetail: zod.string().optional().nullable(),
   memberWallets: zod.array(
     zod.object({
       payoutId: zod.string({ required_error: 'Payout is required' }),
@@ -157,7 +160,7 @@ export default function MemberGeneral({ currentMember }: Props) {
               assetId: newMember.assetId,
               city: newMember.city,
               state,
-              syncWithSendy: !boolean.value,
+              syncWithSendy: boolean.value,
               preferredContact: newMember.preferredContact,
               preferredContactDetail: newMember.preferredContactDetail,
               zipCode: newMember.zipCode,
@@ -305,7 +308,7 @@ export default function MemberGeneral({ currentMember }: Props) {
                 getOptionLabel={(option: any) => option.name}
                 value={{ name: state ?? currentMember.state }}
                 renderInput={(params) => (
-                  <TextField {...params} name="state" label="States" margin="none" />
+                  <TextField {...params} name="state" label="State" margin="none" />
                 )}
                 renderOption={(props, option) => (
                   <li {...props} key={option!.name}>
@@ -317,7 +320,13 @@ export default function MemberGeneral({ currentMember }: Props) {
               />
               <Field.Text name="zipCode" label="ZIP Code" />
               <Field.Text name="assetId" label="Asset ID" />
-              <Field.Text name="preferredContact" label="Preferred Contact" />
+              <Field.Select name="preferredContact" label="Preferred Contact">
+                {CONTACT.map((option) => (
+                  <MenuItem key={option.label} value={option.value}>
+                    {option.value}
+                  </MenuItem>
+                ))}
+              </Field.Select>
               <Field.Text name="preferredContactDetail" label="Preferred Contact Detail" />
             </Box>
           </Card>
