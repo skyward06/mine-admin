@@ -60,7 +60,7 @@ export const navData = [
       { title: 'Product', path: paths.dashboard.products.root, icon: ICONS.package },
       { title: 'Sponsor', path: paths.dashboard.sponsor.root, icon: ICONS.sponsor },
       { title: 'Placement', path: paths.dashboard.placement.root, icon: ICONS.diagram },
-      { title: 'Commission', path: paths.dashboard.commission.root, icon: ICONS.bonus },
+      // { title: 'Commission', path: paths.dashboard.commission.root, icon: ICONS.bonus },
       { title: 'Reward', path: paths.dashboard.reward.root, icon: ICONS.reward },
       { title: 'Admin', path: paths.dashboard.user.root, icon: ICONS.admin },
     ],

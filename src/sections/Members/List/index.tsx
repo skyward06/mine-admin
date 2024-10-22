@@ -59,9 +59,9 @@ const TABLE_HEAD = [
   { id: 'mobile', label: 'Mobile', sortable: true },
   { id: 'assetId', label: 'AssetID', sortable: true },
   { id: 'point', label: 'Point', sortable: true },
-  { id: 'emailVerified', label: 'Status', sortable: true },
+  // { id: 'emailVerified', label: 'Status', sortable: true },
   { id: 'createdAt', label: 'Created At', sortable: true },
-  { id: 'action', label: 'Action', align: 'center' },
+  { id: 'action', label: 'Action', width: 150, align: 'center' },
 ];
 
 const defaultFilter: IMemberTableFilters = {

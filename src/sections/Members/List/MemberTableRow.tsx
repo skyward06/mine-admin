@@ -20,12 +20,12 @@ import { useBoolean, type UseBooleanReturn } from 'src/hooks/useBoolean';
 
 import { fDate, fTime } from 'src/utils/format-time';
 
-import { Label } from 'src/components/Label';
+// import { Label } from 'src/components/Label';
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 import { ConfirmDialog } from 'src/components/Dialog';
 
-import { useApproveMember, useUpdatePassword } from '../useApollo';
+import { useUpdatePassword } from '../useApollo';
 
 // ----------------------------------------------------------------------
 
@@ -58,15 +58,14 @@ export default function MemberTableRow({
     assetId,
     point,
     fullName,
-    emailVerified,
-    introduceMembers,
-    status,
+    // emailVerified,
+    // status,
     createdAt,
     sales,
   } = row;
 
   const { updatePassword } = useUpdatePassword();
-  const { approveMember } = useApproveMember();
+  // const { approveMember } = useApproveMember();
 
   const resetContent = (
     <Paper sx={{ py: 2 }}>
@@ -98,10 +97,6 @@ export default function MemberTableRow({
       />
     </Paper>
   );
-
-  const handleSponsors = () => {
-    window.open(`${paths.dashboard.members.root}?sponsorId=${id}`, '_blank');
-  };
 
   return (
     <>
@@ -136,17 +131,7 @@ export default function MemberTableRow({
 
         <TableCell>{point}</TableCell>
 
-        <TableCell
-          sx={{
-            cursor: 'pointer',
-            '&:hover': { bgcolor: (theme) => theme.vars.palette.action.hover },
-          }}
-          onClick={() => handleSponsors()}
-        >
-          {introduceMembers?.length ?? 0}
-        </TableCell>
-
-        <TableCell>
+        {/* <TableCell>
           {!emailVerified && (
             <Label variant="soft" color="error">
               Email Unverified
@@ -157,7 +142,7 @@ export default function MemberTableRow({
               Pending
             </Label>
           )}
-        </TableCell>
+        </TableCell> */}
 
         <TableCell>
           <ListItemText
@@ -174,7 +159,7 @@ export default function MemberTableRow({
 
         {action && (
           <TableCell sx={{ whiteSpace: 'nowrap' }} align="center">
-            <Grid container lg={12} justifyContent="flex-end">
+            {/* <Grid container lg={12} justifyContent="space-around">
               <Grid>
                 {!status && (
                   <Tooltip title="Approve" placement="top" arrow>
@@ -189,6 +174,46 @@ export default function MemberTableRow({
                   </Tooltip>
                 )}
               </Grid>
+              <Grid>
+                <Tooltip title="View" placement="top" arrow>
+                  <IconButton
+                    color="default"
+                    onClick={() => {
+                      router.push(`${paths.dashboard.members.edit(id)}`);
+                    }}
+                  >
+                    <Iconify icon="solar:eye-bold" />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+              <Grid>
+                <Tooltip title="Reset Password" placement="top" arrow>
+                  <IconButton
+                    color="default"
+                    onClick={() => {
+                      confirm.onTrue();
+                    }}
+                  >
+                    <Iconify icon="basil:unlock-solid" />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+              <Grid>
+                <Tooltip title="Delete" placement="top" arrow>
+                  <IconButton
+                    color="error"
+                    disabled={!!sales?.length}
+                    onClick={() => {
+                      removeConfirm.onTrue();
+                      setSelected(id);
+                    }}
+                  >
+                    <Iconify icon="bxs:coffee-togo" />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+            </Grid> */}
+            <Grid container lg={12} justifyContent="space-around">
               <Grid>
                 <Tooltip title="View" placement="top" arrow>
                   <IconButton
