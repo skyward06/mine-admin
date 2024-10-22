@@ -59,6 +59,7 @@ export default function MemberTableRow({
     point,
     fullName,
     emailVerified,
+    introduceMembers,
     status,
     createdAt,
     sales,

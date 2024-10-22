@@ -21,6 +21,9 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
           status
           emailVerified
           totalIntroducers
+          syncWithSendy
+          preferredContact
+          preferredContactDetail
         }
         package {
           id

@@ -34,6 +34,9 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         status
         emailVerified
         totalIntroducers
+        syncWithSendy
+        preferredContact
+        preferredContactDetail
         sponsor {
           id
           username
@@ -47,6 +50,9 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           status
           emailVerified
           totalIntroducers
+          syncWithSendy
+          preferredContact
+          preferredContactDetail
         }
         placementParentId
         placementPosition
@@ -63,6 +69,9 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           status
           emailVerified
           totalIntroducers
+          syncWithSendy
+          preferredContact
+          preferredContactDetail
         }
         sales {
           id

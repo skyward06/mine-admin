@@ -57,6 +57,9 @@ export const FETCH_MEMBERSTATISTICS_QUERY = gql(/* GraphQL */ `
           primaryAddress
           secondaryAddress
           totalIntroducers
+          syncWithSendy
+          preferredContact
+          preferredContactDetail
           memberWallets {
             createdAt
             updatedAt
