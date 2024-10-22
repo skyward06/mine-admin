@@ -11,20 +11,15 @@ import Stack from '@mui/material/Stack';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Unstable_Grid2';
-import IconButton from '@mui/material/IconButton';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Autocomplete from '@mui/material/Autocomplete';
-import InputAdornment from '@mui/material/InputAdornment';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { useBoolean } from 'src/hooks/useBoolean';
-
 import { CONTACT } from 'src/consts';
 
 import { toast } from 'src/components/SnackBar';
-import { Iconify } from 'src/components/Iconify';
 import { Form, Field } from 'src/components/Form';
 
 import MemberWallets from './MemberWallets';
@@ -50,6 +45,7 @@ const NewMemberSchema = zod.object({
   assetId: zod.string({ required_error: 'AssetID is required' }),
   preferredContact: zod.string().optional().nullable(),
   preferredContactDetail: zod.string().optional().nullable(),
+  syncWithSendy: zod.boolean().default(true),
   wallets: zod.array(
     zod.object({
       payoutId: zod.string({ required_error: 'Payout is required' }),
@@ -65,8 +61,6 @@ interface Member {
 }
 
 export default function MemberCreateForm() {
-  const boolean = useBoolean();
-
   const { data: payoutsData } = useGraphQuery(FETCH_PAYOUTS_QUERY, {
     variables: {},
   });
@@ -92,6 +86,7 @@ export default function MemberCreateForm() {
       secondaryAddress: '',
       state: '',
       city: '',
+      syncWithSendy: true,
       zipCode: '',
       sponsorId: '',
       wallets: [
@@ -126,8 +121,6 @@ export default function MemberCreateForm() {
     });
   };
 
-  const handleSendyStatus = () => boolean.onToggle();
-
   const onSubmit = handleSubmit(async ({ firstName, lastName, wallets, ...data }) => {
     try {
       const total = wallets.reduce((prev: number, save: any) => prev + save.percent, 0);
@@ -145,7 +138,6 @@ export default function MemberCreateForm() {
               fullName: `${firstName} ${lastName}`,
               sponsorId: member?.id,
               state,
-              syncWithSendy: !boolean.value,
               wallets: wallets.map(({ percent, ...rest }) => ({
                 percent: percent * 100,
                 ...rest,
@@ -220,23 +212,9 @@ export default function MemberCreateForm() {
               }}
             >
               <Field.Text name="username" label="Username" />
-              <Field.Text
-                name="email"
-                label="Email"
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton onClick={handleSendyStatus} edge="end">
-                        {boolean.value ? (
-                          <Iconify icon="uis:sync-slash" width={24} />
-                        ) : (
-                          <Iconify icon="uil:sync" width={24} />
-                        )}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
+              <Stack direction="row" alignItems="center">
+                <Field.Text name="email" label="Email" />
+              </Stack>
               <Field.Text name="firstName" label="First Name" />
               <Field.Text name="lastName" label="Last Name" />
               <Field.Phone name="mobile" label="Mobile" />
@@ -290,19 +268,20 @@ export default function MemberCreateForm() {
                 ))}
               </Field.Select>
               <Field.Text name="preferredContactDetail" label="Preferred Contact Detail" />
+              <Field.Switch name="syncWithSendy" label="Subscribe to Sendy" sx={{ p: 0 }} />
             </Box>
           </Card>
         </Grid>
         <Grid md={12} xl={6}>
           <MemberWallets payouts={payouts} />
-
-          <Stack alignItems="flex-end">
-            <LoadingButton type="submit" variant="contained" loading={loading}>
-              Create Member
-            </LoadingButton>
-          </Stack>
         </Grid>
       </Grid>
+
+      <Stack alignItems="flex-start">
+        <LoadingButton type="submit" variant="contained" loading={loading}>
+          Create Member
+        </LoadingButton>
+      </Stack>
     </Form>
   );
 }

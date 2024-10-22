@@ -14,20 +14,15 @@ import Stack from '@mui/material/Stack';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Unstable_Grid2';
-import IconButton from '@mui/material/IconButton';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Autocomplete from '@mui/material/Autocomplete';
-import InputAdornment from '@mui/material/InputAdornment';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { useBoolean } from 'src/hooks/useBoolean';
-
 import { CONTACT } from 'src/consts';
 
 import { toast } from 'src/components/SnackBar';
-import { Iconify } from 'src/components/Iconify';
 import { Form, Field } from 'src/components/Form';
 
 import MemberWallets from './MemberWallets';
@@ -64,6 +59,7 @@ const MemberGeneralSchema = zod.object({
   assetId: zod.string({ required_error: 'AssetID is required' }),
   preferredContact: zod.string().optional().nullable(),
   preferredContactDetail: zod.string().optional().nullable(),
+  syncWithSendy: zod.boolean().default(true),
   memberWallets: zod.array(
     zod.object({
       payoutId: zod.string({ required_error: 'Payout is required' }),
@@ -75,7 +71,6 @@ const MemberGeneralSchema = zod.object({
 
 export default function MemberGeneral({ currentMember }: Props) {
   const router = useRouter();
-  const boolean = useBoolean();
 
   const { fullName } = currentMember;
 
@@ -126,8 +121,6 @@ export default function MemberGeneral({ currentMember }: Props) {
     });
   };
 
-  const handleSendyStatus = () => boolean.onToggle();
-
   const onSubmit = handleSubmit(async (newMember) => {
     try {
       if (isEqual(newMember, defaultValues)) {
@@ -160,7 +153,7 @@ export default function MemberGeneral({ currentMember }: Props) {
               assetId: newMember.assetId,
               city: newMember.city,
               state,
-              syncWithSendy: boolean.value,
+              syncWithSendy: newMember.syncWithSendy,
               preferredContact: newMember.preferredContact,
               preferredContactDetail: newMember.preferredContactDetail,
               zipCode: newMember.zipCode,
@@ -221,15 +214,6 @@ export default function MemberGeneral({ currentMember }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [member]);
 
-  useEffect(() => {
-    if (currentMember.syncWithSendy) {
-      boolean.onTrue();
-    } else {
-      boolean.onFalse();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentMember]);
-
   return (
     <Form methods={methods} onSubmit={onSubmit}>
       <Grid container spacing={3}>
@@ -245,24 +229,7 @@ export default function MemberGeneral({ currentMember }: Props) {
               }}
             >
               <Field.Text name="username" label="Username" />
-              <Field.Text
-                name="email"
-                label="Email"
-                defaultValue={currentMember.email}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton onClick={handleSendyStatus} edge="end">
-                        {boolean.value ? (
-                          <Iconify icon="uil:sync" width={24} />
-                        ) : (
-                          <Iconify icon="uis:sync-slash" width={24} />
-                        )}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
+              <Field.Text name="email" label="Email" defaultValue={currentMember.email} />
               <Field.Text
                 name="firstName"
                 label="First Name"
@@ -328,6 +295,7 @@ export default function MemberGeneral({ currentMember }: Props) {
                 ))}
               </Field.Select>
               <Field.Text name="preferredContactDetail" label="Preferred Contact Detail" />
+              <Field.Switch name="syncWithSendy" label="Subscribe to Sendy" sx={{ p: 0 }} />
             </Box>
           </Card>
         </Grid>
