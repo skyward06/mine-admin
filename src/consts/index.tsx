@@ -22,3 +22,18 @@ export const COMMISSION_TYPE = {
   BLOCK: 'BLOCK',
   NONE: 'NONE',
 };
+
+export const CONTACT = [
+  {
+    label: 'INSTAGRAM',
+    value: 'Instagram',
+  },
+  { label: 'FACEBOOK', value: 'Facebook' },
+  { label: 'SNAPCHAT', value: 'Snapchat' },
+  { label: 'TELEGRAM', value: 'Telegram' },
+  { label: 'SMSTEXT', value: 'SMS Text' },
+  { label: 'EMAIL', value: 'Email' },
+  { label: 'TIKTOK', value: 'Tiktok' },
+  { label: 'WHATSAPP', value: 'WhatsApp' },
+  { label: 'OTHER', value: 'Other' },
+];
