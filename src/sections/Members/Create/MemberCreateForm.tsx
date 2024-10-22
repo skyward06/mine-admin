@@ -45,6 +45,8 @@ const NewMemberSchema = zod.object({
   secondaryAddress: zod.string({ required_error: 'Address Line 2 is required' }),
   sponsorId: zod.string().optional(),
   assetId: zod.string({ required_error: 'AssetID is required' }),
+  preferredContact: zod.string().optional(),
+  preferredContactDetail: zod.string().optional(),
   wallets: zod.array(
     zod.object({
       payoutId: zod.string({ required_error: 'Payout is required' }),
@@ -277,6 +279,8 @@ export default function MemberCreateForm() {
               />
               <Field.Text name="zipCode" label="ZIP Code" />
               <Field.Text name="assetId" label="Asset ID" />
+              <Field.Text name="preferredContact" label="Preferred Contact" />
+              <Field.Text name="preferredContactDetail" label="Preferred Contact Detail" />
             </Box>
           </Card>
         </Grid>

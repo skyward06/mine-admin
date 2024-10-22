@@ -59,6 +59,8 @@ const MemberGeneralSchema = zod.object({
   secondaryAddress: zod.string().optional().nullable(),
   sponsorId: zod.string().optional().nullable(),
   assetId: zod.string({ required_error: 'AssetID is required' }),
+  preferredContact: zod.string().optional(),
+  preferredContactDetail: zod.string().optional(),
   memberWallets: zod.array(
     zod.object({
       payoutId: zod.string({ required_error: 'Payout is required' }),
@@ -156,6 +158,8 @@ export default function MemberGeneral({ currentMember }: Props) {
               city: newMember.city,
               state,
               syncWithSendy: !boolean.value,
+              preferredContact: newMember.preferredContact,
+              preferredContactDetail: newMember.preferredContactDetail,
               zipCode: newMember.zipCode,
               wallets: newMember.memberWallets.map(({ percent, ...rest }) => ({
                 percent: percent * 100,
@@ -304,6 +308,8 @@ export default function MemberGeneral({ currentMember }: Props) {
               />
               <Field.Text name="zipCode" label="ZIP Code" />
               <Field.Text name="assetId" label="Asset ID" />
+              <Field.Text name="preferredContact" label="Preferred Contact" />
+              <Field.Text name="preferredContactDetail" label="Preferred Contact Detail" />
             </Box>
           </Card>
         </Grid>
