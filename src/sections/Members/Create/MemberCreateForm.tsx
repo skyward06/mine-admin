@@ -10,13 +10,18 @@ import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Unstable_Grid2';
+import IconButton from '@mui/material/IconButton';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Autocomplete from '@mui/material/Autocomplete';
+import InputAdornment from '@mui/material/InputAdornment';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { useBoolean } from 'src/hooks/useBoolean';
+
 import { toast } from 'src/components/SnackBar';
+import { Iconify } from 'src/components/Iconify';
 import { Form, Field } from 'src/components/Form';
 
 import MemberWallets from './MemberWallets';
@@ -55,6 +60,8 @@ interface Member {
 }
 
 export default function MemberCreateForm() {
+  const boolean = useBoolean();
+
   const { data: payoutsData } = useGraphQuery(FETCH_PAYOUTS_QUERY, {
     variables: {},
   });
@@ -114,6 +121,8 @@ export default function MemberCreateForm() {
     });
   };
 
+  const handleSendyStatus = () => boolean.onToggle();
+
   const onSubmit = handleSubmit(async ({ firstName, lastName, wallets, ...data }) => {
     try {
       const total = wallets.reduce((prev: number, save: any) => prev + save.percent, 0);
@@ -123,8 +132,6 @@ export default function MemberCreateForm() {
         return;
       }
 
-      console.log('state => ', state);
-
       if (total === 100) {
         await submit({
           variables: {
@@ -133,6 +140,7 @@ export default function MemberCreateForm() {
               fullName: `${firstName} ${lastName}`,
               sponsorId: member?.id,
               state,
+              syncWithSendy: !boolean.value,
               wallets: wallets.map(({ percent, ...rest }) => ({
                 percent: percent * 100,
                 ...rest,
@@ -207,7 +215,23 @@ export default function MemberCreateForm() {
               }}
             >
               <Field.Text name="username" label="Username" />
-              <Field.Text name="email" label="Email" />
+              <Field.Text
+                name="email"
+                label="Email"
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton onClick={handleSendyStatus} edge="end">
+                        {boolean.value ? (
+                          <Iconify icon="uis:sync-slash" width={24} />
+                        ) : (
+                          <Iconify icon="uil:sync" width={24} />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
               <Field.Text name="firstName" label="First Name" />
               <Field.Text name="lastName" label="Last Name" />
               <Field.Phone name="mobile" label="Mobile" />

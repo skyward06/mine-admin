@@ -13,13 +13,18 @@ import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Unstable_Grid2';
+import IconButton from '@mui/material/IconButton';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Autocomplete from '@mui/material/Autocomplete';
+import InputAdornment from '@mui/material/InputAdornment';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { useBoolean } from 'src/hooks/useBoolean';
+
 import { toast } from 'src/components/SnackBar';
+import { Iconify } from 'src/components/Iconify';
 import { Form, Field } from 'src/components/Form';
 
 import MemberWallets from './MemberWallets';
@@ -65,6 +70,8 @@ const MemberGeneralSchema = zod.object({
 
 export default function MemberGeneral({ currentMember }: Props) {
   const router = useRouter();
+  const boolean = useBoolean();
+
   const { fullName } = currentMember;
 
   const [, first, last]: any = fullName.match(/^(\S+)\s+(.*)/);
@@ -72,8 +79,6 @@ export default function MemberGeneral({ currentMember }: Props) {
   const [firstName, setFirstName] = useState<string>(first);
   const [lastName, setLastName] = useState<string>(last);
   const [state, setState] = useState<string>();
-
-  console.log('state => ', currentMember.state);
 
   const { data: payoutsData } = useGraphQuery(FETCH_PAYOUTS_QUERY, {
     variables: {},
@@ -116,6 +121,8 @@ export default function MemberGeneral({ currentMember }: Props) {
     });
   };
 
+  const handleSendyStatus = () => boolean.onToggle();
+
   const onSubmit = handleSubmit(async (newMember) => {
     try {
       if (isEqual(newMember, defaultValues)) {
@@ -148,6 +155,7 @@ export default function MemberGeneral({ currentMember }: Props) {
               assetId: newMember.assetId,
               city: newMember.city,
               state,
+              syncWithSendy: !boolean.value,
               zipCode: newMember.zipCode,
               wallets: newMember.memberWallets.map(({ percent, ...rest }) => ({
                 percent: percent * 100,
@@ -221,7 +229,24 @@ export default function MemberGeneral({ currentMember }: Props) {
               }}
             >
               <Field.Text name="username" label="Username" />
-              <Field.Text name="email" label="Email" defaultValue={currentMember.email} />
+              <Field.Text
+                name="email"
+                label="Email"
+                defaultValue={currentMember.email}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton onClick={handleSendyStatus} edge="end">
+                        {boolean.value ? (
+                          <Iconify icon="uis:sync-slash" width={24} />
+                        ) : (
+                          <Iconify icon="uil:sync" width={24} />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
               <Field.Text
                 name="firstName"
                 label="First Name"
