@@ -218,6 +218,15 @@ export default function MemberGeneral({ currentMember }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [member]);
 
+  useEffect(() => {
+    if (currentMember.syncWithSendy) {
+      boolean.onTrue();
+    } else {
+      boolean.onFalse();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentMember]);
+
   return (
     <Form methods={methods} onSubmit={onSubmit}>
       <Grid container spacing={3}>
@@ -242,9 +251,9 @@ export default function MemberGeneral({ currentMember }: Props) {
                     <InputAdornment position="end">
                       <IconButton onClick={handleSendyStatus} edge="end">
                         {boolean.value ? (
-                          <Iconify icon="uis:sync-slash" width={24} />
-                        ) : (
                           <Iconify icon="uil:sync" width={24} />
+                        ) : (
+                          <Iconify icon="uis:sync-slash" width={24} />
                         )}
                       </IconButton>
                     </InputAdornment>

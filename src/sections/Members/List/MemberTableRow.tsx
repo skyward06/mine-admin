@@ -151,7 +151,7 @@ export default function MemberTableRow({
               Enabled
             </Label>
           ) : (
-            <Label variant="outlined" color="warning">
+            <Label variant="soft" color="warning">
               Disabled
             </Label>
           )}
