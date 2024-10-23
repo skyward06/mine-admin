@@ -220,7 +220,7 @@ function PlacementListView() {
   const popover = usePopover();
   const open = useBoolean();
 
-  const { fetchMembers, members, loading } = useFetchMembers();
+  const { fetchMembers, members, loading, called } = useFetchMembers();
 
   const [visibleMap, setVisibleMap] = useState<Record<string, number>>({});
   const exSetVisibleMap = useCallback((newVisibleMap: Record<string, number>) => {
@@ -304,7 +304,6 @@ function PlacementListView() {
 
   const resetVisibleMap = useCallback(() => {
     const newVisibleMap = getResetVisibleMap(members);
-    
     exSetVisibleMap(newVisibleMap)
 
     setTimeout(() => {
@@ -319,7 +318,13 @@ function PlacementListView() {
     const storageVisibleMap = localStorage.getItem('placementVisibleMap');
     const newVisibleMap = storageVisibleMap ? getNewVisibleMap(members, JSON.parse(storageVisibleMap)) : {};
     exSetVisibleMap(newVisibleMap);
-  }, [members, exSetVisibleMap]);
+    setTimeout(() => {
+      fitView({
+        ...fitViewOptions,
+        nodes: Object.keys(newVisibleMap).map(id => ({id}))
+      })
+    }, 100)
+  }, [members, exSetVisibleMap, fitView]);
 
   const onMinerChange = useCallback((minerId: string) => {
     const newVisibleMap = { ...visibleMap };
@@ -363,25 +368,43 @@ function PlacementListView() {
   }, [members, visibleMap, fitView, exSetVisibleMap]);
 
   useEffect(() => {
+    if (!called || loading) return;
     const storageVisibleMap = localStorage.getItem('placementVisibleMap');
 
     if (!storageVisibleMap || _.isEmpty(JSON.parse(storageVisibleMap))) resetVisibleMap();
     else reSyncVisibleMap();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [members]);
+  }, [members, loading]);
 
   const reset = useCallback(async () => {
     const { data } = await fetchMembers();
     const newVisibleMap = getResetVisibleMap(data?.members.members);
 
     exSetVisibleMap(newVisibleMap);
-  }, [fetchMembers, exSetVisibleMap]);
+
+    setTimeout(() => {
+      fitView({
+        ...fitViewOptions,
+        nodes: Object.keys(newVisibleMap).map(id => ({id}))
+      })
+    }, 100)
+
+  }, [fetchMembers, exSetVisibleMap, fitView]);
 
   const refresh = useCallback(async () => {
     const { data } = await fetchMembers();
     const storageVisibleMap = localStorage.getItem('placementVisibleMap');
-    exSetVisibleMap(storageVisibleMap ? getNewVisibleMap(data?.members.members, JSON.parse(storageVisibleMap)) : {});
-  }, [fetchMembers, exSetVisibleMap])
+    const newVisibleMap = storageVisibleMap ? getNewVisibleMap(data?.members.members, JSON.parse(storageVisibleMap)) : {};
+    exSetVisibleMap(newVisibleMap);
+
+    setTimeout(() => {
+      fitView({
+        ...fitViewOptions,
+        nodes: Object.keys(newVisibleMap).map(id => ({id}))
+      })
+    }, 100)
+
+  }, [fetchMembers, exSetVisibleMap, fitView])
 
   return (
     <DashboardContent sx={{ overflowX: 'hidden' }}>
