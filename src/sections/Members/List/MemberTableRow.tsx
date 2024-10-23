@@ -18,7 +18,7 @@ import { useRouter } from 'src/routes/hooks';
 
 import { useBoolean, type UseBooleanReturn } from 'src/hooks/useBoolean';
 
-import { fDate, fTime } from 'src/utils/format-time';
+import { formatDate, formatTime } from 'src/utils/format-time';
 
 // import { Label } from 'src/components/Label';
 import { toast } from 'src/components/SnackBar';
@@ -146,8 +146,8 @@ export default function MemberTableRow({
 
         <TableCell>
           <ListItemText
-            primary={fDate(createdAt)}
-            secondary={fTime(createdAt)}
+            primary={formatDate(createdAt)}
+            secondary={formatTime(createdAt)}
             primaryTypographyProps={{ typography: 'body2', noWrap: true }}
             secondaryTypographyProps={{
               mt: 0.5,

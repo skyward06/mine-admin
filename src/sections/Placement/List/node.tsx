@@ -20,7 +20,7 @@ import { useRouter } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
-import { fDate } from 'src/utils/format-time';
+import { formatDate } from 'src/utils/format-time';
 
 import { PlacementPosition } from 'src/__generated__/graphql';
 
@@ -287,7 +287,7 @@ export function StandardNode({
             noWrap
             sx={{ color: 'text.secondary', mt: 0.5 }}
           >
-            {fDate(createdAt)}
+            {formatDate(createdAt)}
           </Typography>
 
           <Stack>

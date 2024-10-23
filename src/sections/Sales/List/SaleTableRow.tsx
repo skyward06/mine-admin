@@ -67,7 +67,7 @@ export default function SaleTableRow({ row, confirm, setSelected }: Props) {
       <TableCell align="left">
         <ListItemText
           primary={formatDate(orderedAt)}
-          primaryTypographyProps={{ typography: 'caption', noWrap: true }}
+          primaryTypographyProps={{ typography: 'body2', noWrap: true }}
           secondaryTypographyProps={{
             mt: 0.5,
             component: 'span',

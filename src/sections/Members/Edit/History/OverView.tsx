@@ -8,8 +8,8 @@ import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
 
-import { fDate } from 'src/utils/format-time';
 import { fNumber } from 'src/utils/formatNumber';
+import { formatDate } from 'src/utils/format-time';
 
 import { FETCH_MEMBER_HISTORY } from '../../query';
 
@@ -54,7 +54,7 @@ export const OverView = ({ currentMember }: Props) => {
         </Stack>
 
         <Stack width={1}>
-          {fDate(data?.memberOverview.joinDate ?? new Date())}
+          {formatDate(data?.memberOverview.joinDate ?? new Date())}
           <Box component="span" sx={{ color: 'text.secondary', typography: 'body2' }}>
             Join Date
           </Box>
