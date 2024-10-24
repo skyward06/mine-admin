@@ -59,8 +59,7 @@ const TABLE_HEAD = [
   { id: 'mobile', label: 'Mobile', sortable: true },
   { id: 'assetId', label: 'AssetID', sortable: true },
   { id: 'point', label: 'Point', sortable: true },
-  // { id: 'emailVerified', label: 'Status', sortable: true },
-  { id: 'syncWithSendy', label: 'SyncWithSendy', sortable: true },
+  { id: 'totalIntroducers', label: 'Sponsor', sortable: true },
   { id: 'createdAt', label: 'Created At', sortable: true },
   { id: 'action', label: 'Action', width: 200, align: 'center' },
 ];

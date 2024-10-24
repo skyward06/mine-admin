@@ -20,7 +20,7 @@ import { useBoolean, type UseBooleanReturn } from 'src/hooks/useBoolean';
 
 import { formatDate, formatTime } from 'src/utils/format-time';
 
-import { Label } from 'src/components/Label';
+// import { Label } from 'src/components/Label';
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 import { ConfirmDialog } from 'src/components/Dialog';
@@ -58,7 +58,8 @@ export default function MemberTableRow({
     assetId,
     point,
     fullName,
-    syncWithSendy,
+    // syncWithSendy,
+    totalIntroducers,
     // emailVerified,
     // status,
     createdAt,
@@ -98,6 +99,10 @@ export default function MemberTableRow({
       />
     </Paper>
   );
+
+  const handleSponsors = () => {
+    window.open(`${paths.dashboard.members.root}?sponsorId=${id}`, '_blank');
+  };
 
   return (
     <>
@@ -145,16 +150,14 @@ export default function MemberTableRow({
           )}
         </TableCell> */}
 
-        <TableCell>
-          {syncWithSendy ? (
-            <Label variant="soft" color="success">
-              Enabled
-            </Label>
-          ) : (
-            <Label variant="soft" color="warning">
-              Disabled
-            </Label>
-          )}
+        <TableCell
+          sx={{
+            cursor: 'pointer',
+            '&:hover': { bgcolor: (theme) => theme.vars.palette.action.hover },
+          }}
+          onClick={() => handleSponsors()}
+        >
+          {totalIntroducers}
         </TableCell>
 
         <TableCell>
