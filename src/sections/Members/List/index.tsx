@@ -61,7 +61,7 @@ const TABLE_HEAD = [
   { id: 'point', label: 'Point', sortable: true },
   // { id: 'emailVerified', label: 'Status', sortable: true },
   { id: 'createdAt', label: 'Created At', sortable: true },
-  { id: 'action', label: 'Action', width: 150, align: 'center' },
+  { id: 'action', label: 'Action', width: 200, align: 'center' },
 ];
 
 const defaultFilter: IMemberTableFilters = {
