@@ -27,7 +27,7 @@ export function useFetchPackages() {
   return {
     loading,
     rowCount,
-    members: data?.packages.packages ?? [],
+    packages: data?.packages.packages ?? [],
     fetchPackages,
   };
 }

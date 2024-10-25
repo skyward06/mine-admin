@@ -2,10 +2,10 @@ import type { Sale } from 'src/__generated__/graphql';
 
 import { z as zod } from 'zod';
 import isEqual from 'lodash/isEqual';
-import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { ApolloError } from '@apollo/client';
+import { useMemo, useState, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ApolloError, useMutation, useQuery as useGraphQuery } from '@apollo/client';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -23,10 +23,10 @@ import { formatDate, customizeDate } from 'src/utils/format-time';
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
 
-import { FETCH_MEMBERS_QUERY } from 'src/sections/Members/query';
-import { FETCH_PACKAGES_QUERY } from 'src/sections/Products/query';
+import { useFetchMembers } from 'src/sections/Members/useApollo';
+import { useFetchPackages } from 'src/sections/Products/useApollo';
 
-import { UPDATE_SALE } from '../query';
+import { useUpdateSale } from '../useApollo';
 
 // ----------------------------------------------------------------------
 
@@ -52,15 +52,10 @@ export default function SaleGeneral({ currentSale }: Props) {
 
   const [status, setStatus] = useState(currentStatus);
 
-  const { data: membersData } = useGraphQuery(FETCH_MEMBERS_QUERY);
-  const { data: packagesData } = useGraphQuery(FETCH_PACKAGES_QUERY, {
-    variables: { filter: { status: true } },
-  });
+  const { members, fetchMembers } = useFetchMembers();
+  const { packages, fetchPackages } = useFetchPackages();
 
-  const packages = packagesData?.packages.packages ?? [];
-  const members = membersData?.members.members ?? [];
-
-  const [submit, { loading }] = useMutation(UPDATE_SALE);
+  const { loading, updateSale } = useUpdateSale();
 
   const defaultValues = useMemo(() => {
     const { data } = SaleGeneralSchema.safeParse(currentSale);
@@ -69,6 +64,12 @@ export default function SaleGeneral({ currentSale }: Props) {
       ? { ...data, orderedAt: formatDate(currentSale.orderedAt) }
       : ({} as SaleGeneralSchemaType);
   }, [currentSale]);
+
+  useEffect(() => {
+    fetchMembers();
+    fetchPackages({ variables: { filter: { status: true } } });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const methods = useForm<SaleGeneralSchemaType>({
     resolver: zodResolver(SaleGeneralSchema),
@@ -88,7 +89,7 @@ export default function SaleGeneral({ currentSale }: Props) {
         return;
       }
 
-      await submit({
+      await updateSale({
         variables: {
           data: {
             id: currentSale.id,

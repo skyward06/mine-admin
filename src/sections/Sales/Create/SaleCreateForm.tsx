@@ -2,7 +2,7 @@ import { z as zod } from 'zod';
 import { useForm } from 'react-hook-form';
 import { useMemo, useState, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ApolloError, useMutation, useLazyQuery, useQuery as useGraphQuery } from '@apollo/client';
+import { ApolloError, useLazyQuery, useQuery as useGraphQuery } from '@apollo/client';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -25,7 +25,8 @@ import { Form, Field } from 'src/components/Form';
 import { useFetchMembers } from 'src/sections/Members/useApollo';
 import { FETCH_PACKAGES_QUERY } from 'src/sections/Products/query';
 
-import { CREATE_SALE, FETCH_SALES_QUERY } from '../query';
+import { useCreateSale } from '../useApollo';
+import { FETCH_SALES_QUERY } from '../query';
 
 // ----------------------------------------------------------------------
 export type NewSaleSchemaType = zod.infer<typeof NewSaleSchema>;
@@ -52,7 +53,8 @@ export default function SaleCreateForm() {
     []
   );
 
-  const [submit, { loading }] = useMutation(CREATE_SALE);
+  // const [submit, { loading }] = useMutation(CREATE_SALE);
+  const { loading, createSale } = useCreateSale();
 
   const methods = useForm<NewSaleSchemaType>({
     resolver: zodResolver(NewSaleSchema),
@@ -75,7 +77,7 @@ export default function SaleCreateForm() {
 
   const onSubmit = handleSubmit(async ({ status, orderedAt, ...data }) => {
     try {
-      await submit({
+      await createSale({
         variables: {
           data: {
             ...data,
