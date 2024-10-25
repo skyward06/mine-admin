@@ -2,6 +2,7 @@ import type { Member } from 'src/__generated__/graphql';
 
 import { useState } from 'react';
 
+import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
@@ -20,12 +21,12 @@ import { useBoolean, type UseBooleanReturn } from 'src/hooks/useBoolean';
 
 import { formatDate, formatTime } from 'src/utils/format-time';
 
-// import { Label } from 'src/components/Label';
+import { Label } from 'src/components/Label';
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 import { ConfirmDialog } from 'src/components/Dialog';
 
-import { useUpdatePassword } from '../useApollo';
+import { useApproveMember, useUpdatePassword } from '../useApollo';
 
 // ----------------------------------------------------------------------
 
@@ -60,14 +61,14 @@ export default function MemberTableRow({
     fullName,
     // syncWithSendy,
     totalIntroducers,
-    // emailVerified,
-    // status,
+    emailVerified,
+    status,
     createdAt,
     sales,
   } = row;
 
   const { updatePassword } = useUpdatePassword();
-  // const { approveMember } = useApproveMember();
+  const { approveMember } = useApproveMember();
 
   const resetContent = (
     <Paper sx={{ py: 2 }}>
@@ -137,18 +138,20 @@ export default function MemberTableRow({
 
         <TableCell>{point}</TableCell>
 
-        {/* <TableCell>
-          {!emailVerified && (
-            <Label variant="soft" color="error">
-              Email Unverified
-            </Label>
-          )}
-          {!status && (
-            <Label variant="soft" color="warning">
-              Pending
-            </Label>
-          )}
-        </TableCell> */}
+        <TableCell>
+          <Stack direction="row" columnGap={1}>
+            {!emailVerified && (
+              <Label variant="soft" color="error">
+                Email Unverified
+              </Label>
+            )}
+            {!status && (
+              <Label variant="soft" color="warning">
+                Pending
+              </Label>
+            )}
+          </Stack>
+        </TableCell>
 
         <TableCell
           sx={{
@@ -175,8 +178,8 @@ export default function MemberTableRow({
 
         {action && (
           <TableCell sx={{ whiteSpace: 'nowrap' }} align="center">
-            {/* <Grid container lg={12} justifyContent="space-around">
-              <Grid>
+            <Grid container lg={12} justifyContent="space-around">
+              <Grid lg={3}>
                 {!status && (
                   <Tooltip title="Approve" placement="top" arrow>
                     <IconButton
@@ -190,7 +193,7 @@ export default function MemberTableRow({
                   </Tooltip>
                 )}
               </Grid>
-              <Grid>
+              <Grid lg={3}>
                 <Tooltip title="View" placement="top" arrow>
                   <IconButton
                     color="default"
@@ -202,7 +205,7 @@ export default function MemberTableRow({
                   </IconButton>
                 </Tooltip>
               </Grid>
-              <Grid>
+              <Grid lg={3}>
                 <Tooltip title="Reset Password" placement="top" arrow>
                   <IconButton
                     color="default"
@@ -214,47 +217,7 @@ export default function MemberTableRow({
                   </IconButton>
                 </Tooltip>
               </Grid>
-              <Grid>
-                <Tooltip title="Delete" placement="top" arrow>
-                  <IconButton
-                    color="error"
-                    disabled={!!sales?.length}
-                    onClick={() => {
-                      removeConfirm.onTrue();
-                      setSelected(id);
-                    }}
-                  >
-                    <Iconify icon="bxs:coffee-togo" />
-                  </IconButton>
-                </Tooltip>
-              </Grid>
-            </Grid> */}
-            <Grid container lg={12} justifyContent="space-around">
-              <Grid>
-                <Tooltip title="View" placement="top" arrow>
-                  <IconButton
-                    color="default"
-                    onClick={() => {
-                      router.push(`${paths.dashboard.members.edit(id)}`);
-                    }}
-                  >
-                    <Iconify icon="solar:eye-bold" />
-                  </IconButton>
-                </Tooltip>
-              </Grid>
-              <Grid>
-                <Tooltip title="Reset Password" placement="top" arrow>
-                  <IconButton
-                    color="default"
-                    onClick={() => {
-                      confirm.onTrue();
-                    }}
-                  >
-                    <Iconify icon="basil:unlock-solid" />
-                  </IconButton>
-                </Tooltip>
-              </Grid>
-              <Grid>
+              <Grid lg={3}>
                 <Tooltip title="Delete" placement="top" arrow>
                   <IconButton
                     color="error"

@@ -60,6 +60,7 @@ const TABLE_HEAD = [
   { id: 'assetId', label: 'AssetID', sortable: true },
   { id: 'point', label: 'Point', sortable: true },
   { id: 'totalIntroducers', label: 'Sponsor', sortable: true },
+  { id: 'emailVerified', label: 'Status', sortable: true },
   { id: 'createdAt', label: 'Created At', sortable: true },
   { id: 'action', label: 'Action', width: 200, align: 'center' },
 ];
