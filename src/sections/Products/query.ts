@@ -4,24 +4,25 @@ export const FETCH_PACKAGES_QUERY = gql(/* GraphQL */ `
   query Packages($sort: String, $page: String, $filter: JSONObject) {
     packages(sort: $sort, page: $page, filter: $filter) {
       packages {
-        createdAt
-        updatedAt
-        deletedAt
         id
-        productName
-        amount
-        status
         date
         point
         token
+        amount
+        status
+        createdAt
+        updatedAt
+        deletedAt
+        productName
+        enrollVisibility
         sales {
           id
-          invoiceNo
+          status
           memberId
+          invoiceNo
           orderedAt
           packageId
           paymentMethod
-          status
         }
       }
       total

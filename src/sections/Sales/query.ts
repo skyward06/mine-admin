@@ -10,39 +10,40 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
         packageId
         member {
           id
-          username
-          fullName
           email
           point
           mobile
+          status
           assetId
+          username
+          fullName
+          syncWithSendy
+          emailVerified
           primaryAddress
           secondaryAddress
-          status
-          emailVerified
           totalIntroducers
-          syncWithSendy
           preferredContact
           preferredContactDetail
         }
         package {
           id
-          productName
-          amount
           date
           token
-          status
           point
+          amount
+          status
+          productName
+          enrollVisibility
         }
         statisticsSales {
           id
           saleId
-          statisticsId
           issuedAt
+          statisticsId
         }
-        paymentMethod
-        orderedAt
         status
+        orderedAt
+        paymentMethod
       }
       total
     }
@@ -63,12 +64,12 @@ export const FETCH_SALES_STATS_QUERY = gql(/* GraphQL */ `
 export const CREATE_SALE = gql(/* GraphQL */ `
   mutation CreateSale($data: CreateSaleInput!) {
     createSale(data: $data) {
+      status
+      memberId
       invoiceNo
       orderedAt
-      memberId
-      paymentMethod
       packageId
-      status
+      paymentMethod
     }
   }
 `);

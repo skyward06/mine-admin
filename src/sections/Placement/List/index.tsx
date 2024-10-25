@@ -73,7 +73,7 @@ function buildPlacementTree(members: any[]) {
     }
   });
 
-  return {result, memberMap};
+  return { result, memberMap };
 }
 
 function buildTree(node: any, baseX: number, depth: number, tree: any[], visibleMap: any = null) {
@@ -177,12 +177,14 @@ function getMemberIdsWithDepth(node: any, depth: number, targetDepth: number) {
   return res.length === 0 ? [{ id: node.id, value: 3 }] : [...res, { id: node.id, value: 2 }];
 }
 
-function getResetVisibleMap(members: undefined | null | any[], depth: number = 3): Record<string, number> {
+function getResetVisibleMap(members: undefined | null | any[]): Record<string, number> {
   if (!members || members.length === 0) {
     return {};
   }
 
-  const {result: placementTree} = buildPlacementTree(members.filter((member) => member?.placementParentId));
+  const { result: placementTree } = buildPlacementTree(
+    members.filter((member) => member?.placementParentId)
+  );
   const maps = getMemberIdsWithDepth(placementTree, 0, 3);
   const newVisibleMap: Record<string, number> = {};
 
@@ -193,11 +195,14 @@ function getResetVisibleMap(members: undefined | null | any[], depth: number = 3
   return newVisibleMap;
 }
 
-function getNewVisibleMap(members: undefined | null | any[], visibleMap: Record<string, number>): Record<string, number> {
+function getNewVisibleMap(
+  members: undefined | null | any[],
+  visibleMap: Record<string, number>
+): Record<string, number> {
   if (!members || !members.length) return {};
 
-  const {memberMap} = buildPlacementTree(members.filter((member) => member?.placementParentId));
-  console.log()
+  const { memberMap } = buildPlacementTree(members.filter((member) => member?.placementParentId));
+  console.log();
   const newVisibleMap: Record<string, number> = {};
   Object.entries(visibleMap).forEach(([id]) => {
     if (memberMap[id].children.length === 0) {
@@ -211,7 +216,7 @@ function getNewVisibleMap(members: undefined | null | any[], visibleMap: Record<
       });
       newVisibleMap[id] = value;
     }
-  })
+  });
 
   return newVisibleMap;
 }
@@ -237,7 +242,9 @@ function PlacementListView() {
 
   const nodes: Node[] = useMemo(() => {
     if (!members || members.length === 0) return [];
-    const {result: placementTree} = buildPlacementTree(members.filter((member) => member?.placementParentId));
+    const { result: placementTree } = buildPlacementTree(
+      members.filter((member) => member?.placementParentId)
+    );
 
     const resultTree: any[] = [];
 
@@ -304,7 +311,7 @@ function PlacementListView() {
 
   const resetVisibleMap = useCallback(() => {
     const newVisibleMap = getResetVisibleMap(members);
-    exSetVisibleMap(newVisibleMap)
+    exSetVisibleMap(newVisibleMap);
 
     setTimeout(() => {
       fitView({
@@ -316,56 +323,61 @@ function PlacementListView() {
 
   const reSyncVisibleMap = useCallback(() => {
     const storageVisibleMap = localStorage.getItem('placementVisibleMap');
-    const newVisibleMap = storageVisibleMap ? getNewVisibleMap(members, JSON.parse(storageVisibleMap)) : {};
+    const newVisibleMap = storageVisibleMap
+      ? getNewVisibleMap(members, JSON.parse(storageVisibleMap))
+      : {};
     exSetVisibleMap(newVisibleMap);
     setTimeout(() => {
       fitView({
         ...fitViewOptions,
-        nodes: Object.keys(newVisibleMap).map(id => ({id}))
-      })
-    }, 100)
-  }, [members, exSetVisibleMap, fitView]);
-
-  const onMinerChange = useCallback((minerId: string) => {
-    const newVisibleMap = { ...visibleMap };
-    let iMinerId: string | null | undefined = minerId;
-
-    while (iMinerId) {
-      const currentMinerId: string = iMinerId;
-      const newIMinerId = members.find((mb) => mb?.id === currentMinerId)?.placementParentId;
-
-      if (newIMinerId === iMinerId) break;
-
-      iMinerId = newIMinerId;
-
-      if (iMinerId) {
-        newVisibleMap[iMinerId] = 2;
-        members
-          .filter((mb) => mb?.placementParentId === newIMinerId)
-          .forEach((mb) => {
-            if (!newVisibleMap[mb?.id ?? '']) {
-              newVisibleMap[mb?.id ?? ''] =
-                members.findIndex((mber) => mber?.placementParentId === mb?.id) === -1 ? 3 : 1;
-            }
-          });
-      }
-    }
-
-    if (iMinerId) {
-      exSetVisibleMap(newVisibleMap);
-    }
-
-    setTimeout(() => {
-      fitView({
-        ...fitViewOptions,
-        nodes: [
-          {
-            id: minerId,
-          },
-        ],
+        nodes: Object.keys(newVisibleMap).map((id) => ({ id })),
       });
     }, 100);
-  }, [members, visibleMap, fitView, exSetVisibleMap]);
+  }, [members, exSetVisibleMap, fitView]);
+
+  const onMinerChange = useCallback(
+    (minerId: string) => {
+      const newVisibleMap = { ...visibleMap };
+      let iMinerId: string | null | undefined = minerId;
+
+      while (iMinerId) {
+        const currentMinerId: string = iMinerId;
+        const newIMinerId = members.find((mb) => mb?.id === currentMinerId)?.placementParentId;
+
+        if (newIMinerId === iMinerId) break;
+
+        iMinerId = newIMinerId;
+
+        if (iMinerId) {
+          newVisibleMap[iMinerId] = 2;
+          members
+            .filter((mb) => mb?.placementParentId === newIMinerId)
+            .forEach((mb) => {
+              if (!newVisibleMap[mb?.id ?? '']) {
+                newVisibleMap[mb?.id ?? ''] =
+                  members.findIndex((mber) => mber?.placementParentId === mb?.id) === -1 ? 3 : 1;
+              }
+            });
+        }
+      }
+
+      if (iMinerId) {
+        exSetVisibleMap(newVisibleMap);
+      }
+
+      setTimeout(() => {
+        fitView({
+          ...fitViewOptions,
+          nodes: [
+            {
+              id: minerId,
+            },
+          ],
+        });
+      }, 100);
+    },
+    [members, visibleMap, fitView, exSetVisibleMap]
+  );
 
   useEffect(() => {
     if (!called || loading) return;
@@ -373,7 +385,7 @@ function PlacementListView() {
 
     if (!storageVisibleMap || _.isEmpty(JSON.parse(storageVisibleMap))) resetVisibleMap();
     else reSyncVisibleMap();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [members, loading]);
 
   const reset = useCallback(async () => {
@@ -385,26 +397,26 @@ function PlacementListView() {
     setTimeout(() => {
       fitView({
         ...fitViewOptions,
-        nodes: Object.keys(newVisibleMap).map(id => ({id}))
-      })
-    }, 100)
-
+        nodes: Object.keys(newVisibleMap).map((id) => ({ id })),
+      });
+    }, 100);
   }, [fetchMembers, exSetVisibleMap, fitView]);
 
   const refresh = useCallback(async () => {
     const { data } = await fetchMembers();
     const storageVisibleMap = localStorage.getItem('placementVisibleMap');
-    const newVisibleMap = storageVisibleMap ? getNewVisibleMap(data?.members.members, JSON.parse(storageVisibleMap)) : {};
+    const newVisibleMap = storageVisibleMap
+      ? getNewVisibleMap(data?.members.members, JSON.parse(storageVisibleMap))
+      : {};
     exSetVisibleMap(newVisibleMap);
 
     setTimeout(() => {
       fitView({
         ...fitViewOptions,
-        nodes: Object.keys(newVisibleMap).map(id => ({id}))
-      })
-    }, 100)
-
-  }, [fetchMembers, exSetVisibleMap, fitView])
+        nodes: Object.keys(newVisibleMap).map((id) => ({ id })),
+      });
+    }, 100);
+  }, [fetchMembers, exSetVisibleMap, fitView]);
 
   return (
     <DashboardContent sx={{ overflowX: 'hidden' }}>
@@ -449,8 +461,22 @@ function PlacementListView() {
         slotProps={{ arrow: { placement: 'right-top' } }}
       >
         <MenuList>
-          <MenuItem onClick={reset}>Reset</MenuItem>
-          <MenuItem onClick={refresh}>Refresh</MenuItem>
+          <MenuItem
+            onClick={() => {
+              reset();
+              popover.onClose();
+            }}
+          >
+            Reset
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              refresh();
+              popover.onClose();
+            }}
+          >
+            Refresh
+          </MenuItem>
           <MenuItem
             onClick={() => {
               open.onTrue();
