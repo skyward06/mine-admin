@@ -84,7 +84,7 @@ export default function LogDrawer({ open, defaultStyles, log }: Props) {
             <Difference
               before={before}
               after={after}
-              action={action === ('create' || 'signup') ? 'after' : 'before'}
+              action={action === 'create' || action === 'signup' ? 'after' : 'before'}
               defaultStyles={defaultStyles}
             />
           )}

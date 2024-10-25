@@ -33,6 +33,7 @@ export default function Difference({
     placementParent: afterPlacement,
     sponsor: afterSponsor,
     memberWallets: afterMemberWallets,
+    signupFormRequest,
     ...afterRest
   } = after;
 
@@ -43,10 +44,10 @@ export default function Difference({
     ...beforeRest
   } = before;
 
-  const rest = action === 'after' ? afterRest : beforeRest;
+  const rest = signupFormRequest ?? (action === 'after' ? afterRest : beforeRest);
   const sponsor = action === 'after' ? afterSponsor : beforeSponsor;
   const placement = action === 'after' ? afterPlacement : beforePlacement;
-  const memberWallets = action === 'after' ? afterMemberWallets : beforeMemberWallets;
+  const memberWallets = (action === 'after' ? afterMemberWallets : beforeMemberWallets) ?? [];
 
   return (
     <Card
