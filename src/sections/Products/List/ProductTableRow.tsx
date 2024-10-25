@@ -16,6 +16,8 @@ import { FREE_SHARE_ID_1, FREE_SHARE_ID_2 } from 'src/consts';
 import { Label } from 'src/components/Label';
 import { Iconify } from 'src/components/Iconify';
 
+import { useUpdatePackage } from '../useApollo';
+
 // ----------------------------------------------------------------------
 
 type Props = {
@@ -27,7 +29,9 @@ type Props = {
 export default function ProductTableRow({ row, confirm, setSelected }: Props) {
   const router = useRouter();
 
-  const { id, amount, date, productName, point, token, sales } = row;
+  const { id, amount, date, productName, point, enrollVisibility, token, sales, status } = row;
+
+  const { updatePackage, loading } = useUpdatePackage();
 
   return (
     <TableRow hover>
@@ -43,6 +47,26 @@ export default function ProductTableRow({ row, confirm, setSelected }: Props) {
       </TableCell>
       <TableCell align="left">{point}</TableCell>
       <TableCell align="left">{token}</TableCell>
+      <TableCell align="center">
+        <IconButton
+          disabled={!status || id === FREE_SHARE_ID_1 || id === FREE_SHARE_ID_2}
+          onClick={() =>
+            updatePackage({
+              variables: { data: { id, enrollVisibility: !enrollVisibility } },
+            })
+          }
+          sx={{
+            color: (theme) =>
+              enrollVisibility ? theme.palette.primary.dark : theme.palette.primary.light,
+          }}
+        >
+          {loading ? (
+            <Iconify icon="line-md:loading-loop" />
+          ) : (
+            <Iconify icon={enrollVisibility ? 'eva:eye-outline' : 'tabler:eye-off'} />
+          )}
+        </IconButton>
+      </TableCell>
       <TableCell align="center">
         <Tooltip title="Edit" placement="top" arrow>
           <IconButton

@@ -29,6 +29,7 @@ interface Props {
 
 export default function EditForm({ current }: Props) {
   const [status, setStatus] = useState(current?.status ?? true);
+  const [visibility, setVisibility] = useState(current?.enrollVisibility ?? false);
 
   const NewProductSchema = zod.object({
     amount: zod.number({ required_error: 'Amount is required' }),
@@ -37,6 +38,9 @@ export default function EditForm({ current }: Props) {
     status: current
       ? zod.boolean({ required_error: 'Status is required' }).default(true)
       : zod.number({ required_error: 'Status is required' }).default(1),
+    enrollVisibility: current
+      ? zod.boolean({ required_error: 'Visibility is required' }).default(false)
+      : zod.number({ required_error: 'Visibility is required' }).default(0),
     point: zod.number({ required_error: 'Point is required' }),
   });
 
@@ -47,12 +51,13 @@ export default function EditForm({ current }: Props) {
   const defaultValues = useMemo(
     () =>
       current
-        ? NewProductSchema.safeParse(current)?.data ?? ({} as NewProductSchemaType)
+        ? (NewProductSchema.safeParse(current)?.data ?? ({} as NewProductSchemaType))
         : {
             productName: '',
             amount: 0,
             token: 0,
             status: 1,
+            enrollVisibility: 0,
             point: 0,
           },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -78,6 +83,7 @@ export default function EditForm({ current }: Props) {
               ...newData,
               id: current.id,
               status,
+              enrollVisibility: visibility,
             },
           },
         });
@@ -87,6 +93,7 @@ export default function EditForm({ current }: Props) {
             data: {
               ...newData,
               status,
+              enrollVisibility: visibility,
             },
           },
         });
@@ -149,6 +156,18 @@ export default function EditForm({ current }: Props) {
               >
                 <MenuItem value={1}>Active</MenuItem>
                 <MenuItem value={0}>Inactive</MenuItem>
+              </Field.Select>
+              <Field.Select
+                name="enrollVisibility"
+                label="Visibility"
+                value={visibility ? 1 : 0}
+                onChange={(e) =>
+                  Number(e.target.value) === 1 ? setVisibility(true) : setVisibility(false)
+                }
+                disabled={!!(current?.sales ?? []).length}
+              >
+                <MenuItem value={1}>Show</MenuItem>
+                <MenuItem value={0}>Hide</MenuItem>
               </Field.Select>
             </Box>
 

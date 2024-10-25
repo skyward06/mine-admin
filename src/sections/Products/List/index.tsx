@@ -57,6 +57,7 @@ const TABLE_HEAD = [
   { id: 'type', label: 'Type', sortable: true },
   { id: 'point', label: 'Point', sortable: true },
   { id: 'token', label: 'Hash Power', width: 200, sortable: true },
+  { id: 'enrollVisibility', label: 'Visibility', align: 'center', sortable: true },
   { id: 'action', label: 'Action', align: 'center', width: 200, sortable: true },
 ];
 

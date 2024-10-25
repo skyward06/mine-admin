@@ -50,7 +50,7 @@ export function useCreatePackage() {
 export function useUpdatePackage() {
   const [updatePackage, { loading }] = useMutation(UPDATE_PACKAGE, {
     awaitRefetchQueries: true,
-    refetchQueries: ['FetchPackages'],
+    refetchQueries: ['Packages'],
   });
 
   return { loading, updatePackage };
