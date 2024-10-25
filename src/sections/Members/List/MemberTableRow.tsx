@@ -138,21 +138,6 @@ export default function MemberTableRow({
 
         <TableCell>{point}</TableCell>
 
-        <TableCell>
-          <Stack direction="row" columnGap={1}>
-            {!emailVerified && (
-              <Label variant="soft" color="error">
-                Email Unverified
-              </Label>
-            )}
-            {!status && (
-              <Label variant="soft" color="warning">
-                Pending
-              </Label>
-            )}
-          </Stack>
-        </TableCell>
-
         <TableCell
           sx={{
             cursor: 'pointer',
@@ -161,6 +146,25 @@ export default function MemberTableRow({
           onClick={() => handleSponsors()}
         >
           {totalIntroducers}
+        </TableCell>
+
+        <TableCell>
+          <Stack direction="row" columnGap={1}>
+            {!emailVerified && (
+              <Label variant="soft" color="error">
+                Email Unverified
+              </Label>
+            )}
+            {status ? (
+              <Label variant="soft" color="success">
+                Approved
+              </Label>
+            ) : (
+              <Label variant="soft" color="warning">
+                Pending
+              </Label>
+            )}
+          </Stack>
         </TableCell>
 
         <TableCell>
