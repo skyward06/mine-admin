@@ -18,7 +18,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { formatDate } from 'src/utils/format-time';
+import { formatDate, customizeDate } from 'src/utils/format-time';
 
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
@@ -79,7 +79,7 @@ export default function SaleGeneral({ currentSale }: Props) {
 
   const onSubmit = handleSubmit(async (newData) => {
     try {
-      const { status: newStatus, ...newSale } = newData;
+      const { status: newStatus, orderedAt, ...newSale } = newData;
 
       console.log('new status => ', newStatus);
 
@@ -93,6 +93,7 @@ export default function SaleGeneral({ currentSale }: Props) {
           data: {
             id: currentSale.id,
             invoiceNo: currentSale.invoiceNo,
+            orderedAt: customizeDate(orderedAt),
             status,
             ...newSale,
           },
