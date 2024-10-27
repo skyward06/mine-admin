@@ -11,6 +11,8 @@ import {
 
 import Stack from '@mui/material/Stack';
 import Drawer from '@mui/material/Drawer';
+import MenuList from '@mui/material/MenuList';
+import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 
 import { paths } from 'src/routes/paths';
@@ -29,6 +31,7 @@ import { Iconify } from 'src/components/Iconify';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import ComponentBlock from 'src/components/Component-Block';
 import { LoadingScreen } from 'src/components/loading-screen';
+import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
 import { useFetchMembers } from 'src/sections/Members/useApollo';
 import IndividualMembers from 'src/sections/Placement/List/individualMembers';
@@ -161,6 +164,7 @@ function getMemberIdsWithDepth(node: any, depth: number, targetDepth: number) {
 
 function PlacementListView() {
   const open = useBoolean();
+  const popover = usePopover();
 
   const { fetchMembers, members, loading } = useFetchMembers();
 
@@ -306,6 +310,10 @@ function PlacementListView() {
     }, 100);
   };
 
+  const reset = () => {};
+
+  const refresh = () => {};
+
   useEffect(() => {
     const storageVisibleMap = localStorage.getItem('sponsorVisibleMap');
 
@@ -324,8 +332,8 @@ function PlacementListView() {
         action={
           <Stack direction="row" columnGap={2}>
             <SearchMiner onMinerChange={onMinerChange} />
-            <IconButton onClick={() => open.onTrue()}>
-              <Iconify icon="solar:eye-bold" />
+            <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
+              <Iconify icon="eva:more-horizontal-fill" />
             </IconButton>
           </Stack>
         }
@@ -360,6 +368,40 @@ function PlacementListView() {
           members={members?.filter((item: any) => item.placementParentId === null) ?? []}
         />
       </Drawer>
+
+      <CustomPopover
+        open={popover.open}
+        anchorEl={popover.anchorEl}
+        onClose={popover.onClose}
+        slotProps={{ arrow: { placement: 'right-top' } }}
+      >
+        <MenuList>
+          <MenuItem
+            onClick={() => {
+              reset();
+              popover.onClose();
+            }}
+          >
+            Reset
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              refresh();
+              popover.onClose();
+            }}
+          >
+            Refresh
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              open.onTrue();
+              popover.onClose();
+            }}
+          >
+            Individual Members
+          </MenuItem>
+        </MenuList>
+      </CustomPopover>
     </DashboardContent>
   );
 }
