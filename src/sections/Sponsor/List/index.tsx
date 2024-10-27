@@ -50,7 +50,7 @@ const edgeTypes = {
   customEdge: CustomEdge,
 };
 
-function buildSponsorTree(members: any[]) {
+function buildPlacementTree(members: any[]) {
   const memberMap: Record<string, any> = {};
   const result: any = { id: 'root', children: [] };
 
@@ -68,7 +68,7 @@ function buildSponsorTree(members: any[]) {
     }
   });
 
-  return result;
+  return { result, memberMap };
 }
 
 function buildTree(node: any, baseX: number, depth: number, tree: any[], visibleMap: any = null) {
@@ -162,28 +162,79 @@ function getMemberIdsWithDepth(node: any, depth: number, targetDepth: number) {
   return res.length === 0 ? [{ id: node.id, value: 3 }] : [...res, { id: node.id, value: 2 }];
 }
 
-function PlacementListView() {
-  const open = useBoolean();
-  const popover = usePopover();
+function getResetVisibleMap(members: undefined | null | any[]): Record<string, number> {
+  if (!members || members.length === 0) {
+    return {};
+  }
 
-  const { fetchMembers, members, loading } = useFetchMembers();
+  const { result: placementTree } = buildPlacementTree(members);
+  const maps = getMemberIdsWithDepth(placementTree, 0, 3);
+  const newVisibleMap: Record<string, number> = {};
+
+  maps.forEach((mp: any) => {
+    newVisibleMap[mp.id] = mp.value;
+  });
+
+  return newVisibleMap;
+}
+
+function getNewVisibleMap(
+  members: undefined | null | any[],
+  visibleMap: Record<string, number>
+): Record<string, number> {
+  if (!members || !members.length) return {};
+
+  const { memberMap } = buildPlacementTree(members);
+  const newVisibleMap: Record<string, number> = {};
+  Object.entries(visibleMap).forEach(([id]) => {
+    if (id === 'root') {
+      newVisibleMap[id] = 2;
+      return;
+    }
+
+    if (memberMap[id].children.length === 0) {
+      newVisibleMap[id] = 3;
+    } else {
+      let value = 1;
+      memberMap[id].children.forEach((child: any) => {
+        if (visibleMap[child.id]) {
+          value = 2;
+        }
+      });
+      newVisibleMap[id] = visibleMap[id] === 3 ? value : visibleMap[id];
+    }
+  });
+
+  return newVisibleMap;
+}
+
+function PlacementListView() {
+  const popover = usePopover();
+  const open = useBoolean();
+
+  const { fetchMembers, members, loading, called } = useFetchMembers();
 
   const [visibleMap, setVisibleMap] = useState<Record<string, number>>({});
+  const exSetVisibleMap = useCallback((newVisibleMap: Record<string, number>) => {
+    setVisibleMap(newVisibleMap);
+    localStorage.setItem('sponsorVisibleMap', JSON.stringify(newVisibleMap));
+  }, []);
 
   useEffect(() => {
-    fetchMembers({ variables: {} });
+    fetchMembers({});
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const nodes: Node[] = useMemo(() => {
     if (!members || members.length === 0) return [];
-    const sponsorTree = buildSponsorTree(members);
+    const { result: placementTree } = buildPlacementTree(members);
 
     const resultTree: any[] = [];
 
-    buildTree(sponsorTree, 0, 0, resultTree, visibleMap);
+    buildTree(placementTree, 0, 0, resultTree, visibleMap);
 
     return resultTree;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [members, visibleMap]);
 
   const edges: Edge[] = useMemo(
@@ -200,7 +251,7 @@ function PlacementListView() {
   );
 
   const expandTree = useCallback(
-    (id: string) => {
+    async (id: string) => {
       const newVisibleMap: Record<string, number> = { ...visibleMap };
 
       members
@@ -212,26 +263,22 @@ function PlacementListView() {
           }
         });
 
-      newVisibleMap[id] = 2;
+      newVisibleMap[id] = members.findIndex((mb) => mb?.sponsorId === id) === -1 ? 3 : 2;
 
-      setVisibleMap(newVisibleMap);
-
-      localStorage.setItem('sponsorVisibleMap', JSON.stringify(newVisibleMap));
+      exSetVisibleMap(newVisibleMap);
     },
-    [members, visibleMap]
+    [members, visibleMap, exSetVisibleMap]
   );
 
   const collapseTree = useCallback(
-    (id: string) => {
+    async (id: string) => {
       const newVisibleMap: Record<string, number> = { ...visibleMap };
 
-      newVisibleMap[id] = 1;
+      newVisibleMap[id] = members.findIndex((mb) => mb?.sponsorId === id) === -1 ? 3 : 1;
 
-      setVisibleMap(newVisibleMap);
-
-      localStorage.setItem('sponsorVisibleMap', JSON.stringify(newVisibleMap));
+      exSetVisibleMap(newVisibleMap);
     },
-    [visibleMap]
+    [members, visibleMap, exSetVisibleMap]
   );
 
   const contextValue = useMemo(
@@ -240,97 +287,130 @@ function PlacementListView() {
       expandTree,
       collapseTree,
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [visibleMap]
+    [visibleMap, expandTree, collapseTree]
   );
-
-  const resetVisibleMap = useCallback(() => {
-    if (!members || members.length === 0) {
-      setVisibleMap({});
-
-      localStorage.setItem('sponsorVisibleMap', JSON.stringify({}));
-
-      return;
-    }
-
-    const placementTree = buildSponsorTree(members);
-    const maps = getMemberIdsWithDepth(placementTree, 0, 2);
-    const newVisibleMap: Record<string, number> = {};
-
-    maps.forEach((mp: any) => {
-      newVisibleMap[mp.id] = mp.value;
-    });
-
-    setVisibleMap(newVisibleMap);
-
-    localStorage.setItem('sponsorVisibleMap', JSON.stringify(newVisibleMap));
-  }, [members]);
 
   const { fitView } = useReactFlow();
 
-  const onMinerChange = (minerId: string) => {
-    const newVisibleMap = { ...visibleMap };
-    let iMinerId: string | null | undefined = minerId;
-
-    while (iMinerId) {
-      const currentMinerId: string = iMinerId;
-      const newIMinerId = members.find((mb) => mb?.id === currentMinerId)?.sponsorId;
-
-      if (newIMinerId === iMinerId) break;
-
-      iMinerId = newIMinerId;
-
-      if (iMinerId) {
-        newVisibleMap[iMinerId] = 2;
-        members
-          .filter((mb) => mb?.sponsorId === newIMinerId)
-          .forEach((mb) => {
-            if (!newVisibleMap[mb?.id ?? '']) {
-              newVisibleMap[mb?.id ?? ''] =
-                members.findIndex((mber) => mber?.sponsorId === mb?.id) === -1 ? 3 : 1;
-            }
-          });
-      }
-    }
-
-    if (iMinerId) {
-      setVisibleMap(newVisibleMap);
-      localStorage.setItem('sponsorVisibleMap', JSON.stringify(newVisibleMap));
-    }
+  const resetVisibleMap = useCallback(() => {
+    const newVisibleMap = getResetVisibleMap(members);
+    exSetVisibleMap(newVisibleMap);
 
     setTimeout(() => {
       fitView({
         ...fitViewOptions,
-        nodes: [
-          {
-            id: minerId,
-          },
-        ],
+        nodes: Object.keys(newVisibleMap).map((id) => ({ id })),
       });
     }, 100);
-  };
+  }, [members, fitView, exSetVisibleMap]);
 
-  const reset = () => {};
+  const reSyncVisibleMap = useCallback(() => {
+    const storageVisibleMap = localStorage.getItem('sponsorVisibleMap');
+    const newVisibleMap = storageVisibleMap
+      ? getNewVisibleMap(members, JSON.parse(storageVisibleMap))
+      : {};
+    exSetVisibleMap(newVisibleMap);
+    setTimeout(() => {
+      fitView({
+        ...fitViewOptions,
+        nodes: Object.keys(newVisibleMap).map((id) => ({ id })),
+      });
+    }, 100);
+  }, [members, exSetVisibleMap, fitView]);
 
-  const refresh = () => {};
+  const onMinerChange = useCallback(
+    (minerId: string) => {
+      const newVisibleMap = { ...visibleMap };
+      let iMinerId: string | null | undefined = minerId;
+
+      while (iMinerId) {
+        const currentMinerId: string = iMinerId;
+        const newIMinerId = members.find((mb) => mb?.id === currentMinerId)?.sponsorId;
+
+        if (newIMinerId === iMinerId) break;
+
+        iMinerId = newIMinerId;
+
+        if (iMinerId) {
+          newVisibleMap[iMinerId] = 2;
+          members
+            .filter((mb) => mb?.sponsorId === newIMinerId)
+            .forEach((mb) => {
+              if (!newVisibleMap[mb?.id ?? '']) {
+                newVisibleMap[mb?.id ?? ''] =
+                  members.findIndex((mber) => mber?.sponsorId === mb?.id) === -1 ? 3 : 1;
+              }
+            });
+        }
+      }
+
+      if (iMinerId) {
+        exSetVisibleMap(newVisibleMap);
+      }
+
+      setTimeout(() => {
+        fitView({
+          ...fitViewOptions,
+          nodes: [
+            {
+              id: minerId,
+            },
+          ],
+        });
+      }, 100);
+    },
+    [members, visibleMap, fitView, exSetVisibleMap]
+  );
 
   useEffect(() => {
+    if (!called || loading) return;
     const storageVisibleMap = localStorage.getItem('sponsorVisibleMap');
 
     if (!storageVisibleMap || _.isEmpty(JSON.parse(storageVisibleMap))) resetVisibleMap();
-    else setVisibleMap(JSON.parse(storageVisibleMap));
-  }, [resetVisibleMap]);
+    else reSyncVisibleMap();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [members, loading]);
+
+  const reset = useCallback(async () => {
+    const { data } = await fetchMembers();
+    const newVisibleMap = getResetVisibleMap(data?.members.members);
+
+    exSetVisibleMap(newVisibleMap);
+
+    setTimeout(() => {
+      fitView({
+        ...fitViewOptions,
+        nodes: Object.keys(newVisibleMap).map((id) => ({ id })),
+      });
+    }, 100);
+  }, [fetchMembers, exSetVisibleMap, fitView]);
+
+  const refresh = useCallback(async () => {
+    const { data } = await fetchMembers();
+    const storageVisibleMap = localStorage.getItem('sponsorVisibleMap');
+    const newVisibleMap = storageVisibleMap
+      ? getNewVisibleMap(data?.members.members, JSON.parse(storageVisibleMap))
+      : {};
+    exSetVisibleMap(newVisibleMap);
+
+    setTimeout(() => {
+      fitView({
+        ...fitViewOptions,
+        nodes: Object.keys(newVisibleMap).map((id) => ({ id })),
+      });
+    }, 100);
+  }, [fetchMembers, exSetVisibleMap, fitView]);
 
   return (
     <DashboardContent sx={{ overflowX: 'hidden' }}>
       <Breadcrumbs
-        heading="Sponsor"
-        links={[{ name: 'Sponsor', href: paths.dashboard.placement.root }, { name: 'List' }]}
+        heading="Placement"
+        links={[{ name: 'Placement', href: paths.dashboard.placement.root }, { name: 'List' }]}
         sx={{
           mb: { xs: 1, md: 2 },
         }}
         action={
-          <Stack direction="row" columnGap={2}>
+          <Stack direction="row" columnGap={1}>
             <SearchMiner onMinerChange={onMinerChange} />
             <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
               <Iconify icon="eva:more-horizontal-fill" />
@@ -356,18 +436,6 @@ function PlacementListView() {
           </Stack>
         </ComponentBlock>
       )}
-
-      <Drawer
-        open={open.value}
-        anchor="right"
-        onClose={open.onFalse}
-        slotProps={{ backdrop: { invisible: true } }}
-        PaperProps={{ sx: { width: { xs: 1, sm: 700 }, p: 2 } }}
-      >
-        <IndividualMembers
-          members={members?.filter((item: any) => item.placementParentId === null) ?? []}
-        />
-      </Drawer>
 
       <CustomPopover
         open={popover.open}
@@ -402,6 +470,18 @@ function PlacementListView() {
           </MenuItem>
         </MenuList>
       </CustomPopover>
+
+      <Drawer
+        open={open.value}
+        anchor="right"
+        onClose={open.onFalse}
+        slotProps={{ backdrop: { invisible: true } }}
+        PaperProps={{ sx: { width: { xs: 1, sm: 700 }, p: 2 } }}
+      >
+        <IndividualMembers
+          members={members?.filter((item: any) => item.sponsorId === null) ?? []}
+        />
+      </Drawer>
     </DashboardContent>
   );
 }
