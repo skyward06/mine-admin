@@ -202,7 +202,6 @@ function getNewVisibleMap(
   if (!members || !members.length) return {};
 
   const { memberMap } = buildPlacementTree(members.filter((member) => member?.placementParentId));
-  console.log();
   const newVisibleMap: Record<string, number> = {};
   Object.entries(visibleMap).forEach(([id]) => {
     if (memberMap[id].children.length === 0) {
@@ -214,7 +213,7 @@ function getNewVisibleMap(
           value = 2;
         }
       });
-      newVisibleMap[id] = value;
+      newVisibleMap[id] = visibleMap[id] === 3 ? value : visibleMap[id];
     }
   });
 
