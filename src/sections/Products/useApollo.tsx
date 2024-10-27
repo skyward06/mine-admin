@@ -35,13 +35,13 @@ export function useFetchPackages() {
 export function useFetchPackageStats() {
   const [fetchPackageStats, { data }] = useLazyQuery(FETCH_PACKAGES_STATS_QUERY);
 
-  return { data, fetchPackageStats };
+  return { stats: data, fetchPackageStats };
 }
 
 export function useCreatePackage() {
   const [createPackage, { loading }] = useMutation(CREATE_PACKAGE, {
     awaitRefetchQueries: true,
-    refetchQueries: ['FetchPackages'],
+    refetchQueries: ['Packages'],
   });
 
   return { loading, createPackage };
@@ -59,7 +59,7 @@ export function useUpdatePackage() {
 export function useRemovePackage() {
   const [removePackage, { loading, error }] = useMutation(REMOVE_PACKAGE, {
     awaitRefetchQueries: true,
-    refetchQueries: ['FetchPackages'],
+    refetchQueries: ['Packages'],
   });
 
   return { loading, error, removePackage };

@@ -1,8 +1,7 @@
 import type { LabelColor } from 'src/components/Label';
 import type { SortOrder } from 'src/routes/hooks/useQuery';
 
-import { useMemo, useState, useCallback } from 'react';
-import { useMutation, useQuery as useGraphQuery } from '@apollo/client';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
@@ -39,7 +38,7 @@ import {
 
 import ProductTableRow from './ProductTableRow';
 import ProductTableFiltersResult from './ProductTableFiltersResult';
-import { REMOVE_PACKAGE, FETCH_PACKAGES_QUERY, FETCH_PACKAGES_STATS_QUERY } from '../query';
+import { useRemovePackage, useFetchPackages, useFetchPackageStats } from '../useApollo';
 
 import type { ProductRole, IProductPrismaFilter, IProductTableFilters } from './types';
 
@@ -106,29 +105,29 @@ export default function ProductListView() {
 
   const canReset = !!filter.search;
 
-  const { data: statsData } = useGraphQuery(FETCH_PACKAGES_STATS_QUERY, {
-    variables: {
-      allFilter: { status: true },
-      inactiveFilter: { status: false },
-    },
-  });
+  const { loading: removeLoading, removePackage } = useRemovePackage();
+  const { stats, fetchPackageStats } = useFetchPackageStats();
+  const { loading, rowCount, packages, fetchPackages } = useFetchPackages();
 
-  const { loading, data } = useGraphQuery(FETCH_PACKAGES_QUERY, {
-    variables: {
-      page: page && `${page.page},${page.pageSize}`,
-      filter: graphQueryFilter,
-      sort: graphQuerySort,
-    },
-  });
+  useEffect(() => {
+    fetchPackages({
+      variables: {
+        page: page && `${page.page},${page.pageSize}`,
+        filter: graphQueryFilter,
+        sort: graphQuerySort,
+      },
+    });
 
-  const [removePackage, { loading: removeLoading }] = useMutation(REMOVE_PACKAGE, {
-    awaitRefetchQueries: true,
-    refetchQueries: ['Packages'],
-  });
+    fetchPackageStats({
+      variables: {
+        allFilter: { status: true },
+        inactiveFilter: { status: false },
+      },
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const tableData = data?.packages;
-
-  const notFound = (canReset && !tableData?.packages?.length) || !tableData?.packages?.length;
+  const notFound = (canReset && !packages?.length) || !packages?.length;
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: ProductRole) => {
     setQuery({
@@ -185,7 +184,7 @@ export default function ProductListView() {
                   variant={(tab.value === filter.status && 'filled') || 'soft'}
                   color={tab.color}
                 >
-                  {statsData ? statsData[tab.value].total! : 0}
+                  {stats ? stats[tab.value].total! : 0}
                 </Label>
               }
             />
@@ -195,7 +194,7 @@ export default function ProductListView() {
         <SearchInput search={filter.search} onSearchChange={handleSearchChange} />
 
         {canReset && !loading && (
-          <ProductTableFiltersResult results={tableData!.total!} sx={{ p: 2.5, pt: 0 }} />
+          <ProductTableFiltersResult results={rowCount!} sx={{ p: 2.5, pt: 0 }} />
         )}
 
         <ScrollBar sx={{ maxHeight: 480 }}>
@@ -204,7 +203,7 @@ export default function ProductListView() {
               order={sort && sort[Object.keys(sort)[0]]}
               orderBy={sort && Object.keys(sort)[0]}
               headLabel={TABLE_HEAD}
-              rowCount={loading ? 0 : tableData!.packages!.length}
+              rowCount={loading ? 0 : packages!.length}
               onSort={(id) => {
                 if (id !== 'action') {
                   const isAsc = sort && sort[id] === 'asc';
@@ -228,7 +227,7 @@ export default function ProductListView() {
               </>
             ) : (
               <TableBody>
-                {tableData!.packages!.map((row: any) => (
+                {packages!.map((row: any) => (
                   <ProductTableRow
                     key={row!.id}
                     row={row!}
@@ -244,7 +243,7 @@ export default function ProductListView() {
         </ScrollBar>
 
         <TablePaginationCustom
-          count={loading ? 0 : tableData!.total!}
+          count={loading ? 0 : rowCount!}
           page={loading ? 0 : page!.page - 1}
           rowsPerPage={page?.pageSize}
           onPageChange={(_, curPage) => {
