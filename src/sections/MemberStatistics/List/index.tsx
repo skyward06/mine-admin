@@ -1,7 +1,7 @@
 import type { SortOrder } from 'src/routes/hooks/useQuery';
 
-import { useMemo, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
+import { useMemo, useCallback } from 'react';
 import { useQuery as useGraphQuery } from '@apollo/client';
 
 import Card from '@mui/material/Card';
