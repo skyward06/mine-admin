@@ -31,6 +31,7 @@ export default function MemberTableRow({ row }: Props) {
         }}
         onClick={() => {
           router.push(paths.dashboard.members.edit(id));
+          router.refresh();
         }}
       >
         <ListItemText
