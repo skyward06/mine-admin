@@ -20,6 +20,8 @@ import { useRouter } from 'src/routes/hooks';
 
 import { formatDate, customizeDate } from 'src/utils/format-time';
 
+import { PAYMENT_TYPE } from 'src/consts';
+
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
 
@@ -137,6 +139,7 @@ export default function SaleGeneral({ currentSale }: Props) {
                   </MenuItem>
                 ))}
               </Field.Select>
+
               <Field.Select name="packageId" label="Package">
                 {packages.map((option) => (
                   <MenuItem key={option?.id} value={option?.id}>
@@ -144,8 +147,17 @@ export default function SaleGeneral({ currentSale }: Props) {
                   </MenuItem>
                 ))}
               </Field.Select>
+
               <Field.DatePicker name="orderedAt" label="Ordered At" format="YYYY-MM-DD" />
-              <Field.Text name="paymentMethod" label="Payment Method" />
+
+              <Field.Select name="paymentMethod" label="Payment Method">
+                {PAYMENT_TYPE.map((option) => (
+                  <MenuItem key={option.label} value={option.value}>
+                    {option.value}
+                  </MenuItem>
+                ))}
+              </Field.Select>
+
               <Field.Select
                 name="status"
                 label="Status"

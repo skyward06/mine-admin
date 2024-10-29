@@ -19,6 +19,8 @@ import { useRouter } from 'src/routes/hooks';
 
 import { today, customizeDate } from 'src/utils/format-time';
 
+import { PAYMENT_TYPE } from 'src/consts';
+
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
 
@@ -30,6 +32,12 @@ import { useCreateSale } from '../useApollo';
 // ----------------------------------------------------------------------
 export type NewSaleSchemaType = zod.infer<typeof NewSaleSchema>;
 
+interface Member {
+  id: string;
+  username: string;
+  fullName?: string;
+}
+
 const NewSaleSchema = zod.object({
   orderedAt: zod.string({ required_error: 'Ordered At is required' }),
   paymentMethod: zod.string({ required_error: 'Payment Method is required' }),
@@ -39,7 +47,7 @@ const NewSaleSchema = zod.object({
 export default function SaleCreateForm() {
   const router = useRouter();
 
-  const [memberId, setMemberId] = useState<string>('');
+  const [member, setMember] = useState<Member>();
   const [packageId, setPackageId] = useState<string>('');
 
   const defaultValues = useMemo(
@@ -47,6 +55,7 @@ export default function SaleCreateForm() {
       packageId: '',
       orderedAt: `${new Date(today())}`,
       paymentMethod: '',
+      memberId: '',
       status: 1,
     }),
     []
@@ -76,7 +85,7 @@ export default function SaleCreateForm() {
             ...data,
             status: !!status,
             orderedAt: customizeDate(orderedAt),
-            memberId,
+            memberId: member?.id ?? '',
             packageId,
           },
         },
@@ -102,9 +111,17 @@ export default function SaleCreateForm() {
   const packages = packageData?.packages.packages ?? [];
 
   useEffect(() => {
-    fetchMembers({ variables: { filter: { emailVerified: true } } });
+    fetchMembers({
+      variables: {
+        filter: {
+          emailVerified: true,
+          OR: [{ username: { contains: member?.username ?? '', mode: 'insensitive' } }],
+        },
+        page: '1,10',
+      },
+    });
     fetchPackages();
-  }, [fetchMembers, fetchPackages]);
+  }, [member, fetchMembers, fetchPackages]);
 
   return (
     <Form methods={methods} onSubmit={onSubmit}>
@@ -133,8 +150,14 @@ export default function SaleCreateForm() {
                     {option!.username}
                   </li>
                 )}
-                onChange={(_, newValue) => setMemberId(newValue?.id!)}
+                onChange={(_, value) =>
+                  setMember({ id: value?.id ?? '', username: value?.username ?? '' })
+                }
+                onInputChange={(_, username: string) => {
+                  setMember({ id: '', username });
+                }}
               />
+
               <Autocomplete
                 fullWidth
                 options={packages}
@@ -147,8 +170,17 @@ export default function SaleCreateForm() {
                 )}
                 onChange={(_, newValue) => setPackageId(newValue?.id!)}
               />
+
               <Field.DatePicker name="orderedAt" label="Ordered At" format="YYYY-MM-DD" />
-              <Field.Text name="paymentMethod" label="Payment Method" />
+
+              <Field.Select name="paymentMethod" label="Payment Method">
+                {PAYMENT_TYPE.map((option) => (
+                  <MenuItem key={option.label} value={option.value}>
+                    {option.value}
+                  </MenuItem>
+                ))}
+              </Field.Select>
+
               <Field.Select name="status" label="Status">
                 <MenuItem value={1}>Active</MenuItem>
                 <MenuItem value={0}>Inactive</MenuItem>
