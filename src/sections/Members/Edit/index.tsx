@@ -19,6 +19,7 @@ import { LoadingScreen } from 'src/components/loading-screen';
 
 import Log from './Log';
 import Sale from './Sale';
+import Note from './Note';
 import History from './History';
 import Sponsor from './Sponsor';
 import Placement from './Placement';
@@ -38,6 +39,7 @@ const TABS = [
   { value: 'placement', label: 'Placement', icon: <Iconify icon="clarity:flow-chart-line" /> },
   { value: 'commission', label: 'Commission', icon: <Iconify icon="fluent:reward-32-regular" /> },
   { value: 'log', label: 'Log', icon: <Iconify icon="ri:history-line" /> },
+  { value: 'note', label: 'Note', icon: <Iconify icon="mdi:event-note-outline" /> },
 ];
 
 // ----------------------------------------------------------------------
@@ -108,6 +110,8 @@ export default function MemberEditView() {
         {tabs.value === 'commission' && <Commission currentMember={member} />}
 
         {tabs.value === 'log' && <Log loading={loading} currentMember={member} />}
+
+        {tabs.value === 'note' && <Note currentMember={member} />}
       </DashboardContent>
     </>
   );
