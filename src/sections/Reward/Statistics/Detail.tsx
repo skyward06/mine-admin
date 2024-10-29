@@ -26,10 +26,7 @@ export default function DetailView() {
     <DashboardContent>
       <Breadcrumbs
         heading="Statistics"
-        links={[
-          { name: 'Reward', href: paths.dashboard.reward.root },
-          { name: `Statistics : ${current?.transactionId ?? ''}` },
-        ]}
+        links={[{ name: 'Reward', href: paths.dashboard.reward.root }, { name: 'Statistics' }]}
         sx={{
           mb: { xs: 2, md: 3 },
         }}
