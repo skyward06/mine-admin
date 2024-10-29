@@ -2,7 +2,7 @@ import { z as zod } from 'zod';
 import { useForm } from 'react-hook-form';
 import { useMemo, useState, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ApolloError, useLazyQuery, useQuery as useGraphQuery } from '@apollo/client';
+import { ApolloError, useLazyQuery } from '@apollo/client';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -26,7 +26,6 @@ import { useFetchMembers } from 'src/sections/Members/useApollo';
 import { FETCH_PACKAGES_QUERY } from 'src/sections/Products/query';
 
 import { useCreateSale } from '../useApollo';
-import { FETCH_SALES_QUERY } from '../query';
 
 // ----------------------------------------------------------------------
 export type NewSaleSchemaType = zod.infer<typeof NewSaleSchema>;
@@ -61,12 +60,6 @@ export default function SaleCreateForm() {
     defaultValues,
   });
 
-  const { data: salesData } = useGraphQuery(FETCH_SALES_QUERY, {
-    variables: { sort: 'invoiceNo' },
-  });
-
-  const sales = salesData?.sales.sales ?? [{ invoiceNo: 0 }];
-
   const { fetchMembers, members } = useFetchMembers();
 
   const [fetchPackages, { data: packageData }] = useLazyQuery(FETCH_PACKAGES_QUERY, {
@@ -83,7 +76,6 @@ export default function SaleCreateForm() {
             ...data,
             status: !!status,
             orderedAt: customizeDate(orderedAt),
-            invoiceNo: (sales[0]?.invoiceNo ?? 0) + 1,
             memberId,
             packageId,
           },
@@ -120,15 +112,7 @@ export default function SaleCreateForm() {
         <Grid xl={12}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={1} sx={{ mb: 3 }}>
-              <Grid container xl={12}>
-                <Grid xl={6}>
-                  <Typography variant="subtitle1">Sale</Typography>
-                </Grid>
-                <Grid xl={6} justifyContent="flex-end" display="flex" gap={2}>
-                  <Typography variant="subtitle1">Invoice No:</Typography>
-                  <Typography>{(sales[0]?.invoiceNo ?? 0) + 1}</Typography>
-                </Grid>
-              </Grid>
+              <Typography variant="subtitle1">Sale</Typography>
             </Stack>
             <Box
               rowGap={3}

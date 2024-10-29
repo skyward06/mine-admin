@@ -25,19 +25,10 @@ type Props = {
 export default function SaleTableRow({ row, confirm, setSelected }: Props) {
   const router = useRouter();
 
-  const {
-    id,
-    invoiceNo,
-    member,
-    package: product,
-    paymentMethod,
-    orderedAt,
-    statisticsSales,
-  } = row;
+  const { id, member, package: product, paymentMethod, orderedAt, statisticsSales } = row;
 
   return (
     <TableRow hover>
-      <TableCell>{invoiceNo}</TableCell>
       <TableCell
         align="left"
         sx={{

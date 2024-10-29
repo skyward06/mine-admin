@@ -50,15 +50,12 @@ export default function SaleEditView() {
   return (
     <>
       <Helmet>
-        <title>{`${CONFIG.site.name}: ${`${sale.invoiceNo}`}`}</title>
+        <title>{`${CONFIG.site.name}: Sale`}</title>
       </Helmet>
       <DashboardContent>
         <Breadcrumbs
-          heading={`${sale.invoiceNo}`}
-          links={[
-            { name: 'Sale', href: paths.dashboard.sales.root },
-            { name: `${sale.invoiceNo}` },
-          ]}
+          heading="Sale Edit"
+          links={[{ name: 'Sale', href: paths.dashboard.sales.root }]}
           sx={{
             mb: { xs: 2, md: 3 },
           }}

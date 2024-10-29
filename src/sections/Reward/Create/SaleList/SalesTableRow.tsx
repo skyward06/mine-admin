@@ -20,14 +20,12 @@ type Props = {
 export default function SalesTableRow({ row, selected, onSelectRow }: Props) {
   const router = useRouter();
 
-  const { id, invoiceNo, member, package: product, paymentMethod, status } = row;
+  const { id, member, package: product, paymentMethod, status } = row;
   return (
     <TableRow hover selected={selected}>
       <TableCell padding="checkbox">
         <Checkbox checked={selected} onClick={onSelectRow} />
       </TableCell>
-
-      <TableCell>{invoiceNo}</TableCell>
 
       <TableCell
         sx={{

@@ -41,11 +41,9 @@ const STATUS_OPTIONS: { value: SaleRole; label: string; color: LabelColor }[] = 
 ];
 
 const TABLE_HEAD = [
-  { id: 'invoiceNo', label: 'Invoice No', width: 150, sortable: true },
-  { id: 'mobile', label: 'Mobile', width: 130, sortable: true },
   { id: 'assetId', label: 'Asset ID', width: 130, sortable: true },
   { id: 'productName', label: 'Product Name', sortable: true },
-  { id: 'paymentMethod', label: 'Payment Method', sortable: true },
+  { id: 'paymentMethod', label: 'Payment Method', sortable: true, width: 250 },
   { id: 'amount', label: 'Amount', width: 140, sortable: true },
   { id: 'hashPower', label: 'Hash Power', width: 130, sortable: true },
   { id: 'orderedAt', label: 'Ordered At', width: 150, sortable: true },
@@ -65,7 +63,7 @@ export default function SaleListView() {
 
   const {
     page = { page: 1, pageSize: 10 },
-    sort = { invoiceNo: 'asc' },
+    sort = { createdAt: 'asc' },
     filter = defaultFilter,
   } = query;
 

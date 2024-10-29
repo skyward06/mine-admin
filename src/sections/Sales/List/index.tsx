@@ -53,10 +53,9 @@ const STATUS_OPTIONS: { value: SaleRole; label: string; color: LabelColor }[] = 
 ];
 
 const TABLE_HEAD = [
-  { id: 'invoiceNo', label: 'Invoice No', width: 150, sortable: true },
   { id: 'member.username', label: 'Name', sortable: true },
   { id: 'member.assetId', label: 'Asset ID', width: 90 },
-  { id: 'package.productName', label: 'Product Name', width: 200 },
+  { id: 'package.productName', label: 'Product Name' },
   { id: 'paymentMethod', label: 'Payment Method', width: 250, sortable: true },
   { id: 'package.amount', label: 'Amount', width: 90 },
   { id: 'package.hashPower', label: 'Hash Power', width: 150 },
@@ -77,7 +76,7 @@ export default function SaleListView() {
 
   const {
     page = { page: 1, pageSize: 10 },
-    sort = { invoiceNo: 'asc' },
+    sort = { createdAt: 'asc' },
     filter = defaultFilter,
   } = query;
 
@@ -85,7 +84,6 @@ export default function SaleListView() {
     const filterObj: ISalePrismaFilter = {};
     if (filter.search) {
       filterObj.OR = [
-        { invoiceNo: { equals: +filter.search || -1 } },
         { paymentMethod: { contains: filter.search, mode: 'insensitive' } },
         { member: { username: { contains: filter.search, mode: 'insensitive' } } },
         { member: { email: { contains: filter.search, mode: 'insensitive' } } },

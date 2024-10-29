@@ -22,7 +22,6 @@ interface Props {
 }
 
 const TABLE_HEAD = [
-  { id: 'invoiceNo', label: 'Invoice No', width: 130, sortable: true },
   { id: 'username', label: 'Username', sortable: true },
   { id: 'productName', label: 'Product Name', width: 130, sortable: true },
   { id: 'paymentMethod', label: 'Payment Method', width: 300, sortable: true },
@@ -34,7 +33,7 @@ const TABLE_HEAD = [
 
 export default function SalesTable({ id, date, selectIds }: Props) {
   const [fetchSales, { loading, data }] = useLazyQuery(FETCH_SALES_QUERY, {
-    variables: { sort: 'status,invoiceNo' },
+    variables: { sort: 'status,createdAt' },
   });
 
   const { data: statistics } = useGraphQuery(FETCH_STATISTICS_QUERY, {

@@ -93,7 +93,6 @@ export default function SaleGeneral({ currentSale }: Props) {
         variables: {
           data: {
             id: currentSale.id,
-            invoiceNo: currentSale.invoiceNo,
             orderedAt: customizeDate(orderedAt),
             status,
             ...newSale,
