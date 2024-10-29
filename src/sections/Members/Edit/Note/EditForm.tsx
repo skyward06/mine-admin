@@ -88,7 +88,7 @@ export default function CreateForm({ open, memberId, current }: Props) {
     >
       <Form methods={methods} onSubmit={onSubmit}>
         <Stack rowGap={3}>
-          <Typography variant="h5">Add Note</Typography>
+          <Typography variant="h5">{current ? 'Edit' : 'Add'} Note</Typography>
 
           <Field.Text name="description" label="Content" multiline minRows={3} />
 

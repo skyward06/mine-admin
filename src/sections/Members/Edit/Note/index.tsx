@@ -101,7 +101,7 @@ export default function NoteListView({ currentMember }: Props) {
       },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [query]);
 
   const notFound = (canReset && !notes?.length) || !notes?.length;
 
