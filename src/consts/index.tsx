@@ -11,6 +11,8 @@ export const PLACEMENTTREE_NODE_Y_SPACE = 60;
 
 export const COMMISSION_NODE_HEIGHT = 135;
 
+export const SPONSORTREE_NODE_HEIGHT = 95;
+
 export const FREE_SHARE_ID_1 = 'c62357db-0572-4600-98dc-43d92621cfa5';
 export const FREE_SHARE_ID_2 = 'aa8604b3-3f2a-4f9c-9ee5-1c9d1d76d726';
 

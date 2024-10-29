@@ -21,8 +21,8 @@ import { useBoolean } from 'src/hooks/useBoolean';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 import {
+  SPONSORTREE_NODE_HEIGHT,
   PLACEMENTTREE_NODE_WIDTH,
-  PLACEMENTTREE_NODE_HEIGHT,
   PLACEMENTTREE_NODE_X_SPACE,
   PLACEMENTTREE_NODE_Y_SPACE,
 } from 'src/consts';
@@ -80,7 +80,7 @@ function buildTree(node: any, baseX: number, depth: number, tree: any[], visible
       data: { label: <StandardNode {...node} /> },
       position: {
         x: baseX,
-        y: (depth - 1) * (PLACEMENTTREE_NODE_HEIGHT + PLACEMENTTREE_NODE_Y_SPACE),
+        y: (depth - 1) * (SPONSORTREE_NODE_HEIGHT + PLACEMENTTREE_NODE_Y_SPACE),
       },
       draggable: true,
       style: {
@@ -88,7 +88,7 @@ function buildTree(node: any, baseX: number, depth: number, tree: any[], visible
         border: 'none',
         borderRadius: '12px',
         width: PLACEMENTTREE_NODE_WIDTH,
-        height: PLACEMENTTREE_NODE_HEIGHT,
+        height: SPONSORTREE_NODE_HEIGHT,
       },
       maxX: baseX + PLACEMENTTREE_NODE_WIDTH,
     };
@@ -129,7 +129,7 @@ function buildTree(node: any, baseX: number, depth: number, tree: any[], visible
     data: { label: <StandardNode {...node} /> },
     position: {
       x: resPositionX,
-      y: (depth - 1) * (PLACEMENTTREE_NODE_HEIGHT + PLACEMENTTREE_NODE_Y_SPACE),
+      y: (depth - 1) * (SPONSORTREE_NODE_HEIGHT + PLACEMENTTREE_NODE_Y_SPACE),
     },
     draggable: true,
     style: {
@@ -137,7 +137,7 @@ function buildTree(node: any, baseX: number, depth: number, tree: any[], visible
       border: 'none',
       borderRadius: '12px',
       width: PLACEMENTTREE_NODE_WIDTH,
-      height: PLACEMENTTREE_NODE_HEIGHT,
+      height: SPONSORTREE_NODE_HEIGHT,
     },
     maxX,
   };
