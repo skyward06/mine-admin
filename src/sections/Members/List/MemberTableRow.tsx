@@ -110,7 +110,6 @@ export default function MemberTableRow({
       <TableRow hover selected={selected}>
         <TableCell
           sx={{
-            display: 'flex',
             alignItems: 'center',
             cursor: 'pointer',
             '&:hover': { bgcolor: (theme) => theme.vars.palette.action.hover },
