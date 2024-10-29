@@ -19,7 +19,6 @@ export const FETCH_PACKAGES_QUERY = gql(/* GraphQL */ `
           id
           status
           memberId
-          invoiceNo
           orderedAt
           packageId
           paymentMethod
