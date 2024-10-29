@@ -7,6 +7,8 @@ import { alpha, useTheme } from '@mui/material/styles';
 
 import { useTabs } from 'src/hooks/use-tabs';
 
+import { formatDate } from 'src/utils/format-time';
+
 import ChartWidget from 'src/components/ChartWidget';
 import { CustomTabs } from 'src/components/custom-tabs';
 
@@ -104,7 +106,7 @@ export default function Summary() {
                 tooltip: { enabled: false },
                 tickAmount: 30,
                 categories: statistics
-                  ?.statistics!.map((item) => new Date(item!.issuedAt).toLocaleDateString('en-US'))
+                  ?.statistics!.map((item) => formatDate(item!.issuedAt))
                   .reverse(),
               },
             },

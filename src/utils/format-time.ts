@@ -269,7 +269,11 @@ export function fSub({
 }
 
 export function formatDate(date: string | Date) {
-  return new Date(date).toISOString().split('T')[0];
+  const [dateonly] = new Date(date).toISOString().split('T');
+
+  const [year, month, day] = dateonly.split('-');
+
+  return `${month}/${day}/${year}`;
 }
 
 export function formatTime(date: string | Date) {
