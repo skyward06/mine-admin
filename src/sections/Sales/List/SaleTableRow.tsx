@@ -58,7 +58,6 @@ export default function SaleTableRow({ row, confirm, setSelected }: Props) {
           }}
         />
       </TableCell>
-      <TableCell align="left">{member?.mobile}</TableCell>
       <TableCell align="left">{member?.assetId}</TableCell>
       <TableCell align="left">{product?.productName}</TableCell>
       <TableCell align="left">{paymentMethod}</TableCell>
