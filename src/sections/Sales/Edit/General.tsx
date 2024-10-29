@@ -12,8 +12,10 @@ import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import MenuItem from '@mui/material/MenuItem';
 import Grid from '@mui/material/Unstable_Grid2';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
+import Autocomplete from '@mui/material/Autocomplete';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
@@ -39,12 +41,17 @@ type Props = {
 // ----------------------------------------------------------------------
 export type SaleGeneralSchemaType = zod.infer<typeof SaleGeneralSchema>;
 
+interface Member {
+  id: string;
+  username: string;
+  fullName?: string;
+}
+
 const SaleGeneralSchema = zod.object({
   orderedAt: zod.string({ required_error: 'Ordered At is required' }),
   paymentMethod: zod.string({ required_error: 'Payment Method is required' }),
   status: zod.boolean({ required_error: 'Status is required' }).default(true),
   packageId: zod.string({ required_error: 'Package is required' }),
-  memberId: zod.string({ required_error: 'Miner is required' }),
 });
 
 export default function SaleGeneral({ currentSale }: Props) {
@@ -52,6 +59,7 @@ export default function SaleGeneral({ currentSale }: Props) {
 
   const { status: currentStatus } = currentSale;
 
+  const [member, setMember] = useState<Member>();
   const [status, setStatus] = useState(currentStatus);
 
   const { members, fetchMembers } = useFetchMembers();
@@ -96,6 +104,7 @@ export default function SaleGeneral({ currentSale }: Props) {
           data: {
             id: currentSale.id,
             orderedAt: customizeDate(orderedAt),
+            memberId: member?.id ?? '',
             status,
             ...newSale,
           },
@@ -132,13 +141,24 @@ export default function SaleGeneral({ currentSale }: Props) {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <Field.Select name="memberId" label="Miner">
-                {members.map((option) => (
-                  <MenuItem key={option?.id} value={option?.id}>
-                    {option?.username}
-                  </MenuItem>
-                ))}
-              </Field.Select>
+              <Autocomplete
+                fullWidth
+                options={members}
+                getOptionLabel={(option) => option!.username}
+                value={member ?? currentSale.member}
+                renderInput={(params) => <TextField {...params} label="Miner" margin="none" />}
+                renderOption={(props, option) => (
+                  <li {...props} key={option!.username}>
+                    {option!.username}
+                  </li>
+                )}
+                onChange={(_, value) =>
+                  setMember({ id: value?.id ?? '', username: value?.username ?? '' })
+                }
+                onInputChange={(_, username: string) => {
+                  setMember({ id: '', username });
+                }}
+              />
 
               <Field.Select name="packageId" label="Package">
                 {packages.map((option) => (
