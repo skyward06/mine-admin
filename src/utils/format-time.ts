@@ -268,23 +268,26 @@ export function fSub({
   return result;
 }
 
-export function formatDate(date: string | Date) {
+export function formatDate(date: string | Date, format: boolean = true) {
   const [dateonly] = new Date(date).toISOString().split('T');
 
   const [year, month, day] = dateonly.split('-');
 
-  return `${month}/${day}/${year}`;
+  return format ? `${month}/${day}/${year}` : dateonly;
 }
 
 export function formatTime(date: string | Date) {
   return new Date(date).toISOString().split(/[T.]/)[1];
 }
 
-export function formatDateTime(data: string | Date) {
+export function formatDateTime(data: string | Date, format: boolean = true) {
   const [date, time] = new Date(data).toISOString().split(/[T.]/);
-  return `${date} ${time}`;
+
+  const [year, month, day] = date.split('-');
+
+  return `${format ? `${month}/${day}/${year}` : date} ${time}`;
 }
 
 export function customizeDate(date: string | Date) {
-  return `${formatDate(date)}T00:00:00Z`;
+  return `${formatDate(date, false)}T00:00:00Z`;
 }
