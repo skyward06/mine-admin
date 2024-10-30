@@ -68,7 +68,7 @@ export default function Summary() {
               categories: chartData!.map((item) => item.base).reverse(),
               series: [
                 {
-                  name: 'New Blocks',
+                  name: 'Hashrate',
                   data: chartData!
                     .map((item) => Number(((item?.hashRate! || 1) / 10 ** 9).toFixed(2)))
                     .reverse(),
