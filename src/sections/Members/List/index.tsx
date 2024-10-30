@@ -235,8 +235,8 @@ export default function MemberListView() {
           <MemberTableFiltersResult results={rowCount} sx={{ p: 2.5, pt: 0 }} />
         )}
 
-        <ScrollBar sx={{ maxHeight: 480 }}>
-          <Table stickyHeader size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 1260 }}>
+        <ScrollBar>
+          <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 1260 }}>
             <TableHeadCustom
               order={sort && sort[Object.keys(sort)[0]]}
               orderBy={sort && Object.keys(sort)[0]}
