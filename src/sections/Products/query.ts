@@ -22,6 +22,16 @@ export const FETCH_PACKAGES_QUERY = gql(/* GraphQL */ `
           orderedAt
           packageId
           paymentMethod
+          paymentConfirm {
+            createdAt
+            updatedAt
+            deletedAt
+            id
+            url
+            originalName
+            mimeType
+            size
+          }
         }
       }
       total

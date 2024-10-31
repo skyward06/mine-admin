@@ -5,6 +5,7 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
     sales(sort: $sort, page: $page, filter: $filter) {
       sales {
         id
+        note
         memberId
         packageId
         member {
@@ -43,6 +44,15 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
         status
         orderedAt
         paymentMethod
+        paymentConfirm {
+          id
+          url
+          originalName
+          mimeType
+          size
+          createdAt
+          updatedAt
+        }
       }
       total
     }

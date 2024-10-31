@@ -78,6 +78,16 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           memberId
           packageId
           paymentMethod
+          paymentConfirm {
+            createdAt
+            updatedAt
+            deletedAt
+            id
+            url
+            originalName
+            mimeType
+            size
+          }
           status
           orderedAt
         }
