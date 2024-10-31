@@ -28,6 +28,7 @@ import { useFetchMembers } from 'src/sections/Members/useApollo';
 import { FETCH_PACKAGES_QUERY } from 'src/sections/Products/query';
 
 import { useCreateSale } from '../useApollo';
+import { FileManagerNewFolderDialog } from '../Upload';
 
 // ----------------------------------------------------------------------
 export type NewSaleSchemaType = zod.infer<typeof NewSaleSchema>;
@@ -42,26 +43,29 @@ const NewSaleSchema = zod.object({
   orderedAt: zod.string({ required_error: 'Ordered At is required' }),
   paymentMethod: zod.string({ required_error: 'Payment Method is required' }),
   status: zod.number({ required_error: 'Status is required' }).default(1),
+  note: zod.string().optional().nullable(),
 });
 
 export default function SaleCreateForm() {
   const router = useRouter();
 
   const [member, setMember] = useState<Member>();
+  const [fileIds, setFileIds] = useState<string[]>();
   const [packageId, setPackageId] = useState<string>('');
+  const [paymentMethod, setPaymentMethod] = useState<string>('');
 
   const defaultValues = useMemo(
     () => ({
       packageId: '',
       orderedAt: `${new Date(today())}`,
       paymentMethod: '',
+      note: '',
       memberId: '',
       status: 1,
     }),
     []
   );
 
-  // const [submit, { loading }] = useMutation(CREATE_SALE);
   const { loading, createSale } = useCreateSale();
 
   const methods = useForm<NewSaleSchemaType>({
@@ -83,10 +87,12 @@ export default function SaleCreateForm() {
         variables: {
           data: {
             ...data,
+            fileIds,
             status: !!status,
             orderedAt: customizeDate(orderedAt),
             memberId: member?.id ?? '',
             packageId,
+            paymentMethod,
           },
         },
       });
@@ -108,6 +114,10 @@ export default function SaleCreateForm() {
     }
   });
 
+  const handleUpdate = (data: any) => {
+    setFileIds([...data.files.map((item: any) => item.id)]);
+  };
+
   const packages = packageData?.packages.packages ?? [];
 
   useEffect(() => {
@@ -126,10 +136,10 @@ export default function SaleCreateForm() {
   return (
     <Form methods={methods} onSubmit={onSubmit}>
       <Grid container spacing={3}>
-        <Grid xl={12}>
+        <Grid xs={12} md={9}>
           <Card sx={{ p: 3 }}>
-            <Stack spacing={1} sx={{ mb: 3 }}>
-              <Typography variant="subtitle1">Sale</Typography>
+            <Stack spacing={1} sx={{ mb: 3 }} direction="row" justifyContent="space-between">
+              <Typography variant="h5">Sale</Typography>
             </Stack>
             <Box
               rowGap={3}
@@ -144,7 +154,9 @@ export default function SaleCreateForm() {
                 fullWidth
                 options={members}
                 getOptionLabel={(option) => option!.username}
-                renderInput={(params) => <TextField {...params} label="Miner" margin="none" />}
+                renderInput={(params) => (
+                  <TextField {...params} required label="Miner" margin="none" />
+                )}
                 renderOption={(props, option) => (
                   <li {...props} key={option!.username}>
                     {option!.username}
@@ -162,7 +174,9 @@ export default function SaleCreateForm() {
                 fullWidth
                 options={packages}
                 getOptionLabel={(option) => option!.productName}
-                renderInput={(params) => <TextField {...params} label="Package" margin="none" />}
+                renderInput={(params) => (
+                  <TextField {...params} required label="Package" margin="none" />
+                )}
                 renderOption={(props, option) => (
                   <li {...props} key={option!.productName}>
                     {option!.productName}
@@ -173,18 +187,35 @@ export default function SaleCreateForm() {
 
               <Field.DatePicker name="orderedAt" label="Ordered At" format="YYYY-MM-DD" />
 
-              <Field.Select name="paymentMethod" label="Payment Method">
-                {PAYMENT_TYPE.map((option) => (
-                  <MenuItem key={option.label} value={option.value}>
+              <Autocomplete
+                freeSolo
+                fullWidth
+                options={PAYMENT_TYPE}
+                getOptionLabel={(option: any) => option.value}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    required
+                    name="paymentMethod"
+                    label="Payment Method"
+                    margin="none"
+                  />
+                )}
+                renderOption={(props, option) => (
+                  <li {...props} key={option!.label}>
                     {option.value}
-                  </MenuItem>
-                ))}
-              </Field.Select>
+                  </li>
+                )}
+                onChange={(_, value: any) => setPaymentMethod(value.value)}
+                onInputChange={(_, value: any) => setPaymentMethod(value)}
+              />
 
-              <Field.Select name="status" label="Status">
+              <Field.Select name="status" label="Status" required>
                 <MenuItem value={1}>Active</MenuItem>
                 <MenuItem value={0}>Inactive</MenuItem>
               </Field.Select>
+
+              <Field.Text name="note" label="Note" />
             </Box>
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>
@@ -193,6 +224,9 @@ export default function SaleCreateForm() {
               </LoadingButton>
             </Stack>
           </Card>
+        </Grid>
+        <Grid xs={12} md={3}>
+          <FileManagerNewFolderDialog handleUpdate={handleUpdate} />
         </Grid>
       </Grid>
     </Form>
