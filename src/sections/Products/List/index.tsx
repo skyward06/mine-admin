@@ -125,7 +125,7 @@ export default function ProductListView() {
       },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [query]);
 
   const notFound = (canReset && !packages?.length) || !packages?.length;
 
