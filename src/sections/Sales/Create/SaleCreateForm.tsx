@@ -226,7 +226,7 @@ export default function SaleCreateForm() {
           </Card>
         </Grid>
         <Grid xs={12} md={3}>
-          <FileManagerNewFolderDialog handleUpdate={handleUpdate} />
+          <FileManagerNewFolderDialog preview handleUpdate={handleUpdate} />
         </Grid>
       </Grid>
     </Form>

@@ -10,6 +10,7 @@ import { CustomUpload } from 'src/components/Upload';
 // ----------------------------------------------------------------------
 
 type Props = {
+  preview?: boolean;
   folderName?: string;
   handleUpdate: Function;
   onCreate?: () => void;
@@ -18,6 +19,7 @@ type Props = {
 };
 
 export function FileManagerNewFolderDialog({
+  preview = false,
   handleUpdate,
   onCreate,
   onUpdate,
@@ -73,6 +75,7 @@ export function FileManagerNewFolderDialog({
       )}
 
       <CustomUpload
+        preview={preview}
         multiple
         value={files}
         onDrop={handleDrop}

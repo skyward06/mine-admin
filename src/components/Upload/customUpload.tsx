@@ -10,7 +10,7 @@ import { varAlpha } from 'src/theme/styles';
 import { Iconify } from 'src/components/Iconify';
 
 import { RejectionFiles } from './components/rejection-files';
-// import { MultiFilePreview } from './components/preview-multi-file';
+import { MultiFilePreview } from './components/preview-multi-file';
 import { CustomUploadPlaceholder } from './components/customPlaceholder';
 import { DeleteButton, SingleFilePreview } from './components/preview-single-file';
 
@@ -30,6 +30,7 @@ export function CustomUpload({
   helperText,
   onRemoveAll,
   multiple = false,
+  preview = false,
   ...other
 }: UploadProps) {
   const { getRootProps, getInputProps, isDragActive, isDragReject, fileRejections } = useDropzone({
@@ -48,7 +49,9 @@ export function CustomUpload({
 
   const renderMultiPreview = hasFiles && (
     <>
-      {/* <MultiFilePreview files={value} thumbnail={thumbnail} onRemove={onRemove} sx={{ my: 3 }} /> */}
+      {preview && (
+        <MultiFilePreview files={value} thumbnail={thumbnail} onRemove={onRemove} sx={{ my: 3 }} />
+      )}
 
       {(onRemoveAll || onUpload) && (
         <Stack direction="row" justifyContent="flex-end" spacing={1.5}>
