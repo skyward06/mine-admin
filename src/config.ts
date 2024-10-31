@@ -26,7 +26,7 @@ export const CONFIG: ConfigValue = {
     basePath: import.meta.env.VITE_BASE_PATH ?? '',
     version: packageJson.version,
   },
-  SITE_URL: 'https://api.minetxc.com',
+  SITE_URL: import.meta.env.BASE_URL ?? '',
   SERVER_URL: import.meta.env.VITE_SERVER_URL ?? '',
   ASSET_URL: import.meta.env.VITE_ASSET_URL ?? '',
   TRANSACTION_COUNT: import.meta.env.TRANSACTION_COUNT ?? 150,
