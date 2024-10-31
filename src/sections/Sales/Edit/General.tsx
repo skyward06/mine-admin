@@ -31,6 +31,8 @@ import { useFetchMembers } from 'src/sections/Members/useApollo';
 import { useFetchPackages } from 'src/sections/Products/useApollo';
 
 import { useUpdateSale } from '../useApollo';
+import { FileRecentItem } from './FileRecentItem';
+import { FileManagerNewFolderDialog } from '../Upload';
 
 // ----------------------------------------------------------------------
 
@@ -52,6 +54,7 @@ const SaleGeneralSchema = zod.object({
   paymentMethod: zod.string({ required_error: 'Payment Method is required' }),
   status: zod.boolean({ required_error: 'Status is required' }).default(true),
   packageId: zod.string({ required_error: 'Package is required' }),
+  note: zod.string().optional(),
 });
 
 export default function SaleGeneral({ currentSale }: Props) {
@@ -59,8 +62,10 @@ export default function SaleGeneral({ currentSale }: Props) {
 
   const { status: currentStatus } = currentSale;
 
+  const [files, setFiles] = useState<string[]>();
   const [member, setMember] = useState<Member>();
   const [status, setStatus] = useState(currentStatus);
+  const [paymentMethod, setPaymentMethod] = useState<string>();
 
   const { members, fetchMembers } = useFetchMembers();
   const { packages, fetchPackages } = useFetchPackages();
@@ -80,6 +85,12 @@ export default function SaleGeneral({ currentSale }: Props) {
     fetchPackages({ variables: { filter: { status: true } } });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (currentSale && currentSale.paymentConfirm) {
+      setFiles(currentSale?.paymentConfirm?.map((file: any) => file));
+    }
+  }, [currentSale]);
 
   const methods = useForm<SaleGeneralSchemaType>({
     resolver: zodResolver(SaleGeneralSchema),
@@ -102,11 +113,13 @@ export default function SaleGeneral({ currentSale }: Props) {
       await updateSale({
         variables: {
           data: {
+            ...newSale,
             id: currentSale.id,
             orderedAt: customizeDate(orderedAt),
-            memberId: member?.id ?? '',
+            memberId: member?.id,
+            fileIds: files?.map((file: any) => file.id),
             status,
-            ...newSale,
+            paymentMethod,
           },
         },
       });
@@ -124,13 +137,21 @@ export default function SaleGeneral({ currentSale }: Props) {
     }
   });
 
+  const handleUpdate = (data: any) => {
+    setFiles((prev) => [...(prev ?? []), ...data.files]);
+  };
+
+  const onDelete = (id: string) => {
+    setFiles(files?.filter((file: any) => id !== file.id));
+  };
+
   return (
     <Form methods={methods} onSubmit={onSubmit}>
       <Grid container spacing={3}>
-        <Grid md={12}>
+        <Grid xs={12} md={9}>
           <Card sx={{ p: 3 }}>
-            <Stack spacing={1} sx={{ mb: 3 }}>
-              <Typography variant="subtitle2">Sale</Typography>
+            <Stack spacing={1} sx={{ mb: 3 }} direction="row" justifyContent="space-between">
+              <Typography variant="h5">Sale</Typography>
             </Stack>
             <Box
               rowGap={3}
@@ -156,7 +177,7 @@ export default function SaleGeneral({ currentSale }: Props) {
                   setMember({ id: value?.id ?? '', username: value?.username ?? '' })
                 }
                 onInputChange={(_, username: string) => {
-                  setMember({ id: '', username });
+                  setMember({ id: member?.id ?? currentSale.memberId, username });
                 }}
               />
 
@@ -170,13 +191,29 @@ export default function SaleGeneral({ currentSale }: Props) {
 
               <Field.DatePicker name="orderedAt" label="Ordered At" format="YYYY-MM-DD" />
 
-              <Field.Select name="paymentMethod" label="Payment Method">
-                {PAYMENT_TYPE.map((option) => (
-                  <MenuItem key={option.label} value={option.value}>
+              <Autocomplete
+                freeSolo
+                fullWidth
+                options={PAYMENT_TYPE}
+                getOptionLabel={(option: any) => option.value}
+                value={{ value: paymentMethod ?? currentSale.paymentMethod }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    required
+                    name="paymentMethod"
+                    label="Payment Method"
+                    margin="none"
+                  />
+                )}
+                renderOption={(props, option) => (
+                  <li {...props} key={option!.value}>
                     {option.value}
-                  </MenuItem>
-                ))}
-              </Field.Select>
+                  </li>
+                )}
+                onInputChange={(_, value: any) => setPaymentMethod(value)}
+                onChange={(_, value: any) => setPaymentMethod(value.value)}
+              />
 
               <Field.Select
                 name="status"
@@ -189,6 +226,8 @@ export default function SaleGeneral({ currentSale }: Props) {
                 <MenuItem value={1}>Active</MenuItem>
                 <MenuItem value={0}>Inactive</MenuItem>
               </Field.Select>
+
+              <Field.Text name="note" label="Note" />
             </Box>
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>
@@ -197,6 +236,15 @@ export default function SaleGeneral({ currentSale }: Props) {
               </LoadingButton>
             </Stack>
           </Card>
+        </Grid>
+        <Grid xs={12} md={3}>
+          <FileManagerNewFolderDialog handleUpdate={handleUpdate} />
+
+          <Box sx={{ gap: 1, display: 'flex', flexDirection: 'column', mt: 1 }}>
+            {files?.map((file: any) => (
+              <FileRecentItem key={file.id} file={file} onDelete={onDelete} />
+            ))}
+          </Box>
         </Grid>
       </Grid>
     </Form>
