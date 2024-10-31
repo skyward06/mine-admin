@@ -1,10 +1,12 @@
 import axios from 'axios';
 import { useState, useEffect, useCallback } from 'react';
 
+import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 
 import { CONFIG } from 'src/config';
 
+import { Iconify } from 'src/components/Iconify';
 import { CustomUpload } from 'src/components/Upload';
 
 // ----------------------------------------------------------------------
@@ -27,6 +29,7 @@ export function FileManagerNewFolderDialog({
   onChangeFolderName,
 }: Props) {
   const [files, setFiles] = useState<(File | string)[]>([]);
+  const [loading, setLoading] = useState<boolean>();
 
   useEffect(() => {
     setFiles([]);
@@ -35,6 +38,7 @@ export function FileManagerNewFolderDialog({
   const handleDrop = useCallback(
     async (acceptedFiles: File[]) => {
       setFiles([...files, ...acceptedFiles]);
+      setLoading(true);
 
       const token = localStorage.getItem(CONFIG.storageTokenKey);
 
@@ -51,6 +55,8 @@ export function FileManagerNewFolderDialog({
         handleUpdate(data);
       } catch (error) {
         console.error('Error uploading file:', error);
+      } finally {
+        setLoading(false);
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -82,6 +88,10 @@ export function FileManagerNewFolderDialog({
         onRemove={handleRemoveFile}
         accept={{ images: ['.png', '.jpg', '.jpeg'], files: ['.pdf'] }}
       />
+
+      <Stack direction="row" justifyContent="center">
+        {loading && <Iconify icon="eos-icons:bubble-loading" />}
+      </Stack>
     </>
   );
 }

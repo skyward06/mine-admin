@@ -30,7 +30,7 @@ const NewNoteSchema = zod.object({
   description: zod.string({ required_error: 'Content is required' }),
 });
 
-export default function CreateForm({ open, memberId, current }: Props) {
+export default function EditForm({ open, memberId, current }: Props) {
   const defaultValues = useMemo(
     () =>
       current
@@ -38,8 +38,6 @@ export default function CreateForm({ open, memberId, current }: Props) {
         : { description: '' },
     [current]
   );
-
-  console.log('current => ', current);
 
   const methods = useForm<NewNoteSchemaType>({
     resolver: zodResolver(NewNoteSchema),
