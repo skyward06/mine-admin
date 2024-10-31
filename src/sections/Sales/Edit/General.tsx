@@ -54,7 +54,7 @@ const SaleGeneralSchema = zod.object({
   paymentMethod: zod.string({ required_error: 'Payment Method is required' }),
   status: zod.boolean({ required_error: 'Status is required' }).default(true),
   packageId: zod.string({ required_error: 'Package is required' }),
-  note: zod.string().optional(),
+  note: zod.string().optional().nullable(),
 });
 
 export default function SaleGeneral({ currentSale }: Props) {
