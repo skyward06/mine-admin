@@ -42,7 +42,7 @@ const NewMemberSchema = zod.object({
   primaryAddress: zod.string({ required_error: 'Address is required' }),
   secondaryAddress: zod.string({ required_error: 'Address Line 2 is required' }),
   sponsorId: zod.string().optional(),
-  assetId: zod.string({ required_error: 'AssetID is required' }),
+  assetId: zod.string(),
   preferredContact: zod.string().optional().nullable(),
   preferredContactDetail: zod.string().optional().nullable(),
   syncWithSendy: zod.boolean().default(true),
@@ -189,7 +189,10 @@ export default function MemberCreateForm() {
       variables: {
         page: '1,5',
         filter: {
-          OR: [{ username: { contains: member?.username ?? '', mode: 'insensitive' } }],
+          OR: [
+            { username: { contains: member?.username ?? '', mode: 'insensitive' } },
+            { fullName: { contains: member?.username ?? '', mode: 'insensitive' } },
+          ],
           status: true,
         },
       },
@@ -223,7 +226,7 @@ export default function MemberCreateForm() {
                 options={members}
                 loading={memberLoading}
                 loadingText={<LoadingButton loading={memberLoading} />}
-                getOptionLabel={(option) => option!.username}
+                getOptionLabel={(option) => `${option!.username}-${option!.fullName}`}
                 renderInput={(params) => (
                   <TextField {...params} label="Sponsor Name" margin="none" />
                 )}
@@ -233,7 +236,7 @@ export default function MemberCreateForm() {
                   </li>
                 )}
                 onInputChange={(_, username: string) => {
-                  setMember({ id: '', username });
+                  setMember({ id: '', username: username.split('-')[0] });
                 }}
                 onChange={(_, value) => {
                   setMember({ id: value?.id ?? '', username: value?.username ?? '' });
