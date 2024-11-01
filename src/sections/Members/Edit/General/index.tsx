@@ -138,6 +138,11 @@ export default function MemberGeneral({ currentMember }: Props) {
         return;
       }
 
+      if (!member?.id.length) {
+        toast.error('Sponsor Name is required');
+        return;
+      }
+
       if (total === 100) {
         await submit({
           variables: {
@@ -228,19 +233,21 @@ export default function MemberGeneral({ currentMember }: Props) {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <Field.Text name="username" label="Username" />
-              <Field.Text name="email" label="Email" defaultValue={currentMember.email} />
+              <Field.Text name="username" label="Username" required />
+              <Field.Text name="email" label="Email" defaultValue={currentMember.email} required />
               <Field.Text
                 name="firstName"
                 label="First Name"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
+                required
               />
               <Field.Text
                 name="lastName"
                 label="Last Name"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
+                required
               />
               <Field.Phone name="mobile" label="Mobile" />
               <Autocomplete
@@ -251,7 +258,13 @@ export default function MemberGeneral({ currentMember }: Props) {
                 getOptionLabel={(option) => option!.username}
                 value={member ?? currentMember!.sponsor}
                 renderInput={(params) => (
-                  <TextField {...params} label="Sponsor Name" margin="none" />
+                  <TextField
+                    {...params}
+                    label="Sponsor Name"
+                    margin="none"
+                    required
+                    error={!member?.id.length}
+                  />
                 )}
                 renderOption={(props, option) => (
                   <li {...props} key={option!.username}>

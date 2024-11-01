@@ -41,8 +41,8 @@ const NewMemberSchema = zod.object({
   state: zod.string({ required_error: 'State is required' }),
   primaryAddress: zod.string({ required_error: 'Address is required' }),
   secondaryAddress: zod.string({ required_error: 'Address Line 2 is required' }),
-  sponsorId: zod.string().optional(),
-  assetId: zod.string(),
+  sponsorId: zod.string({ required_error: 'Sponsor Name is required' }),
+  assetId: zod.string().optional().nullable(),
   preferredContact: zod.string().optional().nullable(),
   preferredContactDetail: zod.string().optional().nullable(),
   syncWithSendy: zod.boolean().default(true),
@@ -78,9 +78,6 @@ export default function MemberCreateForm() {
 
   const defaultValues = useMemo(
     () => ({
-      username: '',
-      fullName: '',
-      email: '',
       mobile: '',
       primaryAddress: '',
       secondaryAddress: '',
@@ -130,6 +127,11 @@ export default function MemberCreateForm() {
         return;
       }
 
+      if (!member?.id.length) {
+        toast.error('Sponsor Name is required');
+        return;
+      }
+
       if (total === 100) {
         await submit({
           variables: {
@@ -162,10 +164,6 @@ export default function MemberCreateForm() {
 
         if (error.path?.includes('email')) {
           setError('email', { type: 'manual', message: error?.message || '' });
-        }
-
-        if (error.path?.includes('assetId')) {
-          setError('assetId', { type: 'manual', message: error?.message || '' });
         }
 
         error.path?.forEach((item: any, index: number) => {
@@ -214,12 +212,10 @@ export default function MemberCreateForm() {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <Field.Text name="username" label="Username" />
-              <Stack direction="row" alignItems="center">
-                <Field.Text name="email" label="Email" />
-              </Stack>
-              <Field.Text name="firstName" label="First Name" />
-              <Field.Text name="lastName" label="Last Name" />
+              <Field.Text name="username" label="Username" required />
+              <Field.Text name="email" label="Email" required />
+              <Field.Text name="firstName" label="First Name" required />
+              <Field.Text name="lastName" label="Last Name" required />
               <Field.Phone name="mobile" label="Mobile" />
               <Autocomplete
                 fullWidth
@@ -228,7 +224,7 @@ export default function MemberCreateForm() {
                 loadingText={<LoadingButton loading={memberLoading} />}
                 getOptionLabel={(option) => `${option!.username}-${option!.fullName}`}
                 renderInput={(params) => (
-                  <TextField {...params} label="Sponsor Name" margin="none" />
+                  <TextField {...params} label="Sponsor Name" margin="none" required />
                 )}
                 renderOption={(props, option) => (
                   <li {...props} key={option!.username}>
