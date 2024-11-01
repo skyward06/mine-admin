@@ -86,6 +86,7 @@ export default function SaleListView() {
       filterObj.OR = [
         { paymentMethod: { contains: filter.search, mode: 'insensitive' } },
         { member: { username: { contains: filter.search, mode: 'insensitive' } } },
+        { member: { fullName: { contains: filter.search, mode: 'insensitive' } } },
         { member: { email: { contains: filter.search, mode: 'insensitive' } } },
         { package: { productName: { contains: filter.search, mode: 'insensitive' } } },
       ];
