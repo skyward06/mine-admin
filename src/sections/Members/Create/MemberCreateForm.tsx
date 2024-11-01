@@ -259,7 +259,7 @@ export default function MemberCreateForm() {
                 onInputChange={(_, value: any) => setState(value)}
               />
               <Field.Text name="zipCode" label="ZIP Code" />
-              <Field.Text name="assetId" label="Asset ID" />
+              <Field.Text name="assetId" label="Coin ID" />
               <Field.Select name="preferredContact" label="Preferred Contact">
                 {CONTACT.map((option) => (
                   <MenuItem key={option.label} value={option.value}>
