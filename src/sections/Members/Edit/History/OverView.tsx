@@ -9,7 +9,6 @@ import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
 
 import { fNumber } from 'src/utils/formatNumber';
-import { formatDate } from 'src/utils/format-time';
 
 import { FETCH_MEMBER_HISTORY } from '../../query';
 
@@ -27,22 +26,22 @@ export const OverView = ({ currentMember }: Props) => {
   });
 
   return (
-    <Card sx={{ mr: 2, mt: 2, py: 3, textAlign: 'center', typography: 'h4' }}>
+    <Card sx={{ mt: 2, py: 3, textAlign: 'center', typography: 'h4' }}>
       <Stack
         direction="row"
         divider={<Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />}
       >
-        <Stack width={1}>
+        <Stack width={0.8}>
           {fNumber(data?.memberOverview.currentHashPower ?? 0)}
           <Box component="span" sx={{ color: 'text.secondary', typography: 'body2' }}>
             Hash Power
           </Box>
         </Stack>
 
-        <Stack width={1}>
+        <Stack width={0.6}>
           {currentMember.point}
           <Box component="span" sx={{ color: 'text.secondary', typography: 'body2' }}>
-            Point
+            Total Point
           </Box>
         </Stack>
 
@@ -50,13 +49,6 @@ export const OverView = ({ currentMember }: Props) => {
           {fNumber((data?.memberOverview.totalTXCShared ?? 0) / 10 ** 8)}
           <Box component="span" sx={{ color: 'text.secondary', typography: 'body2' }}>
             Total TXC Reward
-          </Box>
-        </Stack>
-
-        <Stack width={1}>
-          {formatDate(data?.memberOverview.joinDate ?? new Date())}
-          <Box component="span" sx={{ color: 'text.secondary', typography: 'body2' }}>
-            Join Date
           </Box>
         </Stack>
       </Stack>
