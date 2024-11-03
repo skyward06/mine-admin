@@ -170,7 +170,7 @@ export type CreateMemberInput = {
   preferredContactDetail?: InputMaybe<Scalars['String']['input']>;
   primaryAddress: Scalars['String']['input'];
   secondaryAddress?: InputMaybe<Scalars['String']['input']>;
-  sponsorId?: InputMaybe<Scalars['ID']['input']>;
+  sponsorId: Scalars['ID']['input'];
   state?: InputMaybe<Scalars['String']['input']>;
   status?: InputMaybe<Scalars['Boolean']['input']>;
   syncWithSendy?: InputMaybe<Scalars['Boolean']['input']>;
@@ -287,6 +287,14 @@ export type EmailVerificationInput = {
 export type EmailVerificationResponse = {
   __typename?: 'EmailVerificationResponse';
   token: Scalars['String']['output'];
+};
+
+export type EmailVerifyResult = {
+  __typename?: 'EmailVerifyResult';
+  message?: Maybe<Scalars['String']['output']>;
+  packageId?: Maybe<Scalars['ID']['output']>;
+  paymentMethod?: Maybe<Scalars['String']['output']>;
+  result: SuccessResult;
 };
 
 export type EntityStats = {
@@ -515,7 +523,7 @@ export type Mutation = {
   createSale: Sale;
   createStatistics: Statistics;
   createStatisticsSale: StatisticsSale;
-  emailVerify: SuccessResponse;
+  emailVerify: EmailVerifyResult;
   memberLogin: MemberLoginResponse;
   removeAdminNote: SuccessResponse;
   removeAdmins: ManySuccessResponse;
@@ -1159,8 +1167,13 @@ export type StatisticsSaleResponse = {
 export type SuccessResponse = {
   __typename?: 'SuccessResponse';
   message?: Maybe<Scalars['String']['output']>;
-  result: Scalars['String']['output'];
+  result: SuccessResult;
 };
+
+export enum SuccessResult {
+  Failed = 'failed',
+  Success = 'success'
+}
 
 export type TokenInput = {
   token: Scalars['String']['input'];
@@ -1377,7 +1390,7 @@ export type RemoveAdminNoteMutationVariables = Exact<{
 }>;
 
 
-export type RemoveAdminNoteMutation = { __typename?: 'Mutation', removeAdminNote: { __typename?: 'SuccessResponse', message?: string | null, result: string } };
+export type RemoveAdminNoteMutation = { __typename?: 'Mutation', removeAdminNote: { __typename?: 'SuccessResponse', message?: string | null, result: SuccessResult } };
 
 export type FetchMemberStatsQueryVariables = Exact<{
   pendingFilter?: InputMaybe<Scalars['JSONObject']['input']>;
@@ -1448,21 +1461,21 @@ export type RemoveMemberMutationVariables = Exact<{
 }>;
 
 
-export type RemoveMemberMutation = { __typename?: 'Mutation', removeMember: { __typename?: 'SuccessResponse', message?: string | null, result: string } };
+export type RemoveMemberMutation = { __typename?: 'Mutation', removeMember: { __typename?: 'SuccessResponse', message?: string | null, result: SuccessResult } };
 
 export type RemoveCompleteMemberPlacementMutationVariables = Exact<{
   data: IdInput;
 }>;
 
 
-export type RemoveCompleteMemberPlacementMutation = { __typename?: 'Mutation', removeCompleteMemberPlacement: { __typename?: 'SuccessResponse', message?: string | null, result: string } };
+export type RemoveCompleteMemberPlacementMutation = { __typename?: 'Mutation', removeCompleteMemberPlacement: { __typename?: 'SuccessResponse', message?: string | null, result: SuccessResult } };
 
 export type MutationMutationVariables = Exact<{
   data: IdInput;
 }>;
 
 
-export type MutationMutation = { __typename?: 'Mutation', approveMember: { __typename?: 'SuccessResponse', message?: string | null, result: string } };
+export type MutationMutation = { __typename?: 'Mutation', approveMember: { __typename?: 'SuccessResponse', message?: string | null, result: SuccessResult } };
 
 export type PackagesQueryVariables = Exact<{
   sort?: InputMaybe<Scalars['String']['input']>;
@@ -1500,7 +1513,7 @@ export type RemovePackageMutationVariables = Exact<{
 }>;
 
 
-export type RemovePackageMutation = { __typename?: 'Mutation', removePackage: { __typename?: 'SuccessResponse', result: string } };
+export type RemovePackageMutation = { __typename?: 'Mutation', removePackage: { __typename?: 'SuccessResponse', result: SuccessResult } };
 
 export type RewardQueryVariables = Exact<{
   sort?: InputMaybe<Scalars['String']['input']>;
@@ -1598,7 +1611,7 @@ export type RemoveSaleMutationVariables = Exact<{
 }>;
 
 
-export type RemoveSaleMutation = { __typename?: 'Mutation', removeSale: { __typename?: 'SuccessResponse', result: string } };
+export type RemoveSaleMutation = { __typename?: 'Mutation', removeSale: { __typename?: 'SuccessResponse', result: SuccessResult } };
 
 export type LoginMutationVariables = Exact<{
   data: AdminLoginInput;
