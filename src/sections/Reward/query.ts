@@ -50,6 +50,7 @@ export const FETCH_MEMBERSTATISTICS_QUERY = gql(/* GraphQL */ `
           email
           point
           mobile
+          userId
           assetId
           status
           emailVerified

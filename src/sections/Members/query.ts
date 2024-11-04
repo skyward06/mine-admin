@@ -24,6 +24,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         email
         primaryAddress
         secondaryAddress
+        userId
         assetId
         mobile
         city
@@ -46,6 +47,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           primaryAddress
           secondaryAddress
           mobile
+          userId
           assetId
           status
           emailVerified
@@ -62,6 +64,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           point
           mobile
           status
+          userId
           assetId
           username
           fullName
@@ -79,6 +82,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           point
           mobile
           status
+          userId
           assetId
           username
           fullName

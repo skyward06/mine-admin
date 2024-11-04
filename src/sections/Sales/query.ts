@@ -16,6 +16,7 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
           point
           mobile
           status
+          userId
           assetId
           username
           fullName
