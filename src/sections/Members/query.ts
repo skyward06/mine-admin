@@ -58,19 +58,37 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         placementPosition
         placementParent {
           id
-          username
-          fullName
           email
           point
+          mobile
+          status
+          assetId
+          username
+          fullName
+          emailVerified
+          syncWithSendy
+          primaryAddress
+          totalIntroducers
+          preferredContact
+          secondaryAddress
+          preferredContactDetail
+        }
+        placementChildren {
+          id
+          email
+          point
+          mobile
+          status
+          assetId
+          username
+          fullName
+          emailVerified
+          syncWithSendy
           primaryAddress
           secondaryAddress
-          mobile
-          assetId
-          status
-          emailVerified
-          totalIntroducers
-          syncWithSendy
           preferredContact
+          totalIntroducers
+          placementPosition
           preferredContactDetail
         }
         sales {
