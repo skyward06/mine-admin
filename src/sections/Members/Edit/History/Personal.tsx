@@ -1,8 +1,9 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
+import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 
@@ -10,12 +11,22 @@ import { useFetchMembers } from '../../useApollo';
 
 export const Personal = () => {
   const params = useParams();
+  const [children, setChildren] = useState<any>();
 
   const { id } = params;
 
   const { members, fetchMembers } = useFetchMembers();
 
   const member = members[0];
+
+  useEffect(() => {
+    setChildren(
+      member?.placementChildren?.reduce(
+        (prev, save) => ({ ...prev, [save?.placementPosition ?? '']: save?.fullName }),
+        {}
+      )
+    );
+  }, [member]);
 
   useEffect(() => {
     fetchMembers({ variables: { filter: { id: id ?? '' } } });
@@ -150,10 +161,12 @@ export const Personal = () => {
             </Stack>
           </Stack>
 
+          <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
+
           <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
             <Stack width={0.5}>
               <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                Placement:
+                Placement Parent:
               </Typography>
             </Stack>
             <Stack width={1}>
@@ -168,7 +181,7 @@ export const Personal = () => {
               </Typography>
             </Stack>
             <Stack width={1}>
-              <Typography variant="body2">Not Sure</Typography>
+              <Typography variant="body2">{children?.LEFT}</Typography>
             </Stack>
           </Stack>
 
@@ -179,7 +192,7 @@ export const Personal = () => {
               </Typography>
             </Stack>
             <Stack width={1}>
-              <Typography variant="body2">Not Sure</Typography>
+              <Typography variant="body2">{children?.RIGHT}</Typography>
             </Stack>
           </Stack>
         </Stack>
