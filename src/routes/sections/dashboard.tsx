@@ -57,6 +57,10 @@ const CommissionDetailPage = lazy(() => import('src/pages/CommissionDetail'));
 const SponsorListPage = lazy(() => import('src/pages/Sponsor/List'));
 // ----------------------------------------------------------------------
 
+// ----------------------------------------------------------------------
+const ReportListPage = lazy(() => import('src/pages/Report/List'));
+// ----------------------------------------------------------------------
+
 export const dashboardRoutes = [
   {
     path: '',
@@ -130,6 +134,10 @@ export const dashboardRoutes = [
             children: [{ path: ':id', element: <StatisticsDetailPage /> }],
           },
         ],
+      },
+      {
+        path: 'reports',
+        children: [{ index: true, element: <ReportListPage /> }],
       },
       {
         path: 'users',

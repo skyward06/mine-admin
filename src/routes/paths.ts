@@ -12,6 +12,7 @@ const ROOTS = {
   COMMISSION: '/commission',
   REWARD: '/reward',
   USERS: '/users',
+  REPORTS: '/reports',
 };
 
 // ----------------------------------------------------------------------
@@ -61,6 +62,9 @@ export const paths = {
       edit: (id: string) => `${ROOTS.REWARD}/new/${id}`,
       detail: (id: string) => `${ROOTS.REWARD}/${id}`,
       view: (id: string) => `${ROOTS.REWARD}/statistics/${id}`,
+    },
+    report: {
+      root: ROOTS.REPORTS,
     },
   },
   notFound: '/404',

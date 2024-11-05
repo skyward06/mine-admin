@@ -71,6 +71,11 @@ export const _account = [
     icon: <Iconify icon="marketeq:reward" />,
   },
   {
+    label: 'Report',
+    href: '/reports',
+    icon: <Iconify icon="oui:app-reporting" />,
+  },
+  {
     label: 'Admin',
     href: '/users',
     icon: <Iconify icon="grommet-icons:user-admin" />,
