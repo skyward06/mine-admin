@@ -79,6 +79,7 @@ export default function SaleTableRow({ row, confirm, setSelected }: Props) {
         <TableCell align="left">{paymentMethod}</TableCell>
         <TableCell align="left">{product?.amount}</TableCell>
         <TableCell align="left">{product?.token}</TableCell>
+        <TableCell align="left">{product?.point}</TableCell>
         <TableCell align="left">
           <ListItemText
             primary={formatDate(orderedAt)}

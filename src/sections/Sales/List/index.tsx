@@ -59,6 +59,7 @@ const TABLE_HEAD = [
   { id: 'paymentMethod', label: 'Payment Method', width: 250, sortable: true },
   { id: 'package.amount', label: 'Amount', width: 90 },
   { id: 'package.hashPower', label: 'Hash Power', width: 150 },
+  { id: 'package.point', label: 'Point', width: 50 },
   { id: 'orderedAt', label: 'Ordered At', width: 110, sortable: true },
   { id: 'action', label: 'Action', align: 'center' },
 ];
