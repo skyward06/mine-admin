@@ -6,7 +6,7 @@ import isEqual from 'lodash/isEqual';
 import { useForm } from 'react-hook-form';
 import { useMemo, useState, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ApolloError, useMutation, useLazyQuery, useQuery as useGraphQuery } from '@apollo/client';
+import { ApolloError, useMutation, useLazyQuery } from '@apollo/client';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -20,13 +20,14 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { CONTACT } from 'src/consts';
+import { CONTACT, TXC_WALLET, OTHER_WALLET } from 'src/consts';
 
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
 
-import MemberWallets from './MemberWallets';
-import { UPDATE_MEMBER, FETCH_PAYOUTS_QUERY, FETCH_MEMBERS_QUERY } from '../../query';
+import TXCWallets from './txcWallets';
+import OtherWallets from './otherWallets';
+import { UPDATE_MEMBER, FETCH_MEMBERS_QUERY } from '../../query';
 
 // ----------------------------------------------------------------------
 
@@ -60,19 +61,65 @@ const MemberGeneralSchema = zod.object({
   preferredContact: zod.string().optional().nullable(),
   preferredContactDetail: zod.string().optional().nullable(),
   syncWithSendy: zod.boolean().default(true),
-  memberWallets: zod.array(
+  txcWallets: zod.array(
     zod.object({
       payoutId: zod.string({ required_error: 'Payout is required' }),
       address: zod.string({ required_error: 'Address is required' }),
+      note: zod.string().optional().nullable(),
       percent: zod.number({ required_error: 'Percent is required' }),
+    })
+  ),
+  otherWallets: zod.array(
+    zod.object({
+      payoutId: zod.string(),
+      address: zod.string(),
+      note: zod.string(),
+      percent: zod.number().default(0),
     })
   ),
 });
 
+const getWallets = (memberWallets: any) => {
+  const data = memberWallets.reduce(
+    (prev: any, save: any) => ({ ...prev, [save.payout.id]: save }),
+    {}
+  );
+
+  const txcWallets: any = [];
+  const otherWallets: any = [];
+
+  TXC_WALLET.forEach((item: any) => {
+    if (data[item.id]) {
+      txcWallets.push({
+        id: data[item.id].id,
+        payoutId: item.id,
+        address: data[item.id].address,
+        percent: data[item.id].percent,
+        note: data[item.id].note,
+      });
+    }
+  });
+
+  OTHER_WALLET.forEach((item: any) => {
+    if (data[item.id]) {
+      otherWallets.push({
+        id: data[item.id].id,
+        payoutId: item.id,
+        address: data[item.id].address,
+        note: data[item.id].note,
+      });
+    }
+  });
+
+  return [txcWallets, otherWallets];
+};
+
 export default function MemberGeneral({ currentMember }: Props) {
   const router = useRouter();
 
-  const { fullName } = currentMember;
+  const { fullName, memberWallets } = currentMember;
+
+  const [txcWallets, otherWallets] = getWallets(memberWallets);
 
   const [, first, last]: any = fullName.match(/^(\S+)\s+(.*)/);
 
@@ -80,14 +127,9 @@ export default function MemberGeneral({ currentMember }: Props) {
   const [lastName, setLastName] = useState<string>(last);
   const [state, setState] = useState<string>();
 
-  const { data: payoutsData } = useGraphQuery(FETCH_PAYOUTS_QUERY, {
-    variables: {},
-  });
-
   const [fetchMembers, { loading: memberLoading, data: memberData }] =
     useLazyQuery(FETCH_MEMBERS_QUERY);
 
-  const payouts = payoutsData?.payouts.payouts ?? [];
   const members = memberData?.members.members ?? [];
 
   const [member, setMember] = useState<Edit>();
@@ -95,10 +137,10 @@ export default function MemberGeneral({ currentMember }: Props) {
   const [submit, { loading }] = useMutation(UPDATE_MEMBER);
 
   const defaultValues = useMemo(() => {
-    const { data } = MemberGeneralSchema.safeParse(currentMember);
+    const { data } = MemberGeneralSchema.safeParse({ ...currentMember, txcWallets, otherWallets });
 
     return data ? { ...data, firstName: first, lastName: last } : ({} as MemberGeneralSchemaType);
-  }, [currentMember, first, last]);
+  }, [currentMember, first, last, txcWallets, otherWallets]);
 
   const methods = useForm<MemberGeneralSchemaType>({
     resolver: zodResolver(MemberGeneralSchema),
@@ -128,12 +170,12 @@ export default function MemberGeneral({ currentMember }: Props) {
         return;
       }
 
-      const total = newMember.memberWallets.reduce(
+      const total = newMember.txcWallets.reduce(
         (prev: number, save: any) => prev + save.percent,
         0
       );
 
-      if (hasDuplicates(newMember.memberWallets)) {
+      if (hasDuplicates([...newMember.txcWallets, ...newMember.otherWallets])) {
         toast.warning('Duplicated wallet address!');
         return;
       }
@@ -142,6 +184,8 @@ export default function MemberGeneral({ currentMember }: Props) {
         toast.error('Sponsor Name is required');
         return;
       }
+
+      console.log('asdasd => ', newMember.txcWallets);
 
       if (total === 100) {
         await submit({
@@ -162,10 +206,12 @@ export default function MemberGeneral({ currentMember }: Props) {
               preferredContact: newMember.preferredContact,
               preferredContactDetail: newMember.preferredContactDetail,
               zipCode: newMember.zipCode,
-              wallets: newMember.memberWallets.map(({ percent, ...rest }) => ({
-                percent: percent * 100,
-                ...rest,
-              })),
+              wallets: [...newMember.txcWallets, ...newMember.otherWallets].map(
+                ({ percent, ...rest }) => ({
+                  percent: percent * 100,
+                  ...rest,
+                })
+              ),
             },
           },
         });
@@ -194,7 +240,7 @@ export default function MemberGeneral({ currentMember }: Props) {
 
         error.path?.forEach((item: any, index: number) => {
           if (item.includes('wallets')) {
-            setError(`memberWallets.${index}.address`, {
+            setError(`txcWallets.${index}.address`, {
               type: 'manual',
               message: 'Invalid Address',
             });
@@ -313,7 +359,8 @@ export default function MemberGeneral({ currentMember }: Props) {
           </Card>
         </Grid>
         <Grid md={12} xl={6}>
-          <MemberWallets payouts={payouts} wallets={currentMember?.memberWallets ?? []} />
+          <TXCWallets wallets={txcWallets} />
+          <OtherWallets wallets={otherWallets} />
         </Grid>
       </Grid>
 
