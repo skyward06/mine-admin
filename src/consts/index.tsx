@@ -26,10 +26,7 @@ export const COMMISSION_TYPE = {
 };
 
 export const CONTACT = [
-  {
-    label: 'INSTAGRAM',
-    value: 'Instagram',
-  },
+  { label: 'INSTAGRAM', value: 'Instagram' },
   { label: 'FACEBOOK', value: 'Facebook' },
   { label: 'SNAPCHAT', value: 'Snapchat' },
   { label: 'TELEGRAM', value: 'Telegram' },
@@ -49,4 +46,16 @@ export const PAYMENT_TYPE = [
   { label: 'CASH', value: 'Cash' },
   { label: 'KILO_OF_SILVER', value: 'Kilo of Silver' },
   { label: 'CRYPTO', value: 'Crypto' },
+];
+
+export const TXC_WALLET = [
+  { id: 'b3ed0e78-6cc8-465c-9454-0576534f06f2', method: 'TXC-HOT' },
+  { id: '6f7681f0-9ccf-4a79-b1cb-f87e56cf7e8a', method: 'TXC-COLD' },
+];
+
+export const OTHER_WALLET = [
+  { id: '69f1351c-e7c8-4c98-9030-2f0469f86b76', method: 'ETH' },
+  { id: 'fc6302d9-7819-4cd6-a1a4-68b03286c86f', method: 'BTC' },
+  { id: 'f8717a04-6203-482a-bed0-58bfb9c6f7e0', method: 'USDT' },
+  { id: 'ac26f196-d377-4846-8b86-7a7dda622d01', method: 'OTHER' },
 ];
