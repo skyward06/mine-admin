@@ -3,7 +3,7 @@ import states from 'states-us';
 import { useForm } from 'react-hook-form';
 import { useMemo, useState, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ApolloError, useMutation, useLazyQuery, useQuery as useGraphQuery } from '@apollo/client';
+import { ApolloError, useMutation, useLazyQuery } from '@apollo/client';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -22,8 +22,9 @@ import { CONTACT } from 'src/consts';
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
 
-import MemberWallets from './MemberWallets';
-import { CREATE_MEMBER, FETCH_PAYOUTS_QUERY, FETCH_MEMBERS_QUERY } from '../query';
+import TXCWallets from './txcWallets';
+import OtherWallets from './otherWallets';
+import { CREATE_MEMBER, FETCH_MEMBERS_QUERY } from '../query';
 
 // ----------------------------------------------------------------------
 export type NewMemberSchemaType = zod.infer<typeof NewMemberSchema>;
@@ -46,11 +47,20 @@ const NewMemberSchema = zod.object({
   preferredContact: zod.string().optional().nullable(),
   preferredContactDetail: zod.string().optional().nullable(),
   syncWithSendy: zod.boolean().default(true),
-  wallets: zod.array(
+  txcWallets: zod.array(
     zod.object({
       payoutId: zod.string({ required_error: 'Payout is required' }),
       address: zod.string({ required_error: 'Address is required' }),
+      note: zod.string().optional().nullable(),
       percent: zod.number({ required_error: 'Percent is required' }),
+    })
+  ),
+  otherWallets: zod.array(
+    zod.object({
+      payoutId: zod.string(),
+      address: zod.string(),
+      note: zod.string(),
+      percent: zod.number().default(0),
     })
   ),
 });
@@ -61,14 +71,9 @@ interface Member {
 }
 
 export default function MemberCreateForm() {
-  const { data: payoutsData } = useGraphQuery(FETCH_PAYOUTS_QUERY, {
-    variables: {},
-  });
-
   const [fetchMembers, { loading: memberLoading, data: memberData }] =
     useLazyQuery(FETCH_MEMBERS_QUERY);
 
-  const payouts = payoutsData?.payouts.payouts ?? [];
   const members = memberData?.members.members ?? [];
 
   const [member, setMember] = useState<Member>();
@@ -86,11 +91,7 @@ export default function MemberCreateForm() {
       syncWithSendy: true,
       zipCode: '',
       sponsorId: '',
-      wallets: [
-        {
-          percent: 100,
-        },
-      ],
+      txcWallets: [{ percent: 100 }],
     }),
     []
   );
@@ -118,69 +119,71 @@ export default function MemberCreateForm() {
     });
   };
 
-  const onSubmit = handleSubmit(async ({ firstName, lastName, wallets, ...data }) => {
-    try {
-      const total = wallets.reduce((prev: number, save: any) => prev + save.percent, 0);
+  const onSubmit = handleSubmit(
+    async ({ firstName, lastName, txcWallets, otherWallets, ...data }) => {
+      try {
+        const total = txcWallets.reduce((prev: number, save: any) => prev + save.percent, 0);
 
-      if (hasDuplicates(wallets)) {
-        toast.warning('Duplicated wallet address!');
-        return;
-      }
+        if (hasDuplicates([...txcWallets, ...otherWallets])) {
+          toast.warning('Duplicated wallet address!');
+          return;
+        }
 
-      if (!member?.id.length) {
-        toast.error('Sponsor Name is required');
-        return;
-      }
+        if (!member?.id.length) {
+          toast.error('Sponsor Name is required');
+          return;
+        }
 
-      if (total === 100) {
-        await submit({
-          variables: {
-            data: {
-              ...data,
-              fullName: `${firstName} ${lastName}`,
-              sponsorId: member?.id,
-              state,
-              wallets: wallets.map(({ percent, ...rest }) => ({
-                percent: percent * 100,
-                ...rest,
-              })),
+        if (total === 100) {
+          await submit({
+            variables: {
+              data: {
+                ...data,
+                fullName: `${firstName} ${lastName}`,
+                sponsorId: member?.id,
+                state,
+                wallets: [...txcWallets, ...otherWallets].map(({ percent, ...rest }) => ({
+                  percent: percent * 100,
+                  ...rest,
+                })),
+              },
             },
-          },
-        });
+          });
 
-        reset();
-        toast.success('Create success!');
-        router.push(paths.dashboard.members.root);
-      } else {
-        toast.warning('Sum of percent muse be 100%');
-      }
-    } catch (err) {
-      if (err instanceof ApolloError) {
-        const [error] = err.graphQLErrors;
-
-        if (error.path?.includes('username')) {
-          setError('username', { type: 'manual', message: error?.message || '' });
+          reset();
+          toast.success('Create success!');
+          router.push(paths.dashboard.members.root);
+        } else {
+          toast.warning('Sum of percent muse be 100%');
         }
+      } catch (err) {
+        if (err instanceof ApolloError) {
+          const [error] = err.graphQLErrors;
 
-        if (error.path?.includes('email')) {
-          setError('email', { type: 'manual', message: error?.message || '' });
-        }
-
-        error.path?.forEach((item: any, index: number) => {
-          if (item.includes('wallets')) {
-            setError(`wallets.${index}.address`, {
-              type: 'manual',
-              message: 'Invalid Address',
-            });
+          if (error.path?.includes('username')) {
+            setError('username', { type: 'manual', message: error?.message || '' });
           }
-        });
-      } else {
+
+          if (error.path?.includes('email')) {
+            setError('email', { type: 'manual', message: error?.message || '' });
+          }
+
+          error.path?.forEach((item: any, index: number) => {
+            if (item.includes('wallets')) {
+              setError(`txcWallets.${index}.address`, {
+                type: 'manual',
+                message: 'Invalid Address',
+              });
+            }
+          });
+        } else {
+          toast.error(err.message);
+        }
+
         toast.error(err.message);
       }
-
-      toast.error(err.message);
     }
-  });
+  );
 
   useEffect(() => {
     fetchMembers({
@@ -272,7 +275,8 @@ export default function MemberCreateForm() {
           </Card>
         </Grid>
         <Grid md={12} xl={6}>
-          <MemberWallets payouts={payouts} />
+          <TXCWallets />
+          <OtherWallets />
         </Grid>
       </Grid>
 
