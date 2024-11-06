@@ -23,7 +23,6 @@ import Note from './Note';
 import History from './History';
 import Sponsor from './Sponsor';
 import Placement from './Placement';
-import Commission from './Commission';
 import MemberGeneral from './General';
 import { FETCH_MEMBERS_QUERY } from '../query';
 
@@ -37,7 +36,6 @@ const TABS = [
   { value: 'sale', label: 'Sale', icon: <Iconify icon="bi:currency-exchange" /> },
   { value: 'sponsor', label: 'Sponsor', icon: <Iconify icon="bi:diagram-3" /> },
   { value: 'placement', label: 'Placement', icon: <Iconify icon="clarity:flow-chart-line" /> },
-  { value: 'commission', label: 'Commission', icon: <Iconify icon="fluent:reward-32-regular" /> },
   { value: 'log', label: 'Log', icon: <Iconify icon="ri:history-line" /> },
   { value: 'note', label: 'Note', icon: <Iconify icon="mdi:event-note-outline" /> },
 ];
@@ -106,8 +104,6 @@ export default function MemberEditView() {
         {tabs.value === 'sponsor' && <Sponsor currentMember={member} />}
 
         {tabs.value === 'placement' && <Placement currentMember={member} />}
-
-        {tabs.value === 'commission' && <Commission currentMember={member} />}
 
         {tabs.value === 'log' && <Log loading={loading} currentMember={member} />}
 
