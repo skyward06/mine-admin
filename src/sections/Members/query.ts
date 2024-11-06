@@ -122,6 +122,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           payoutId
           address
           percent
+          note
           payout {
             id
             method
