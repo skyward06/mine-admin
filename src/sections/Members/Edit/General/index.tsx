@@ -1,6 +1,5 @@
 import type { Member } from 'src/__generated__/graphql';
 
-import { z as zod } from 'zod';
 import states from 'states-us';
 import isEqual from 'lodash/isEqual';
 import { useForm } from 'react-hook-form';
@@ -27,6 +26,7 @@ import { Form, Field } from 'src/components/Form';
 
 import TXCWallets from './txcWallets';
 import OtherWallets from './otherWallets';
+import { Schema, type SchemaType } from './schema';
 import { UPDATE_MEMBER, FETCH_MEMBERS_QUERY } from '../../query';
 
 // ----------------------------------------------------------------------
@@ -40,44 +40,6 @@ interface Edit {
   username: string;
   fullName?: string;
 }
-
-// ----------------------------------------------------------------------
-export type MemberGeneralSchemaType = zod.infer<typeof MemberGeneralSchema>;
-
-const MemberGeneralSchema = zod.object({
-  username: zod.string({ required_error: 'Username is required' }),
-  fullName: zod.string(),
-  email: zod
-    .string({ required_error: 'Email is required' })
-    .email({ message: 'Invalid email address is provided' }),
-  mobile: zod.string({ required_error: 'Mobile is required' }),
-  city: zod.string().optional().nullable(),
-  zipCode: zod.string().optional().nullable(),
-  state: zod.string().optional().nullable(),
-  primaryAddress: zod.string({ required_error: 'Address is required' }),
-  secondaryAddress: zod.string().optional().nullable(),
-  sponsorId: zod.string().optional().nullable(),
-  assetId: zod.string().optional().nullable(),
-  preferredContact: zod.string().optional().nullable(),
-  preferredContactDetail: zod.string().optional().nullable(),
-  syncWithSendy: zod.boolean().default(true),
-  txcWallets: zod.array(
-    zod.object({
-      payoutId: zod.string({ required_error: 'Payout is required' }),
-      address: zod.string({ required_error: 'Address is required' }),
-      note: zod.string().optional().nullable(),
-      percent: zod.number({ required_error: 'Percent is required' }),
-    })
-  ),
-  otherWallets: zod.array(
-    zod.object({
-      payoutId: zod.string(),
-      address: zod.string(),
-      note: zod.string(),
-      percent: zod.number().default(0),
-    })
-  ),
-});
 
 const getWallets = (memberWallets: any) => {
   const data = memberWallets.reduce(
@@ -137,13 +99,13 @@ export default function MemberGeneral({ currentMember }: Props) {
   const [submit, { loading }] = useMutation(UPDATE_MEMBER);
 
   const defaultValues = useMemo(() => {
-    const { data } = MemberGeneralSchema.safeParse({ ...currentMember, txcWallets, otherWallets });
+    const { data } = Schema.safeParse({ ...currentMember, txcWallets, otherWallets });
 
-    return data ? { ...data, firstName: first, lastName: last } : ({} as MemberGeneralSchemaType);
+    return data ? { ...data, firstName: first, lastName: last } : ({} as SchemaType);
   }, [currentMember, first, last, txcWallets, otherWallets]);
 
-  const methods = useForm<MemberGeneralSchemaType>({
-    resolver: zodResolver(MemberGeneralSchema),
+  const methods = useForm<SchemaType>({
+    resolver: zodResolver(Schema),
     defaultValues,
   });
 
