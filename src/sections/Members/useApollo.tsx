@@ -51,12 +51,12 @@ export function useUpdateMember() {
 }
 
 export function useUpdatePassword() {
-  const [updatePassword] = useMutation(UPDATE_PASSWORD_QUERY, {
+  const [updatePassword, { loading }] = useMutation(UPDATE_PASSWORD_QUERY, {
     awaitRefetchQueries: true,
     refetchQueries: ['FetchMembers'],
   });
 
-  return { updatePassword };
+  return { loading, updatePassword };
 }
 
 export function useRemoveMember() {

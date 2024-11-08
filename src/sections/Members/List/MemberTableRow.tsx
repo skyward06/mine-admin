@@ -4,13 +4,13 @@ import { useState } from 'react';
 
 import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
-import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import TableRow from '@mui/material/TableRow';
 import Grid from '@mui/material/Unstable_Grid2';
 import TableCell from '@mui/material/TableCell';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
+import LoadingButton from '@mui/lab/LoadingButton';
 import ListItemText from '@mui/material/ListItemText';
 import InputAdornment from '@mui/material/InputAdornment';
 
@@ -67,7 +67,7 @@ export default function MemberTableRow({
     sales,
   } = row;
 
-  const { updatePassword } = useUpdatePassword();
+  const { loading, updatePassword } = useUpdatePassword();
   const { approveMember } = useApproveMember();
 
   const resetContent = (
@@ -245,9 +245,10 @@ export default function MemberTableRow({
         title="Reset Password"
         content={resetContent}
         action={
-          <Button
+          <LoadingButton
             variant="contained"
             color="info"
+            loading={loading}
             onClick={async () => {
               try {
                 await updatePassword({ variables: { data: { id, newPassword } } });
@@ -261,7 +262,7 @@ export default function MemberTableRow({
             }}
           >
             OK
-          </Button>
+          </LoadingButton>
         }
       />
     </>
