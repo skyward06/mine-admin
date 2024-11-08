@@ -42,36 +42,25 @@ interface Edit {
 }
 
 const getWallets = (memberWallets: any) => {
-  const data = memberWallets.reduce(
-    (prev: any, save: any) => ({ ...prev, [save.payout.id]: save }),
-    {}
-  );
-
-  const txcWallets: any = [];
-  const otherWallets: any = [];
-
-  TXC_WALLET.forEach((item: any) => {
-    if (data[item.id]) {
-      txcWallets.push({
-        id: data[item.id].id,
-        payoutId: item.id,
-        address: data[item.id].address,
-        percent: data[item.id].percent,
-        note: data[item.id].note,
-      });
-    }
-  });
-
-  OTHER_WALLET.forEach((item: any) => {
-    if (data[item.id]) {
-      otherWallets.push({
-        id: data[item.id].id,
-        payoutId: item.id,
-        address: data[item.id].address,
-        note: data[item.id].note,
-      });
-    }
-  });
+  if (!Array.isArray(memberWallets)) return [[], []];
+  const txcWallets: any[] = memberWallets
+    .filter((mw) => TXC_WALLET.findIndex((TXCWALLET) => TXCWALLET.id === mw.payout.id) !== -1)
+    .map((mw) => ({
+      id: mw.id,
+      payoutId: mw.payout.id,
+      address: mw.address,
+      note: mw.note,
+      percent: mw.percent,
+    }));
+  const otherWallets: any = memberWallets
+    .filter((mw) => OTHER_WALLET.findIndex((TXCWALLET) => TXCWALLET.id === mw.payout.id) !== -1)
+    .map((mw) => ({
+      id: mw.id,
+      payoutId: mw.payout.id,
+      address: mw.address,
+      note: mw.note,
+      percent: mw.percent,
+    }));
 
   return [txcWallets, otherWallets];
 };
