@@ -38,6 +38,8 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         syncWithSendy
         preferredContact
         preferredContactDetail
+        currentL
+        currentR
         sponsor {
           id
           username
@@ -55,6 +57,8 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           syncWithSendy
           preferredContact
           preferredContactDetail
+          currentL
+          currentR
         }
         placementParentId
         placementPosition
@@ -75,6 +79,8 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           preferredContact
           secondaryAddress
           preferredContactDetail
+          currentL
+          currentR
         }
         placementChildren {
           id
@@ -94,6 +100,8 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           totalIntroducers
           placementPosition
           preferredContactDetail
+          currentL
+          currentR
         }
         sales {
           id

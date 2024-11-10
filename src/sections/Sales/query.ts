@@ -27,6 +27,8 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
           totalIntroducers
           preferredContact
           preferredContactDetail
+          currentL
+          currentR
         }
         package {
           id

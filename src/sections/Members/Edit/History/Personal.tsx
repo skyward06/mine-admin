@@ -7,6 +7,8 @@ import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 
+import { formatDate } from 'src/utils/format-time';
+
 import { useFetchMembers } from '../../useApollo';
 
 export const Personal = () => {
@@ -151,6 +153,32 @@ export const Personal = () => {
             </Stack>
             <Stack width={1}>
               <Typography variant="body2">{member?.assetId}</Typography>
+            </Stack>
+          </Stack>
+
+          <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+            <Stack width={0.5}>
+              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                Joined At:
+              </Typography>
+            </Stack>
+            <Stack width={1}>
+              <Typography variant="body2">
+                {member?.createdAt ? formatDate(member.createdAt) : ''}
+              </Typography>
+            </Stack>
+          </Stack>
+
+          <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+            <Stack width={0.5}>
+              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                Commission:
+              </Typography>
+            </Stack>
+            <Stack width={1}>
+              <Typography variant="body2">
+                {`L${member?.currentL}, R${member?.currentR}`}
+              </Typography>
             </Stack>
           </Stack>
 

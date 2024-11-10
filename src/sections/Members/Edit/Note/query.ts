@@ -36,6 +36,8 @@ export const FETCH_NOTES_QUERY = gql(/* GraphQL */ `
           syncWithSendy
           preferredContact
           preferredContactDetail
+          currentL
+          currentR
         }
         admin {
           createdAt

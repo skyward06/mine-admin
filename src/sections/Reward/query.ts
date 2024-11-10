@@ -61,6 +61,8 @@ export const FETCH_MEMBERSTATISTICS_QUERY = gql(/* GraphQL */ `
           syncWithSendy
           preferredContact
           preferredContactDetail
+          currentL
+          currentR
           memberWallets {
             createdAt
             updatedAt
