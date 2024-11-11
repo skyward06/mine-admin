@@ -43,6 +43,7 @@ interface Edit {
 
 const getWallets = (memberWallets: any) => {
   if (!Array.isArray(memberWallets)) return [[], []];
+
   const txcWallets: any[] = memberWallets
     .filter((mw) => TXC_WALLET.findIndex((TXCWALLET) => TXCWALLET.id === mw.payout.id) !== -1)
     .map((mw) => ({
@@ -52,6 +53,7 @@ const getWallets = (memberWallets: any) => {
       note: mw.note,
       percent: mw.percent,
     }));
+
   const otherWallets: any = memberWallets
     .filter((mw) => OTHER_WALLET.findIndex((TXCWALLET) => TXCWALLET.id === mw.payout.id) !== -1)
     .map((mw) => ({
@@ -135,8 +137,6 @@ export default function MemberGeneral({ currentMember }: Props) {
         toast.error('Sponsor Name is required');
         return;
       }
-
-      console.log('asdasd => ', newMember.txcWallets);
 
       if (total === 100) {
         await submit({

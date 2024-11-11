@@ -1,7 +1,6 @@
 import { Helmet } from 'react-helmet-async';
-import { useLazyQuery } from '@apollo/client';
+import { useState, useEffect } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
-import { useState, useEffect, useCallback } from 'react';
 
 import { paths } from 'src/routes/paths';
 
@@ -12,7 +11,7 @@ import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import { LoadingScreen } from 'src/components/loading-screen';
 
 import SaleGeneral from './General';
-import { FETCH_SALES_QUERY } from '../query';
+import { useFetchSales } from '../useApollo';
 
 // ----------------------------------------------------------------------
 export default function SaleEditView() {
@@ -21,23 +20,19 @@ export default function SaleEditView() {
 
   const params = useParams();
 
-  const [fetchSaleQuery, { loading, data, called }] = useLazyQuery(FETCH_SALES_QUERY);
+  const { fetchSales, loading, sales, called } = useFetchSales();
 
-  const { id: saleId } = params;
-
-  const fetchSale = useCallback(() => {
-    fetchSaleQuery({ variables: { filter: { id: saleId } } });
-  }, [fetchSaleQuery, saleId]);
+  const { id } = params;
 
   useEffect(() => {
-    fetchSale();
-  }, [fetchSale]);
+    fetchSales({ variables: { filter: { id } } });
+  }, [fetchSales, id]);
 
   useEffect(() => {
     setIsLoading(!called || loading);
   }, [loading, called]);
 
-  const sale = data?.sales?.sales?.[0];
+  const sale = sales?.[0];
 
   if (isLoading) {
     return <LoadingScreen />;

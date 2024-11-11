@@ -46,7 +46,6 @@ export type SaleGeneralSchemaType = zod.infer<typeof SaleGeneralSchema>;
 interface Member {
   id: string;
   username: string;
-  fullName?: string;
 }
 
 const SaleGeneralSchema = zod.object({
