@@ -38,8 +38,8 @@ export default function CommissionTableRow({ row }: Props) {
     <TableRow hover>
       <TableCell align="left">
         <ListItemText
-          primary={dayjs(weekStartDate).format('MMM-ww')}
-          secondary={`${dayjs(weekStartDate).add(1, 'day').format('MM/DD')} - ${dayjs(weekStartDate).add(7, 'day').format('MM/DD')}`}
+          primary={dayjs(weekStartDate).utc().format('MMM-ww')}
+          secondary={`${dayjs(weekStartDate).utc().format('MM/DD')} - ${dayjs(weekStartDate).utc().add(6, 'day').format('MM/DD')}`}
           primaryTypographyProps={{ typography: 'body2' }}
           secondaryTypographyProps={{
             component: 'span',

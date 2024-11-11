@@ -1,6 +1,7 @@
 import type { SortOrder } from 'src/routes/hooks/useQuery';
 
 import dayjs from 'dayjs';
+import utcPlugin from 'dayjs/plugin/utc';
 import { useMemo, useEffect, useCallback } from 'react';
 
 import Card from '@mui/material/Card';
@@ -30,6 +31,8 @@ import { useFetchCommissions } from '../useApollo';
 import ProductTableFiltersResult from './CommissionTableFiltersResult';
 
 import type { ICommissionPrismaFilter, ICommissionTableFilters } from './types';
+
+dayjs.extend(utcPlugin);
 
 const TABLE_HEAD = [
   { id: 'member.username', label: 'Username', sortable: true },
@@ -107,12 +110,12 @@ export default function CommissionDetail() {
   return (
     <DashboardContent>
       <Breadcrumbs
-        heading={`Commission (Week #${dayjs(weekStartDate).format('ww')})`}
+        heading={`Commission (Week #${dayjs(weekStartDate).utc().format('ww')})`}
         links={[
           { name: 'Commission', href: paths.dashboard.commission.root },
           { name: 'Detail' },
           {
-            name: `${dayjs(weekStartDate).format('MM/DD')} - ${dayjs(weekStartDate).add(6, 'day').format('MM/DD')}`,
+            name: `${dayjs(weekStartDate).utc().format('MM/DD')} - ${dayjs(weekStartDate).utc().add(6, 'day').format('MM/DD')}`,
           },
         ]}
         sx={{

@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import utcPlugin from 'dayjs/plugin/utc';
 
 import Dialog from '@mui/material/Dialog';
 import Tooltip from '@mui/material/Tooltip';
@@ -22,6 +23,7 @@ import PlacementTreeView from './Placement';
 import { useUpdateCommissionStatus } from '../useApollo';
 
 // ----------------------------------------------------------------------
+dayjs.extend(utcPlugin);
 
 type Props = {
   row: WeeklyCommission;
@@ -60,8 +62,8 @@ export default function CommissionTableRow({ row }: Props) {
       <TableRow hover>
         <TableCell align="left">
           <ListItemText
-            primary={`week #${dayjs(weekStartDate).format('ww')}`}
-            secondary={`${dayjs(weekStartDate).add(1, 'day').format('MM/DD')} - ${dayjs(weekStartDate).add(7, 'day').format('MM/DD')}`}
+            primary={`week #${dayjs(weekStartDate).utc().format('ww')}`}
+            secondary={`${dayjs(weekStartDate).utc().format('MM/DD')} - ${dayjs(weekStartDate).utc().add(6, 'day').format('MM/DD')}`}
             primaryTypographyProps={{ typography: 'body2' }}
             secondaryTypographyProps={{
               component: 'span',
