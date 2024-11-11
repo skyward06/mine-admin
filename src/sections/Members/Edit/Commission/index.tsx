@@ -86,11 +86,11 @@ export default function Commission({ currentMember }: Props) {
     }
 
     if (filter.status === 'pending') {
-      filterObj.status = COMMISSION_TYPE.PENDING;
+      filterObj.status = COMMISSION_TYPE.PENDING.label;
     } else if (filter.status === 'sent') {
-      filterObj.status = COMMISSION_TYPE.CONFIRM;
+      filterObj.status = COMMISSION_TYPE.CONFIRM.label;
     } else {
-      filterObj.status = COMMISSION_TYPE.BLOCK;
+      filterObj.status = COMMISSION_TYPE.BLOCK.label;
     }
 
     filterObj.commission = { gt: 0 };
@@ -116,17 +116,17 @@ export default function Commission({ currentMember }: Props) {
     fetchCommissionStats({
       variables: {
         declineFilter: {
-          status: COMMISSION_TYPE.BLOCK,
+          status: COMMISSION_TYPE.BLOCK.label,
           memberId: currentMember.id,
           commission: { gt: 0 },
         },
         pendingFilter: {
-          status: COMMISSION_TYPE.PENDING,
+          status: COMMISSION_TYPE.PENDING.label,
           memberId: currentMember.id,
           commission: { gt: 0 },
         },
         sentFilter: {
-          status: COMMISSION_TYPE.CONFIRM,
+          status: COMMISSION_TYPE.CONFIRM.label,
           memberId: currentMember.id,
           commission: { gt: 0 },
         },

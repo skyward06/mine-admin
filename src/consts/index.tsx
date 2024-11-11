@@ -20,10 +20,10 @@ export const FREE_SHARE_ID_2 = 'aa8604b3-3f2a-4f9c-9ee5-1c9d1d76d726';
 export const ROOT_ID = 'affe34e8-891b-41c2-8405-d31df4dadb8c';
 
 export const COMMISSION_TYPE = {
-  PENDING: 'PENDING',
-  CONFIRM: 'CONFIRM',
-  BLOCK: 'BLOCK',
-  NONE: 'NONE',
+  PENDING: { label: 'PENDING', value: 'Pending' },
+  CONFIRM: { label: 'CONFIRM', value: 'Confirm' },
+  BLOCK: { label: 'BLOCK', value: 'Block' },
+  NONE: { label: 'NONE', value: 'None' },
 };
 
 export const CONTACT = [

@@ -78,7 +78,7 @@ export default function CommissionListView({ openWeek }: Props) {
 
   const {
     page = { page: 1, pageSize: 10 },
-    sort = { weekStartDate: 'asc' },
+    sort = { weekStartDate: 'asc', memberId: 'asc' },
     filter = defaultFilter,
     weekStartDate = customizeDate(`${dayjs().endOf('week').add(1, 'day')}`),
   } = query;
@@ -90,11 +90,11 @@ export default function CommissionListView({ openWeek }: Props) {
     }
 
     if (filter.status === 'pending') {
-      filterObj.status = COMMISSION_TYPE.PENDING;
+      filterObj.status = COMMISSION_TYPE.PENDING.label;
     } else if (filter.status === 'sent') {
-      filterObj.status = COMMISSION_TYPE.CONFIRM;
+      filterObj.status = COMMISSION_TYPE.CONFIRM.label;
     } else {
-      filterObj.status = COMMISSION_TYPE.BLOCK;
+      filterObj.status = COMMISSION_TYPE.BLOCK.label;
     }
 
     filterObj.weekStartDate = {
@@ -118,15 +118,15 @@ export default function CommissionListView({ openWeek }: Props) {
     fetchCommissionStats({
       variables: {
         declineFilter: {
-          status: COMMISSION_TYPE.BLOCK,
+          status: COMMISSION_TYPE.BLOCK.label,
           weekStartDate: { lt: weekStartDate },
         },
         pendingFilter: {
-          status: COMMISSION_TYPE.PENDING,
+          status: COMMISSION_TYPE.PENDING.label,
           weekStartDate: { lt: weekStartDate },
         },
         sentFilter: {
-          status: COMMISSION_TYPE.CONFIRM,
+          status: COMMISSION_TYPE.CONFIRM.label,
           weekStartDate: { lt: weekStartDate },
         },
       },

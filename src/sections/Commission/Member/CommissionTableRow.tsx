@@ -19,6 +19,7 @@ import { Confirmation4Status, type WeeklyCommission } from 'src/__generated__/gr
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 
+import Detail from './Detail';
 import PlacementTreeView from './Placement';
 import { useUpdateCommissionStatus } from '../useApollo';
 
@@ -30,7 +31,8 @@ type Props = {
 };
 
 export default function CommissionTableRow({ row }: Props) {
-  const open = useBoolean();
+  const placementOpen = useBoolean();
+  const detailOpen = useBoolean();
 
   const router = useRouter();
 
@@ -40,9 +42,6 @@ export default function CommissionTableRow({ row }: Props) {
 
   const {
     id,
-    member,
-    status,
-    memberId,
     begL,
     begR,
     newL,
@@ -53,6 +52,8 @@ export default function CommissionTableRow({ row }: Props) {
     endR,
     pkgL,
     pkgR,
+    member,
+    status,
     commission,
     weekStartDate,
   } = row;
@@ -91,27 +92,24 @@ export default function CommissionTableRow({ row }: Props) {
         <TableCell align="left">{`L${maxL}, R${maxR}`}</TableCell>
         <TableCell align="left">{`L${endL}, R${endR}`}</TableCell>
         <TableCell align="left">
-          {status !== COMMISSION_TYPE.NONE ? `L${pkgL}, R${pkgR}` : 'None'}
+          {status !== COMMISSION_TYPE.NONE.label ? `L${pkgL}, R${pkgR}` : 'None'}
         </TableCell>
         <TableCell align="left">{commission ?? 0}</TableCell>
         <TableCell align="center">
           <Tooltip title="Placement" placement="top" arrow>
-            <IconButton color="default" onClick={() => open.onTrue()}>
+            <IconButton color="default" onClick={() => placementOpen.onTrue()}>
               <Iconify icon="clarity:flow-chart-line" />
             </IconButton>
           </Tooltip>
           <Tooltip title="View" placement="top" arrow>
-            <IconButton
-              color="default"
-              onClick={() => router.push(paths.dashboard.members.edit(memberId))}
-            >
+            <IconButton color="default" onClick={() => detailOpen.onTrue()}>
               <Iconify icon="solar:eye-bold" />
             </IconButton>
           </Tooltip>
           <Tooltip title="Confirm" placement="top">
             <IconButton
               color="success"
-              disabled={status !== COMMISSION_TYPE.PENDING}
+              disabled={status !== COMMISSION_TYPE.PENDING.label}
               onClick={async () => {
                 const { data } = await updateCommissionStatus({
                   variables: { data: { id, status: commission_type.Confirm } },
@@ -130,7 +128,7 @@ export default function CommissionTableRow({ row }: Props) {
           <Tooltip title="Decline" placement="top">
             <IconButton
               color="error"
-              disabled={status !== COMMISSION_TYPE.PENDING}
+              disabled={status !== COMMISSION_TYPE.PENDING.label}
               onClick={async () => {
                 const { data } = await updateCommissionStatus({
                   variables: { data: { id, status: commission_type.Block } },
@@ -149,9 +147,16 @@ export default function CommissionTableRow({ row }: Props) {
         </TableCell>
       </TableRow>
 
-      <Dialog fullWidth maxWidth={false} open={open.value} onClose={() => open.onFalse()}>
+      <Dialog
+        fullWidth
+        maxWidth={false}
+        open={placementOpen.value}
+        onClose={() => placementOpen.onFalse()}
+      >
         <PlacementTreeView memberId={member?.id} weekStartDate={weekStartDate} />
       </Dialog>
+
+      <Detail open={detailOpen} row={row} />
     </>
   );
 }

@@ -61,7 +61,7 @@ export default function CommissionTableRow({ row }: Props) {
       <TableCell align="left">{`L${maxL}, R${maxR}`}</TableCell>
       <TableCell align="left">{`L${endL}, R${endR}`}</TableCell>
       <TableCell align="left">
-        {status !== COMMISSION_TYPE.NONE ? `L${pkgL}, R${pkgR}` : 'None'}
+        {status !== COMMISSION_TYPE.NONE.label ? `L${pkgL}, R${pkgR}` : 'None'}
       </TableCell>
       <TableCell align="left">{commission ?? 0}</TableCell>
       <TableCell align="center">
