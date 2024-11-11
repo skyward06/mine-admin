@@ -174,13 +174,22 @@ export const Personal = () => {
           <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
             <Stack width={0.5}>
               <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                Commission:
+                Starting Points:
               </Typography>
             </Stack>
             <Stack width={1}>
-              <Typography variant="body2">
-                {`L${member?.currentL}, R${member?.currentR}`}
+              <Typography variant="body2">{`L${member?.begL}, R${member?.begR}`}</Typography>
+            </Stack>
+          </Stack>
+
+          <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+            <Stack width={0.5}>
+              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                New Points:
               </Typography>
+            </Stack>
+            <Stack width={1}>
+              <Typography variant="body2">{`L${member?.newL}, R${member?.newR}`}</Typography>
             </Stack>
           </Stack>
 
