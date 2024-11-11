@@ -834,6 +834,33 @@ export type Payout = {
   updatedAt?: Maybe<Scalars['DateTimeISO']['output']>;
 };
 
+export type PayoutDashboardNewMiner = {
+  __typename?: 'PayoutDashboardNewMiner';
+  createdAt: Scalars['DateTimeISO']['output'];
+  fullName: Scalars['String']['output'];
+};
+
+export type PayoutDashboardResponse = {
+  __typename?: 'PayoutDashboardResponse';
+  newMiners: Array<PayoutDashboardNewMiner>;
+  topEarners: Array<PayoutDashboardSponsorEarnMiner>;
+  topSponsors: Array<PayoutDashboardSponsorEarnMiner>;
+  totalMiners: Scalars['Float']['output'];
+  totalMinersByWeek: Array<PayoutDashboardWeekTotalMiner>;
+};
+
+export type PayoutDashboardSponsorEarnMiner = {
+  __typename?: 'PayoutDashboardSponsorEarnMiner';
+  fullName: Scalars['String']['output'];
+  value: Scalars['Float']['output'];
+};
+
+export type PayoutDashboardWeekTotalMiner = {
+  __typename?: 'PayoutDashboardWeekTotalMiner';
+  totalMiners: Scalars['Float']['output'];
+  week: Scalars['DateTimeISO']['output'];
+};
+
 export type PayoutResponse = {
   __typename?: 'PayoutResponse';
   payouts?: Maybe<Array<Maybe<Payout>>>;
@@ -878,6 +905,7 @@ export type Query = {
   monthlyblocks: MonthlyBlocksResponse;
   onepointAwayMembers: MembersResponse;
   packages: PackageResponse;
+  payoutDashboard: PayoutDashboardResponse;
   payouts: PayoutResponse;
   rewardsByWallets: RewardsByWallets;
   sales: SalesResponse;

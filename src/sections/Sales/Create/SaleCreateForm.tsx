@@ -108,6 +108,7 @@ export default function SaleCreateForm() {
         if (error.path?.includes('email')) {
           setError('paymentMethod', { type: 'manual', message: error?.message || '' });
         }
+        toast.error(err.message);
       } else {
         toast.error(err.message);
       }
