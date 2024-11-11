@@ -169,6 +169,8 @@ export const Personal = () => {
             </Stack>
           </Stack>
 
+          <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
+
           <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
             <Stack width={0.5}>
               <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
@@ -181,8 +183,6 @@ export const Personal = () => {
               </Typography>
             </Stack>
           </Stack>
-
-          <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
 
           <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
             <Stack width={0.5}>

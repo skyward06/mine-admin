@@ -9,6 +9,7 @@ import {
   UPDATE_PASSWORD_QUERY,
   REMOVE_MEMBER_PLACEMENT,
   FETCH_MEMBER_STATS_QUERY,
+  RECALCULATE_CURRENT_COMMISSION,
 } from './query';
 
 export function useFetchMembers() {
@@ -84,4 +85,13 @@ export function useApproveMember() {
   });
 
   return { loading, error, approveMember };
+}
+
+export function useRecalculateCurrentCommission() {
+  const [recalculateCurrentCommission, { loading, error }] = useMutation(
+    RECALCULATE_CURRENT_COMMISSION,
+    {}
+  );
+
+  return { loading, error, recalculateCurrentCommission };
 }

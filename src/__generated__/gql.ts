@@ -33,6 +33,7 @@ const documents = {
     "\n  mutation RemoveMember($data: IDInput!) {\n    removeMember(data: $data) {\n      message\n      result\n    }\n  }\n": types.RemoveMemberDocument,
     "\n  mutation RemoveCompleteMemberPlacement($data: IDInput!) {\n    removeCompleteMemberPlacement(data: $data) {\n      message\n      result\n    }\n  }\n": types.RemoveCompleteMemberPlacementDocument,
     "\n  mutation Mutation($data: IDInput!) {\n    approveMember(data: $data) {\n      message\n      result\n      result\n    }\n  }\n": types.MutationDocument,
+    "\n  mutation RecalculateCurrentCommission {\n    recalculateCurrentCommission {\n      message\n      result\n    }\n  }\n": types.RecalculateCurrentCommissionDocument,
     "\n  query Packages($sort: String, $page: String, $filter: JSONObject) {\n    packages(sort: $sort, page: $page, filter: $filter) {\n      packages {\n        id\n        date\n        point\n        token\n        amount\n        status\n        createdAt\n        updatedAt\n        deletedAt\n        productName\n        enrollVisibility\n        sales {\n          id\n          status\n          memberId\n          orderedAt\n          packageId\n          paymentMethod\n          paymentConfirm {\n            createdAt\n            updatedAt\n            deletedAt\n            id\n            url\n            originalName\n            mimeType\n            size\n          }\n        }\n      }\n      total\n    }\n  }\n": types.PackagesDocument,
     "\n  query FetchPackageStats($allFilter: JSONObject, $inactiveFilter: JSONObject) {\n    all: packages(filter: $allFilter) {\n      total\n    }\n    inactive: packages(filter: $inactiveFilter) {\n      total\n    }\n  }\n": types.FetchPackageStatsDocument,
     "\n  mutation CreatePackage($data: CreatePackageInput!) {\n    createPackage(data: $data) {\n      id\n    }\n  }\n": types.CreatePackageDocument,
@@ -162,6 +163,10 @@ export function gql(source: "\n  mutation RemoveCompleteMemberPlacement($data: I
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  mutation Mutation($data: IDInput!) {\n    approveMember(data: $data) {\n      message\n      result\n      result\n    }\n  }\n"): (typeof documents)["\n  mutation Mutation($data: IDInput!) {\n    approveMember(data: $data) {\n      message\n      result\n      result\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation RecalculateCurrentCommission {\n    recalculateCurrentCommission {\n      message\n      result\n    }\n  }\n"): (typeof documents)["\n  mutation RecalculateCurrentCommission {\n    recalculateCurrentCommission {\n      message\n      result\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

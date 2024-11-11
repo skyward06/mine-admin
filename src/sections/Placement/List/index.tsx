@@ -27,13 +27,14 @@ import {
   PLACEMENTTREE_NODE_Y_SPACE,
 } from 'src/consts';
 
+import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import ComponentBlock from 'src/components/Component-Block';
 import { LoadingScreen } from 'src/components/loading-screen';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
-import { useFetchMembers } from 'src/sections/Members/useApollo';
+import { useFetchMembers, useRecalculateCurrentCommission } from 'src/sections/Members/useApollo';
 
 import { StandardNode } from './node';
 import CustomEdge from './customEdge';
@@ -227,6 +228,7 @@ function PlacementListView() {
   const open = useBoolean();
 
   const { fetchMembers, members, loading, called } = useFetchMembers();
+  const { recalculateCurrentCommission } = useRecalculateCurrentCommission();
 
   const [visibleMap, setVisibleMap] = useState<Record<string, number>>({});
   const exSetVisibleMap = useCallback((newVisibleMap: Record<string, number>) => {
@@ -419,6 +421,15 @@ function PlacementListView() {
     }, 100);
   }, [fetchMembers, exSetVisibleMap, fitView]);
 
+  const recaluclateCurrentCommissionHandler = useCallback(async () => {
+    try {
+      await recalculateCurrentCommission();
+      toast.success('Successfully recalculated current commission statuses!');
+    } catch (err) {
+      toast.error(err.message);
+    }
+  }, [recalculateCurrentCommission]);
+
   return (
     <DashboardContent sx={{ overflowX: 'hidden' }}>
       <Breadcrumbs
@@ -477,6 +488,14 @@ function PlacementListView() {
             }}
           >
             Refresh
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              recaluclateCurrentCommissionHandler();
+              popover.onClose();
+            }}
+          >
+            Calculate
           </MenuItem>
           <MenuItem
             onClick={() => {

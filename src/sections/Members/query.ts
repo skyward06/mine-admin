@@ -264,3 +264,12 @@ export const APPROVE_MEMBER = gql(/* GraphQL */ `
     }
   }
 `);
+
+export const RECALCULATE_CURRENT_COMMISSION = gql(/* GraphQL */ `
+  mutation RecalculateCurrentCommission {
+    recalculateCurrentCommission {
+      message
+      result
+    }
+  }
+`);
