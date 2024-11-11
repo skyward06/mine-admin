@@ -17,7 +17,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { today, customizeDate } from 'src/utils/format-time';
+import { today, formatDate, customizeDate } from 'src/utils/format-time';
 
 import { PAYMENT_TYPE } from 'src/consts';
 
@@ -154,7 +154,9 @@ export default function SaleCreateForm() {
               <Autocomplete
                 fullWidth
                 options={members}
-                getOptionLabel={(option) => option!.username}
+                getOptionLabel={(option) =>
+                  `${option!.username} (${formatDate(option?.createdAt)})`
+                }
                 renderInput={(params) => (
                   <TextField {...params} required label="Miner" margin="none" />
                 )}
