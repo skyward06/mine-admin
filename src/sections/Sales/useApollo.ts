@@ -10,7 +10,7 @@ import {
 } from './query';
 
 export function useFetchSales() {
-  const [fetchSales, { loading, data }] = useLazyQuery(FETCH_SALES_QUERY);
+  const [fetchSales, { loading, data, called }] = useLazyQuery(FETCH_SALES_QUERY);
 
   const rowCountRef = useRef(data?.sales.total ?? 0);
 
@@ -25,6 +25,7 @@ export function useFetchSales() {
   }, [data]);
 
   return {
+    called,
     loading,
     rowCount,
     sales: data?.sales.sales ?? [],

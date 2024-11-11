@@ -18,6 +18,8 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
           status
           userId
           assetId
+          currentL
+          currentR
           username
           fullName
           syncWithSendy
@@ -27,8 +29,7 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
           totalIntroducers
           preferredContact
           preferredContactDetail
-          currentL
-          currentR
+          createdAt
         }
         package {
           id
