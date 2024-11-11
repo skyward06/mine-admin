@@ -1,6 +1,8 @@
 import type { Sale } from 'src/__generated__/graphql';
 import type { UseBooleanReturn } from 'src/hooks/useBoolean';
 
+import { isEmpty } from 'lodash';
+
 import Stack from '@mui/material/Stack';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
@@ -13,6 +15,7 @@ import { FREE_SHARE_ID_1, FREE_SHARE_ID_2 } from 'src/consts';
 
 import { Iconify } from 'src/components/Iconify';
 import { ScrollBar } from 'src/components/ScrollBar';
+import { EmptyContent } from 'src/components/EmptyContent';
 
 import { FileRecentItem } from './FileRecentItem';
 
@@ -133,7 +136,11 @@ export default function Detail({ open, row }: Props) {
 
           <Typography variant="subtitle1">Files</Typography>
 
-          {paymentConfirm?.map((file: any) => <FileRecentItem key={file.id} file={file} />)}
+          {isEmpty(paymentConfirm) ? (
+            <EmptyContent />
+          ) : (
+            paymentConfirm?.map((file: any) => <FileRecentItem key={file.id} file={file} />)
+          )}
         </Stack>
       </ScrollBar>
     </Drawer>

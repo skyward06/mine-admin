@@ -1,8 +1,7 @@
 import type { LabelColor } from 'src/components/Label';
 import type { SortOrder } from 'src/routes/hooks/useQuery';
 
-import { useMemo, useCallback } from 'react';
-import { useQuery as useGraphQuery } from '@apollo/client';
+import { useMemo, useEffect, useCallback } from 'react';
 
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
@@ -26,7 +25,7 @@ import {
   TablePaginationCustom,
 } from 'src/components/Table';
 
-import { FETCH_SALES_QUERY, FETCH_SALES_STATS_QUERY } from 'src/sections/Sales/query';
+import { useFetchSales, useFetchSaleStats } from 'src/sections/Sales/useApollo';
 
 import SaleTableRow from './SaleTableRow';
 import SaleTableFiltersResult from './SaleTableFiltersResult';
@@ -47,6 +46,7 @@ const TABLE_HEAD = [
   { id: 'amount', label: 'Amount', width: 140, sortable: true },
   { id: 'hashPower', label: 'Hash Power', width: 130, sortable: true },
   { id: 'orderedAt', label: 'Ordered At', width: 150, sortable: true },
+  { id: 'action', label: 'View', width: 100, align: 'center' },
 ];
 
 const defaultFilter: ISaleTableFilters = {
@@ -102,24 +102,28 @@ export default function SaleListView() {
 
   const canReset = !!filter.search;
 
-  const { data: statsData } = useGraphQuery(FETCH_SALES_STATS_QUERY, {
-    variables: {
-      allFilter: { memberId: params.id },
-      inactiveFilter: { status: false, memberId: params.id },
-    },
-  });
+  const { fetchSaleStats, stats } = useFetchSaleStats();
+  const { fetchSales, loading, sales, rowCount } = useFetchSales();
 
-  const { loading, data } = useGraphQuery(FETCH_SALES_QUERY, {
-    variables: {
-      page: page && `${page.page},${page.pageSize}`,
-      filter: graphQueryFilter,
-      sort: graphQuerySort,
-    },
-  });
+  useEffect(() => {
+    fetchSaleStats({
+      variables: {
+        allFilter: { memberId: params.id },
+        inactiveFilter: { status: false, memberId: params.id },
+      },
+    });
 
-  const tableData = data?.sales;
+    fetchSales({
+      variables: {
+        page: page && `${page.page},${page.pageSize}`,
+        filter: graphQueryFilter,
+        sort: graphQuerySort,
+      },
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query]);
 
-  const notFound = (canReset && !tableData?.sales?.length) || !tableData?.sales?.length;
+  const notFound = (canReset && !sales?.length) || !sales?.length;
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: SaleRole) => {
     setQuery({
@@ -157,7 +161,7 @@ export default function SaleListView() {
                 variant={(tab.value === filter.status && 'filled') || 'soft'}
                 color={tab.color}
               >
-                {statsData ? statsData[tab.value].total! : 0}
+                {stats ? stats[tab.value].total! : 0}
               </Label>
             }
           />
@@ -167,7 +171,7 @@ export default function SaleListView() {
       <SearchInput search={filter.search} onSearchChange={handleSearchChange} />
 
       {canReset && !loading && (
-        <SaleTableFiltersResult results={tableData!.total!} sx={{ p: 2.5, pt: 0 }} />
+        <SaleTableFiltersResult results={rowCount!} sx={{ p: 2.5, pt: 0 }} />
       )}
 
       <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
@@ -187,15 +191,17 @@ export default function SaleListView() {
                   order={sort && sort[Object.keys(sort)[0]]}
                   orderBy={sort && Object.keys(sort)[0]}
                   headLabel={TABLE_HEAD}
-                  rowCount={loading ? 0 : tableData!.sales!.length}
+                  rowCount={loading ? 0 : sales!.length}
                   onSort={(id) => {
-                    const isAsc = sort && sort[id] === 'asc';
-                    const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
-                    setQuery({ ...query, sort: newSort });
+                    if (id !== 'action') {
+                      const isAsc = sort && sort[id] === 'asc';
+                      const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
+                      setQuery({ ...query, sort: newSort });
+                    }
                   }}
                 />
                 <TableBody>
-                  {tableData!.sales!.map((row) => (
+                  {sales!.map((row) => (
                     <SaleTableRow key={row!.id} row={row!} />
                   ))}
 
@@ -208,7 +214,7 @@ export default function SaleListView() {
       </TableContainer>
 
       <TablePaginationCustom
-        count={loading ? 0 : tableData!.total!}
+        count={loading ? 0 : rowCount!}
         page={loading ? 0 : page!.page - 1}
         rowsPerPage={page?.pageSize}
         onPageChange={(_, curPage) => {
