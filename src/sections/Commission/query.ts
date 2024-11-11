@@ -20,6 +20,15 @@ export const FETCH_COMMISSION_QUERY = gql(/* GraphQL */ `
         commission
         status
         note
+        paymentConfirm {
+          id
+          url
+          originalName
+          mimeType
+          size
+          createdAt
+          updatedAt
+        }
         member {
           createdAt
           updatedAt
