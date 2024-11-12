@@ -8,7 +8,7 @@ import Paper from '@mui/material/Paper';
 import Drawer from '@mui/material/Drawer';
 import Typography from '@mui/material/Typography';
 
-import { fDateTime } from 'src/utils/format-time';
+import { formatDateTime } from 'src/utils/format-time';
 
 import { Iconify } from 'src/components/Iconify';
 import { ScrollBar } from 'src/components/ScrollBar';
@@ -50,7 +50,7 @@ export default function LogDrawer({ open, defaultStyles, log }: Props) {
             </Typography>
           </Stack>
 
-          <Typography>{fDateTime(when, 'MM/DD/YYYY hh:mm:ss')}</Typography>
+          <Typography>{formatDateTime(when)}</Typography>
           {action === 'update' ? (
             <Stack direction="row" columnGap={2}>
               <Stack width={0.5}>
