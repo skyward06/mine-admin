@@ -27,7 +27,7 @@ import { FileManagerNewFolderDialog } from 'src/sections/Sales/Upload';
 import { FileRecentItem } from 'src/sections/Sales/List/FileRecentItem';
 import { FileRecentItem as EditFileItem } from 'src/sections/Sales/Edit/FileRecentItem';
 
-import { useUpdateCommissionStatus } from '../../useApollo';
+import { useUpdateCommissionStatus } from '../useApollo';
 
 interface Props {
   row: WeeklyCommission;
