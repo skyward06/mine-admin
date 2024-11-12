@@ -33,7 +33,7 @@ export const formatStr = {
 };
 
 export function today(format?: string) {
-  return dayjs(new Date()).startOf('day').format(format);
+  return dayjs().utc().startOf('day').format(format);
 }
 
 // ----------------------------------------------------------------------

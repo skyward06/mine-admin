@@ -57,7 +57,7 @@ export default function SaleCreateForm() {
   const defaultValues = useMemo(
     () => ({
       packageId: '',
-      orderedAt: `${new Date(today())}`,
+      orderedAt: `${today('YYYY-MM-DD')}`,
       paymentMethod: '',
       note: '',
       memberId: '',
