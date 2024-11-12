@@ -60,7 +60,7 @@ export default function CommissionTableRow({ row }: Props) {
               color="default"
               onClick={() =>
                 window.open(
-                  paths.dashboard.commission.detail(formatDate(weekStartDate, false)),
+                  paths.dashboard.commission.detail(formatDate(weekStartDate, 'YYYY-MM-DD')),
                   '_blank'
                 )
               }
