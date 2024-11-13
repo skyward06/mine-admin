@@ -51,9 +51,27 @@ export function StandardNode({ id, placementPosition, username, fullName, create
         {`${firstName} ${lastName.length && lastName[0].toUpperCase()}.`}
       </Typography>
 
-      <Typography variant="caption" component="div" noWrap sx={{ color: 'text.secondary' }}>
-        {username}
-      </Typography>
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        sx={{ mb: 0.5, background: 'translation' }}
+      >
+        <Typography variant="caption" component="div" noWrap sx={{ color: 'text.secondary' }}>
+          {username}
+        </Typography>
+
+        <Stack>
+          {placementPosition && (
+            <Label
+              variant={placementPosition === 'LEFT' ? 'soft' : 'outlined'}
+              color="info"
+              sx={{ fontSize: 10, border: placementPosition === 'LEFT' ? 'none' : 1 }}
+            >
+              {placementPosition}
+            </Label>
+          )}
+        </Stack>
+      </Stack>
 
       <Stack direction="row" justifyContent="space-between" sx={{ background: 'translation' }}>
         <Typography
@@ -65,30 +83,17 @@ export function StandardNode({ id, placementPosition, username, fullName, create
           {fDate(createdAt)}
         </Typography>
 
-        <Stack direction="row" columnGap={1}>
-          <Stack>
-            {placementPosition && (
-              <Label
-                variant={placementPosition === 'LEFT' ? 'soft' : 'outlined'}
-                color="info"
-                sx={{ fontSize: 10, border: placementPosition === 'LEFT' ? 'none' : 1 }}
-              >
-                {placementPosition}
-              </Label>
-            )}
-          </Stack>
-          <Stack>
-            {visibleMap[id] !== 3 && (
-              <Iconify
-                icon={`mdi:${visibleMap[id] === 1 ? 'plus' : 'minus'}-circle-outline`}
-                sx={{ mt: 0.15, cursor: 'pointer' }}
-                onClick={() => {
-                  if (visibleMap[id] === 1) expandTree(id);
-                  else if (visibleMap[id] === 2) collapseTree(id);
-                }}
-              />
-            )}
-          </Stack>
+        <Stack>
+          {visibleMap[id] !== 3 && (
+            <Iconify
+              icon={`mdi:${visibleMap[id] === 1 ? 'plus' : 'minus'}-circle-outline`}
+              sx={{ mt: 0.15, cursor: 'pointer' }}
+              onClick={() => {
+                if (visibleMap[id] === 1) expandTree(id);
+                else if (visibleMap[id] === 2) collapseTree(id);
+              }}
+            />
+          )}
         </Stack>
       </Stack>
     </Card>
