@@ -16,6 +16,7 @@ import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 
 import { paths } from 'src/routes/paths';
+import { useSearchParams } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
@@ -227,6 +228,9 @@ function PlacementListView() {
   const popover = usePopover();
   const open = useBoolean();
 
+  const searchParams = useSearchParams();
+  const memberId = searchParams.get('memberId');
+
   const { fetchMembers, members, loading, called } = useFetchMembers();
   const { recalculateCurrentCommission } = useRecalculateCurrentCommission();
 
@@ -241,7 +245,7 @@ function PlacementListView() {
       variables: { sort: '-placementPosition' },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [memberId]);
 
   const nodes: Node[] = useMemo(() => {
     if (!members || members.length === 0) return [];
@@ -390,6 +394,13 @@ function PlacementListView() {
     else reSyncVisibleMap();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [members, loading]);
+
+  useEffect(() => {
+    if (memberId) {
+      onMinerChange(memberId);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [members, memberId]);
 
   const reset = useCallback(async () => {
     const { data } = await fetchMembers();

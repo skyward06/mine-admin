@@ -6,13 +6,21 @@ import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
 
 import { formatDate } from 'src/utils/format-time';
+
+import { Iconify } from 'src/components/Iconify';
 
 import { useFetchMembers } from '../../useApollo';
 
 export const Personal = () => {
   const params = useParams();
+  const router = useRouter();
+
   const [children, setChildren] = useState<any>();
 
   const { id } = params;
@@ -38,11 +46,22 @@ export const Personal = () => {
   return (
     <Grid xl={12}>
       <Card sx={{ mt: 2, p: 3 }}>
-        <Stack direction="row" justifyContent="space-between" sx={{ pb: 2 }} columnGap={2}>
-          <Typography variant="h6">{member?.fullName}</Typography>
-          <Typography variant="body2" sx={{ pt: 0.4 }}>
-            {member?.userId.toString().padStart(7, '0')}
-          </Typography>
+        <Stack direction="row" justifyContent="space-between" sx={{ pb: 0 }} columnGap={2}>
+          <Typography variant="subtitle1">{member?.fullName}</Typography>
+          <Stack direction="row">
+            <Typography variant="body2" sx={{ pt: 0.9 }}>
+              {member?.userId.toString().padStart(7, '0')}
+            </Typography>
+            <IconButton
+              color="success"
+              onClick={() => {
+                const searchParams = new URLSearchParams({ memberId: id ?? '' }).toString();
+                router.push(`${paths.dashboard.placement.root}?${searchParams}`);
+              }}
+            >
+              <Iconify icon="solar:eye-bold" />
+            </IconButton>
+          </Stack>
         </Stack>
 
         <Stack>
