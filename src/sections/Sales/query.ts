@@ -10,6 +10,7 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
         packageId
         createdAt
         updatedAt
+        purchaseId
         member {
           id
           email

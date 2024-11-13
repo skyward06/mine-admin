@@ -29,11 +29,20 @@ export default function SaleTableRow({ row, confirm, setSelected }: Props) {
   const router = useRouter();
   const open = useBoolean();
 
-  const { id, member, package: product, paymentMethod, orderedAt, statisticsSales } = row;
+  const {
+    id,
+    purchaseId,
+    member,
+    package: product,
+    paymentMethod,
+    orderedAt,
+    statisticsSales,
+  } = row;
 
   return (
     <>
       <TableRow hover>
+        <TableCell align="left">{purchaseId}</TableCell>
         <TableCell
           align="left"
           sx={{

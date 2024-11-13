@@ -53,6 +53,7 @@ const STATUS_OPTIONS: { value: SaleRole; label: string; color: LabelColor }[] = 
 ];
 
 const TABLE_HEAD = [
+  { id: 'purchaseId', label: 'Purchase ID', sortable: true, width: 140, align: 'left' },
   { id: 'member.username', label: 'Name', sortable: true },
   { id: 'member.assetId', label: 'Asset ID', width: 90 },
   { id: 'package.productName', label: 'Product Name' },
