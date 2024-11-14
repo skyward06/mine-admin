@@ -335,14 +335,36 @@ function PlacementListView() {
     [members, visibleMap, exSetVisibleMap, fitView]
   );
 
+  const collapseAll = useCallback(
+    async (id: string) => {
+      const { memberMap } = buildPlacementTree(members);
+      const subtreeMembers = getSubtree(memberMap[id]);
+      const newVisibleMap = { ...visibleMap };
+      subtreeMembers.forEach((mb) => {
+        delete newVisibleMap[mb.id];
+      });
+      newVisibleMap[id] = memberMap[id].children.length ? 1 : 3;
+
+      exSetVisibleMap(newVisibleMap);
+      setTimeout(() => {
+        fitView({
+          ...fitViewOptions,
+          nodes: [{ id }],
+        });
+      });
+    },
+    [members, visibleMap, exSetVisibleMap, fitView]
+  );
+
   const contextValue = useMemo(
     () => ({
       visibleMap,
       expandTree,
       collapseTree,
       expandAll,
+      collapseAll,
     }),
-    [visibleMap, expandTree, collapseTree, expandAll]
+    [visibleMap, expandTree, collapseTree, expandAll, collapseAll]
   );
 
   const resetVisibleMap = useCallback(() => {

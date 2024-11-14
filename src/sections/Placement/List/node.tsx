@@ -112,7 +112,7 @@ export function StandardNode({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [member]);
 
-  const { visibleMap, expandTree, collapseTree, expandAll } = useContext(NodeContext);
+  const { visibleMap, expandTree, collapseTree, expandAll, collapseAll } = useContext(NodeContext);
 
   const addContent = (
     <Paper sx={{ py: 1 }}>
@@ -338,6 +338,15 @@ export function StandardNode({
           >
             <Iconify icon="fluent:arrow-expand-all-16-filled" />
             Expand All
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              if (collapseAll) collapseAll(id);
+              popover.onClose();
+            }}
+          >
+            <Iconify icon="fluent:arrow-collapse-all-16-filled" />
+            Collapse All
           </MenuItem>
         </MenuList>
       </CustomPopover>
