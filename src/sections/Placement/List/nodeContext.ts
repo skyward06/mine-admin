@@ -4,6 +4,7 @@ interface NodeContextType {
   visibleMap: { [key: string]: number };
   expandTree: (id: string) => void;
   collapseTree: (id: string) => void;
+  expandAll?: (id: string) => Promise<void>;
 }
 
 const NodeContext = React.createContext<NodeContextType>({

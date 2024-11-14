@@ -78,6 +78,15 @@ function buildPlacementTree(members: any[]) {
   return { result, memberMap };
 }
 
+function getSubtree(node: any) {
+  const res: any[] = [];
+  node.children?.forEach((child: any) => {
+    const subtree = getSubtree(child);
+    res.push(...subtree);
+  });
+  return [...res, node];
+}
+
 function buildTree(node: any, baseX: number, depth: number, tree: any[], visibleMap: any = null) {
   const children = node.children.sort(
     (child1: any, child2: any) =>
@@ -305,16 +314,36 @@ function PlacementListView() {
     [members, visibleMap, exSetVisibleMap]
   );
 
+  const { fitView } = useReactFlow();
+
+  const expandAll = useCallback(
+    async (id: string) => {
+      const { memberMap } = buildPlacementTree(members);
+      const subtreeMembers = getSubtree(memberMap[id]);
+      const newVisibleMap = { ...visibleMap };
+      subtreeMembers.forEach((mb) => {
+        newVisibleMap[mb.id] = mb.children.length ? 2 : 3;
+      });
+      exSetVisibleMap(newVisibleMap);
+      setTimeout(() => {
+        fitView({
+          ...fitViewOptions,
+          nodes: subtreeMembers.map(({ id: rootID }: { id: string }) => ({ id: rootID })),
+        });
+      });
+    },
+    [members, visibleMap, exSetVisibleMap, fitView]
+  );
+
   const contextValue = useMemo(
     () => ({
       visibleMap,
       expandTree,
       collapseTree,
+      expandAll,
     }),
-    [visibleMap, expandTree, collapseTree]
+    [visibleMap, expandTree, collapseTree, expandAll]
   );
-
-  const { fitView } = useReactFlow();
 
   const resetVisibleMap = useCallback(() => {
     const newVisibleMap = getResetVisibleMap(members);
