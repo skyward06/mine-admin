@@ -17,6 +17,8 @@ import Typography from '@mui/material/Typography';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
+import { formatWeekNumber } from 'src/utils/format-time';
+
 import {
   ROOT_ID,
   COMMISSION_NODE_HEIGHT,
@@ -400,7 +402,7 @@ function PlacementListView({ weekStartDate }: Props) {
       <Stack direction="row" justifyContent="space-between" sx={{ pb: 2 }}>
         <Stack direction="row" justifyContent="flex-start">
           <Typography variant="subtitle1" sx={{ pt: 1 }}>
-            Placement (Week #{dayjs(weekStartDate).add(1, 'day').format('ww')})
+            Placement (Week #{formatWeekNumber(weekStartDate)})
           </Typography>
           <Typography
             variant="subtitle2"

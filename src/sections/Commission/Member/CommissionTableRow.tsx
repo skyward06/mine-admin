@@ -13,6 +13,8 @@ import { useRouter } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
+import { formatWeekNumber } from 'src/utils/format-time';
+
 import { COMMISSION_TYPE } from 'src/consts';
 import { Confirmation4Status, type WeeklyCommission } from 'src/__generated__/graphql';
 
@@ -63,7 +65,7 @@ export default function CommissionTableRow({ row }: Props) {
       <TableRow hover>
         <TableCell align="left">
           <ListItemText
-            primary={`week #${dayjs(weekStartDate).utc().format('ww')}`}
+            primary={`week #${formatWeekNumber(weekStartDate)}`}
             secondary={`${dayjs(weekStartDate).utc().format('MM/DD')} - ${dayjs(weekStartDate).utc().add(6, 'day').format('MM/DD')}`}
             primaryTypographyProps={{ typography: 'body2' }}
             secondaryTypographyProps={{

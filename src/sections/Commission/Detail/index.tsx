@@ -11,7 +11,7 @@ import TableBody from '@mui/material/TableBody';
 import { paths } from 'src/routes/paths';
 import { useQuery, useParams } from 'src/routes/hooks';
 
-import { customizeDate } from 'src/utils/format-time';
+import { customizeDate, formatWeekNumber } from 'src/utils/format-time';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 
@@ -110,7 +110,7 @@ export default function CommissionDetail() {
   return (
     <DashboardContent>
       <Breadcrumbs
-        heading={`Commission (Week #${dayjs(weekStartDate).utc().format('ww')})`}
+        heading={`Commission (Week #${formatWeekNumber(weekStartDate ?? '')})`}
         links={[
           { name: 'Commission', href: paths.dashboard.commission.root },
           { name: 'Detail' },
