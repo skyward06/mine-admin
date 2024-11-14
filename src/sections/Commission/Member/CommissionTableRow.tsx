@@ -75,7 +75,11 @@ export default function CommissionTableRow({ row }: Props) {
           />
         </TableCell>
         <TableCell
-          align="left"
+          sx={{
+            alignItems: 'center',
+            cursor: 'pointer',
+            '&:hover': { bgcolor: (theme) => theme.vars.palette.action.hover },
+          }}
           onClick={() => router.push(paths.dashboard.members.edit(member?.id ?? ''))}
         >
           <ListItemText
