@@ -47,6 +47,7 @@ export const PAYMENT_TYPE = [
   { label: 'CASH', value: 'Cash' },
   { label: 'KILO_OF_SILVER', value: 'Kilo of Silver' },
   { label: 'CRYPTO', value: 'Crypto' },
+  { label: 'Commission', value: 'Commission' },
 ];
 
 export const TXC_WALLET = [
