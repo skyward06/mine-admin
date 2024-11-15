@@ -16,7 +16,7 @@ import { useBoolean } from 'src/hooks/useBoolean';
 import { formatWeekNumber } from 'src/utils/format-time';
 
 import { COMMISSION_TYPE } from 'src/consts';
-import { Confirmation4Status, type WeeklyCommission } from 'src/__generated__/graphql';
+import { ConfirmationStatus, type WeeklyCommission } from 'src/__generated__/graphql';
 
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
@@ -38,7 +38,7 @@ export default function CommissionTableRow({ row }: Props) {
 
   const router = useRouter();
 
-  const commission_type = Confirmation4Status;
+  const commission_type = ConfirmationStatus;
 
   const { updateCommissionStatus } = useUpdateCommissionStatus();
 
@@ -118,7 +118,7 @@ export default function CommissionTableRow({ row }: Props) {
               disabled={status !== COMMISSION_TYPE.PENDING.label}
               onClick={async () => {
                 const { data } = await updateCommissionStatus({
-                  variables: { data: { id, status: commission_type.Confirm } },
+                  variables: { data: { id, status: commission_type.Paid } },
                 });
 
                 if (data) {
@@ -137,7 +137,7 @@ export default function CommissionTableRow({ row }: Props) {
               disabled={status !== COMMISSION_TYPE.PENDING.label}
               onClick={async () => {
                 const { data } = await updateCommissionStatus({
-                  variables: { data: { id, status: commission_type.Block } },
+                  variables: { data: { id, status: commission_type.Declined } },
                 });
 
                 if (data) {

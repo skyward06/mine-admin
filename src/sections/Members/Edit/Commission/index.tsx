@@ -39,8 +39,9 @@ import type { CommissionRole, ICommissionPrismaFilter, ICommissionTableFilters }
 
 const STATUS_OPTIONS: { value: CommissionRole; label: string; color: LabelColor }[] = [
   { value: 'pending', label: 'Pending', color: 'info' },
-  { value: 'decline', label: 'Declined', color: 'error' },
-  { value: 'sent', label: 'Sent', color: 'success' },
+  { value: 'approved', label: 'Approved', color: 'warning' },
+  { value: 'declined', label: 'Declined', color: 'error' },
+  { value: 'paid', label: 'Paid', color: 'success' },
 ];
 
 const TABLE_HEAD = [
@@ -87,10 +88,12 @@ export default function Commission({ currentMember }: Props) {
 
     if (filter.status === 'pending') {
       filterObj.status = COMMISSION_TYPE.PENDING.label;
-    } else if (filter.status === 'sent') {
-      filterObj.status = COMMISSION_TYPE.CONFIRM.label;
-    } else {
-      filterObj.status = COMMISSION_TYPE.BLOCK.label;
+    } else if (filter.status === 'approved') {
+      filterObj.status = COMMISSION_TYPE.APPROVED.label;
+    } else if (filter.status === 'paid') {
+      filterObj.status = COMMISSION_TYPE.PAID.label;
+    } else if (filter.status === 'declined') {
+      filterObj.status = COMMISSION_TYPE.DECLINED.label;
     }
 
     filterObj.commission = { gt: 0 };
@@ -115,8 +118,8 @@ export default function Commission({ currentMember }: Props) {
   useEffect(() => {
     fetchCommissionStats({
       variables: {
-        declineFilter: {
-          status: COMMISSION_TYPE.BLOCK.label,
+        declinedFilter: {
+          status: COMMISSION_TYPE.DECLINED.label,
           memberId: currentMember.id,
           commission: { gt: 0 },
         },
@@ -125,8 +128,13 @@ export default function Commission({ currentMember }: Props) {
           memberId: currentMember.id,
           commission: { gt: 0 },
         },
-        sentFilter: {
-          status: COMMISSION_TYPE.CONFIRM.label,
+        paidFilter: {
+          status: COMMISSION_TYPE.PAID.label,
+          memberId: currentMember.id,
+          commission: { gt: 0 },
+        },
+        approvedFilter: {
+          status: COMMISSION_TYPE.APPROVED.label,
           memberId: currentMember.id,
           commission: { gt: 0 },
         },

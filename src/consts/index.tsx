@@ -21,8 +21,9 @@ export const ROOT_ID = 'affe34e8-891b-41c2-8405-d31df4dadb8c';
 
 export const COMMISSION_TYPE = {
   PENDING: { label: 'PENDING', value: 'Pending' },
-  CONFIRM: { label: 'CONFIRM', value: 'Confirm' },
-  BLOCK: { label: 'BLOCK', value: 'Block' },
+  APPROVED: { label: 'APPROVED', value: 'Paid' },
+  PAID: { label: 'PAID', value: 'Paid' },
+  DECLINED: { label: 'DECLINED', value: 'Declined' },
   NONE: { label: 'NONE', value: 'None' },
 };
 

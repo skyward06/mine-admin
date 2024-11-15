@@ -41,8 +41,9 @@ import type { CommissionRole, ICommissionPrismaFilter, ICommissionTableFilters }
 
 const STATUS_OPTIONS: { value: CommissionRole; label: string; color: LabelColor }[] = [
   { value: 'pending', label: 'Pending', color: 'info' },
-  { value: 'sent', label: 'Sent', color: 'success' },
-  { value: 'decline', label: 'Declined', color: 'error' },
+  { value: 'approved', label: 'Approved', color: 'info' },
+  { value: 'paid', label: 'Paid', color: 'success' },
+  { value: 'declined', label: 'Declined', color: 'error' },
 ];
 
 const TABLE_HEAD = [
@@ -91,10 +92,10 @@ export default function CommissionListView({ openWeek }: Props) {
 
     if (filter.status === 'pending') {
       filterObj.status = COMMISSION_TYPE.PENDING.label;
-    } else if (filter.status === 'sent') {
-      filterObj.status = COMMISSION_TYPE.CONFIRM.label;
+    } else if (filter.status === 'paid') {
+      filterObj.status = COMMISSION_TYPE.PAID.label;
     } else {
-      filterObj.status = COMMISSION_TYPE.BLOCK.label;
+      filterObj.status = COMMISSION_TYPE.DECLINED.label;
     }
 
     filterObj.weekStartDate = {
@@ -117,16 +118,20 @@ export default function CommissionListView({ openWeek }: Props) {
   useEffect(() => {
     fetchCommissionStats({
       variables: {
-        declineFilter: {
-          status: COMMISSION_TYPE.BLOCK.label,
+        declinedFilter: {
+          status: COMMISSION_TYPE.DECLINED.label,
           weekStartDate: { lt: weekStartDate },
         },
         pendingFilter: {
           status: COMMISSION_TYPE.PENDING.label,
           weekStartDate: { lt: weekStartDate },
         },
-        sentFilter: {
-          status: COMMISSION_TYPE.CONFIRM.label,
+        paidFilter: {
+          status: COMMISSION_TYPE.PAID.label,
+          weekStartDate: { lt: weekStartDate },
+        },
+        approvedFilter: {
+          status: COMMISSION_TYPE.APPROVED.label,
           weekStartDate: { lt: weekStartDate },
         },
       },
