@@ -65,8 +65,6 @@ export default function CommissionTableRow({ row }: Props) {
     weekStartDate,
   } = row;
 
-  console.log('status => ', status);
-
   return (
     <>
       <TableRow hover>

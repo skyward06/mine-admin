@@ -78,8 +78,6 @@ export default function Detail({ open, row }: Props) {
     setFiles(currentFile);
   }, [currentNote, currentFile]);
 
-  console.log('files => ', files);
-
   return (
     <Drawer
       open={open.value}
