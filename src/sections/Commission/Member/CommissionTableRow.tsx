@@ -4,6 +4,8 @@ import utcPlugin from 'dayjs/plugin/utc';
 import Dialog from '@mui/material/Dialog';
 import Tooltip from '@mui/material/Tooltip';
 import TableRow from '@mui/material/TableRow';
+import MenuList from '@mui/material/MenuList';
+import MenuItem from '@mui/material/MenuItem';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import ListItemText from '@mui/material/ListItemText';
@@ -20,6 +22,7 @@ import { ConfirmationStatus, type WeeklyCommission } from 'src/__generated__/gra
 
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
+import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
 import Detail from './Detail';
 import PlacementTreeView from './Placement';
@@ -37,6 +40,8 @@ export default function CommissionTableRow({ row }: Props) {
   const detailOpen = useBoolean();
 
   const router = useRouter();
+
+  const popover = usePopover();
 
   const commission_type = ConfirmationStatus;
 
@@ -59,6 +64,8 @@ export default function CommissionTableRow({ row }: Props) {
     commission,
     weekStartDate,
   } = row;
+
+  console.log('status => ', status);
 
   return (
     <>
@@ -112,44 +119,9 @@ export default function CommissionTableRow({ row }: Props) {
               <Iconify icon="solar:eye-bold" />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Confirm" placement="top">
-            <IconButton
-              color="success"
-              disabled={status !== COMMISSION_TYPE.PENDING.label}
-              onClick={async () => {
-                const { data } = await updateCommissionStatus({
-                  variables: { data: { id, status: commission_type.Paid } },
-                });
-
-                if (data) {
-                  toast.message('Successfully Confirmed!');
-                } else {
-                  toast.message('Something went wrong!');
-                }
-              }}
-            >
-              <Iconify icon="mage:check-circle-fill" />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Decline" placement="top">
-            <IconButton
-              color="error"
-              disabled={status !== COMMISSION_TYPE.PENDING.label}
-              onClick={async () => {
-                const { data } = await updateCommissionStatus({
-                  variables: { data: { id, status: commission_type.Declined } },
-                });
-
-                if (data) {
-                  toast.message('Successfully Cancelled!');
-                } else {
-                  toast.message('Something went wrong!');
-                }
-              }}
-            >
-              <Iconify icon="material-symbols:cancel" />
-            </IconButton>
-          </Tooltip>
+          <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
+            <Iconify icon="nrk:more" />
+          </IconButton>
         </TableCell>
       </TableRow>
 
@@ -163,6 +135,74 @@ export default function CommissionTableRow({ row }: Props) {
       </Dialog>
 
       <Detail open={detailOpen} row={row} />
+
+      <CustomPopover
+        open={popover.open}
+        anchorEl={popover.anchorEl}
+        onClose={popover.onClose}
+        slotProps={{ arrow: { placement: 'right-center' } }}
+      >
+        <MenuList>
+          <MenuItem
+            sx={{ color: 'secondary.main' }}
+            disabled={
+              status === COMMISSION_TYPE.APPROVED.label || status === COMMISSION_TYPE.PAID.label
+            }
+            onClick={async () => {
+              const { data } = await updateCommissionStatus({
+                variables: { data: { id, status: commission_type.Approved } },
+              });
+
+              if (data) {
+                toast.message('Successfully Confirmed!');
+              } else {
+                toast.message('Something went wrong!');
+              }
+            }}
+          >
+            <Iconify icon="mage:check-circle-fill" />
+            Approve
+          </MenuItem>
+          <MenuItem
+            sx={{ color: 'success.main' }}
+            disabled={status === COMMISSION_TYPE.PAID.label}
+            onClick={async () => {
+              const { data } = await updateCommissionStatus({
+                variables: { data: { id, status: commission_type.Paid } },
+              });
+
+              if (data) {
+                toast.message('Successfully Cancelled!');
+              } else {
+                toast.message('Something went wrong!');
+              }
+            }}
+          >
+            <Iconify icon="ic:round-paid" />
+            Pay
+          </MenuItem>
+          <MenuItem
+            sx={{ color: 'error.main' }}
+            disabled={
+              status === COMMISSION_TYPE.DECLINED.label || status === COMMISSION_TYPE.PAID.label
+            }
+            onClick={async () => {
+              const { data } = await updateCommissionStatus({
+                variables: { data: { id, status: commission_type.Declined } },
+              });
+
+              if (data) {
+                toast.message('Successfully Cancelled!');
+              } else {
+                toast.message('Something went wrong!');
+              }
+            }}
+          >
+            <Iconify icon="material-symbols:cancel" />
+            Decline
+          </MenuItem>
+        </MenuList>
+      </CustomPopover>
     </>
   );
 }

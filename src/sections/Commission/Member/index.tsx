@@ -42,8 +42,8 @@ import type { CommissionRole, ICommissionPrismaFilter, ICommissionTableFilters }
 const STATUS_OPTIONS: { value: CommissionRole; label: string; color: LabelColor }[] = [
   { value: 'pending', label: 'Pending', color: 'info' },
   { value: 'approved', label: 'Approved', color: 'info' },
-  { value: 'paid', label: 'Paid', color: 'success' },
   { value: 'declined', label: 'Declined', color: 'error' },
+  { value: 'paid', label: 'Paid', color: 'success' },
 ];
 
 const TABLE_HEAD = [
@@ -94,6 +94,8 @@ export default function CommissionListView({ openWeek }: Props) {
       filterObj.status = COMMISSION_TYPE.PENDING.label;
     } else if (filter.status === 'paid') {
       filterObj.status = COMMISSION_TYPE.PAID.label;
+    } else if (filter.status === 'approved') {
+      filterObj.status = COMMISSION_TYPE.APPROVED.label;
     } else {
       filterObj.status = COMMISSION_TYPE.DECLINED.label;
     }
