@@ -10,7 +10,7 @@ import ListItemText from '@mui/material/ListItemText';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { fDate, fTime, fDateTime } from 'src/utils/format-time';
+import { formatDate, formatTime, formatDateTime } from 'src/utils/format-time';
 
 import { Label } from 'src/components/Label';
 import { Iconify } from 'src/components/Iconify';
@@ -62,8 +62,8 @@ export default function UserTableRow({
 
       <TableCell>
         <ListItemText
-          primary={fDate(createdAt)}
-          secondary={fTime(createdAt)}
+          primary={formatDate(createdAt)}
+          secondary={formatTime(createdAt)}
           primaryTypographyProps={{ typography: 'body2', noWrap: true }}
           secondaryTypographyProps={{
             mt: 0.5,
@@ -74,8 +74,8 @@ export default function UserTableRow({
       </TableCell>
       <TableCell>
         <ListItemText
-          primary={fDate(updatedAt)}
-          secondary={fTime(updatedAt)}
+          primary={formatDate(updatedAt)}
+          secondary={formatTime(updatedAt)}
           primaryTypographyProps={{ typography: 'body2', noWrap: true }}
           secondaryTypographyProps={{
             mt: 0.5,
@@ -87,7 +87,7 @@ export default function UserTableRow({
 
       <TableCell>
         {deletedAt ? (
-          <Tooltip title={`Deactivated at ${fDateTime(deletedAt)}`} placement="top" arrow>
+          <Tooltip title={`Deactivated at ${formatDateTime(deletedAt)}`} placement="top" arrow>
             <Label variant="soft" color="error">
               Inactive
             </Label>

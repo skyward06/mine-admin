@@ -8,7 +8,7 @@ import ListItemText from '@mui/material/ListItemText';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { fDate, fTime } from 'src/utils/format-time';
+import { formatDate, formatTime } from 'src/utils/format-time';
 
 import { TableNoData } from 'src/components/Table';
 import { ScrollBar } from 'src/components/ScrollBar';
@@ -65,8 +65,8 @@ export default function IndividualMembers({ members }: Props) {
 
               <TableCell>
                 <ListItemText
-                  primary={fDate(row.createdAt)}
-                  secondary={fTime(row.createdAt)}
+                  primary={formatDate(row.createdAt)}
+                  secondary={formatTime(row.createdAt)}
                   primaryTypographyProps={{ typography: 'body2', noWrap: true }}
                   secondaryTypographyProps={{
                     mt: 0.5,

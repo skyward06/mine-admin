@@ -3,8 +3,8 @@ import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
 
-import { fDate } from 'src/utils/format-time';
 import { fNumber } from 'src/utils/formatNumber';
+import { formatDate } from 'src/utils/format-time';
 
 interface Props {
   // Todo: Update type to Statistics
@@ -54,7 +54,7 @@ export default function Overview({ data }: Props) {
         </Stack>
 
         <Stack width={1}>
-          {fDate(data?.issuedAt ?? new Date())}
+          {formatDate(data?.issuedAt ?? new Date())}
           <Box component="span" sx={{ color: 'text.secondary', typography: 'body2' }}>
             Issued At
           </Box>

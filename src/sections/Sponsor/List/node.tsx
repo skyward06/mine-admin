@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { fDate } from 'src/utils/format-time';
+import { formatDate } from 'src/utils/format-time';
 
 import { Iconify } from 'src/components/Iconify';
 
@@ -58,7 +58,7 @@ export function StandardNode({ id, username, fullName, createdAt }: NodeProps) {
           noWrap
           sx={{ color: 'text.secondary', mt: 0.5 }}
         >
-          {fDate(createdAt)}
+          {formatDate(createdAt)}
         </Typography>
 
         <Stack direction="row" columnGap={1}>

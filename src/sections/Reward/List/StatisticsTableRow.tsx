@@ -14,7 +14,7 @@ import { useRouter } from 'src/routes/hooks';
 
 import { useBoolean, type UseBooleanReturn } from 'src/hooks/useBoolean';
 
-import { fDate, fTime, formatDate } from 'src/utils/format-time';
+import { formatDate, formatTime } from 'src/utils/format-time';
 
 import { EXPLORER_PATH } from 'src/consts';
 
@@ -132,8 +132,8 @@ export default function StatisticsTableRow({
 
         <TableCell>
           <ListItemText
-            primary={fDate(from)}
-            secondary={fTime(from)}
+            primary={formatDate(from)}
+            secondary={formatTime(from)}
             primaryTypographyProps={{ typography: 'caption', noWrap: true }}
             secondaryTypographyProps={{
               mt: 0.5,
@@ -144,8 +144,8 @@ export default function StatisticsTableRow({
         </TableCell>
         <TableCell>
           <ListItemText
-            primary={fDate(to)}
-            secondary={fTime(to)}
+            primary={formatDate(to)}
+            secondary={formatTime(to)}
             primaryTypographyProps={{ typography: 'caption', noWrap: true }}
             secondaryTypographyProps={{
               mt: 0.5,

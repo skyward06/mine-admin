@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 import LoadingButton from '@mui/lab/LoadingButton';
 
-import { fDate, fTime } from 'src/utils/format-time';
+import { fTime, formatDate } from 'src/utils/format-time';
 
 import { CONFIG } from 'src/config';
 
@@ -34,7 +34,7 @@ export default function ExportButton({ target, token }: Props) {
 
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${target}-${fDate(new Date(), 'YYYYMMDD')}${fTime(new Date(), 'hhmmss')}.xlsx`;
+    a.download = `${target}-${formatDate(new Date(), 'YYYYMMDD')}${fTime(new Date(), 'hhmmss')}.xlsx`;
 
     document.body.appendChild(a);
     a.click();
