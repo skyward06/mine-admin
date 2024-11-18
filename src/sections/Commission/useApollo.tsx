@@ -6,6 +6,7 @@ import {
   FETCH_COMMISSION_BY_WEEK,
   UPDATE_COMMISSION_STATUS,
   FETCH_COMMISSION_STATS_QUERY,
+  CALCULATE_COMMISSION_PREVIEW,
 } from './query';
 
 export function useFetchCommissions() {
@@ -67,4 +68,15 @@ export function useUpdateCommissionStatus() {
   });
 
   return { loading, data, error, updateCommissionStatus };
+}
+
+export function useRecalculateCommissionPreview() {
+  const [updateCommissionPreview, { loading, data, error }] = useMutation(
+    CALCULATE_COMMISSION_PREVIEW,
+    {
+      awaitRefetchQueries: true,
+      refetchQueries: ['WeeklyCommissions'],
+    }
+  );
+  return { loading, data, error, updateCommissionPreview };
 }

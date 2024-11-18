@@ -8,6 +8,7 @@ import Button from '@mui/material/Button';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 import { paths } from 'src/routes/paths';
+import { useQuery } from 'src/routes/hooks';
 
 import { useTabs } from 'src/hooks/use-tabs';
 import { useBoolean } from 'src/hooks/useBoolean';
@@ -15,11 +16,14 @@ import { useBoolean } from 'src/hooks/useBoolean';
 import { CONFIG } from 'src/config';
 import { DashboardContent } from 'src/layouts/dashboard';
 
+import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 
 import Week from './Week';
 import Member from './Member';
+import Preview from './Preview';
+import { useRecalculateCommissionPreview } from './useApollo';
 
 const TABS = [
   { value: 'week', label: 'Week', icon: <Iconify icon="stash:data-date-duotone" width={24} /> },
@@ -28,10 +32,17 @@ const TABS = [
     label: 'Member',
     icon: <Iconify icon="iconoir:user" width={24} />,
   },
+  {
+    value: 'preview',
+    label: 'Preview',
+    icon: <Iconify icon="fluent:preview-link-16-regular" width={24} />,
+  },
 ];
 
 export default function CommissionListView() {
-  const tabs = useTabs('week');
+  const { updateCommissionPreview } = useRecalculateCommissionPreview();
+  const [query, { setQueryParams: setQuery }] = useQuery();
+  const tabs = useTabs(query.tab ?? 'week');
   const [loading, setLoading] = useState<boolean>(false);
 
   const openWeek = useBoolean();
@@ -66,6 +77,20 @@ export default function CommissionListView() {
     setLoading(false);
   };
 
+  const handleTabChange = (event: React.SyntheticEvent, value: any) => {
+    setQuery({ tab: value });
+    tabs.onChange(event, value);
+  };
+
+  const handleRecalculatePreview = async () => {
+    try {
+      await updateCommissionPreview();
+      toast.success('Successfully updated the commission preview');
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
+
   return (
     <DashboardContent>
       <Breadcrumbs
@@ -85,6 +110,14 @@ export default function CommissionListView() {
             <Button variant="contained" color="primary" onClick={() => openWeek.onTrue()}>
               Select Week
             </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<Iconify icon="fluent:preview-link-16-regular" />}
+              onClick={handleRecalculatePreview}
+            >
+              RECALCULATION
+            </Button>
           </Stack>
         }
         sx={{
@@ -92,7 +125,7 @@ export default function CommissionListView() {
         }}
       />
 
-      <Tabs value={tabs.value} onChange={tabs.onChange} sx={{ mb: { xs: 2, md: 3 } }}>
+      <Tabs value={tabs.value} onChange={handleTabChange} sx={{ mb: { xs: 2, md: 3 } }}>
         {TABS.map((tab) => (
           <Tab key={tab.value} label={tab.label} icon={tab.icon} value={tab.value} />
         ))}
@@ -101,6 +134,8 @@ export default function CommissionListView() {
       {tabs.value === 'week' && <Week openWeek={openWeek} />}
 
       {tabs.value === 'member' && <Member openWeek={openWeek} />}
+
+      {tabs.value === 'preview' && <Preview />}
     </DashboardContent>
   );
 }

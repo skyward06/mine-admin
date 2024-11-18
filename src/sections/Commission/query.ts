@@ -108,3 +108,12 @@ export const UPDATE_COMMISSION_STATUS = gql(/* GraphQL */ `
     }
   }
 `);
+
+export const CALCULATE_COMMISSION_PREVIEW = gql(/* GraphQL */ `
+  mutation CalculatePreview {
+    calculatePreview {
+      message
+      result
+    }
+  }
+`);
