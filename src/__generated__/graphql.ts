@@ -573,7 +573,7 @@ export type Mutation = {
   resetPasswordRequest: SuccessResponse;
   resetTokenVerify: VerifyTokenResponse;
   sendEmailVerification: EmailVerificationResponse;
-  signUpMember: SuccessResponse;
+  signUpMember: Member;
   updateAdmin: Admin;
   updateAdminNote: AdminNotes;
   updateCommissionStatus: WeeklyCommission;

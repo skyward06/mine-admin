@@ -22,8 +22,6 @@ import ProductTableRow from './CommissionTableRow';
 import { useFetchCommissions } from '../useApollo';
 import ProductTableFiltersResult from '../Member/CommissionTableFiltersResult';
 
-import type { ICommissionPrismaFilter } from './types';
-
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -39,26 +37,28 @@ const TABLE_HEAD = [
   { id: 'action', label: 'Action', width: 250, sortable: true, align: 'center' },
 ];
 
-const additionalFilter = {
-  status: 'PREVIEW',
-  OR: [
-    {
-      commission: {
-        gt: 0,
+const additionalFilter = [
+  { status: 'PREVIEW' },
+  {
+    OR: [
+      {
+        commission: {
+          gt: 0,
+        },
       },
-    },
-    {
-      newL: {
-        gt: 0,
+      {
+        newL: {
+          gt: 0,
+        },
       },
-    },
-    {
-      newR: {
-        gt: 0,
+      {
+        newR: {
+          gt: 0,
+        },
       },
-    },
-  ],
-};
+    ],
+  },
+];
 
 export default function CommissionPreviewList() {
   const table = useTable({ defaultDense: true });
@@ -74,18 +74,19 @@ export default function CommissionPreviewList() {
     sort = { commission: 'asc', memberId: 'asc' },
     filter = {
       search: '',
-      ...additionalFilter,
     },
   } = query;
 
   const graphQueryFilter = useMemo(() => {
-    let filterObj: ICommissionPrismaFilter = {};
+    let filterObj: any[] = [];
     if (filter.search) {
-      filterObj.OR = [{ member: { username: { contains: filter.search, mode: 'insensitive' } } }];
+      filterObj = [
+        { OR: [{ member: { username: { contains: filter.search, mode: 'insensitive' } } }] },
+      ];
     }
-    filterObj = { ...filterObj, ...additionalFilter };
+    filterObj = [...filterObj, ...additionalFilter];
 
-    return filterObj;
+    return { AND: filterObj };
   }, [filter]);
 
   const graphQuerySort = useMemo(() => {
