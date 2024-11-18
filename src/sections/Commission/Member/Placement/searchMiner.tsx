@@ -32,7 +32,10 @@ export default function PlacementListView({ onMinerChange, weekStartDate }: Prop
           ...(addModal.value && {
             placementParentId: null,
           }),
-          username: { contains: miner?.username, mode: 'insensitive' },
+          OR: [
+            { username: { contains: miner?.username, mode: 'insensitive' } },
+            { fullName: { contains: miner?.username, mode: 'insensitive' } },
+          ],
           createdAt: {
             lt: dayjs(weekStartDate).add(1, 'week').toDate(),
           },
@@ -49,7 +52,7 @@ export default function PlacementListView({ onMinerChange, weekStartDate }: Prop
       options={members}
       loading={loading}
       loadingText={<LoadingButton loading={loading} />}
-      getOptionLabel={(option) => option!.username}
+      getOptionLabel={(option) => `${option!.username}-${option!.fullName}`}
       renderInput={(params) => (
         <TextField {...params} label="Miner Name" margin="none" size="small" />
       )}

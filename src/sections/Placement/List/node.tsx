@@ -45,6 +45,7 @@ import type { NodeProps } from './type';
 interface Member {
   id: string;
   username: string;
+  fullName?: string;
 }
 
 export function StandardNode({
@@ -104,7 +105,10 @@ export function StandardNode({
           ...(addModal.value && {
             placementParentId: null,
           }),
-          username: { contains: member?.username, mode: 'insensitive' },
+          OR: [
+            { username: { contains: member?.username, mode: 'insensitive' } },
+            { fullName: { contains: member?.username, mode: 'insensitive' } },
+          ],
         },
         page: '1,10',
       },
@@ -121,7 +125,7 @@ export function StandardNode({
         options={members}
         loading={memberLoading}
         loadingText={<LoadingButton loading={memberLoading} />}
-        getOptionLabel={(option) => option!.username}
+        getOptionLabel={(option) => `${option!.username}-${option!.fullName}`}
         renderInput={(params) => <TextField {...params} label="Miner Name(Child)" margin="none" />}
         renderOption={(props, option) => (
           <li {...props} key={option!.username}>
@@ -164,7 +168,7 @@ export function StandardNode({
         options={members}
         loading={memberLoading}
         loadingText={<LoadingButton loading={memberLoading} />}
-        getOptionLabel={(option) => option!.username}
+        getOptionLabel={(option) => `${option!.username}-${option!.fullName}`}
         value={member || placementParent}
         renderInput={(params) => <TextField {...params} label="Miner Name(Parent)" margin="none" />}
         renderOption={(props, option) => (
