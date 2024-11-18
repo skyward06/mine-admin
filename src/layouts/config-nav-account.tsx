@@ -61,6 +61,11 @@ export const _account = [
     icon: <Iconify icon="clarity:flow-chart-line" />,
   },
   {
+    label: 'Prepayment',
+    href: '/prepaid-commission',
+    icon: <Iconify icon="ic:outline-paid" />,
+  },
+  {
     label: 'Commission',
     href: '/commission',
     icon: <Iconify icon="fluent:reward-32-regular" />,
