@@ -53,8 +53,8 @@ const CommissionPage = lazy(() => import('src/pages/Commission'));
 const CommissionDetailPage = lazy(() => import('src/pages/CommissionDetail'));
 
 // ----------------------------------------------------------------------
-const PrepaidCommissionPage = lazy(() => import('src/pages/PrepaidCommission/List'));
-const PrepaidCommissionCreatePage = lazy(() => import('src/pages/PrepaidCommission/Create'));
+// const PrepaidCommissionPage = lazy(() => import('src/pages/PrepaidCommission/List'));
+// const PrepaidCommissionCreatePage = lazy(() => import('src/pages/PrepaidCommission/Create'));
 // const PrepaidCommissionEditPage = lazy(() => import('src/pages/PrepaidCommission/Edit'));
 
 // ----------------------------------------------------------------------
@@ -122,13 +122,13 @@ export const dashboardRoutes = [
           { path: ':id', element: <CommissionDetailPage /> },
         ],
       },
-      {
-        path: 'prepaid-commission',
-        children: [
-          { index: true, element: <PrepaidCommissionPage /> },
-          { path: 'new', element: <PrepaidCommissionCreatePage /> },
-        ],
-      },
+      // {
+      //   path: 'prepaid-commission',
+      //   children: [
+      //     { index: true, element: <PrepaidCommissionPage /> },
+      //     { path: 'new', element: <PrepaidCommissionCreatePage /> },
+      //   ],
+      // },
       {
         path: 'reward',
         children: [
