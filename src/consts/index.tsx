@@ -52,6 +52,12 @@ export const PAYMENT_TYPE = [
   { label: 'Commission', value: 'Commission' },
 ];
 
+export const PREPAYMRENT_TYPE = [
+  { label: 'BTC', value: 'btc' },
+  { label: 'CASH', value: 'cash' },
+  { label: 'TEXITCOIN', value: 'texitcoin' },
+];
+
 export const TXC_WALLET = [
   { id: 'b3ed0e78-6cc8-465c-9454-0576534f06f2', method: 'TXC-HOT' },
   { id: '6f7681f0-9ccf-4a79-b1cb-f87e56cf7e8a', method: 'TXC-COLD' },
