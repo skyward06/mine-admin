@@ -4,7 +4,7 @@ import { useMutation, useLazyQuery } from '@apollo/client';
 import { CREATE_PREPAID, UPDATE_PREPAID, FETCH_PREPAID_QUERY } from './query';
 
 export function useFetchPrepaid() {
-  const [fetchPrepaid, { loading, data }] = useLazyQuery(FETCH_PREPAID_QUERY);
+  const [fetchPrepaid, { loading, data, called }] = useLazyQuery(FETCH_PREPAID_QUERY);
 
   const rowCountRef = useRef(data?.prepaidCommissions.total ?? 0);
 
@@ -19,6 +19,7 @@ export function useFetchPrepaid() {
   }, [data]);
 
   return {
+    called,
     loading,
     rowCount,
     prepaid: data?.prepaidCommissions.prepaidCommissions ?? [],

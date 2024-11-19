@@ -9,7 +9,8 @@ export const FETCH_PREPAID_QUERY = gql(/* GraphQL */ `
         deletedAt
         id
         memberId
-        saleId
+        txId
+        txType
         note
         pkgL
         pkgR
@@ -56,29 +57,6 @@ export const FETCH_PREPAID_QUERY = gql(/* GraphQL */ `
           begR
           newL
           newR
-        }
-        sale {
-          createdAt
-          updatedAt
-          deletedAt
-          id
-          purchaseId
-          paymentMethod
-          status
-          memberId
-          packageId
-          package {
-            id
-            date
-            token
-            point
-            amount
-            status
-            productName
-            enrollVisibility
-          }
-          orderedAt
-          note
         }
         reflinks {
           link
