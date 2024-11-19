@@ -1,7 +1,7 @@
 import { useRef, useMemo } from 'react';
 import { useMutation, useLazyQuery } from '@apollo/client';
 
-import { CREATE_PREPAID, UPDATE_PREPAID, FETCH_PREPAID_QUERY } from './query';
+import { CREATE_PREPAID, UPDATE_PREPAID, REMOVE_PREPAID, FETCH_PREPAID_QUERY } from './query';
 
 export function useFetchPrepaid() {
   const [fetchPrepaid, { loading, data, called }] = useLazyQuery(FETCH_PREPAID_QUERY);
@@ -43,4 +43,13 @@ export function useUpdatePrepaid() {
   });
 
   return { loading, updatePrepaid };
+}
+
+export function useRemovePrepaid() {
+  const [removePrepaid, { loading, error }] = useMutation(REMOVE_PREPAID, {
+    awaitRefetchQueries: true,
+    refetchQueries: ['PrepaidCommissions'],
+  });
+
+  return { loading, error, removePrepaid };
 }

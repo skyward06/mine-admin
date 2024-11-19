@@ -1,20 +1,26 @@
 import type { SortOrder } from 'src/routes/hooks/useQuery';
 
-import { useMemo, useEffect, useCallback } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
 import TableBody from '@mui/material/TableBody';
+import Typography from '@mui/material/Typography';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 import { paths } from 'src/routes/paths';
 import { useQuery } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 
+import { useBoolean } from 'src/hooks/useBoolean';
+
 import { DashboardContent } from 'src/layouts/dashboard';
 
+import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 import { ScrollBar } from 'src/components/ScrollBar';
+import { ConfirmDialog } from 'src/components/Dialog';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import { SearchInput } from 'src/components/SearchInput';
 import {
@@ -25,8 +31,8 @@ import {
   TablePaginationCustom,
 } from 'src/components/Table';
 
-import { useFetchPrepaid } from '../useApollo';
 import PrepaidTableRow from './PrepaidTableRow';
+import { useFetchPrepaid, useRemovePrepaid } from '../useApollo';
 import PrepaidTableFiltersResult from './PrepaidTableFiltersResult';
 
 import type { IPrepaidPrismaFilter, IPrepaidTableFilters } from './types';
@@ -35,7 +41,9 @@ const TABLE_HEAD = [
   { id: 'orderedAt', label: 'Date', width: 200, sortable: true },
   { id: 'member.username', label: 'Username', sortable: true },
   { id: 'commission', label: 'Commission', width: 200, sortable: true },
-  { id: 'pkgLR', label: 'Package LR', sortable: true },
+  { id: 'pkgLR', label: 'Package', sortable: true },
+  { id: 'txType', label: 'TxType', width: 200, sortable: true },
+  { id: 'weekStartDate', label: 'Week', width: 200, sortable: true },
   { id: 'action', label: 'Action', align: 'center', width: 200, sortable: true },
 ];
 
@@ -45,6 +53,8 @@ const defaultFilter: IPrepaidTableFilters = {
 
 export default function PrepaidCommissionListView() {
   const table = useTable({ defaultDense: true });
+  const [selected, setSelected] = useState<string>('');
+  const removeConfirm = useBoolean();
 
   const [query, { setQueryParams: setQuery, setPage, setPageSize }] =
     useQuery<IPrepaidTableFilters>();
@@ -72,6 +82,7 @@ export default function PrepaidCommissionListView() {
       .join(',');
   }, [sort]);
 
+  const { loading: removeLoading, removePrepaid } = useRemovePrepaid();
   const { loading, prepaid, rowCount, fetchPrepaid } = useFetchPrepaid();
 
   const canReset = !!filter.search;
@@ -156,7 +167,12 @@ export default function PrepaidCommissionListView() {
             ) : (
               <TableBody>
                 {prepaid!.map((row: any) => (
-                  <PrepaidTableRow key={row!.id} row={row!} />
+                  <PrepaidTableRow
+                    key={row!.id}
+                    row={row!}
+                    removeConfirm={removeConfirm}
+                    setSelected={setSelected}
+                  />
                 ))}
 
                 <TableNoData notFound={notFound} />
@@ -180,6 +196,39 @@ export default function PrepaidCommissionListView() {
           onChangeDense={table.onChangeDense}
         />
       </Card>
+
+      <ConfirmDialog
+        open={removeConfirm.value}
+        onClose={removeConfirm.onFalse}
+        title="Delete"
+        content={
+          <>
+            <Typography>This member will be removed permanently!</Typography>
+            <Typography>Are you sure?</Typography>
+          </>
+        }
+        action={
+          <LoadingButton
+            variant="contained"
+            color="error"
+            loading={removeLoading}
+            onClick={async () => {
+              const promise = await removePrepaid({ variables: { data: { id: selected } } });
+              const result = promise.data?.removePrepaidCommission.result;
+
+              if (result === 'success') {
+                toast.success('Prepayment removed successfully');
+              } else {
+                toast.error('You are not allowed to remove this prepayment');
+              }
+
+              removeConfirm.onFalse();
+            }}
+          >
+            Confirm
+          </LoadingButton>
+        }
+      />
     </DashboardContent>
   );
 }

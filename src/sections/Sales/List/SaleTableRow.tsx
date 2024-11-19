@@ -109,6 +109,7 @@ export default function SaleTableRow({ row, confirm, setSelected }: Props) {
           </Tooltip>
         </TableCell>
       </TableRow>
+
       <Detail row={row} open={open} />
     </>
   );

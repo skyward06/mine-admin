@@ -56,7 +56,7 @@ export default function EditForm({ current }: Props) {
             pkgL: 0,
             pkgR: 0,
             orderedAt: `${today('YYYY-MM-DD')}`,
-            weekStartDate: `${dayjs(today()).utc().add(7, 'day').startOf('day')}`,
+            weekStartDate: `${dayjs(today()).utc().startOf('day')}`,
           },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [current]
@@ -90,7 +90,7 @@ export default function EditForm({ current }: Props) {
             data: {
               ...rest,
               id: current.id,
-              memberId: member?.id,
+              memberId: member?.id ?? '',
               orderedAt: customizeDate(orderedAt),
               weekStartDate: customizeDate(weekStartDate),
               fileIds: files?.map((file: any) => file.id),
@@ -185,7 +185,7 @@ export default function EditForm({ current }: Props) {
                 )}
                 onInputChange={(_, username: string) => {
                   console.log('onInputChange');
-                  setMember({ id: '', username });
+                  setMember({ id: current ? current.member.id : '', username });
                 }}
                 onChange={(_, value) => {
                   console.log('onChange');

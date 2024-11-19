@@ -83,3 +83,12 @@ export const UPDATE_PREPAID = gql(/* GraphQL */ `
     }
   }
 `);
+
+export const REMOVE_PREPAID = gql(/* GraphQL */ `
+  mutation RemovePrepaidCommission($data: IDInput!) {
+    removePrepaidCommission(data: $data) {
+      message
+      result
+    }
+  }
+`);
