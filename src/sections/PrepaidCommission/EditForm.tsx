@@ -55,10 +55,8 @@ export default function EditForm({ current }: Props) {
             commission: 0,
             pkgL: 0,
             pkgR: 0,
-            orderedAt: customizeDate(today()),
-            weekStartDate: customizeDate(
-              dayjs(today()).utc().add(7, 'day').startOf('day').format()
-            ),
+            orderedAt: `${today('YYYY-MM-DD')}`,
+            weekStartDate: `${dayjs(today()).utc().add(7, 'day').startOf('day')}`,
           },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [current]
@@ -84,14 +82,17 @@ export default function EditForm({ current }: Props) {
   };
 
   const onSubmit = handleSubmit(async (newData) => {
+    const { orderedAt, weekStartDate, ...rest } = newData;
     try {
       if (current) {
         await updatePrepaid({
           variables: {
             data: {
-              ...newData,
+              ...rest,
               id: current.id,
               memberId: member?.id,
+              orderedAt: customizeDate(orderedAt),
+              weekStartDate: customizeDate(weekStartDate),
               fileIds: files?.map((file: any) => file.id),
             },
           },
@@ -100,8 +101,10 @@ export default function EditForm({ current }: Props) {
         await createPrepaid({
           variables: {
             data: {
-              ...newData,
+              ...rest,
               memberId: member?.id ?? '',
+              orderedAt: customizeDate(orderedAt),
+              weekStartDate: customizeDate(weekStartDate),
               fileIds: files?.map((file: any) => file.id),
             },
           },
@@ -157,8 +160,10 @@ export default function EditForm({ current }: Props) {
             >
               <Field.Text type="number" name="commission" label="Commission" />
 
-              <Field.Text type="number" name="pkgL" label="pkgL" />
-              <Field.Text type="number" name="pkgR" label="pkgR" />
+              <Stack direction="row" columnGap={2}>
+                <Field.Text type="number" name="pkgL" label="pkgL" />
+                <Field.Text type="number" name="pkgR" label="pkgR" />
+              </Stack>
 
               <Field.Autocomplete
                 fullWidth
@@ -188,6 +193,8 @@ export default function EditForm({ current }: Props) {
                 }}
               />
 
+              <Field.Text name="note" label="Note" />
+
               <Field.DatePicker name="orderedAt" label="Ordered At" format="YYYY-MM-DD" />
 
               <Field.DatePicker name="weekStartDate" label="Week" format="YYYY-MM-DD" />
@@ -199,8 +206,6 @@ export default function EditForm({ current }: Props) {
               </Field.Select>
 
               <Field.Text name="txId" label="Transaction / Purchase ID" />
-
-              <Field.Text name="note" label="Note" />
             </Box>
 
             <Divider flexItem sx={{ borderStyle: 'dashed', my: 2 }} />
