@@ -22,7 +22,7 @@ type Props = {
 export default function ProductTableRow({ row }: Props) {
   const router = useRouter();
 
-  const { id, member, commission, pkgL, pkgR, sale, orderedAt } = row;
+  const { id, member, commission, pkgL, pkgR, orderedAt } = row;
 
   return (
     <TableRow hover>
@@ -50,7 +50,6 @@ export default function ProductTableRow({ row }: Props) {
       </TableCell>
       <TableCell align="left">{commission}</TableCell>
       <TableCell align="left">{`L${pkgL}, R${pkgR}`}</TableCell>
-      <TableCell align="left">{sale?.package?.productName}</TableCell>
       <TableCell align="center">
         <Tooltip title="Edit" placement="top" arrow>
           <IconButton

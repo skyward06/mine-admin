@@ -36,7 +36,6 @@ const TABLE_HEAD = [
   { id: 'member.username', label: 'Username', sortable: true },
   { id: 'commission', label: 'Commission', width: 200, sortable: true },
   { id: 'pkgLR', label: 'Package LR', sortable: true },
-  { id: 'sale.productName', label: 'Product Name', sortable: true },
   { id: 'action', label: 'Action', align: 'center', width: 200, sortable: true },
 ];
 

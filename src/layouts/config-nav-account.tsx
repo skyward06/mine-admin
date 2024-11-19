@@ -60,11 +60,11 @@ export const _account = [
     href: '/placement',
     icon: <Iconify icon="clarity:flow-chart-line" />,
   },
-  // {
-  //   label: 'Prepayment',
-  //   href: '/prepaid-commission',
-  //   icon: <Iconify icon="ic:outline-paid" />,
-  // },
+  {
+    label: 'Prepayment',
+    href: '/prepaid-commission',
+    icon: <Iconify icon="ic:outline-paid" />,
+  },
   {
     label: 'Commission',
     href: '/commission',

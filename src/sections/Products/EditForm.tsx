@@ -9,7 +9,6 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import MenuItem from '@mui/material/MenuItem';
-import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 
@@ -51,7 +50,7 @@ export default function EditForm({ current }: Props) {
   const defaultValues = useMemo(
     () =>
       current
-        ? (NewProductSchema.safeParse(current)?.data ?? ({} as NewProductSchemaType))
+        ? NewProductSchema.safeParse(current)?.data ?? ({} as NewProductSchemaType)
         : {
             productName: '',
             amount: 0,
@@ -111,78 +110,72 @@ export default function EditForm({ current }: Props) {
 
   return (
     <Form methods={methods} onSubmit={onSubmit}>
-      <Grid container spacing={3}>
-        <Grid xl={12}>
-          <Card sx={{ p: 3 }}>
-            <Stack spacing={1} sx={{ mb: 3 }}>
-              <Typography variant="subtitle1">Product</Typography>
-            </Stack>
-            <Box
-              rowGap={3}
-              columnGap={2}
-              display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(2, 1fr)',
-              }}
-            >
-              <Field.Text name="productName" label="Product Name" />
-              <Field.Text
-                name="amount"
-                type="number"
-                label="Amount"
-                disabled={!!(current?.sales ?? []).length}
-              />
-              <Field.Text
-                name="token"
-                type="number"
-                label="Hash Power"
-                disabled={!!(current?.sales ?? []).length}
-              />
-              <Field.Text
-                name="point"
-                type="number"
-                label="Point"
-                disabled={!!(current?.sales ?? []).length}
-              />
-              <Field.Select
-                name="status"
-                label="Status"
-                value={status ? 1 : 0}
-                onChange={(e) =>
-                  Number(e.target.value) === 1 ? setStatus(true) : setStatus(false)
-                }
-                disabled={!!(current?.sales ?? []).length}
-              >
-                <MenuItem value={1}>Active</MenuItem>
-                <MenuItem value={0}>Inactive</MenuItem>
-              </Field.Select>
-              <Field.Select
-                name="enrollVisibility"
-                label="Visibility"
-                value={visibility ? 1 : 0}
-                onChange={(e) =>
-                  Number(e.target.value) === 1 ? setVisibility(true) : setVisibility(false)
-                }
-                disabled={!!(current?.sales ?? []).length}
-              >
-                <MenuItem value={1}>Show</MenuItem>
-                <MenuItem value={0}>Hide</MenuItem>
-              </Field.Select>
-            </Box>
+      <Card sx={{ p: 3 }}>
+        <Stack spacing={1} sx={{ mb: 3 }}>
+          <Typography variant="subtitle1">Product</Typography>
+        </Stack>
+        <Box
+          rowGap={3}
+          columnGap={2}
+          display="grid"
+          gridTemplateColumns={{
+            xs: 'repeat(1, 1fr)',
+            sm: 'repeat(2, 1fr)',
+          }}
+        >
+          <Field.Text name="productName" label="Product Name" />
+          <Field.Text
+            name="amount"
+            type="number"
+            label="Amount"
+            disabled={!!(current?.sales ?? []).length}
+          />
+          <Field.Text
+            name="token"
+            type="number"
+            label="Hash Power"
+            disabled={!!(current?.sales ?? []).length}
+          />
+          <Field.Text
+            name="point"
+            type="number"
+            label="Point"
+            disabled={!!(current?.sales ?? []).length}
+          />
+          <Field.Select
+            name="status"
+            label="Status"
+            value={status ? 1 : 0}
+            onChange={(e) => (Number(e.target.value) === 1 ? setStatus(true) : setStatus(false))}
+            disabled={!!(current?.sales ?? []).length}
+          >
+            <MenuItem value={1}>Active</MenuItem>
+            <MenuItem value={0}>Inactive</MenuItem>
+          </Field.Select>
+          <Field.Select
+            name="enrollVisibility"
+            label="Visibility"
+            value={visibility ? 1 : 0}
+            onChange={(e) =>
+              Number(e.target.value) === 1 ? setVisibility(true) : setVisibility(false)
+            }
+            disabled={!!(current?.sales ?? []).length}
+          >
+            <MenuItem value={1}>Show</MenuItem>
+            <MenuItem value={0}>Hide</MenuItem>
+          </Field.Select>
+        </Box>
 
-            <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-              <LoadingButton
-                type="submit"
-                variant="contained"
-                loading={current ? updateLoading : loading}
-              >
-                {current ? 'Edit' : 'Create'}
-              </LoadingButton>
-            </Stack>
-          </Card>
-        </Grid>
-      </Grid>
+        <Stack alignItems="flex-end" sx={{ mt: 3 }}>
+          <LoadingButton
+            type="submit"
+            variant="contained"
+            loading={current ? updateLoading : loading}
+          >
+            {current ? 'Edit' : 'Create'}
+          </LoadingButton>
+        </Stack>
+      </Card>
     </Form>
   );
 }
