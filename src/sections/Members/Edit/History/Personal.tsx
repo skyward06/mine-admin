@@ -50,7 +50,7 @@ export const Personal = () => {
           <Typography variant="subtitle1">{member?.fullName}</Typography>
           <Stack direction="row">
             <Typography variant="body2" sx={{ pt: 0.9 }}>
-              {member?.userId.toString().padStart(7, '0')}
+              {member?.ID.toString().padStart(7, '0')}
             </Typography>
             <IconButton
               color="success"

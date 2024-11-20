@@ -45,12 +45,12 @@ export const FETCH_MEMBERSTATISTICS_QUERY = gql(/* GraphQL */ `
           updatedAt
           deletedAt
           id
+          ID
           username
           fullName
           email
           point
           mobile
-          userId
           assetId
           status
           emailVerified

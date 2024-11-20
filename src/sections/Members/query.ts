@@ -19,12 +19,12 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
     members(page: $page, filter: $filter, sort: $sort) {
       members {
         id
+        ID
         username
         fullName
         email
         primaryAddress
         secondaryAddress
-        userId
         assetId
         mobile
         city
@@ -44,6 +44,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         newR
         sponsor {
           id
+          ID
           username
           fullName
           email
@@ -51,7 +52,6 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           primaryAddress
           secondaryAddress
           mobile
-          userId
           assetId
           status
           emailVerified
@@ -68,11 +68,11 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         placementPosition
         placementParent {
           id
+          ID
           email
           point
           mobile
           status
-          userId
           assetId
           username
           fullName
@@ -90,11 +90,11 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         }
         placementChildren {
           id
+          ID
           email
           point
           mobile
           status
-          userId
           assetId
           username
           fullName
@@ -113,10 +113,11 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         }
         sales {
           id
+          ID
           memberId
           packageId
           paymentMethod
-          purchaseId
+          ID
           paymentConfirm {
             createdAt
             updatedAt

@@ -43,7 +43,7 @@ export default function Detail({ open, row }: Props) {
         }}
       >
         <Stack direction="row" justifyContent="space-between" sx={{ p: 2 }}>
-          <Typography variant="h6"> #{row.purchaseId} </Typography>
+          <Typography variant="h6"> #{row.ID} </Typography>
           <Stack direction="row">
             <Typography>
               <Iconify

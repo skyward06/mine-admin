@@ -150,7 +150,7 @@ export default function SaleGeneral({ currentSale }: Props) {
         <Grid xs={12} md={9}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={1} sx={{ mb: 3 }} direction="row" justifyContent="space-between">
-              <Typography variant="h5">Sale #{currentSale.purchaseId}</Typography>
+              <Typography variant="h5">Sale #{currentSale.ID}</Typography>
             </Stack>
             <Box
               rowGap={3}

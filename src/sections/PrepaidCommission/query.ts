@@ -36,7 +36,7 @@ export const FETCH_PREPAID_QUERY = gql(/* GraphQL */ `
           fullName
           sponsorId
           email
-          userId
+          ID
           mobile
           assetId
           primaryAddress

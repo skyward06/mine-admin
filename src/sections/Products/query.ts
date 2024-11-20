@@ -17,12 +17,12 @@ export const FETCH_PACKAGES_QUERY = gql(/* GraphQL */ `
         enrollVisibility
         sales {
           id
+          ID
           status
           memberId
           orderedAt
           packageId
           paymentMethod
-          purchaseId
           paymentConfirm {
             createdAt
             updatedAt
