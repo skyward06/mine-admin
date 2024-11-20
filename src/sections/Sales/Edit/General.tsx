@@ -20,6 +20,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { formatID } from 'src/utils/helper';
 import { formatDate, customizeDate } from 'src/utils/format-time';
 
 import { PAYMENT_TYPE } from 'src/consts';
@@ -59,7 +60,7 @@ const SaleGeneralSchema = zod.object({
 export default function SaleGeneral({ currentSale }: Props) {
   const router = useRouter();
 
-  const { status: currentStatus } = currentSale;
+  const { status: currentStatus, ID } = currentSale;
 
   const [files, setFiles] = useState<string[]>();
   const [member, setMember] = useState<Member>();
@@ -150,7 +151,7 @@ export default function SaleGeneral({ currentSale }: Props) {
         <Grid xs={12} md={9}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={1} sx={{ mb: 3 }} direction="row" justifyContent="space-between">
-              <Typography variant="h5">Sale #{currentSale.ID}</Typography>
+              <Typography variant="h5">{formatID(ID)}</Typography>
             </Stack>
             <Box
               rowGap={3}

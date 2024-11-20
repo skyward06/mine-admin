@@ -4,6 +4,8 @@ import { Navigate, useParams } from 'react-router-dom';
 
 import { paths } from 'src/routes/paths';
 
+import { formatID } from 'src/utils/helper';
+
 import { CONFIG } from 'src/config';
 import { DashboardContent } from 'src/layouts/dashboard';
 
@@ -50,7 +52,7 @@ export default function SaleEditView() {
       <DashboardContent>
         <Breadcrumbs
           heading="Sale Edit"
-          links={[{ name: 'Sale', href: paths.dashboard.sales.root }]}
+          links={[{ name: 'Sale', href: paths.dashboard.sales.root }, { name: formatID(sale.ID) }]}
           sx={{
             mb: { xs: 2, md: 3 },
           }}

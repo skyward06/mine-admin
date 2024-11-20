@@ -9,6 +9,7 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import ListItemText from '@mui/material/ListItemText';
 
+import { formatID } from 'src/utils/helper';
 import { formatDateTime } from 'src/utils/format-time';
 
 import { FREE_SHARE_ID_1, FREE_SHARE_ID_2 } from 'src/consts';
@@ -43,7 +44,7 @@ export default function Detail({ open, row }: Props) {
         }}
       >
         <Stack direction="row" justifyContent="space-between" sx={{ p: 2 }}>
-          <Typography variant="h6"> #{row.ID} </Typography>
+          <Typography variant="h6"> {formatID(row.ID)} </Typography>
           <Stack direction="row">
             <Typography>
               <Iconify

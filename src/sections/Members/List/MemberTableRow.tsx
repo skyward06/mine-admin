@@ -19,6 +19,7 @@ import { useRouter } from 'src/routes/hooks';
 
 import { useBoolean, type UseBooleanReturn } from 'src/hooks/useBoolean';
 
+import { formatID } from 'src/utils/helper';
 import { formatDate, formatTime } from 'src/utils/format-time';
 
 import { Label } from 'src/components/Label';
@@ -53,13 +54,13 @@ export default function MemberTableRow({
 
   const {
     id,
+    ID,
     username,
     email,
     mobile,
     assetId,
     point,
     fullName,
-    // syncWithSendy,
     totalIntroducers,
     emailVerified,
     status,
@@ -108,6 +109,8 @@ export default function MemberTableRow({
   return (
     <>
       <TableRow hover selected={selected}>
+        <TableCell>{formatID(ID)}</TableCell>
+
         <TableCell
           sx={{
             alignItems: 'center',

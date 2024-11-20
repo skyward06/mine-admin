@@ -11,6 +11,7 @@ import { useRouter } from 'src/routes/hooks';
 
 import { useBoolean, type UseBooleanReturn } from 'src/hooks/useBoolean';
 
+import { formatID } from 'src/utils/helper';
 import { formatDate } from 'src/utils/format-time';
 
 import { Iconify } from 'src/components/Iconify';
@@ -34,7 +35,7 @@ export default function SaleTableRow({ row, confirm, setSelected }: Props) {
   return (
     <>
       <TableRow hover>
-        <TableCell align="left">{ID}</TableCell>
+        <TableCell align="left">{formatID(ID)}</TableCell>
         <TableCell
           align="left"
           sx={{
