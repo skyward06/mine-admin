@@ -7,7 +7,6 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
-import MenuItem from '@mui/material/MenuItem';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -17,12 +16,11 @@ import { useRouter } from 'src/routes/hooks';
 
 import { today, customizeDate } from 'src/utils/format-time';
 
-import { PREPAYMRENT_TYPE } from 'src/consts';
-
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
 
 import LinkForm from './LinkForm';
+import PaymentForm from './PaymentForm';
 import { Schema, type SchemaType } from './schema';
 import { useFetchMembers } from '../Members/useApollo';
 import { FileManagerNewFolderDialog } from '../Sales/Upload';
@@ -48,16 +46,27 @@ export default function EditForm({ current }: Props) {
   const router = useRouter();
 
   const defaultValues = useMemo(
-    () =>
-      current
-        ? Schema.safeParse(current)?.data ?? ({} as SchemaType)
-        : {
-            commission: 0,
-            pkgL: 0,
-            pkgR: 0,
-            orderedAt: `${today('YYYY-MM-DD')}`,
-            weekStartDate: `${dayjs(today()).utc().startOf('day')}`,
-          },
+    () => {
+      if (current) {
+        const txTypes = current ? current.txType.split(',') : '';
+        const txIds = current ? current.txId.split(',') : '';
+
+        const payments = txTypes.map((item: string, index: number) => ({
+          txType: item,
+          txId: txIds[index],
+        }));
+
+        return Schema.safeParse({ ...current, payments })?.data ?? ({} as SchemaType);
+      }
+
+      return {
+        commission: 0,
+        pkgL: 0,
+        pkgR: 0,
+        orderedAt: `${today('YYYY-MM-DD')}`,
+        weekStartDate: `${dayjs(today()).utc().startOf('day')}`,
+      };
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [current]
   );
@@ -82,13 +91,19 @@ export default function EditForm({ current }: Props) {
   };
 
   const onSubmit = handleSubmit(async (newData) => {
-    const { orderedAt, weekStartDate, ...rest } = newData;
+    const { orderedAt, weekStartDate, payments, ...rest } = newData;
+
+    const txId = payments?.map((item) => item.txId).join(',');
+    const txType = payments?.map((item) => item.txType).join(',');
+
     try {
       if (current) {
         await updatePrepaid({
           variables: {
             data: {
               ...rest,
+              txId,
+              txType,
               id: current.id,
               memberId: member?.id ?? '',
               orderedAt: customizeDate(orderedAt),
@@ -102,6 +117,8 @@ export default function EditForm({ current }: Props) {
           variables: {
             data: {
               ...rest,
+              txId,
+              txType,
               memberId: member?.id ?? '',
               orderedAt: customizeDate(orderedAt),
               weekStartDate: customizeDate(weekStartDate),
@@ -184,11 +201,9 @@ export default function EditForm({ current }: Props) {
                   </li>
                 )}
                 onInputChange={(_, username: string) => {
-                  console.log('onInputChange');
                   setMember({ id: current ? current.member.id : '', username });
                 }}
                 onChange={(_, value) => {
-                  console.log('onChange');
                   setMember({ id: value?.id ?? '', username: value?.username ?? '' });
                 }}
               />
@@ -198,19 +213,13 @@ export default function EditForm({ current }: Props) {
               <Field.DatePicker name="orderedAt" label="Ordered At" format="YYYY-MM-DD" />
 
               <Field.DatePicker name="weekStartDate" label="Week" format="YYYY-MM-DD" />
-
-              <Field.Select name="txType" label="Payment Type">
-                {PREPAYMRENT_TYPE.map((item) => (
-                  <MenuItem value={item.label}>{item.label}</MenuItem>
-                ))}
-              </Field.Select>
-
-              <Field.Text name="txId" label="Transaction / Purchase ID" />
             </Box>
 
             <Divider flexItem sx={{ borderStyle: 'dashed', my: 2 }} />
 
             <LinkForm />
+
+            <PaymentForm />
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>
               <LoadingButton
