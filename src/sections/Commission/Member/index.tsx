@@ -80,7 +80,7 @@ export default function CommissionListView({ openWeek }: Props) {
 
   const {
     page = { page: 1, pageSize: 10 },
-    sort = { weekStartDate: 'asc', memberId: 'asc' },
+    sort = { ID: 'asc', memberId: 'asc' },
     filter = defaultFilter,
     weekStartDate = customizeDate(`${dayjs().endOf('week').add(1, 'day')}`),
   } = query;
