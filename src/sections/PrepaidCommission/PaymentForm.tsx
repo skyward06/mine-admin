@@ -13,7 +13,7 @@ import { PREPAYMRENT_TYPE } from 'src/consts';
 import { Field } from 'src/components/Form';
 import { Iconify } from 'src/components/Iconify';
 
-export default function LinkForm() {
+export default function PaymentForm() {
   const { control } = useFormContext();
   const { fields, append, remove } = useFieldArray({ control, name: 'payments' });
 

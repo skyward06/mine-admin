@@ -7,6 +7,7 @@ import { ApolloError, useLazyQuery } from '@apollo/client';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
+import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import Grid from '@mui/material/Unstable_Grid2';
 import TextField from '@mui/material/TextField';
@@ -24,6 +25,7 @@ import { PAYMENT_TYPE } from 'src/consts';
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
 
+import LinkForm from 'src/sections/PrepaidCommission/LinkForm';
 import { useFetchMembers } from 'src/sections/Members/useApollo';
 import { FETCH_PACKAGES_QUERY } from 'src/sections/Products/query';
 
@@ -44,6 +46,15 @@ const NewSaleSchema = zod.object({
   paymentMethod: zod.string({ required_error: 'Payment Method is required' }),
   status: zod.number({ required_error: 'Status is required' }).default(1),
   note: zod.string().optional().nullable(),
+  reflinks: zod
+    .array(
+      zod.object({
+        linkType: zod.string(),
+        link: zod.string(),
+      })
+    )
+    .optional()
+    .nullable(),
 });
 
 export default function SaleCreateForm() {
@@ -220,6 +231,10 @@ export default function SaleCreateForm() {
 
               <Field.Text name="note" label="Note" />
             </Box>
+
+            <Divider flexItem sx={{ borderStyle: 'dashed', my: 2 }} />
+
+            <LinkForm />
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>
               <LoadingButton type="submit" variant="contained" loading={loading}>

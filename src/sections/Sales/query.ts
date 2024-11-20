@@ -11,6 +11,10 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
         packageId
         createdAt
         updatedAt
+        reflinks {
+          linkType
+          link
+        }
         member {
           id
           ID

@@ -10,6 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
+import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import Grid from '@mui/material/Unstable_Grid2';
 import TextField from '@mui/material/TextField';
@@ -28,6 +29,7 @@ import { PAYMENT_TYPE } from 'src/consts';
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
 
+import LinkForm from 'src/sections/PrepaidCommission/LinkForm';
 import { useFetchMembers } from 'src/sections/Members/useApollo';
 import { useFetchPackages } from 'src/sections/Products/useApollo';
 
@@ -55,6 +57,15 @@ const SaleGeneralSchema = zod.object({
   status: zod.boolean({ required_error: 'Status is required' }).default(true),
   packageId: zod.string({ required_error: 'Package is required' }),
   note: zod.string().optional().nullable(),
+  reflinks: zod
+    .array(
+      zod.object({
+        linkType: zod.string(),
+        link: zod.string(),
+      })
+    )
+    .optional()
+    .nullable(),
 });
 
 export default function SaleGeneral({ currentSale }: Props) {
@@ -229,6 +240,10 @@ export default function SaleGeneral({ currentSale }: Props) {
 
               <Field.Text name="note" label="Note" />
             </Box>
+
+            <Divider flexItem sx={{ borderStyle: 'dashed', my: 2 }} />
+
+            <LinkForm />
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>
               <LoadingButton type="submit" variant="contained" loading={loading}>
