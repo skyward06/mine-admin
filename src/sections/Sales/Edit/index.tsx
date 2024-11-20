@@ -52,7 +52,10 @@ export default function SaleEditView() {
       <DashboardContent>
         <Breadcrumbs
           heading="Sale Edit"
-          links={[{ name: 'Sale', href: paths.dashboard.sales.root }, { name: formatID(sale.ID) }]}
+          links={[
+            { name: 'Sale', href: paths.dashboard.sales.root },
+            { name: formatID(sale.ID, 'S') },
+          ]}
           sx={{
             mb: { xs: 2, md: 3 },
           }}

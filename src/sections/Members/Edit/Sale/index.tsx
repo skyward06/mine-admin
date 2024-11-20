@@ -40,6 +40,7 @@ const STATUS_OPTIONS: { value: SaleRole; label: string; color: LabelColor }[] = 
 ];
 
 const TABLE_HEAD = [
+  { id: 'ID', label: 'ID', width: 130, sortable: true },
   { id: 'assetId', label: 'Asset ID', width: 130, sortable: true },
   { id: 'productName', label: 'Product Name', sortable: true },
   { id: 'paymentMethod', label: 'Payment Method', sortable: true, width: 250 },

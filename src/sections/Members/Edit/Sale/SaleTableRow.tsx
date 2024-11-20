@@ -10,6 +10,7 @@ import { paths } from 'src/routes/paths';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
+import { formatID } from 'src/utils/helper';
 import { formatDate } from 'src/utils/format-time';
 
 import { Iconify } from 'src/components/Iconify';
@@ -25,7 +26,7 @@ type Props = {
 export default function SaleTableRow({ row }: Props) {
   const open = useBoolean();
 
-  const { id, member, package: product, paymentMethod, orderedAt } = row;
+  const { id, ID, member, package: product, paymentMethod, orderedAt } = row;
 
   const handleClickSale = () => {
     window.open(`${paths.dashboard.sales.edit(id)}`, '_blank');
@@ -40,6 +41,7 @@ export default function SaleTableRow({ row }: Props) {
         }}
         onClick={() => handleClickSale()}
       >
+        <TableCell align="left">{formatID(ID, 'S')}</TableCell>
         <TableCell align="left">{member?.assetId}</TableCell>
         <TableCell align="left">{product?.productName}</TableCell>
         <TableCell align="left">{paymentMethod}</TableCell>

@@ -35,7 +35,7 @@ export default function SaleTableRow({ row, confirm, setSelected }: Props) {
   return (
     <>
       <TableRow hover>
-        <TableCell align="left">{formatID(ID)}</TableCell>
+        <TableCell align="left">{formatID(ID, 'S')}</TableCell>
         <TableCell
           align="left"
           sx={{

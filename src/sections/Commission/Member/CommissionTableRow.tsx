@@ -15,6 +15,7 @@ import { useRouter } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
+import { formatID } from 'src/utils/helper';
 import { formatWeekNumber } from 'src/utils/format-time';
 
 import { COMMISSION_TYPE } from 'src/consts';
@@ -49,6 +50,7 @@ export default function CommissionTableRow({ row }: Props) {
 
   const {
     id,
+    ID,
     begL,
     begR,
     newL,
@@ -68,6 +70,7 @@ export default function CommissionTableRow({ row }: Props) {
   return (
     <>
       <TableRow hover>
+        <TableCell align="left">{formatID(ID, 'C')}</TableCell>
         <TableCell align="left">
           <ListItemText
             primary={`week #${formatWeekNumber(weekStartDate)}`}

@@ -47,6 +47,7 @@ const STATUS_OPTIONS: { value: CommissionRole; label: string; color: LabelColor 
 ];
 
 const TABLE_HEAD = [
+  { id: 'ID', label: 'ID', width: 120, sortable: true },
   { id: 'weekStartDate', label: 'Week', width: 120, sortable: true },
   { id: 'member.username', label: 'Username', sortable: true },
   { id: 'member.assetId', label: 'AssetId', sortable: true },
