@@ -2,7 +2,10 @@ import type { UseBooleanReturn } from 'src/hooks/useBoolean';
 import type { WeeklyCommission } from 'src/__generated__/graphql';
 
 import { isEmpty } from 'lodash';
-import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { useMemo, useState, useEffect } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -19,6 +22,7 @@ import { formatDateTime } from 'src/utils/format-time';
 
 import { COMMISSION_TYPE } from 'src/consts';
 
+import { Form } from 'src/components/Form';
 import { Iconify } from 'src/components/Iconify';
 import { ScrollBar } from 'src/components/ScrollBar';
 import { EmptyContent } from 'src/components/EmptyContent';
@@ -27,6 +31,8 @@ import { FileManagerNewFolderDialog } from 'src/sections/Sales/Upload';
 import { FileRecentItem } from 'src/sections/Sales/List/FileRecentItem';
 import { FileRecentItem as EditFileItem } from 'src/sections/Sales/Edit/FileRecentItem';
 
+import LinkForm from './LinkForm';
+import { Schema, type SchemaType } from './schema';
 import { useUpdateCommissionStatus } from '../useApollo';
 
 interface Props {
@@ -35,17 +41,41 @@ interface Props {
 }
 
 export default function Detail({ open, row }: Props) {
-  const { id, note: currentNote, paymentConfirm: currentFile, status, member } = row;
+  const { id, note: currentNote, paymentConfirm: currentFile, status, member, reflinks } = row;
 
   const [firstName, lastName] = member?.fullName.split(' ') ?? ['', ''];
 
+  const defaultValues = useMemo(
+    () =>
+      reflinks
+        ? Schema.safeParse({ reflinks })?.data ?? ({} as SchemaType)
+        : {
+            reflinks: [
+              {
+                link: '',
+                linkType: '',
+              },
+            ],
+          },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [reflinks]
+  );
+
+  const methods = useForm<SchemaType>({
+    resolver: zodResolver(Schema),
+    defaultValues,
+  });
+
+  const { handleSubmit } = methods;
+
   const noteEdit = useBoolean();
   const fileEdit = useBoolean();
+  const linkEdit = useBoolean();
 
   const [note, setNote] = useState<any>();
   const [files, setFiles] = useState<any>();
 
-  const { updateCommissionStatus } = useUpdateCommissionStatus();
+  const { loading, updateCommissionStatus } = useUpdateCommissionStatus();
 
   const saveNote = async () => {
     noteEdit.onToggle();
@@ -64,6 +94,18 @@ export default function Detail({ open, row }: Props) {
       });
     }
   };
+
+  const onSubmit = handleSubmit(async (newData) => {
+    if (linkEdit.value) {
+      await updateCommissionStatus({ variables: { data: { id, reflinks: newData.reflinks } } });
+
+      if (!loading) {
+        linkEdit.onFalse();
+      }
+    } else {
+      linkEdit.onTrue();
+    }
+  });
 
   const onDelete = (fileId: string) => {
     setFiles(files?.filter((file: any) => fileId !== file.id));
@@ -152,6 +194,32 @@ export default function Detail({ open, row }: Props) {
           ) : (
             files?.map((file: any) => <FileRecentItem key={file.id} file={file} />)
           )}
+
+          <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
+
+          <Form methods={methods} onSubmit={onSubmit}>
+            <Stack direction="row" justifyContent="space-between">
+              <Typography variant="subtitle1">Reference Links</Typography>
+              <IconButton type="submit">
+                <Iconify icon={linkEdit.value ? 'mage:check-circle-fill' : 'solar:pen-2-bold'} />
+              </IconButton>
+            </Stack>
+
+            {linkEdit.value ? (
+              <LinkForm loading={loading} />
+            ) : (
+              reflinks?.map((link) => (
+                <Stack direction="row" columnGap={1}>
+                  <Typography>{link?.linkType}:</Typography>
+                  <Typography
+                    sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+                  >
+                    <Link to={link?.link ?? ''}>{link?.link}</Link>
+                  </Typography>
+                </Stack>
+              ))
+            )}
+          </Form>
         </Stack>
       </ScrollBar>
     </Drawer>

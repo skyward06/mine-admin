@@ -21,6 +21,10 @@ export const FETCH_COMMISSION_QUERY = gql(/* GraphQL */ `
         commission
         status
         note
+        reflinks {
+          link
+          linkType
+        }
         paymentConfirm {
           id
           url
