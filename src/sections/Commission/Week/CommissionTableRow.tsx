@@ -28,7 +28,7 @@ type Props = {
 };
 
 export default function CommissionTableRow({ row }: Props) {
-  const { totalAmount, totalMember, totalSale, weekStartDate } = row;
+  const { totalAmount, totalMember, totalSale, totalRevenue, weekStartDate } = row;
 
   const open = useBoolean();
 
@@ -47,8 +47,12 @@ export default function CommissionTableRow({ row }: Props) {
           />
         </TableCell>
         <TableCell align="left">{totalSale}</TableCell>
+        <TableCell align="left">{totalRevenue}</TableCell>
         <TableCell align="left">{totalMember}</TableCell>
         <TableCell align="left">{totalAmount}</TableCell>
+        <TableCell align="left">
+          {(totalRevenue ? (totalAmount / totalRevenue) * 100 : 0).toFixed(2)}
+        </TableCell>
         <TableCell align="center">
           <Tooltip title="Placement" placement="top" arrow>
             <IconButton color="default" onClick={() => open.onTrue()}>

@@ -98,6 +98,7 @@ export const FETCH_COMMISSION_BY_WEEK = gql(/* GraphQL */ `
       commissions {
         weekStartDate
         totalSale
+        totalRevenue
         totalMember
         totalAmount
       }
