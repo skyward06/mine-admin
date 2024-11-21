@@ -98,10 +98,14 @@ export default function Detail({ open, row }: Props) {
   };
 
   const onSubmit = handleSubmit(async (newData) => {
-    linkEdit.onToggle();
-
     if (linkEdit.value) {
       await updateCommissionStatus({ variables: { data: { id, reflinks: newData.reflinks } } });
+
+      if (!loading) {
+        linkEdit.onFalse();
+      }
+    } else {
+      linkEdit.onTrue();
     }
   });
 
@@ -218,7 +222,7 @@ export default function Detail({ open, row }: Props) {
                           ? item?.link
                           : item?.linkType === PREPAID_TYPE[3]
                             ? `${EXPLORER_PATH}${item.link}`
-                            : `${CONFIG.SITE_URL}/sales/${item?.link}`) ?? ''
+                            : `${CONFIG.SITE_PATH}/sales/${item?.link}`) ?? ''
                       }
                       target="_blank"
                     >
