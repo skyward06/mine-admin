@@ -112,7 +112,9 @@ export default function Detail({ row, open }: Props) {
               <Typography
                 sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
               >
-                <Link to={link?.link ?? ''}>{link?.link}</Link>
+                <Link to={link?.link ?? ''} target="_blank">
+                  {link?.link}
+                </Link>
               </Typography>
             </Stack>
           ))}
