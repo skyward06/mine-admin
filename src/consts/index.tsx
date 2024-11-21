@@ -58,6 +58,8 @@ export const PREPAYMRENT_TYPE = [
   { label: 'TEXITCOIN', value: 'texitcoin' },
 ];
 
+export const PREPAID_TYPE = ['BOGO', 'BTC', 'CASH', 'TEXITCOIN', 'OTHER'];
+
 export const TXC_WALLET = [
   { id: 'b3ed0e78-6cc8-465c-9454-0576534f06f2', method: 'TXC-HOT' },
   { id: '6f7681f0-9ccf-4a79-b1cb-f87e56cf7e8a', method: 'TXC-COLD' },
