@@ -18,9 +18,11 @@ import ListItemText from '@mui/material/ListItemText';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
+import { isValidUrl } from 'src/utils/helper';
 import { formatDateTime } from 'src/utils/format-time';
 
-import { COMMISSION_TYPE } from 'src/consts';
+import { CONFIG } from 'src/config';
+import { PREPAID_TYPE, EXPLORER_PATH, COMMISSION_TYPE } from 'src/consts';
 
 import { Form } from 'src/components/Form';
 import { Iconify } from 'src/components/Iconify';
@@ -96,14 +98,10 @@ export default function Detail({ open, row }: Props) {
   };
 
   const onSubmit = handleSubmit(async (newData) => {
+    linkEdit.onToggle();
+
     if (linkEdit.value) {
       await updateCommissionStatus({ variables: { data: { id, reflinks: newData.reflinks } } });
-
-      if (!loading) {
-        linkEdit.onFalse();
-      }
-    } else {
-      linkEdit.onTrue();
     }
   });
 
@@ -208,14 +206,23 @@ export default function Detail({ open, row }: Props) {
             {linkEdit.value ? (
               <LinkForm loading={loading} />
             ) : (
-              reflinks?.map((link) => (
+              reflinks?.map((item) => (
                 <Stack direction="row" columnGap={1}>
-                  <Typography>{link?.linkType}:</Typography>
+                  <Typography>{item?.linkType}:</Typography>
                   <Typography
                     sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
                   >
-                    <Link to={link?.link ?? ''} target="_blank">
-                      {link?.link}
+                    <Link
+                      to={
+                        (isValidUrl(item?.link ?? '')
+                          ? item?.link
+                          : item?.linkType === PREPAID_TYPE[3]
+                            ? `${EXPLORER_PATH}${item.link}`
+                            : `${CONFIG.SITE_URL}/sales/${item?.link}`) ?? ''
+                      }
+                      target="_blank"
+                    >
+                      {item?.link}
                     </Link>
                   </Typography>
                 </Stack>

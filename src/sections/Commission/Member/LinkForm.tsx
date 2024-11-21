@@ -5,6 +5,8 @@ import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 
+import { PREPAID_TYPE } from 'src/consts';
+
 import { Field } from 'src/components/Form';
 import { Iconify } from 'src/components/Iconify';
 import { LoadingScreen } from 'src/components/loading-screen';
@@ -36,8 +38,21 @@ export default function LinkForm({ loading }: Props) {
         <Box key={item.id} rowGap={1} columnGap={1} display="grid" sx={{ mb: 2 }}>
           <Stack direction="row" justifyContent="space-between" columnGap={1}>
             <Stack width={1}>
-              <Field.Text name={`reflinks[${index}].linkType`} label="Link Type" size="small" />
+              <Field.Autocomplete
+                name={`reflinks[${index}].linkType`}
+                fullWidth
+                size="small"
+                options={PREPAID_TYPE}
+                getOptionLabel={(option: any) => option ?? ''}
+                isOptionEqualToValue={(option, value) => option.value === value.value}
+                renderOption={(props, option) => (
+                  <li {...props} key={option}>
+                    {option}
+                  </li>
+                )}
+              />
             </Stack>
+
             <Stack width={0.1}>
               <IconButton
                 size="small"
@@ -49,6 +64,7 @@ export default function LinkForm({ loading }: Props) {
               </IconButton>
             </Stack>
           </Stack>
+
           <Field.Text name={`reflinks[${index}].link`} label="Link" size="small" />
         </Box>
       ))}
