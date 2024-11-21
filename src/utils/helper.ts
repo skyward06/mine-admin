@@ -145,3 +145,14 @@ export const merge = (target: any, ...sources: any[]): any => {
 
 export const formatID = (id: string | number, format: string = 'M') =>
   `${format}-${id.toString().padStart(7, '0')}`;
+
+export const isValidUrl = (str: string) => {
+  try {
+    const url = new URL(str); // If it's a valid URL, this won't throw
+
+    console.log('url => ', url);
+    return true;
+  } catch {
+    return false; // Throws if it's not a valid URL
+  }
+};
