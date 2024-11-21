@@ -26,10 +26,10 @@ type Props = {
 export default function SaleTableRow({ row }: Props) {
   const open = useBoolean();
 
-  const { id, ID, member, package: product, paymentMethod, orderedAt } = row;
+  const { ID, member, package: product, paymentMethod, orderedAt } = row;
 
   const handleClickSale = () => {
-    window.open(`${paths.dashboard.sales.edit(id)}`, '_blank');
+    window.open(`${paths.dashboard.sales.edit(formatID(ID, 'S'))}`, '_blank');
   };
 
   return (
