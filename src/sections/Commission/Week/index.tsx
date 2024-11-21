@@ -32,7 +32,7 @@ const TABLE_HEAD = [
   { id: 'total sales', label: 'Total Sales', sortable: false },
   { id: 'total revenue', label: 'Revenue($)', sortable: false },
   { id: 'total members', label: 'Total Members', sortable: false },
-  { id: 'total amount', label: 'Total Amount', sortable: false },
+  { id: 'commission', label: 'Commission', sortable: false },
   { id: '%', label: '%', sortable: false },
   { id: 'action', label: 'Action', width: 150, sortable: false, align: 'center' },
 ];
