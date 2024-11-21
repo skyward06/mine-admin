@@ -4,8 +4,6 @@ import { Navigate, useParams } from 'react-router-dom';
 
 import { paths } from 'src/routes/paths';
 
-import { formatID } from 'src/utils/helper';
-
 import { CONFIG } from 'src/config';
 import { DashboardContent } from 'src/layouts/dashboard';
 
@@ -27,7 +25,7 @@ export default function SaleEditView() {
   const { id } = params;
 
   useEffect(() => {
-    fetchSales({ variables: { filter: { id } } });
+    fetchSales({ variables: { filter: { ID: parseInt(id?.split('-')[1] ?? '', 10) } } });
   }, [fetchSales, id]);
 
   useEffect(() => {
@@ -52,10 +50,7 @@ export default function SaleEditView() {
       <DashboardContent>
         <Breadcrumbs
           heading="Sale Edit"
-          links={[
-            { name: 'Sale', href: paths.dashboard.sales.root },
-            { name: formatID(sale.ID, 'S') },
-          ]}
+          links={[{ name: 'Sale', href: paths.dashboard.sales.root }, { name: id }]}
           sx={{
             mb: { xs: 2, md: 3 },
           }}

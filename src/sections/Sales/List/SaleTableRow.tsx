@@ -82,7 +82,7 @@ export default function SaleTableRow({ row, confirm, setSelected }: Props) {
           <Tooltip title="Edit" placement="top" arrow>
             <IconButton
               onClick={() => {
-                router.push(`${paths.dashboard.sales.edit(id)}`);
+                router.push(`${paths.dashboard.sales.edit(formatID(ID))}`);
               }}
             >
               <Iconify icon="solar:pen-2-bold" />
