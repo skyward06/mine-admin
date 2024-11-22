@@ -1,5 +1,3 @@
-import type { Sale } from 'src/__generated__/graphql';
-
 import { z as zod } from 'zod';
 import isEqual from 'lodash/isEqual';
 import { useForm } from 'react-hook-form';
@@ -40,7 +38,8 @@ import { FileManagerNewFolderDialog } from '../Upload';
 // ----------------------------------------------------------------------
 
 type Props = {
-  currentSale: Sale;
+  // Todo: Restore Sale Type
+  currentSale: any;
 };
 
 // ----------------------------------------------------------------------
@@ -90,7 +89,7 @@ export default function SaleGeneral({ currentSale }: Props) {
       ? {
           ...data,
           orderedAt: formatDate(currentSale.orderedAt),
-          // reflinks: currentSale.proof?.reflinks,
+          reflinks: currentSale.proof?.reflinks,
           note: currentSale.proof?.note,
         }
       : ({} as SaleGeneralSchemaType);
@@ -117,7 +116,7 @@ export default function SaleGeneral({ currentSale }: Props) {
 
   const onSubmit = handleSubmit(async (newData) => {
     try {
-      const { status: newStatus, orderedAt, reflinks, ...newSale } = newData;
+      const { status: newStatus, orderedAt, ...newSale } = newData;
 
       console.log('new status => ', newStatus);
 
