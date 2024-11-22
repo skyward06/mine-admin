@@ -1,6 +1,7 @@
 import type { UseBooleanReturn } from 'src/hooks/useBoolean';
 import type { PrepaidCommission } from 'src/__generated__/graphql';
 
+import dayjs from 'dayjs';
 import { isEmpty } from 'lodash';
 import { Link } from 'react-router-dom';
 
@@ -8,6 +9,7 @@ import Stack from '@mui/material/Stack';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
+import ListItemText from '@mui/material/ListItemText';
 
 import { formatDateTime } from 'src/utils/format-time';
 
@@ -22,9 +24,17 @@ interface Props {
 }
 
 export default function Detail({ row, open }: Props) {
-  const { proof } = row;
+  const { proof, txType, txId, commission } = row;
 
-  // const [firstName, lastName] = member?.fullName.split(' ') ?? ['', ''];
+  const [firstName, lastName] = commission?.member?.fullName.split(' ') ?? ['', ''];
+
+  const txTypes = txType?.split(',') ?? [];
+  const txIds = txId?.split(',') ?? [];
+
+  const payments = txTypes.map((item: string, index: number) => ({
+    txType: item,
+    txId: txIds[index],
+  }));
 
   return (
     <Drawer
@@ -46,40 +56,44 @@ export default function Detail({ row, open }: Props) {
         <Stack spacing={1} sx={{ p: 2.5, bgcolor: 'background.neutral' }}>
           <Typography variant="subtitle1">Miner</Typography>
 
-          {/* <ListItemText
+          <ListItemText
             primary={`${firstName} ${lastName.length && lastName[0].toUpperCase()}.`}
-            secondary={member?.username}
+            secondary={commission?.member?.username}
             primaryTypographyProps={{ typography: 'subtitle1' }}
             secondaryTypographyProps={{
               component: 'span',
               color: 'text.disabled',
             }}
-          /> */}
+          />
 
           <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
 
           <Typography variant="subtitle1">Main</Typography>
 
-          <Stack direction="row" columnGap={2}>
-            <Typography variant="body2" color="text.disabled">
-              Tx Type:
-            </Typography>
-            <Typography variant="body2">{row.txType}</Typography>
-          </Stack>
+          {payments.map((item) => (
+            <Stack sx={{ mb: 1 }}>
+              <Stack direction="row" columnGap={2}>
+                <Typography variant="body2" color="text.disabled">
+                  Tx Type:
+                </Typography>
+                <Typography variant="body2">{item.txType}</Typography>
+              </Stack>
+
+              <Stack direction="row" columnGap={2}>
+                <Typography variant="body2" color="text.disabled">
+                  Transaction ID:
+                </Typography>
+                <Typography variant="body2">{item.txId}</Typography>
+              </Stack>
+            </Stack>
+          ))}
 
           <Stack direction="row" columnGap={2}>
-            <Typography variant="body2" color="text.disabled">
-              Transaction ID:
-            </Typography>
-            <Typography variant="body2">{row.txId}</Typography>
-          </Stack>
-
-          {/* <Stack direction="row" columnGap={2}>
             <Typography variant="body2" color="text.disabled">
               Week:
             </Typography>
-            <Typography variant="body2">{`${dayjs(weekStartDate).add(1, 'day').format('MM/DD')} - ${dayjs(weekStartDate).add(7, 'day').format('MM/DD')}`}</Typography>
-          </Stack> */}
+            <Typography variant="body2">{`${dayjs(commission?.weekStartDate).add(1, 'day').format('MM/DD')} - ${dayjs(commission?.weekStartDate).add(7, 'day').format('MM/DD')}`}</Typography>
+          </Stack>
 
           <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
 
