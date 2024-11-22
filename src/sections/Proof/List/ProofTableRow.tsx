@@ -1,9 +1,11 @@
 import type { Proof } from 'src/__generated__/graphql';
 
+import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
@@ -13,6 +15,7 @@ import { useBoolean, type UseBooleanReturn } from 'src/hooks/useBoolean';
 import { formatDate } from 'src/utils/format-time';
 
 import { Iconify } from 'src/components/Iconify';
+import { FileThumbnail } from 'src/components/FileThumbnail';
 
 import Detail from './Detail';
 
@@ -28,7 +31,7 @@ export default function ProductTableRow({ row, confirm, setSelected }: Props) {
   const router = useRouter();
   const open = useBoolean();
 
-  const { id, amount, createdAt, type, refId } = row;
+  const { id, amount, createdAt, type, refId, files } = row;
 
   return (
     <>
@@ -37,6 +40,14 @@ export default function ProductTableRow({ row, confirm, setSelected }: Props) {
         <TableCell align="left">{amount}</TableCell>
         <TableCell align="left">{refId}</TableCell>
         <TableCell align="left">{type}</TableCell>
+        <TableCell align="left">
+          <Stack direction="row">
+            {!!files?.length && <FileThumbnail file="png" sx={{ width: 24 }} />}
+            <Typography sx={{ p: 1 }}>
+              {!!files?.length && `${files.length} file${files.length > 1 ? 's' : ''}`}
+            </Typography>
+          </Stack>
+        </TableCell>
         <TableCell align="center">
           <Tooltip title="Edit" placement="top" arrow>
             <IconButton

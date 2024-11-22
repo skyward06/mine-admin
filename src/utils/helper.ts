@@ -156,3 +156,11 @@ export const isValidUrl = (str: string) => {
     return false; // Throws if it's not a valid URL
   }
 };
+
+export function canConvertToNumber(value: string): boolean {
+  // Trim the string to handle any leading or trailing spaces
+  const trimmedValue = value.trim();
+
+  // Check if the trimmed value is a valid number
+  return !Number.isNaN(trimmedValue);
+}

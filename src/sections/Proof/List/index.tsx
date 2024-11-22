@@ -8,12 +8,15 @@ import Button from '@mui/material/Button';
 import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
 
+// import { canConvertToNumber } from 'src/utils/helper';
+
 import { paths } from 'src/routes/paths';
 import { useQuery } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
+import { ProofType } from 'src/__generated__/graphql';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { toast } from 'src/components/SnackBar';
@@ -41,9 +44,10 @@ import type { IProofPrismaFilter, IProofTableFilters } from './types';
 
 const TABLE_HEAD = [
   { id: 'createdAt', label: 'Date', width: 200, sortable: true },
-  { id: 'amonut', label: 'Amount', width: 200, sortable: true },
+  { id: 'amount', label: 'Amount', width: 200, sortable: true },
   { id: 'refId', label: 'Reference ID', sortable: true },
   { id: 'type', label: 'Proof Type', sortable: true },
+  { id: 'attached', label: 'Attached', width: 150, sortable: true },
   { id: 'action', label: 'Action', align: 'center', width: 200, sortable: true },
 ];
 
@@ -68,7 +72,17 @@ export default function ProofListView() {
   const graphQueryFilter = useMemo(() => {
     const filterObj: IProofPrismaFilter = {};
     if (filter.search) {
-      filterObj.OR = [{ type: { contains: filter.search, mode: 'insensitive' } }];
+      filterObj.OR = [
+        // ...(canConvertToNumber(filter.search) && { amount: { equals: filter.search } }),
+        ...((Object.values(ProofType) as string[]).includes(filter.search.toUpperCase())
+          ? [
+              {
+                type: { equals: filter.search.toUpperCase() },
+              },
+            ]
+          : []),
+        { refId: { contains: filter.search, mode: 'insensitive' } },
+      ];
     }
 
     return filterObj;
