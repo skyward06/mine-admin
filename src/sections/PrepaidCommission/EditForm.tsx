@@ -56,7 +56,14 @@ export default function EditForm({ current }: Props) {
           txId: txIds[index],
         }));
 
-        return Schema.safeParse({ ...current, payments })?.data ?? ({} as SchemaType);
+        return (
+          Schema.safeParse({
+            ...current,
+            payments,
+            note: current.proof.note,
+            reflinks: current.proof.reflinks,
+          })?.data ?? ({} as SchemaType)
+        );
       }
 
       return {
@@ -152,8 +159,8 @@ export default function EditForm({ current }: Props) {
   }, [member]);
 
   useEffect(() => {
-    if (current && current.paymentConfirm) {
-      setFiles(current?.paymentConfirm?.map((file: any) => file));
+    if (current && current.proof.files) {
+      setFiles(current?.proof.files?.map((file: any) => file));
     }
   }, [current]);
 

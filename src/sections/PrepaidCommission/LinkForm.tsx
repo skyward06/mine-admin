@@ -7,6 +7,8 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 
+import { PREPAID_TYPE } from 'src/consts';
+
 import { Field } from 'src/components/Form';
 import { Iconify } from 'src/components/Iconify';
 
@@ -40,7 +42,18 @@ export default function LinkForm() {
             display="grid"
             sx={{ mb: 1, gridTemplateColumns: '30% 55% auto' }}
           >
-            <Field.Text name={`reflinks[${index}].linkType`} label="Link Type" />
+            <Field.Autocomplete
+              name={`reflinks[${index}].linkType`}
+              fullWidth
+              options={PREPAID_TYPE}
+              getOptionLabel={(option: any) => option ?? ''}
+              isOptionEqualToValue={(option, value) => option.value === value.value}
+              renderOption={(props, option) => (
+                <li {...props} key={option}>
+                  {option}
+                </li>
+              )}
+            />
             <Field.Text name={`reflinks[${index}].link`} label="Link" />
             <Button
               size="small"
