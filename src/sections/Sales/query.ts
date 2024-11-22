@@ -6,14 +6,33 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
       sales {
         id
         ID
-        note
         memberId
         packageId
         createdAt
         updatedAt
-        reflinks {
-          linkType
-          link
+        proof {
+          createdAt
+          updatedAt
+          deletedAt
+          id
+          refId
+          type
+          amount
+          note
+          files {
+            createdAt
+            updatedAt
+            deletedAt
+            id
+            url
+            originalName
+            mimeType
+            size
+          }
+          reflinks {
+            linkType
+            link
+          }
         }
         member {
           id
@@ -57,14 +76,29 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
         status
         orderedAt
         paymentMethod
-        paymentConfirm {
-          id
-          url
-          originalName
-          mimeType
-          size
+        proof {
           createdAt
           updatedAt
+          deletedAt
+          id
+          refId
+          type
+          amount
+          note
+          files {
+            createdAt
+            updatedAt
+            deletedAt
+            id
+            url
+            originalName
+            mimeType
+            size
+          }
+          reflinks {
+            linkType
+            link
+          }
         }
       }
       total

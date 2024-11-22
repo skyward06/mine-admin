@@ -20,19 +20,29 @@ export const FETCH_COMMISSION_QUERY = gql(/* GraphQL */ `
         pkgR
         commission
         status
-        note
-        reflinks {
-          link
-          linkType
-        }
-        paymentConfirm {
-          id
-          url
-          originalName
-          mimeType
-          size
+        proof {
           createdAt
           updatedAt
+          deletedAt
+          id
+          refId
+          type
+          amount
+          note
+          files {
+            createdAt
+            updatedAt
+            deletedAt
+            id
+            url
+            originalName
+            mimeType
+            size
+          }
+          reflinks {
+            linkType
+            link
+          }
         }
         member {
           createdAt

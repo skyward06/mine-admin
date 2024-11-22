@@ -11,21 +11,34 @@ export const FETCH_PREPAID_QUERY = gql(/* GraphQL */ `
         memberId
         txId
         txType
-        note
         pkgL
         pkgR
         commission
         orderedAt
         weekStartDate
-        paymentConfirm {
+        proof {
           createdAt
           updatedAt
           deletedAt
           id
-          url
-          originalName
-          mimeType
-          size
+          refId
+          type
+          amount
+          note
+          files {
+            createdAt
+            updatedAt
+            deletedAt
+            id
+            url
+            originalName
+            mimeType
+            size
+          }
+          reflinks {
+            linkType
+            link
+          }
         }
         member {
           createdAt
@@ -57,10 +70,6 @@ export const FETCH_PREPAID_QUERY = gql(/* GraphQL */ `
           begR
           newL
           newR
-        }
-        reflinks {
-          link
-          linkType
         }
       }
       total

@@ -24,7 +24,7 @@ interface Props {
 }
 
 export default function Detail({ row, open }: Props) {
-  const { member, reflinks, weekStartDate, paymentConfirm } = row;
+  const { member, proof, weekStartDate } = row;
 
   const [firstName, lastName] = member?.fullName.split(' ') ?? ['', ''];
 
@@ -100,13 +100,13 @@ export default function Detail({ row, open }: Props) {
           <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
 
           <Typography variant="subtitle1">Note</Typography>
-          <Typography variant="body2">{row.note}</Typography>
+          <Typography variant="body2">{row.proof?.note}</Typography>
 
           <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
 
           <Typography variant="subtitle1">Reference Link</Typography>
 
-          {reflinks?.map((link) => (
+          {proof?.reflinks?.map((link) => (
             <Stack direction="row" columnGap={1}>
               <Typography>{link?.linkType}:</Typography>
               <Typography
@@ -123,10 +123,10 @@ export default function Detail({ row, open }: Props) {
 
           <Typography variant="subtitle1">Files</Typography>
 
-          {isEmpty(paymentConfirm) ? (
+          {isEmpty(proof?.files) ? (
             <EmptyContent />
           ) : (
-            paymentConfirm?.map((file: any) => <FileRecentItem key={file.id} file={file} />)
+            proof?.files?.map((file: any) => <FileRecentItem key={file.id} file={file} />)
           )}
         </Stack>
       </ScrollBar>

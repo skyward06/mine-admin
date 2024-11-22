@@ -23,15 +23,29 @@ export const FETCH_PACKAGES_QUERY = gql(/* GraphQL */ `
           orderedAt
           packageId
           paymentMethod
-          paymentConfirm {
+          proof {
             createdAt
             updatedAt
             deletedAt
             id
-            url
-            originalName
-            mimeType
-            size
+            refId
+            type
+            amount
+            note
+            files {
+              createdAt
+              updatedAt
+              deletedAt
+              id
+              url
+              originalName
+              mimeType
+              size
+            }
+            reflinks {
+              linkType
+              link
+            }
           }
         }
       }

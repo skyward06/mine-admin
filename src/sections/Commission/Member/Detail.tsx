@@ -43,14 +43,14 @@ interface Props {
 }
 
 export default function Detail({ open, row }: Props) {
-  const { id, note: currentNote, paymentConfirm: currentFile, status, member, reflinks } = row;
+  const { id, status, member, proof } = row;
 
   const [firstName, lastName] = member?.fullName.split(' ') ?? ['', ''];
 
   const defaultValues = useMemo(
     () =>
-      reflinks
-        ? Schema.safeParse({ reflinks })?.data ?? ({} as SchemaType)
+      proof?.reflinks
+        ? Schema.safeParse({ reflinks: proof.reflinks })?.data ?? ({} as SchemaType)
         : {
             reflinks: [
               {
@@ -60,7 +60,7 @@ export default function Detail({ open, row }: Props) {
             ],
           },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [reflinks]
+    [proof?.reflinks]
   );
 
   const methods = useForm<SchemaType>({
@@ -118,9 +118,9 @@ export default function Detail({ open, row }: Props) {
   };
 
   useEffect(() => {
-    setNote(currentNote);
-    setFiles(currentFile);
-  }, [currentNote, currentFile]);
+    setNote(proof?.note);
+    setFiles(proof?.files);
+  }, [proof?.note, proof?.files]);
 
   return (
     <Drawer
@@ -210,7 +210,7 @@ export default function Detail({ open, row }: Props) {
             {linkEdit.value ? (
               <LinkForm loading={loading} />
             ) : (
-              reflinks?.map((item) => (
+              proof?.reflinks?.map((item) => (
                 <Stack direction="row" columnGap={1}>
                   <Typography>{item?.linkType}:</Typography>
                   <Typography

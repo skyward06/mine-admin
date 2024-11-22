@@ -87,7 +87,12 @@ export default function SaleGeneral({ currentSale }: Props) {
     const { data } = SaleGeneralSchema.safeParse(currentSale);
 
     return currentSale
-      ? { ...data, orderedAt: formatDate(currentSale.orderedAt) }
+      ? {
+          ...data,
+          orderedAt: formatDate(currentSale.orderedAt),
+          // reflinks: currentSale.proof?.reflinks,
+          note: currentSale.proof?.note,
+        }
       : ({} as SaleGeneralSchemaType);
   }, [currentSale]);
 
@@ -98,8 +103,8 @@ export default function SaleGeneral({ currentSale }: Props) {
   }, []);
 
   useEffect(() => {
-    if (currentSale && currentSale.paymentConfirm) {
-      setFiles(currentSale?.paymentConfirm?.map((file: any) => file));
+    if (currentSale && currentSale.proof?.files) {
+      setFiles(currentSale?.proof.files?.map((file: any) => file));
     }
   }, [currentSale]);
 
@@ -112,7 +117,7 @@ export default function SaleGeneral({ currentSale }: Props) {
 
   const onSubmit = handleSubmit(async (newData) => {
     try {
-      const { status: newStatus, orderedAt, ...newSale } = newData;
+      const { status: newStatus, orderedAt, reflinks, ...newSale } = newData;
 
       console.log('new status => ', newStatus);
 
