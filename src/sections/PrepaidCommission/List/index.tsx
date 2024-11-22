@@ -42,7 +42,6 @@ const TABLE_HEAD = [
   { id: 'member.username', label: 'Username', sortable: true },
   { id: 'commission', label: 'Commission', width: 200, sortable: true },
   { id: 'pkgLR', label: 'Package', sortable: true },
-  { id: 'txType', label: 'TxType', width: 200, sortable: true },
   { id: 'weekStartDate', label: 'Week', width: 200, sortable: true },
   { id: 'action', label: 'Action', align: 'center', width: 200, sortable: true },
 ];

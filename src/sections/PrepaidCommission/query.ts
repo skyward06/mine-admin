@@ -8,14 +8,47 @@ export const FETCH_PREPAID_QUERY = gql(/* GraphQL */ `
         updatedAt
         deletedAt
         id
-        memberId
+        commissionId
         txId
         txType
-        pkgL
-        pkgR
-        commission
         orderedAt
-        weekStartDate
+        commission {
+          commission
+          weekStartDate
+          pkgL
+          pkgR
+          member {
+            createdAt
+            updatedAt
+            deletedAt
+            id
+            username
+            fullName
+            sponsorId
+            email
+            ID
+            mobile
+            assetId
+            primaryAddress
+            secondaryAddress
+            city
+            state
+            zipCode
+            placementParentId
+            placementPosition
+            point
+            emailVerified
+            status
+            totalIntroducers
+            syncWithSendy
+            preferredContact
+            preferredContactDetail
+            begL
+            begR
+            newL
+            newR
+          }
+        }
         proof {
           createdAt
           updatedAt
@@ -40,39 +73,19 @@ export const FETCH_PREPAID_QUERY = gql(/* GraphQL */ `
             link
           }
         }
-        member {
-          createdAt
-          updatedAt
-          deletedAt
-          id
-          username
-          fullName
-          sponsorId
-          email
-          ID
-          mobile
-          assetId
-          primaryAddress
-          secondaryAddress
-          city
-          state
-          zipCode
-          placementParentId
-          placementPosition
-          point
-          emailVerified
-          status
-          totalIntroducers
-          syncWithSendy
-          preferredContact
-          preferredContactDetail
-          begL
-          begR
-          newL
-          newR
-        }
       }
       total
+    }
+  }
+`);
+
+export const FETCH_COMMISSION_BY_MEMBER = gql(/* GraphQL */ `
+  query CommissionByMemberIDAndWeek($data: WeeklyCommissionGetInput!) {
+    commissionByMemberIDAndWeek(data: $data) {
+      id
+      commission
+      pkgL
+      pkgR
     }
   }
 `);

@@ -55,7 +55,7 @@ export default function PrepaidEditView() {
             name: 'Prepayment',
             href: paths.dashboard.prepaidCommission.root,
           },
-          { name: `${current?.member?.fullName}` },
+          { name: `${current?.commissionId}` },
         ]}
         sx={{
           mb: { xs: 1, md: 2 },

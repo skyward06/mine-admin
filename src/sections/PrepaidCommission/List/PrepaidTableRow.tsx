@@ -31,7 +31,7 @@ export default function ProductTableRow({ row, removeConfirm, setSelected }: Pro
   const router = useRouter();
   const open = useBoolean();
 
-  const { id, member, commission, pkgL, pkgR, txType, weekStartDate, orderedAt } = row;
+  const { id, commission, orderedAt } = row;
 
   return (
     <>
@@ -49,8 +49,8 @@ export default function ProductTableRow({ row, removeConfirm, setSelected }: Pro
           }}
         >
           <ListItemText
-            primary={member?.username}
-            secondary={member?.email}
+            primary={commission?.member?.username}
+            secondary={commission?.member?.email}
             primaryTypographyProps={{ typography: 'body2' }}
             secondaryTypographyProps={{
               component: 'span',
@@ -58,12 +58,11 @@ export default function ProductTableRow({ row, removeConfirm, setSelected }: Pro
             }}
           />
         </TableCell>
-        <TableCell align="left">{commission}</TableCell>
-        <TableCell align="left">{`L${pkgL}, R${pkgR}`}</TableCell>
-        <TableCell align="left">{txType}</TableCell>
+        <TableCell align="left">{commission?.commission}</TableCell>
+        <TableCell align="left">{`L${commission?.pkgL}, R${commission?.pkgR}`}</TableCell>
         <TableCell align="left">
           <ListItemText
-            primary={`${dayjs(weekStartDate).add(1, 'day').format('MM/DD')} - ${dayjs(weekStartDate).add(7, 'day').format('MM/DD')}`}
+            primary={`${dayjs(commission?.weekStartDate).add(1, 'day').format('MM/DD')} - ${dayjs(commission?.weekStartDate).add(7, 'day').format('MM/DD')}`}
             primaryTypographyProps={{ typography: 'body2', noWrap: true }}
             secondaryTypographyProps={{
               mt: 0.5,

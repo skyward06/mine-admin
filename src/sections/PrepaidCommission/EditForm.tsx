@@ -14,7 +14,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { today, customizeDate } from 'src/utils/format-time';
+import { today, formatDate, customizeDate } from 'src/utils/format-time';
 
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
@@ -25,7 +25,7 @@ import { Schema, type SchemaType } from './schema';
 import { useFetchMembers } from '../Members/useApollo';
 import { FileManagerNewFolderDialog } from '../Sales/Upload';
 import { FileRecentItem } from '../Sales/Edit/FileRecentItem';
-import { useCreatePrepaid, useUpdatePrepaid } from './useApollo';
+import { useCreatePrepaid, useUpdatePrepaid, useFetchCommissionByMemberAndWeek } from './useApollo';
 
 // ----------------------------------------------------------------------
 
@@ -41,6 +41,7 @@ interface Props {
 
 export default function EditForm({ current }: Props) {
   const [member, setMember] = useState<Member>();
+  const [week, setWeek] = useState<any>('');
   const [files, setFiles] = useState<string[]>();
 
   const router = useRouter();
@@ -67,9 +68,6 @@ export default function EditForm({ current }: Props) {
       }
 
       return {
-        commission: 0,
-        pkgL: 0,
-        pkgR: 0,
         orderedAt: `${today('YYYY-MM-DD')}`,
         weekStartDate: `${dayjs(today()).utc().startOf('day')}`,
       };
@@ -85,9 +83,10 @@ export default function EditForm({ current }: Props) {
 
   const { reset, handleSubmit } = methods;
 
-  const { loading: memberLoading, members, fetchMembers } = useFetchMembers();
   const { loading, createPrepaid } = useCreatePrepaid();
   const { loading: updateLoading, updatePrepaid } = useUpdatePrepaid();
+  const { loading: memberLoading, members, fetchMembers } = useFetchMembers();
+  const { commission, fetchCommissions } = useFetchCommissionByMemberAndWeek();
 
   const handleUpdate = (data: any) => {
     setFiles((prev) => [...(prev ?? []), ...data.files]);
@@ -98,7 +97,7 @@ export default function EditForm({ current }: Props) {
   };
 
   const onSubmit = handleSubmit(async (newData) => {
-    const { orderedAt, weekStartDate, payments, ...rest } = newData;
+    const { orderedAt, payments, ...rest } = newData;
 
     const txId = payments?.map((item) => item.txId).join(',');
     const txType = payments?.map((item) => item.txType).join(',');
@@ -112,9 +111,8 @@ export default function EditForm({ current }: Props) {
               txId,
               txType,
               id: current.id,
-              memberId: member?.id ?? '',
+              commissionId: commission?.id,
               orderedAt: customizeDate(orderedAt),
-              weekStartDate: customizeDate(weekStartDate),
               fileIds: files?.map((file: any) => file.id),
             },
           },
@@ -126,9 +124,8 @@ export default function EditForm({ current }: Props) {
               ...rest,
               txId,
               txType,
-              memberId: member?.id ?? '',
+              commissionId: commission?.id ?? '',
               orderedAt: customizeDate(orderedAt),
-              weekStartDate: customizeDate(weekStartDate),
               fileIds: files?.map((file: any) => file.id),
             },
           },
@@ -161,8 +158,23 @@ export default function EditForm({ current }: Props) {
   useEffect(() => {
     if (current && current.proof.files) {
       setFiles(current?.proof.files?.map((file: any) => file));
+      setWeek(formatDate(current.commission.weekStartDate));
     }
   }, [current]);
+
+  useEffect(() => {
+    fetchCommissions({
+      variables: {
+        data: {
+          memberId: current ? current.commission.member.id : member?.id ?? '',
+          weekStartDate: customizeDate(
+            `${dayjs(current ? current.commission.weekStartDate : week).startOf('week')}`
+          ),
+        },
+      },
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [member, week, current]);
 
   return (
     <Form methods={methods} onSubmit={onSubmit}>
@@ -182,21 +194,15 @@ export default function EditForm({ current }: Props) {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <Field.Text type="number" name="commission" label="Commission" />
-
-              <Stack direction="row" columnGap={2}>
-                <Field.Text type="number" name="pkgL" label="pkgL" />
-                <Field.Text type="number" name="pkgR" label="pkgR" />
-              </Stack>
-
               <Field.Autocomplete
                 fullWidth
                 name="memberId"
                 label="Miner"
                 autoHighlight
+                disabled={!!current}
                 options={members}
                 loading={memberLoading}
-                value={current?.member ?? member}
+                value={current?.commission?.member ?? member}
                 loadingText={<LoadingButton loading={memberLoading} />}
                 getOptionLabel={(option: Member | string) =>
                   `${(option as Member).username} (${(option as Member).fullName})`
@@ -208,19 +214,38 @@ export default function EditForm({ current }: Props) {
                   </li>
                 )}
                 onInputChange={(_, username: string) => {
-                  setMember({ id: current ? current.member.id : '', username });
+                  setMember({ id: current ? current.commission.member.id : '', username });
                 }}
                 onChange={(_, value) => {
                   setMember({ id: value?.id ?? '', username: value?.username ?? '' });
                 }}
               />
 
+              <Field.DatePicker
+                name="weekStartDate"
+                label="Week"
+                format="YYYY-MM-DD"
+                disabled={!!current}
+                value={dayjs(week)}
+                onChange={(value) => setWeek(value)}
+              />
+
               <Field.Text name="note" label="Note" />
 
               <Field.DatePicker name="orderedAt" label="Ordered At" format="YYYY-MM-DD" />
-
-              <Field.DatePicker name="weekStartDate" label="Week" format="YYYY-MM-DD" />
             </Box>
+
+            {commission && (
+              <>
+                <Divider flexItem sx={{ borderStyle: 'dashed', my: 2 }} />
+
+                <Stack direction="row">
+                  <Stack width={1}>Commission: {commission.commission}</Stack>
+                  <Stack width={1}>pkgL: {commission.pkgL}</Stack>
+                  <Stack width={1}>pkgR: {commission.pkgR}</Stack>
+                </Stack>
+              </>
+            )}
 
             <Divider flexItem sx={{ borderStyle: 'dashed', my: 2 }} />
 

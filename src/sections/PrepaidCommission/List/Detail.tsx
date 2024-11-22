@@ -1,7 +1,6 @@
 import type { UseBooleanReturn } from 'src/hooks/useBoolean';
 import type { PrepaidCommission } from 'src/__generated__/graphql';
 
-import dayjs from 'dayjs';
 import { isEmpty } from 'lodash';
 import { Link } from 'react-router-dom';
 
@@ -9,7 +8,6 @@ import Stack from '@mui/material/Stack';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
-import ListItemText from '@mui/material/ListItemText';
 
 import { formatDateTime } from 'src/utils/format-time';
 
@@ -24,9 +22,9 @@ interface Props {
 }
 
 export default function Detail({ row, open }: Props) {
-  const { member, proof, weekStartDate } = row;
+  const { proof } = row;
 
-  const [firstName, lastName] = member?.fullName.split(' ') ?? ['', ''];
+  // const [firstName, lastName] = member?.fullName.split(' ') ?? ['', ''];
 
   return (
     <Drawer
@@ -48,7 +46,7 @@ export default function Detail({ row, open }: Props) {
         <Stack spacing={1} sx={{ p: 2.5, bgcolor: 'background.neutral' }}>
           <Typography variant="subtitle1">Miner</Typography>
 
-          <ListItemText
+          {/* <ListItemText
             primary={`${firstName} ${lastName.length && lastName[0].toUpperCase()}.`}
             secondary={member?.username}
             primaryTypographyProps={{ typography: 'subtitle1' }}
@@ -56,25 +54,11 @@ export default function Detail({ row, open }: Props) {
               component: 'span',
               color: 'text.disabled',
             }}
-          />
+          /> */}
 
           <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
 
           <Typography variant="subtitle1">Main</Typography>
-
-          <Stack direction="row" columnGap={2}>
-            <Typography variant="body2" color="text.disabled">
-              Commission:
-            </Typography>
-            <Typography variant="body2">{row.commission}</Typography>
-          </Stack>
-
-          <Stack direction="row" columnGap={2}>
-            <Typography variant="body2" color="text.disabled">
-              Package:
-            </Typography>
-            <Typography variant="body2">{`L${row.pkgL}, R${row.pkgR}`}</Typography>
-          </Stack>
 
           <Stack direction="row" columnGap={2}>
             <Typography variant="body2" color="text.disabled">
@@ -90,12 +74,12 @@ export default function Detail({ row, open }: Props) {
             <Typography variant="body2">{row.txId}</Typography>
           </Stack>
 
-          <Stack direction="row" columnGap={2}>
+          {/* <Stack direction="row" columnGap={2}>
             <Typography variant="body2" color="text.disabled">
               Week:
             </Typography>
             <Typography variant="body2">{`${dayjs(weekStartDate).add(1, 'day').format('MM/DD')} - ${dayjs(weekStartDate).add(7, 'day').format('MM/DD')}`}</Typography>
-          </Stack>
+          </Stack> */}
 
           <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
 

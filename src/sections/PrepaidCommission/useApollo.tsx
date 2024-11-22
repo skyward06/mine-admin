@@ -1,7 +1,13 @@
 import { useRef, useMemo } from 'react';
 import { useMutation, useLazyQuery } from '@apollo/client';
 
-import { CREATE_PREPAID, UPDATE_PREPAID, REMOVE_PREPAID, FETCH_PREPAID_QUERY } from './query';
+import {
+  CREATE_PREPAID,
+  UPDATE_PREPAID,
+  REMOVE_PREPAID,
+  FETCH_PREPAID_QUERY,
+  FETCH_COMMISSION_BY_MEMBER,
+} from './query';
 
 export function useFetchPrepaid() {
   const [fetchPrepaid, { loading, data, called }] = useLazyQuery(FETCH_PREPAID_QUERY);
@@ -25,6 +31,12 @@ export function useFetchPrepaid() {
     prepaid: data?.prepaidCommissions.prepaidCommissions ?? [],
     fetchPrepaid,
   };
+}
+
+export function useFetchCommissionByMemberAndWeek() {
+  const [fetchCommissions, { loading, data, called }] = useLazyQuery(FETCH_COMMISSION_BY_MEMBER);
+
+  return { called, loading, commission: data?.commissionByMemberIDAndWeek, fetchCommissions };
 }
 
 export function useCreatePrepaid() {
