@@ -25,7 +25,7 @@ import ProductTableFiltersResult from '../Member/CommissionTableFiltersResult';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'weekStartDate', label: 'Week', width: 120, sortable: true },
+  { id: 'weekStartDate', label: 'Week', width: 200, sortable: true },
   { id: 'member.username', label: 'Username', sortable: true },
   { id: 'member.assetId', label: 'AssetId', sortable: true },
   { id: 'begLR', label: 'BegLR', sortable: false },
@@ -39,25 +39,7 @@ const TABLE_HEAD = [
 
 const additionalFilter = [
   { status: 'PREVIEW' },
-  {
-    OR: [
-      {
-        commission: {
-          gt: 0,
-        },
-      },
-      {
-        newL: {
-          gt: 0,
-        },
-      },
-      {
-        newR: {
-          gt: 0,
-        },
-      },
-    ],
-  },
+  { OR: [{ commission: { gt: 0 } }, { newL: { gt: 0 } }, { newR: { gt: 0 } }] },
 ];
 
 export default function CommissionPreviewList() {

@@ -9,6 +9,7 @@ const ROOTS = {
   PRODUCTS: '/products',
   SPONSOR: '/sponsor',
   PLACEMENT: '/placement',
+  PROOF: '/proof',
   PREPAID_COMMISSION: '/prepaid-commission',
   COMMISSION: '/commission',
   REWARD: '/reward',
@@ -61,6 +62,11 @@ export const paths = {
     commission: {
       root: ROOTS.COMMISSION,
       detail: (id: string) => `${ROOTS.COMMISSION}/${id}`,
+    },
+    proof: {
+      root: ROOTS.PROOF,
+      edit: (id: string) => `${ROOTS.PROOF}/${id}`,
+      new: `${ROOTS.PROOF}/new`,
     },
     reward: {
       root: ROOTS.REWARD,

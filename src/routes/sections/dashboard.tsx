@@ -51,6 +51,13 @@ const PlacementListPage = lazy(() => import('src/pages/Placement/List'));
 // ----------------------------------------------------------------------
 const CommissionPage = lazy(() => import('src/pages/Commission'));
 const CommissionDetailPage = lazy(() => import('src/pages/CommissionDetail'));
+// ----------------------------------------------------------------------
+
+// ----------------------------------------------------------------------
+const ProofListPage = lazy(() => import('src/pages/Proof/List'));
+const ProofCreatePage = lazy(() => import('src/pages/Proof/Create'));
+const ProofEditPage = lazy(() => import('src/pages/Proof/Edit'));
+// ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
 const PrepaidCommissionPage = lazy(() => import('src/pages/PrepaidCommission/List'));
@@ -120,6 +127,14 @@ export const dashboardRoutes = [
         children: [
           { index: true, element: <CommissionPage /> },
           { path: ':id', element: <CommissionDetailPage /> },
+        ],
+      },
+      {
+        path: 'proof',
+        children: [
+          { index: true, element: <ProofListPage /> },
+          { path: 'new', element: <ProofCreatePage /> },
+          { path: ':id', element: <ProofEditPage /> },
         ],
       },
       {

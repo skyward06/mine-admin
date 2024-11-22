@@ -168,7 +168,7 @@ export default function EditForm({ current }: Props) {
         data: {
           memberId: current ? current.commission.member.id : member?.id ?? '',
           weekStartDate: customizeDate(
-            `${dayjs(current ? current.commission.weekStartDate : week).startOf('week')}`
+            `${dayjs(current ? formatDate(current.commission.weekStartDate) : week).startOf('week')}`
           ),
         },
       },

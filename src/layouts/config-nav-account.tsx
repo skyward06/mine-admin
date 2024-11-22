@@ -71,6 +71,11 @@ export const _account = [
     icon: <Iconify icon="fluent:reward-32-regular" />,
   },
   {
+    label: 'Proof',
+    href: '/proof',
+    icon: <Iconify icon="hugeicons:notebook" />,
+  },
+  {
     label: 'Reward',
     href: '/reward',
     icon: <Iconify icon="marketeq:reward" />,
