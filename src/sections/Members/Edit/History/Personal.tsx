@@ -198,7 +198,7 @@ export const Personal = () => {
               </Typography>
             </Stack>
             <Stack width={1}>
-              <Typography variant="body2">{`L${member?.commission.begL}, R${member?.commission.begR}`}</Typography>
+              <Typography variant="body2">{`L${member?.commission?.begL ?? 0}, R${member?.commission?.begR ?? 0}`}</Typography>
             </Stack>
           </Stack>
 
@@ -209,7 +209,7 @@ export const Personal = () => {
               </Typography>
             </Stack>
             <Stack width={1}>
-              <Typography variant="body2">{`L${member?.commission.newL}, R${member?.commission.newR}`}</Typography>
+              <Typography variant="body2">{`L${member?.commission?.newL ?? 0}, R${member?.commission?.newR ?? 0}`}</Typography>
             </Stack>
           </Stack>
 
