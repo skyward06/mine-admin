@@ -27,7 +27,7 @@ export function StandardNode({
 }: NodeProps) {
   const router = useRouter();
 
-  const [firstName, lastName] = fullName ? fullName.split(' ') : ['', ''];
+  const [firstName = '', lastName = ''] = fullName ? fullName.split(' ').filter(Boolean) : ['', ''];
 
   const { visibleMap, expandTree, collapseTree } = useContext(NodeContext);
 

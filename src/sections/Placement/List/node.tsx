@@ -72,7 +72,7 @@ export function StandardNode({
   const { loading: memberLoading, members, fetchMembers } = useFetchMembers();
   const { loading: removeLoading, removeMemberPlacement } = useRemoveMemberPlacement();
 
-  const [firstName, lastName] = fullName ? fullName.split(' ') : ['', ''];
+  const [firstName = '', lastName = ''] = fullName ? fullName.split(' ').filter(Boolean) : ['', ''];
 
   const onRemove = () => {
     popover.onClose();
