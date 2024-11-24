@@ -38,10 +38,12 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         syncWithSendy
         preferredContact
         preferredContactDetail
-        begL
-        begR
-        newL
-        newR
+        commission {
+          begL
+          begR
+          newL
+          newR
+        }
         sponsor {
           id
           ID
@@ -59,10 +61,12 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           syncWithSendy
           preferredContact
           preferredContactDetail
-          begL
-          begR
-          newL
-          newR
+          commission {
+            begL
+            begR
+            newL
+            newR
+          }
         }
         placementParentId
         placementPosition
@@ -83,10 +87,12 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           preferredContact
           secondaryAddress
           preferredContactDetail
-          begL
-          begR
-          newL
-          newR
+          commission {
+            begL
+            begR
+            newL
+            newR
+          }
         }
         placementChildren {
           id
@@ -106,10 +112,12 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           totalIntroducers
           placementPosition
           preferredContactDetail
-          begL
-          begR
-          newL
-          newR
+          commission {
+            begL
+            begR
+            newL
+            newR
+          }
         }
         sales {
           id
@@ -283,15 +291,6 @@ export const APPROVE_MEMBER = gql(/* GraphQL */ `
     approveMember(data: $data) {
       message
       result
-      result
-    }
-  }
-`);
-
-export const RECALCULATE_CURRENT_COMMISSION = gql(/* GraphQL */ `
-  mutation RecalculateCurrentCommission {
-    recalculateCurrentCommission {
-      message
       result
     }
   }

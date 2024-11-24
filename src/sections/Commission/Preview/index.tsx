@@ -39,7 +39,15 @@ const TABLE_HEAD = [
 
 const additionalFilter = [
   { status: 'PREVIEW' },
-  { OR: [{ commission: { gt: 0 } }, { newL: { gt: 0 } }, { newR: { gt: 0 } }] },
+  {
+    OR: [
+      { commission: { gt: 0 } },
+      { newL: { gt: 0 } },
+      { newR: { gt: 0 } },
+      { begL: { gt: 0 } },
+      { begR: { gt: 0 } },
+    ],
+  },
 ];
 
 export default function CommissionPreviewList() {

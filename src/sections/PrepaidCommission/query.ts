@@ -43,10 +43,12 @@ export const FETCH_PREPAID_QUERY = gql(/* GraphQL */ `
             syncWithSendy
             preferredContact
             preferredContactDetail
-            begL
-            begR
-            newL
-            newR
+            commission {
+              begL
+              begR
+              newL
+              newR
+            }
           }
         }
         proof {

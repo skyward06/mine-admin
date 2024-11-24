@@ -1,6 +1,7 @@
 import { useRef, useMemo } from 'react';
 import { useMutation, useLazyQuery } from '@apollo/client';
 
+import { CALCULATE_COMMISSION_PREVIEW } from '../Commission/query';
 import {
   UPDATE_MEMBER,
   APPROVE_MEMBER,
@@ -9,7 +10,6 @@ import {
   UPDATE_PASSWORD_QUERY,
   REMOVE_MEMBER_PLACEMENT,
   FETCH_MEMBER_STATS_QUERY,
-  RECALCULATE_CURRENT_COMMISSION,
 } from './query';
 
 export function useFetchMembers() {
@@ -89,7 +89,7 @@ export function useApproveMember() {
 
 export function useRecalculateCurrentCommission() {
   const [recalculateCurrentCommission, { loading, error }] = useMutation(
-    RECALCULATE_CURRENT_COMMISSION,
+    CALCULATE_COMMISSION_PREVIEW,
     {}
   );
 
