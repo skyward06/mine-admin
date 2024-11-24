@@ -150,6 +150,7 @@ export default function EditForm({ current }: Props) {
           variables: {
             data: {
               ...newData,
+              orderedAt: customizeDate(orderedAt),
               fileIds: files?.map((file: any) => file.id),
             },
           },
