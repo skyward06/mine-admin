@@ -60,6 +60,7 @@ export const FETCH_PREPAID_QUERY = gql(/* GraphQL */ `
           type
           amount
           note
+          orderedAt
           files {
             createdAt
             updatedAt

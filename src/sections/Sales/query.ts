@@ -18,6 +18,7 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
           refId
           type
           amount
+          orderedAt
           note
           files {
             createdAt
@@ -86,6 +87,7 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
           refId
           type
           amount
+          orderedAt
           note
           files {
             createdAt

@@ -98,6 +98,7 @@ export default function EditForm({ current }: Props) {
 
   const onSubmit = handleSubmit(async (newData) => {
     const { orderedAt, payments, ...rest } = newData;
+    console.log(orderedAt, customizeDate(orderedAt));
 
     const txId = payments?.map((item) => item.txId).join(',');
     const txType = payments?.map((item) => item.txType).join(',');

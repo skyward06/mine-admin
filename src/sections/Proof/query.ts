@@ -11,6 +11,7 @@ export const FETCH_PROOF_QUERY = gql(/* GraphQL */ `
         refId
         type
         amount
+        orderedAt
         note
         files {
           createdAt

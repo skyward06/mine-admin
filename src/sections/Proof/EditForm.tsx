@@ -1,18 +1,19 @@
 import { useForm } from 'react-hook-form';
-import { useMemo, useState, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import React, { useMemo, useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
-import MenuItem from '@mui/material/MenuItem';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
+
+import { today, formatDate, customizeDate } from 'src/utils/format-time';
 
 import { ProofType } from 'src/__generated__/graphql';
 
@@ -30,6 +31,68 @@ import { FileRecentItem } from '../Sales/Edit/FileRecentItem';
 interface Props {
   current?: any;
 }
+type NestedMenu = {
+  [key: string]: NestedMenu | ProofType;
+};
+
+export type PROOF_KEY_VALUE_TYPE = Exclude<ProofType, ProofType.Prepay>;
+
+export const PROOF_VALUES: Record<PROOF_KEY_VALUE_TYPE, string> = {
+  COMMISSION: 'COMMISSION',
+  ADMINISTRATIONSALARY: 'ADMINISTRATION:SALARY',
+  INFRASTRUCTURE: 'INFRASTRUCTURE',
+  MARKETINGMINETXCPROMOTION: 'MARKETING:mineTXC PROMOTION',
+  MARKETINGTXCPROMOTION: 'MARKETING:TXC PROMOTION',
+  MINEELECTRICITY: 'MINE:ELECTRICITY',
+  MINEFACILITYRENTMORTAGE: 'MINE:FACILITY RENT/MOTAGE',
+  MINEMAINTAINANCE: 'MINE:MAINTAINANCE',
+  MINENEWEQUIPMENT: 'MINE:NEW EQUIPMENT',
+  OVERHEAD: 'OVERHEAD',
+  PROFIT: 'PROFIT',
+  PROMOTION: 'PROMOTION',
+  SALE: 'SALE',
+  DEVELOPERSPROTOCOL: 'DEVELOPERS:PROTOCOL',
+  DEVELOPERSWEB: 'DEVELOPERS:WEB',
+  DEVELOPERSAPPS: 'DEVELOPERS:APPS',
+  DEVELOPERSINTEGRATIONS: 'DEVELOPERS:INTEGRATIONS',
+};
+
+// Convert flat list to a nested structure
+function createNestedMenu(list: ProofType[]): NestedMenu {
+  const root: NestedMenu = {};
+  list.forEach((item) => {
+    if (!(item in PROOF_VALUES)) return;
+    const parts = PROOF_VALUES[item as PROOF_KEY_VALUE_TYPE].split(':');
+    let current = root;
+
+    parts.forEach((part, index) => {
+      if (!current[part]) {
+        current[part] = index === parts.length - 1 ? item : {};
+      }
+      current = current[part] as NestedMenu;
+    });
+  });
+  return root;
+}
+
+function renderMenu(menu: NestedMenu, path: string[] = []): React.ReactNode {
+  return Object.keys(menu).map((key) => {
+    const currentPath = [...path, key].join(':');
+
+    if (typeof menu[key] === 'string') {
+      return (
+        <option key={currentPath} value={menu[key] as string}>
+          {key}
+        </option>
+      );
+    }
+    return (
+      <optgroup label={currentPath} key={key}>
+        {renderMenu(menu[key] as NestedMenu, [...path, key])}
+      </optgroup>
+    );
+  });
+}
 
 export default function EditForm({ current }: Props) {
   const [files, setFiles] = useState<string[]>();
@@ -39,10 +102,12 @@ export default function EditForm({ current }: Props) {
   const defaultValues = useMemo(
     () =>
       current
-        ? Schema.safeParse(current)?.data ?? ({} as SchemaType)
+        ? Schema.safeParse({ ...current, orderedAt: formatDate(current.orderedAt) })?.data ??
+          ({} as SchemaType)
         : {
             amount: 0,
             refId: '',
+            orderedAt: `${today('YYYY-MM-DD')}`,
             type: ProofType.Sale,
           },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -67,13 +132,14 @@ export default function EditForm({ current }: Props) {
     setFiles(files?.filter((file: any) => id !== file.id));
   };
 
-  const onSubmit = handleSubmit(async (newData) => {
+  const onSubmit = handleSubmit(async ({ orderedAt, ...newData }) => {
     try {
       if (current) {
         await updateProof({
           variables: {
             data: {
               ...newData,
+              orderedAt: customizeDate(orderedAt),
               id: current.id,
               fileIds: files?.map((file: any) => file.id),
             },
@@ -121,14 +187,15 @@ export default function EditForm({ current }: Props) {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <Field.Text type="number" name="amount" label="Amount" />
+              <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
+                <Field.Select name="type" label="Type" native>
+                  {renderMenu(createNestedMenu(Object.values(ProofType)))}
+                </Field.Select>
+                <Field.Text type="number" name="amount" label="Amount" />
+              </Stack>
 
               <Field.Text name="note" label="Note" />
-              <Field.Select name="type" label="Proof Type">
-                {Object.values(ProofType).map((item: string) => (
-                  <MenuItem value={item}>{item}</MenuItem>
-                ))}
-              </Field.Select>
+              <Field.DatePicker name="orderedAt" label="Ordered At" format="YYYY-MM-DD" />
               <Field.Text name="refId" label="Reference ID" />
             </Box>
 

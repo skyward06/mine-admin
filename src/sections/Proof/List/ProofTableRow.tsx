@@ -18,6 +18,9 @@ import { Iconify } from 'src/components/Iconify';
 import { FileThumbnail } from 'src/components/FileThumbnail';
 
 import Detail from './Detail';
+import { PROOF_VALUES } from '../EditForm';
+
+import type { PROOF_KEY_VALUE_TYPE } from '../EditForm';
 
 // ----------------------------------------------------------------------
 
@@ -31,15 +34,18 @@ export default function ProductTableRow({ row, confirm, setSelected }: Props) {
   const router = useRouter();
   const open = useBoolean();
 
-  const { id, amount, createdAt, type, refId, files } = row;
+  const { id, amount, createdAt, orderedAt, type, refId, files } = row;
 
   return (
     <>
       <TableRow hover>
         <TableCell align="left">{formatDate(createdAt)}</TableCell>
+        <TableCell align="left">{formatDate(orderedAt)}</TableCell>
         <TableCell align="left">{amount}</TableCell>
         <TableCell align="left">{refId}</TableCell>
-        <TableCell align="left">{type}</TableCell>
+        <TableCell align="left">
+          {PROOF_VALUES[type as PROOF_KEY_VALUE_TYPE].split(':').pop()}
+        </TableCell>
         <TableCell align="left">
           <Stack direction="row">
             {!!files?.length && <FileThumbnail file="png" sx={{ width: 24 }} />}

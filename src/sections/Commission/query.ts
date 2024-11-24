@@ -29,6 +29,7 @@ export const FETCH_COMMISSION_QUERY = gql(/* GraphQL */ `
           type
           amount
           note
+          orderedAt
           files {
             createdAt
             updatedAt
