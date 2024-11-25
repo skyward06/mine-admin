@@ -26,7 +26,7 @@ interface Props {
 }
 
 export default function Detail({ row, open }: Props) {
-  const { amount, refId, type, note, files, reflinks, orderedAt } = row;
+  const { amount, refId, type, note, mineLocation, files, reflinks, orderedAt } = row;
 
   return (
     <Drawer
@@ -75,6 +75,15 @@ export default function Detail({ row, open }: Props) {
             </Typography>
             <Typography variant="body2">{amount}</Typography>
           </Stack>
+
+          {mineLocation && (
+            <Stack direction="row" columnGap={2}>
+              <Typography variant="body2" color="text.disabled">
+                Mine Location:
+              </Typography>
+              <Typography variant="body2">{mineLocation}</Typography>
+            </Stack>
+          )}
 
           <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
 

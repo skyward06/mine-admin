@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
+import MenuItem from '@mui/material/MenuItem';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -25,7 +26,7 @@ import LinkForm from '../PrepaidCommission/LinkForm';
 import { useCreateProof, useUpdateProof } from './useApollo';
 import { FileManagerNewFolderDialog } from '../Sales/Upload';
 import { FileRecentItem } from '../Sales/Edit/FileRecentItem';
-import { PROOF_VALUES, type PROOF_KEY_VALUE_TYPE } from './const';
+import { PROOF_VALUES, MINE_LOCATION, type PROOF_KEY_VALUE_TYPE } from './const';
 
 // ----------------------------------------------------------------------
 
@@ -167,12 +168,19 @@ export default function EditForm({ current }: Props) {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
-                <Field.Select name="type" label="Type" native>
-                  {renderMenu(createNestedMenu(Object.values(ProofType)))}
-                </Field.Select>
-                <Field.Text type="number" name="amount" label="Amount" />
-              </Stack>
+              <Field.Select name="type" label="Type" native>
+                {renderMenu(createNestedMenu(Object.values(ProofType)))}
+              </Field.Select>
+
+              <Field.Select name="mineLocation" label="Mine Location">
+                {MINE_LOCATION.map((item) => (
+                  <MenuItem key={item.value} value={item.value}>
+                    {item.value}
+                  </MenuItem>
+                ))}
+              </Field.Select>
+
+              <Field.Text type="number" name="amount" label="Amount" />
 
               <Field.Text name="note" label="Note" />
               <Field.DatePicker name="orderedAt" label="Ordered At" format="YYYY-MM-DD" />

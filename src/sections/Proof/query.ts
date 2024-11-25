@@ -12,6 +12,7 @@ export const FETCH_PROOF_QUERY = gql(/* GraphQL */ `
         type
         amount
         orderedAt
+        mineLocation
         note
         files {
           createdAt
