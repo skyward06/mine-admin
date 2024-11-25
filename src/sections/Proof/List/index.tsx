@@ -34,10 +34,12 @@ import {
   TablePaginationCustom,
 } from 'src/components/Table';
 
+import { PROOF_VALUES } from '../EditForm';
 import ProofTableRow from './ProofTableRow';
 import { useFetchProofs, useRemoveProof } from '../useApollo';
 import ProofTableFiltersResult from './ProofTableFiltersResult';
 
+import type { PROOF_KEY_VALUE_TYPE } from '../EditForm';
 import type { IProofPrismaFilter, IProofTableFilters } from './types';
 
 // ----------------------------------------------------------------------
@@ -75,13 +77,17 @@ export default function ProofListView() {
     if (filter.search) {
       filterObj.OR = [
         // ...(canConvertToNumber(filter.search) && { amount: { equals: filter.search } }),
-        ...((Object.values(ProofType) as string[]).includes(filter.search.toUpperCase())
-          ? [
-              {
-                type: { equals: filter.search.toUpperCase() },
-              },
-            ]
-          : []),
+        ...Object.values(ProofType)
+          .map((pft: ProofType) => {
+            const detail = PROOF_VALUES[pft as PROOF_KEY_VALUE_TYPE];
+            if (detail) {
+              return detail.includes(filter.search.toUpperCase())
+                ? { type: { equals: pft } }
+                : null;
+            }
+            return null;
+          })
+          .filter(Boolean),
         { refId: { contains: filter.search, mode: 'insensitive' } },
       ];
     }
