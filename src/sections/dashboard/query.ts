@@ -32,3 +32,47 @@ export const FETCH_BLOCKS_DATA_QUERY = gql(/* GraphQL */ `
     }
   }
 `);
+
+export const FETCH_MEMBER_COUNT = gql(/* GraphQL */ `
+  query MemberCounts($data: PeriodStatsArgs!) {
+    memberCounts(data: $data) {
+      base
+      minerCount
+    }
+  }
+`);
+
+export const FETCH_MEMBER_REWARD = gql(/* GraphQL */ `
+  query MemberRewards($data: PeriodStatsArgs!) {
+    memberRewards(data: $data) {
+      base
+      reward
+    }
+  }
+`);
+
+export const FETCH_COMMISSION_BY_PERIOD = gql(/* GraphQL */ `
+  query CommissionByPeriod($data: PeriodStatsArgs!) {
+    commissionByPeriod(data: $data) {
+      base
+      commission
+    }
+  }
+`);
+
+export const FETCH_REVENUE_QUERY = gql(/* GraphQL */ `
+  query RevenueOverview {
+    revenueOverview {
+      revenue
+      commissionPending
+      commissionApprovedPaid
+      mineElectricy
+      mineFacility
+      mineMaintainance
+      mineNewEquipment
+      infrastructure
+      marketingMineTXCPromotion
+      marketingTXCPromotion
+    }
+  }
+`);
