@@ -18,9 +18,9 @@ import { Iconify } from 'src/components/Iconify';
 import { FileThumbnail } from 'src/components/FileThumbnail';
 
 import Detail from './Detail';
-import { PROOF_VALUES } from '../EditForm';
+import { PROOF_VALUES } from '../const';
 
-import type { PROOF_KEY_VALUE_TYPE } from '../EditForm';
+import type { PROOF_KEY_VALUE_TYPE } from '../const';
 
 // ----------------------------------------------------------------------
 

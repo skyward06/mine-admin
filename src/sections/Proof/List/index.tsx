@@ -34,12 +34,12 @@ import {
   TablePaginationCustom,
 } from 'src/components/Table';
 
-import { PROOF_VALUES } from '../EditForm';
+import { PROOF_VALUES } from '../const';
 import ProofTableRow from './ProofTableRow';
 import { useFetchProofs, useRemoveProof } from '../useApollo';
 import ProofTableFiltersResult from './ProofTableFiltersResult';
 
-import type { PROOF_KEY_VALUE_TYPE } from '../EditForm';
+import type { PROOF_KEY_VALUE_TYPE } from '../const';
 import type { IProofPrismaFilter, IProofTableFilters } from './types';
 
 // ----------------------------------------------------------------------

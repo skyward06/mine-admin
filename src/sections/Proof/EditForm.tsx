@@ -25,6 +25,7 @@ import LinkForm from '../PrepaidCommission/LinkForm';
 import { useCreateProof, useUpdateProof } from './useApollo';
 import { FileManagerNewFolderDialog } from '../Sales/Upload';
 import { FileRecentItem } from '../Sales/Edit/FileRecentItem';
+import { PROOF_VALUES, type PROOF_KEY_VALUE_TYPE } from './const';
 
 // ----------------------------------------------------------------------
 
@@ -33,28 +34,6 @@ interface Props {
 }
 type NestedMenu = {
   [key: string]: NestedMenu | ProofType;
-};
-
-export type PROOF_KEY_VALUE_TYPE = Exclude<ProofType, ProofType.Prepay>;
-
-export const PROOF_VALUES: Record<PROOF_KEY_VALUE_TYPE, string> = {
-  COMMISSION: 'COMMISSION',
-  ADMINISTRATIONSALARY: 'ADMINISTRATION:SALARY',
-  INFRASTRUCTURE: 'INFRASTRUCTURE',
-  MARKETINGMINETXCPROMOTION: 'MARKETING:mineTXC PROMOTION',
-  MARKETINGTXCPROMOTION: 'MARKETING:TXC PROMOTION',
-  MINEELECTRICITY: 'MINE:ELECTRICITY',
-  MINEFACILITYRENTMORTAGE: 'MINE:FACILITY RENT/MOTAGE',
-  MINEMAINTAINANCE: 'MINE:MAINTAINANCE',
-  MINENEWEQUIPMENT: 'MINE:NEW EQUIPMENT',
-  OVERHEAD: 'OVERHEAD',
-  PROFIT: 'PROFIT',
-  PROMOTION: 'PROMOTION',
-  SALE: 'SALE',
-  DEVELOPERSPROTOCOL: 'DEVELOPERS:PROTOCOL',
-  DEVELOPERSWEB: 'DEVELOPERS:WEB',
-  DEVELOPERSAPPS: 'DEVELOPERS:APPS',
-  DEVELOPERSINTEGRATIONS: 'DEVELOPERS:INTEGRATIONS',
 };
 
 // Convert flat list to a nested structure

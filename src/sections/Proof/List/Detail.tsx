@@ -16,9 +16,9 @@ import { EmptyContent } from 'src/components/EmptyContent';
 
 import { FileRecentItem } from 'src/sections/Sales/List/FileRecentItem';
 
-import { PROOF_VALUES } from '../EditForm';
+import { PROOF_VALUES } from '../const';
 
-import type { PROOF_KEY_VALUE_TYPE } from '../EditForm';
+import type { PROOF_KEY_VALUE_TYPE } from '../const';
 
 interface Props {
   row: Proof;
