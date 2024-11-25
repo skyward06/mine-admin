@@ -45,12 +45,11 @@ import type { IProofPrismaFilter, IProofTableFilters } from './types';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'createdAt', label: 'Created', width: 200, sortable: true },
-  { id: 'orderedAt', label: 'Ordered', width: 200, sortable: true },
   { id: 'amount', label: 'Amount', width: 200, sortable: true },
-  { id: 'refId', label: 'Reference ID', sortable: true },
   { id: 'type', label: 'Proof Type', sortable: true },
   { id: 'attached', label: 'Attached', width: 150, sortable: true },
+  { id: 'createdAt', label: 'Created At', width: 150, sortable: true },
+  { id: 'orderedAt', label: 'Ordered At', width: 150, sortable: true },
   { id: 'action', label: 'Action', align: 'center', width: 200, sortable: true },
 ];
 

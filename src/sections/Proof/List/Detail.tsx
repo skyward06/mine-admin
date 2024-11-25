@@ -26,7 +26,7 @@ interface Props {
 }
 
 export default function Detail({ row, open }: Props) {
-  const { amount, refId, type, note, files, reflinks, createdAt } = row;
+  const { amount, refId, type, note, files, reflinks, orderedAt } = row;
 
   return (
     <Drawer
@@ -43,7 +43,7 @@ export default function Detail({ row, open }: Props) {
       >
         <Stack direction="row" justifyContent="space-between" sx={{ p: 2 }}>
           <Typography variant="h6"> Info </Typography>
-          <Typography variant="body2">{formatDateTime(createdAt)}</Typography>
+          <Typography variant="body2">{formatDateTime(orderedAt)}</Typography>
         </Stack>
         <Stack spacing={1} sx={{ p: 2.5, bgcolor: 'background.neutral' }}>
           <Typography variant="subtitle1">Main</Typography>
@@ -61,7 +61,12 @@ export default function Detail({ row, open }: Props) {
             <Typography variant="body2" color="text.disabled">
               Reference ID:
             </Typography>
-            <Typography variant="body2">{refId}</Typography>
+            <Typography
+              variant="body2"
+              sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+            >
+              {refId}
+            </Typography>
           </Stack>
 
           <Stack direction="row" columnGap={2}>

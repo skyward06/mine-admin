@@ -34,15 +34,12 @@ export default function ProductTableRow({ row, confirm, setSelected }: Props) {
   const router = useRouter();
   const open = useBoolean();
 
-  const { id, amount, createdAt, orderedAt, type, refId, files } = row;
+  const { id, amount, createdAt, orderedAt, type, files } = row;
 
   return (
     <>
       <TableRow hover>
-        <TableCell align="left">{formatDate(createdAt)}</TableCell>
-        <TableCell align="left">{formatDate(orderedAt)}</TableCell>
         <TableCell align="left">{amount}</TableCell>
-        <TableCell align="left">{refId}</TableCell>
         <TableCell align="left">
           {PROOF_VALUES[type as PROOF_KEY_VALUE_TYPE].split(':').pop()}
         </TableCell>
@@ -54,6 +51,8 @@ export default function ProductTableRow({ row, confirm, setSelected }: Props) {
             </Typography>
           </Stack>
         </TableCell>
+        <TableCell align="left">{formatDate(createdAt)}</TableCell>
+        <TableCell align="left">{formatDate(orderedAt)}</TableCell>
         <TableCell align="center">
           <Tooltip title="Edit" placement="top" arrow>
             <IconButton
