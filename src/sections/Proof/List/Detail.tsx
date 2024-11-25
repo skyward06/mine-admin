@@ -16,6 +16,10 @@ import { EmptyContent } from 'src/components/EmptyContent';
 
 import { FileRecentItem } from 'src/sections/Sales/List/FileRecentItem';
 
+import { PROOF_VALUES } from '../EditForm';
+
+import type { PROOF_KEY_VALUE_TYPE } from '../EditForm';
+
 interface Props {
   row: Proof;
   open: UseBooleanReturn;
@@ -48,7 +52,9 @@ export default function Detail({ row, open }: Props) {
             <Typography variant="body2" color="text.disabled">
               Reference Type:
             </Typography>
-            <Typography variant="body2">{type}</Typography>
+            <Typography variant="body2">
+              {PROOF_VALUES[type as PROOF_KEY_VALUE_TYPE].split(':').pop()}
+            </Typography>
           </Stack>
 
           <Stack direction="row" columnGap={2}>
