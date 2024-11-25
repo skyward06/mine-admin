@@ -32,7 +32,7 @@ export default function TXCShared() {
         options: {
           xaxis: {
             tooltip: { enabled: false },
-            tickAmount: 30,
+            tickAmount: 18,
             categories: statistics!.map((item) => formatDate(item!.issuedAt)).reverse(),
           },
           yaxis: {

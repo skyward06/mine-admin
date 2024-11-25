@@ -63,7 +63,7 @@ export default function HashRate() {
           options: {
             xaxis: {
               tooltip: { enabled: false },
-              tickAmount: 30,
+              tickAmount: 18,
               categories: blocks!.map((item) => item.base).reverse(),
             },
             yaxis: {
