@@ -10,7 +10,7 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import ListItemText from '@mui/material/ListItemText';
 
-import { formatID } from 'src/utils/helper';
+import { customizeFullName, formatID } from 'src/utils/helper';
 import { formatDateTime } from 'src/utils/format-time';
 
 import { FREE_SHARE_ID_1, FREE_SHARE_ID_2 } from 'src/consts';
@@ -28,8 +28,6 @@ interface Props {
 
 export default function Detail({ open, row }: Props) {
   const { id, member, package: product, status, proof, updatedAt } = row;
-
-  const [firstName, lastName] = member?.fullName.split(' ') ?? ['', ''];
 
   return (
     <Drawer
@@ -61,7 +59,7 @@ export default function Detail({ open, row }: Props) {
 
           <Stack direction="row" justifyContent="space-between">
             <ListItemText
-              primary={`${firstName} ${lastName.length && lastName[0].toUpperCase()}.`}
+              primary={customizeFullName(member?.fullName ?? '')}
               secondary={member?.username}
               primaryTypographyProps={{ typography: 'subtitle1' }}
               secondaryTypographyProps={{

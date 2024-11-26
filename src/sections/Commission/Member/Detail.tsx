@@ -18,7 +18,7 @@ import ListItemText from '@mui/material/ListItemText';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
-import { isValidUrl } from 'src/utils/helper';
+import { isValidUrl, customizeFullName } from 'src/utils/helper';
 import { formatDateTime } from 'src/utils/format-time';
 
 import { CONFIG } from 'src/config';
@@ -44,8 +44,6 @@ interface Props {
 
 export default function Detail({ open, row }: Props) {
   const { id, status, member, proof } = row;
-
-  const [firstName, lastName] = member?.fullName.split(' ') ?? ['', ''];
 
   const defaultValues = useMemo(
     () =>
@@ -141,7 +139,7 @@ export default function Detail({ open, row }: Props) {
 
           <Stack direction="row" justifyContent="space-between">
             <ListItemText
-              primary={`${firstName} ${lastName.length && lastName[0].toUpperCase()}.`}
+              primary={customizeFullName(member?.fullName ?? '')}
               secondary={member?.username}
               primaryTypographyProps={{ typography: 'subtitle1' }}
               secondaryTypographyProps={{

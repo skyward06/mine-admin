@@ -21,6 +21,7 @@ import { useRouter } from 'src/routes/hooks';
 import { useBoolean } from 'src/hooks/useBoolean';
 
 import { formatDate } from 'src/utils/format-time';
+import { customizeFullName } from 'src/utils/helper';
 
 import { PlacementPosition } from 'src/__generated__/graphql';
 
@@ -71,8 +72,6 @@ export function StandardNode({
   const { loading, updateMember } = useUpdateMember();
   const { loading: memberLoading, members, fetchMembers } = useFetchMembers();
   const { loading: removeLoading, removeMemberPlacement } = useRemoveMemberPlacement();
-
-  const [firstName = '', lastName = ''] = fullName ? fullName.split(' ').filter(Boolean) : ['', ''];
 
   const onRemove = () => {
     popover.onClose();
@@ -254,7 +253,7 @@ export function StandardNode({
           }}
           onClick={() => router.push(paths.dashboard.members.edit(id))}
         >
-          {`${firstName} ${lastName.length && lastName[0].toUpperCase()}.`}
+          {customizeFullName(fullName)}
         </Typography>
 
         <Stack

@@ -17,6 +17,7 @@ import { ScrollBar } from 'src/components/ScrollBar';
 import { EmptyContent } from 'src/components/EmptyContent';
 
 import { FileRecentItem } from 'src/sections/Sales/List/FileRecentItem';
+import { customizeFullName } from 'src/utils/helper';
 
 interface Props {
   row: PrepaidCommission;
@@ -25,8 +26,6 @@ interface Props {
 
 export default function Detail({ row, open }: Props) {
   const { proof, txType, txId, commission } = row;
-
-  const [firstName, lastName] = commission?.member?.fullName.split(' ') ?? ['', ''];
 
   const txTypes = txType?.split(',') ?? [];
   const txIds = txId?.split(',') ?? [];
@@ -57,7 +56,7 @@ export default function Detail({ row, open }: Props) {
           <Typography variant="subtitle1">Miner</Typography>
 
           <ListItemText
-            primary={`${firstName} ${lastName.length && lastName[0].toUpperCase()}.`}
+            primary={customizeFullName(commission?.member?.fullName ?? '')}
             secondary={commission?.member?.username}
             primaryTypographyProps={{ typography: 'subtitle1' }}
             secondaryTypographyProps={{

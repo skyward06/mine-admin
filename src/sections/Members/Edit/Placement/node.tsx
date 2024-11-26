@@ -15,11 +15,10 @@ import { Iconify } from 'src/components/Iconify';
 import NodeContext from './nodeContext';
 
 import type { NodeProps } from './type';
+import { customizeFullName } from 'src/utils/helper';
 
 export function StandardNode({ id, placementPosition, username, fullName, createdAt }: NodeProps) {
   const router = useRouter();
-
-  const [firstName = '', lastName = ''] = fullName ? fullName.split(' ').filter(Boolean) : ['', ''];
 
   const { visibleMap, expandTree, collapseTree } = useContext(NodeContext);
 
@@ -48,7 +47,7 @@ export function StandardNode({ id, placementPosition, username, fullName, create
           router.refresh();
         }}
       >
-        {`${firstName} ${lastName.length && lastName[0].toUpperCase()}.`}
+        {customizeFullName(fullName)}
       </Typography>
 
       <Stack

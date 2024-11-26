@@ -164,3 +164,9 @@ export function canConvertToNumber(value: string): boolean {
   // Check if the trimmed value is a valid number
   return !Number.isNaN(trimmedValue);
 }
+
+export const customizeFullName = (fullName: string) => {
+  const [firstName, lastName] = fullName ? fullName.split(' ').filter(Boolean) : ['', ''];
+
+  return `${firstName} ${lastName.length && lastName[0].toUpperCase()}.`;
+};

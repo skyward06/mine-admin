@@ -11,6 +11,7 @@ import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
 import { formatDate } from 'src/utils/format-time';
+import { customizeFullName } from 'src/utils/helper';
 
 import { Label } from 'src/components/Label';
 import { Iconify } from 'src/components/Iconify';
@@ -26,8 +27,6 @@ export function StandardNode({
   createdAt,
 }: NodeProps) {
   const router = useRouter();
-
-  const [firstName = '', lastName = ''] = fullName ? fullName.split(' ').filter(Boolean) : ['', ''];
 
   const { visibleMap, expandTree, collapseTree } = useContext(NodeContext);
 
@@ -52,7 +51,7 @@ export function StandardNode({
       <Stack direction="row" justifyContent="space-between" sx={{ background: 'translation' }}>
         <Stack>
           <ListItemText
-            primary={`${firstName} ${lastName.length && lastName[0].toUpperCase()}.`}
+            primary={customizeFullName(fullName)}
             secondary={username}
             primaryTypographyProps={{ typography: 'body2', noWrap: true }}
             secondaryTypographyProps={{
