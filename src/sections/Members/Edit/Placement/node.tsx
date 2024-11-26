@@ -8,6 +8,7 @@ import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
 import { formatDate } from 'src/utils/format-time';
+import { customizeFullName } from 'src/utils/helper';
 
 import { Label } from 'src/components/Label';
 import { Iconify } from 'src/components/Iconify';
@@ -15,7 +16,6 @@ import { Iconify } from 'src/components/Iconify';
 import NodeContext from './nodeContext';
 
 import type { NodeProps } from './type';
-import { customizeFullName } from 'src/utils/helper';
 
 export function StandardNode({ id, placementPosition, username, fullName, createdAt }: NodeProps) {
   const router = useRouter();

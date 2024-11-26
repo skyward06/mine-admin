@@ -10,8 +10,8 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import ListItemText from '@mui/material/ListItemText';
 
-import { customizeFullName, formatID } from 'src/utils/helper';
 import { formatDateTime } from 'src/utils/format-time';
+import { formatID, customizeFullName } from 'src/utils/helper';
 
 import { FREE_SHARE_ID_1, FREE_SHARE_ID_2 } from 'src/consts';
 
