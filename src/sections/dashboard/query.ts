@@ -95,3 +95,33 @@ export const FETCH_TXC_SHARES = gql(/* GraphQL */ `
     }
   }
 `);
+
+export const FETCH_LATEST_REWARD = gql(/* GraphQL */ `
+  query LatestStatistics {
+    latestStatistics {
+      id
+      newBlocks
+      totalMembers
+      txcShared
+      issuedAt
+    }
+  }
+`);
+
+export const FETCH_TOP_EARNERS = gql(/* GraphQL */ `
+  query TopEarners {
+    topEarners {
+      fullName
+      earned
+    }
+  }
+`);
+
+export const FETCH_TOP_RECRUITERS = gql(/* GraphQL */ `
+  query TopRecruiters {
+    topRecruiters {
+      fullName
+      totalIntroducers
+    }
+  }
+`);
