@@ -36,6 +36,7 @@ export default function RevenueOverview() {
     theme.palette.secondary.main,
     theme.palette.success.main,
     theme.palette.error.main,
+    theme.palette.warning.dark,
     theme.palette.primary.main,
     theme.palette.info.light,
     theme.palette.warning.main,
@@ -107,7 +108,8 @@ export default function RevenueOverview() {
   type RevenueKeys = keyof typeof revenue;
 
   return (
-    <>
+    <Card>
+      <CardHeader title="Use Of Funds" />
       {loading ? (
         <Paper sx={{ p: 3 }}>
           <Skeleton variant="text" sx={{ fontSize: 26 }} />
@@ -119,39 +121,36 @@ export default function RevenueOverview() {
           <Skeleton variant="text" sx={{ fontSize: 26 }} />
         </Paper>
       ) : (
-        <Card>
-          <CardHeader title="Revenue" />
-
-          <Chart
-            type="donut"
-            series={[
-              revenue.revenue -
-                Object.keys(revenue)
-                  .filter(
-                    (ky): ky is Exclude<RevenueKeys, 'revenue' | '__typename'> =>
-                      ky !== 'revenue' && ky !== '__typename'
-                  )
-                  .reduce((prev, cur) => prev + revenue[cur], 0),
-              revenue.mineFacility,
-              revenue.mineElectricy,
-              revenue.commissionPending,
-              revenue.mineMaintainance,
-              revenue.infrastructure,
-              revenue.mineNewEquipment,
-              revenue.commissionApprovedPaid,
-              revenue.marketingTXCPromotion,
-              revenue.marketingMineTXCPromotion,
-            ]}
-            options={chartOptions}
-            width={274}
-            height={274}
-            sx={{
-              my: 3,
-              mx: 'auto',
-            }}
-          />
-        </Card>
+        <Chart
+          type="donut"
+          series={[
+            revenue.revenue -
+              Object.keys(revenue)
+                .filter(
+                  (ky): ky is Exclude<RevenueKeys, 'revenue' | '__typename'> =>
+                    ky !== 'revenue' && ky !== '__typename'
+                )
+                .reduce((prev, cur) => prev + revenue[cur], 0),
+            revenue.mineFacility,
+            revenue.mineElectricy,
+            revenue.commissionPending,
+            revenue.mineMaintainance,
+            revenue.infrastructure,
+            revenue.mineNewEquipment,
+            revenue.commissionApproved,
+            revenue.commissionPaid,
+            revenue.marketingTXCPromotion,
+            revenue.marketingMineTXCPromotion,
+          ]}
+          options={chartOptions}
+          width={274}
+          height={274}
+          sx={{
+            my: 3,
+            mx: 'auto',
+          }}
+        />
       )}
-    </>
+    </Card>
   );
 }

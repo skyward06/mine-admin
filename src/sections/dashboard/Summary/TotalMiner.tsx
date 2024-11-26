@@ -10,18 +10,19 @@ import { formatWeekNumber } from 'src/utils/format-time';
 import { ChartSelect } from 'src/components/chart';
 import ChartWidget from 'src/components/ChartWidget';
 
-import { useFetchCommissionByPeriod } from '../useApollo';
+import { useFetchTotalMiner } from '../useApollo';
 
 // ----------------------------------------------------------------------
 
 const series = [
+  { value: 'day', label: 'Day' },
   { value: 'week', label: 'Week' },
   { value: 'month', label: 'Month' },
   { value: 'quarter', label: 'Quarter' },
 ];
 
-export default function MemberReward() {
-  const [selectedSeries, setSelectedSeries] = useState('Week');
+export default function MemberCount() {
+  const [selectedSeries, setSelectedSeries] = useState('Day');
   const theme = useTheme();
 
   const handleChangeSeries = useCallback((newValue: string) => {
@@ -30,16 +31,17 @@ export default function MemberReward() {
 
   const currentSeries = series.find((i) => i.label === selectedSeries);
 
-  const { loading, commission, fetchCommissionByPeriod } = useFetchCommissionByPeriod();
+  const { loading, totalMiner, fetchTotalMiner } = useFetchTotalMiner();
 
   useEffect(() => {
-    fetchCommissionByPeriod({ variables: { data: { type: currentSeries?.value ?? '' } } });
+    fetchTotalMiner({ variables: { data: { type: currentSeries?.value ?? '' } } });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentSeries]);
+
   return (
     <Card>
       <CardHeader
-        title="Commission"
+        title="Total Miners"
         action={
           <ChartSelect
             options={series.map((item) => item.label)}
@@ -52,18 +54,18 @@ export default function MemberReward() {
       <ChartWidget
         loading={loading}
         chart={{
-          categories: commission!.map((item) => item.base).reverse(),
+          categories: totalMiner!.map((item) => item.base).reverse(),
           series: [
             {
-              name: 'Commission',
-              data: commission.map((item) => item.commission).reverse(),
+              name: 'Miners',
+              data: totalMiner.map((item) => item.minerCount).reverse(),
             },
           ],
           options: {
             xaxis: {
               tooltip: { enabled: false },
               tickAmount: 10,
-              categories: commission!
+              categories: totalMiner!
                 .map((item) =>
                   currentSeries?.value === 'week'
                     ? `#${formatWeekNumber(item.baseDate)} (${dayjs(item.baseDate).utc().format('MM/DD')} - ${dayjs(item.baseDate).utc().add(6, 'day').format('MM/DD')})`
@@ -79,7 +81,7 @@ export default function MemberReward() {
               },
             },
           },
-          colors: [alpha(theme.palette.primary.dark, 0.8)],
+          colors: [alpha(theme.palette.warning.main, 0.8)],
         }}
         card
       />

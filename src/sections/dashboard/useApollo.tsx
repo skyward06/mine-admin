@@ -5,6 +5,7 @@ import {
   FETCH_MEMBER_REWARD,
   FETCH_REVENUE_QUERY,
   FETCH_STATISTICS_QUERY,
+  FETCH_TOTAL_MINER_QUERY,
   FETCH_BLOCKS_DATA_QUERY,
   FETCH_COMMISSION_BY_PERIOD,
 } from './query';
@@ -24,13 +25,19 @@ export function useFetchBlocks() {
 export function useFetchMemberCounts() {
   const [fetchMemberCount, { loading, data }] = useLazyQuery(FETCH_MEMBER_COUNT);
 
-  return { loading, memberCount: data?.memberCounts ?? [], fetchMemberCount };
+  return { loading, memberCount: data?.newMemberCounts ?? [], fetchMemberCount };
+}
+
+export function useFetchTotalMiner() {
+  const [fetchTotalMiner, { loading, data }] = useLazyQuery(FETCH_TOTAL_MINER_QUERY);
+
+  return { loading, totalMiner: data?.totalMemberCounts ?? [], fetchTotalMiner };
 }
 
 export function useFetchMemberReward() {
   const [fetchMemberReward, { loading, data }] = useLazyQuery(FETCH_MEMBER_REWARD);
 
-  return { loading, memberReward: data?.memberRewards ?? [], fetchMemberReward };
+  return { loading, memberReward: data?.averageMemberReward ?? [], fetchMemberReward };
 }
 
 export function useFetchCommissionByPeriod() {
@@ -45,7 +52,8 @@ export function useFetchRevenue() {
   const revenue = data?.revenueOverview ?? {
     revenue: 0,
     commissionPending: 0,
-    commissionApprovedPaid: 0,
+    commissionApproved: 0,
+    commissionPaid: 0,
     mineElectricy: 0,
     mineFacility: 0,
     mineMaintainance: 0,

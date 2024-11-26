@@ -1,8 +1,11 @@
+import dayjs from 'dayjs';
 import { useState, useEffect, useCallback } from 'react';
 
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import { alpha, useTheme } from '@mui/material/styles';
+
+import { formatWeekNumber } from 'src/utils/format-time';
 
 import { ChartSelect } from 'src/components/chart';
 import ChartWidget from 'src/components/ChartWidget';
@@ -38,7 +41,7 @@ export default function MemberCount() {
   return (
     <Card>
       <CardHeader
-        title="Miner Count"
+        title="New Miners"
         action={
           <ChartSelect
             options={series.map((item) => item.label)}
@@ -62,7 +65,13 @@ export default function MemberCount() {
             xaxis: {
               tooltip: { enabled: false },
               tickAmount: 10,
-              categories: memberCount!.map((item) => item.base).reverse(),
+              categories: memberCount!
+                .map((item) =>
+                  currentSeries?.value === 'week'
+                    ? `#${formatWeekNumber(item.baseDate)} (${dayjs(item.baseDate).utc().format('MM/DD')} - ${dayjs(item.baseDate).utc().add(6, 'day').format('MM/DD')})`
+                    : item.base
+                )
+                .reverse(),
             },
             yaxis: {
               labels: {

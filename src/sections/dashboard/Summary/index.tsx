@@ -3,6 +3,8 @@ import Grid from '@mui/material/Unstable_Grid2';
 import Revenue from './Revenue';
 import HashRate from './HashRate';
 import TXCShared from './TXCShared';
+import TotalMiner from './TotalMiner';
+import Commission from './Commission';
 import MemberCount from './MemberCount';
 import MemberReward from './MemberReward';
 
@@ -23,6 +25,12 @@ export default function Summary() {
       </Grid>
       <Grid xs={12} md={4}>
         <MemberReward />
+      </Grid>
+      <Grid xs={12} md={6}>
+        <Commission />
+      </Grid>
+      <Grid xs={12} md={6}>
+        <TotalMiner />
       </Grid>
     </Grid>
   );
