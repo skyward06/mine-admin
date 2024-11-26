@@ -1,6 +1,7 @@
 import { useLazyQuery } from '@apollo/client';
 
 import {
+  FETCH_TXC_SHARES,
   FETCH_MEMBER_COUNT,
   FETCH_MEMBER_REWARD,
   FETCH_REVENUE_QUERY,
@@ -49,19 +50,18 @@ export function useFetchCommissionByPeriod() {
 export function useFetchRevenue() {
   const [fetchRevenue, { loading, data }] = useLazyQuery(FETCH_REVENUE_QUERY);
 
-  const revenue = data?.revenueOverview ?? {
-    revenue: 0,
-    commissionPending: 0,
-    commissionApproved: 0,
-    commissionPaid: 0,
-    mineElectricy: 0,
-    mineFacility: 0,
-    mineMaintainance: 0,
-    mineNewEquipment: 0,
-    infrastructure: 0,
-    marketingMineTXCPromotion: 0,
-    marketingTXCPromotion: 0,
+  return {
+    loading,
+    revenue: {
+      total: data?.revenueOverview.revenue ?? 0,
+      spent: data?.revenueOverview.spent ?? [],
+    },
+    fetchRevenue,
   };
+}
 
-  return { loading, revenue, fetchRevenue };
+export function useFetchTXCShares() {
+  const [fetchTXCShares, { loading, data }] = useLazyQuery(FETCH_TXC_SHARES);
+
+  return { loading, txcShares: data?.txcShares ?? [], fetchTXCShares };
 }
