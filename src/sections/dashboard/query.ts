@@ -24,11 +24,12 @@ export const FETCH_STATISTICS_QUERY = gql(/* GraphQL */ `
 `);
 
 export const FETCH_BLOCKS_DATA_QUERY = gql(/* GraphQL */ `
-  query Blocksdata($data: PeriodStatsArgs!) {
+  query BlocksData($data: PeriodStatsArgs!) {
     blocksData(data: $data) {
-      base
-      difficulty
       hashRate
+      difficulty
+      base
+      baseDate
     }
   }
 `);
