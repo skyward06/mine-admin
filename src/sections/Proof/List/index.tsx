@@ -46,7 +46,8 @@ import type { IProofPrismaFilter, IProofTableFilters } from './types';
 
 const TABLE_HEAD = [
   { id: 'amount', label: 'Amount', width: 200, sortable: true },
-  { id: 'type', label: 'Proof Type', sortable: true },
+  { id: 'type', label: 'Proof Type', width: 200, sortable: true },
+  { id: 'note', label: 'Note', sortable: true },
   { id: 'attached', label: 'Attached', width: 150, sortable: true },
   { id: 'createdAt', label: 'Created At', width: 150, sortable: true },
   { id: 'orderedAt', label: 'Ordered At', width: 150, sortable: true },

@@ -34,7 +34,7 @@ export default function ProductTableRow({ row, confirm, setSelected }: Props) {
   const router = useRouter();
   const open = useBoolean();
 
-  const { id, amount, createdAt, orderedAt, type, files } = row;
+  const { id, amount, createdAt, orderedAt, type, note, files } = row;
 
   return (
     <>
@@ -42,6 +42,9 @@ export default function ProductTableRow({ row, confirm, setSelected }: Props) {
         <TableCell align="left">{amount}</TableCell>
         <TableCell align="left">
           {PROOF_VALUES[type as PROOF_KEY_VALUE_TYPE].split(':').pop()}
+        </TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          {note}
         </TableCell>
         <TableCell align="left">
           <Stack direction="row">
