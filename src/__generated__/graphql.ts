@@ -975,6 +975,7 @@ export enum ProofType {
   Developersintegrations = 'DEVELOPERSINTEGRATIONS',
   Developersprotocol = 'DEVELOPERSPROTOCOL',
   Developersweb = 'DEVELOPERSWEB',
+  Exchangefee = 'EXCHANGEFEE',
   Infrastructure = 'INFRASTRUCTURE',
   Marketingminetxcpromotion = 'MARKETINGMINETXCPROMOTION',
   Marketingtxcpromotion = 'MARKETINGTXCPROMOTION',

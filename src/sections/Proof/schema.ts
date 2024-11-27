@@ -16,6 +16,7 @@ export const Schema = zod.object({
     ProofType.Overhead,
     ProofType.Promotion,
     ProofType.Commission,
+    ProofType.Exchangefee,
     ProofType.Developersweb,
     ProofType.Developersapps,
     ProofType.Infrastructure,
