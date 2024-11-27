@@ -168,5 +168,5 @@ export function canConvertToNumber(value: string): boolean {
 export const customizeFullName = (fullName: string) => {
   const [firstName, lastName] = fullName ? fullName.split(' ').filter(Boolean) : ['', ''];
 
-  return `${firstName} ${lastName.length && lastName[0].toUpperCase()}.`;
+  return `${firstName} ${lastName?.length ? `${lastName[0].toUpperCase()}.` : ''}`;
 };
