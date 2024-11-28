@@ -1,10 +1,20 @@
 import { useRef, useMemo } from 'react';
-import { useMutation, useLazyQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
+
+import { useAgQuery as useQueryString } from 'src/routes/hooks';
+
+import { parseFilterModel } from 'src/utils/parseFilter';
 
 import { CREATE_PROOF, REMOVE_PROOF, UPDATE_PROOF, FETCH_PROOF_QUERY } from './query';
 
 export function useFetchProofs() {
-  const [fetchProofs, { loading, data, called }] = useLazyQuery(FETCH_PROOF_QUERY);
+  const [{ page = '1,25', sort = 'createdAt', filter }] = useQueryString();
+
+  const graphQueryFilter = useMemo(() => parseFilterModel({}, filter), [filter]);
+
+  const { loading, data } = useQuery(FETCH_PROOF_QUERY, {
+    variables: { filter: graphQueryFilter, page, sort },
+  });
 
   const rowCountRef = useRef(data?.proofs.total ?? 0);
 
@@ -19,12 +29,18 @@ export function useFetchProofs() {
   }, [data]);
 
   return {
-    called,
     loading,
     rowCount,
     proofs: data?.proofs.proofs ?? [],
-    fetchProofs,
   };
+}
+
+export function useFetchProof(id: string) {
+  const { loading, data } = useQuery(FETCH_PROOF_QUERY, {
+    variables: { filter: { id } },
+  });
+
+  return { loading, proof: data?.proofs.proofs ?? [] };
 }
 
 export function useCreateProof() {

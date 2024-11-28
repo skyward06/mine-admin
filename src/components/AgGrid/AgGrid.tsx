@@ -43,7 +43,7 @@ export const AgGrid = <TData,>(props: Props<TData>) => {
   const gridWrapperRef = useRef<HTMLDivElement>(null);
 
   const [query, { setPage, setPageSize, setSort, setFilter }] = useAgQuery<FilterModel>();
-  const { pageModel = { page: 1, pageSize: 50 }, sortModel, filter } = query;
+  const { pageModel = { page: 1, pageSize: 25 }, sortModel, filter } = query;
   const theme = useTheme();
 
   const agGridTheme = useMemo(
@@ -64,7 +64,8 @@ export const AgGrid = <TData,>(props: Props<TData>) => {
         borderRadius: 0,
         sidePanelBorder: false,
         // Header
-        headerBackgroundColor: '#F9FAFB',
+        // headerBackgroundColor: '#eaeaea',
+        headerBackgroundColor: theme.palette.grey.A100,
         headerFontSize: 14,
         headerFontWeight: 600,
         headerTextColor: theme.palette.text.secondary,

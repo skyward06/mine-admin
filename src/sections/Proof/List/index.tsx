@@ -1,134 +1,131 @@
-import type { SortOrder } from 'src/routes/hooks/useQuery';
+import type { CustomCellRendererProps } from '@ag-grid-community/react';
+import type {
+  ColDef,
+  ISetFilterParams,
+  IDateFilterParams,
+  ITextFilterParams,
+} from '@ag-grid-community/core';
 
-import { useMemo, useState, useEffect, useCallback } from 'react';
+import { useMemo } from 'react';
 
 import Card from '@mui/material/Card';
-import Table from '@mui/material/Table';
+import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
 
-// import { canConvertToNumber } from 'src/utils/helper';
-
 import { paths } from 'src/routes/paths';
-import { useQuery } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 
-import { useBoolean } from 'src/hooks/useBoolean';
+import { formatDate } from 'src/utils/format-time';
 
+import { PROOF_TYPE } from 'src/consts';
 import { ProofType } from 'src/__generated__/graphql';
 import { DashboardContent } from 'src/layouts/dashboard';
 
-import { toast } from 'src/components/SnackBar';
+import { AgGrid } from 'src/components/AgGrid';
 import { Iconify } from 'src/components/Iconify';
-import { ScrollBar } from 'src/components/ScrollBar';
-import { ConfirmDialog } from 'src/components/Dialog';
-import { SearchInput } from 'src/components/SearchInput';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
-import { LoadingScreen } from 'src/components/loading-screen';
-import {
-  useTable,
-  TableNoData,
-  TableSkeleton,
-  TableHeadCustom,
-  TablePaginationCustom,
-} from 'src/components/Table';
+import { FileThumbnail } from 'src/components/FileThumbnail';
 
-import { PROOF_VALUES } from '../const';
-import ProofTableRow from './ProofTableRow';
-import { useFetchProofs, useRemoveProof } from '../useApollo';
-import ProofTableFiltersResult from './ProofTableFiltersResult';
+import { parseType } from './parseType';
+import { useFetchProofs } from '../useApollo';
+import { ActionRender } from './ActionRenderer';
 
-import type { PROOF_KEY_VALUE_TYPE } from '../const';
-import type { IProofPrismaFilter, IProofTableFilters } from './types';
-
-// ----------------------------------------------------------------------
-
-const TABLE_HEAD = [
-  { id: 'amount', label: 'Amount', width: 200, sortable: true },
-  { id: 'type', label: 'Proof Type', width: 200, sortable: true },
-  { id: 'note', label: 'Note', sortable: true },
-  { id: 'attached', label: 'Attached', width: 150, sortable: true },
-  { id: 'createdAt', label: 'Created At', width: 150, sortable: true },
-  { id: 'orderedAt', label: 'Ordered At', width: 150, sortable: true },
-  { id: 'action', label: 'Action', align: 'center', width: 200, sortable: true },
-];
-
-const defaultFilter: IProofTableFilters = {
-  search: '',
-  status: 'all',
-};
+import type { Proof } from './type';
 
 export default function ProofListView() {
-  const table = useTable({ defaultDense: true });
-  const [selected, setSelected] = useState<string>('');
+  const { loading, proofs, rowCount } = useFetchProofs();
 
-  const [query, { setQueryParams: setQuery, setPage, setPageSize }] =
-    useQuery<IProofTableFilters>();
-
-  const {
-    page = { page: 1, pageSize: 10 },
-    sort = { createdAt: 'asc' },
-    filter = defaultFilter,
-  } = query;
-
-  const graphQueryFilter = useMemo(() => {
-    const filterObj: IProofPrismaFilter = {};
-    if (filter.search) {
-      filterObj.OR = [
-        // ...(canConvertToNumber(filter.search) && { amount: { equals: filter.search } }),
-        ...Object.values(ProofType)
-          .map((pft: ProofType) => {
-            const detail = PROOF_VALUES[pft as PROOF_KEY_VALUE_TYPE];
-            if (detail) {
-              return detail.includes(filter.search.toUpperCase())
-                ? { type: { equals: pft } }
-                : null;
-            }
-            return null;
-          })
-          .filter(Boolean),
-        { refId: { contains: filter.search, mode: 'insensitive' } },
-      ];
-    }
-
-    return filterObj;
-  }, [filter]);
-
-  const graphQuerySort = useMemo(() => {
-    if (!sort) return undefined;
-
-    return Object.entries(sort)
-      .map(([key, value]) => `${value === 'asc' ? '' : '-'}${key}`)
-      .join(',');
-  }, [sort]);
-
-  const confirm = useBoolean();
-
-  const canReset = !!filter.search;
-
-  const { loading, rowCount, proofs, fetchProofs } = useFetchProofs();
-  const { loading: removeLoading, removeProof } = useRemoveProof();
-
-  useEffect(() => {
-    fetchProofs({
-      variables: {
-        page: page && `${page.page},${page.pageSize}`,
-        filter: graphQueryFilter,
-        sort: graphQuerySort,
+  const colDefs = useMemo<ColDef<Proof>[]>(
+    () => [
+      {
+        field: 'amount',
+        headerName: 'Amount',
+        width: 200,
+        filter: 'agNumberColumnFilter',
+        resizable: true,
+        editable: false,
+        cellClass: 'ag-number-cell',
       },
-    });
-
+      {
+        field: 'type',
+        headerName: 'Proof Type',
+        width: 200,
+        filter: 'agMultiColumnFilter',
+        filterParams: {
+          values: Object.values(ProofType).filter((value) => value !== ProofType.Prepay),
+          valueFormatter: (params: any) => parseType(params.value),
+          defaultToNothingSelected: true,
+        } as ISetFilterParams<Proof>,
+        resizable: true,
+        editable: false,
+        cellRenderer: ({ data }: CustomCellRendererProps<Proof>) =>
+          data ? PROOF_TYPE[data.type] : '',
+      },
+      {
+        field: 'note',
+        headerName: 'Note',
+        flex: 1,
+        filter: 'agTextColumnFilter',
+        resizable: true,
+        editable: false,
+        filterParams: { buttons: ['reset'] } as ITextFilterParams,
+      },
+      {
+        colId: 'attached',
+        headerName: 'Attached',
+        width: 150,
+        filter: false,
+        resizable: true,
+        editable: false,
+        sortable: false,
+        cellRenderer: ({ data }: CustomCellRendererProps<Proof>) => (
+          <Stack direction="row">
+            {!!data?.files?.length && <FileThumbnail file="png" sx={{ width: 24 }} />}
+            <Typography sx={{ p: 1 }}>
+              {!!data?.files?.length &&
+                `${data?.files.length} file${data?.files.length > 1 ? 's' : ''}`}
+            </Typography>
+          </Stack>
+        ),
+      },
+      {
+        field: 'createdAt',
+        headerName: 'Created At',
+        width: 150,
+        filter: 'agDateColumnFilter',
+        filterParams: {
+          buttons: ['reset'],
+          defaultOption: 'greaterThan',
+          filterOptions: ['greaterThan', 'lessThan', 'equals', 'notEqual'],
+        } as IDateFilterParams,
+        resizable: true,
+        editable: false,
+        initialSort: 'desc',
+        cellRenderer: ({ data }: CustomCellRendererProps<Proof>) => formatDate(data?.createdAt),
+      },
+      {
+        field: 'orderedAt',
+        headerName: 'Ordered At',
+        width: 150,
+        filter: 'agDateColumnFilter',
+        resizable: true,
+        editable: false,
+        cellRenderer: ({ data }: CustomCellRendererProps<Proof>) => formatDate(data?.orderedAt),
+      },
+      {
+        colId: 'action',
+        headerName: 'Action',
+        width: 150,
+        resizable: false,
+        editable: false,
+        sortable: false,
+        cellClass: 'ag-action-cell',
+        cellRenderer: ActionRender,
+      },
+    ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query]);
-
-  const notFound = (canReset && !proofs?.length) || !proofs?.length;
-
-  const handleSearchChange = useCallback(
-    (value: string) => {
-      setQuery({ ...query, filter: { ...filter, search: value } });
-    },
-    [setQuery, query, filter]
+    []
   );
 
   return (
@@ -150,110 +147,21 @@ export default function ProofListView() {
           </Button>
         }
       />
-
-      <Card>
-        <SearchInput search={filter.search} onSearchChange={handleSearchChange} />
-
-        {canReset && !loading && (
-          <ProofTableFiltersResult results={rowCount!} sx={{ p: 2.5, pt: 0 }} />
-        )}
-
-        <ScrollBar>
-          <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 1260 }}>
-            <TableHeadCustom
-              order={sort && sort[Object.keys(sort)[0]]}
-              orderBy={sort && Object.keys(sort)[0]}
-              headLabel={TABLE_HEAD}
-              rowCount={loading ? 0 : proofs!.length}
-              onSort={(id) => {
-                if (id !== 'action') {
-                  const isAsc = sort && sort[id] === 'asc';
-                  const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
-                  setQuery({ ...query, sort: newSort });
-                }
-              }}
-            />
-            {loading ? (
-              <>
-                <TableSkeleton height={26} />
-                <TableSkeleton height={26} />
-                <TableSkeleton height={26} />
-                <TableSkeleton height={26} />
-                <TableSkeleton height={26} />
-                <TableSkeleton height={26} />
-                <TableSkeleton height={26} />
-                <TableSkeleton height={26} />
-                <TableSkeleton height={26} />
-                <TableSkeleton height={26} />
-              </>
-            ) : (
-              <TableBody>
-                {proofs!.map((row: any) => (
-                  <ProofTableRow
-                    key={row!.id}
-                    row={row!}
-                    confirm={confirm}
-                    setSelected={setSelected}
-                  />
-                ))}
-
-                <TableNoData notFound={notFound} />
-              </TableBody>
-            )}
-          </Table>
-        </ScrollBar>
-
-        <TablePaginationCustom
-          count={loading ? 0 : rowCount!}
-          page={loading ? 0 : page!.page - 1}
-          rowsPerPage={page?.pageSize}
-          onPageChange={(_, curPage) => {
-            setPage(curPage + 1);
-          }}
-          onRowsPerPageChange={(event) => {
-            setPageSize(parseInt(event.target.value, 10));
-          }}
-          //
-          dense={table.dense}
-          onChangeDense={table.onChangeDense}
+      <Card
+        sx={{
+          flexGrow: 1,
+          display: 'flex',
+          overflow: 'hidden',
+        }}
+      >
+        <AgGrid<Proof>
+          gridKey="proof-list"
+          loading={loading}
+          rowData={proofs}
+          columnDefs={colDefs}
+          totalRowCount={rowCount}
         />
       </Card>
-
-      <ConfirmDialog
-        open={confirm.value}
-        onClose={confirm.onFalse}
-        title="Delete"
-        content={
-          removeLoading ? (
-            <LoadingScreen />
-          ) : (
-            <>
-              <Typography>This proof will be removed permanently!</Typography>
-              <Typography>Are you sure?</Typography>
-            </>
-          )
-        }
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            onClick={async () => {
-              const promise = await removeProof({ variables: { data: { id: selected } } });
-              const result = promise.data?.removeProof.result;
-
-              if (result === 'success') {
-                toast.success('Proof removed successfully');
-              } else {
-                toast.error('You are not allowed to remove this proof');
-              }
-
-              confirm.onFalse();
-            }}
-          >
-            Confirm
-          </Button>
-        }
-      />
     </DashboardContent>
   );
 }

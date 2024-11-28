@@ -1,6 +1,5 @@
 import { Helmet } from 'react-helmet-async';
 import { Navigate, useParams } from 'react-router-dom';
-import { useState, useEffect, useCallback } from 'react';
 
 import { paths } from 'src/routes/paths';
 
@@ -11,34 +10,17 @@ import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import { LoadingScreen } from 'src/components/loading-screen';
 
 import EditForm from '../EditForm';
-import { useFetchProofs } from '../useApollo';
+import { useFetchProof } from '../useApollo';
 
 // ----------------------------------------------------------------------
 export default function ProofEditView() {
-  // Loading state including first initial render
-  const [isLoading, setIsLoading] = useState(true);
-
   const params = useParams();
 
-  const { fetchProofs, loading, proofs, called } = useFetchProofs();
+  const { loading, proof } = useFetchProof(params?.id ?? '');
 
-  const { id: productId } = params;
+  const current = proof?.[0] ?? {};
 
-  const fetchProduct = useCallback(() => {
-    fetchProofs({ variables: { filter: { id: productId } } });
-  }, [fetchProofs, productId]);
-
-  useEffect(() => {
-    fetchProduct();
-  }, [fetchProduct]);
-
-  useEffect(() => {
-    setIsLoading(!called || loading);
-  }, [loading, called]);
-
-  const proof = proofs?.[0];
-
-  if (isLoading) {
+  if (loading) {
     return <LoadingScreen />;
   }
 
@@ -60,7 +42,7 @@ export default function ProofEditView() {
           }}
         />
 
-        <EditForm current={proof} />
+        <EditForm current={current} />
       </DashboardContent>
     </>
   );

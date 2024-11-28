@@ -1,4 +1,3 @@
-import type { Proof } from 'src/__generated__/graphql';
 import type { UseBooleanReturn } from 'src/hooks/useBoolean';
 
 import { isEmpty } from 'lodash';
@@ -21,7 +20,7 @@ import { PROOF_VALUES } from '../const';
 import type { PROOF_KEY_VALUE_TYPE } from '../const';
 
 interface Props {
-  row: Proof;
+  row: any;
   open: UseBooleanReturn;
 }
 
@@ -94,7 +93,7 @@ export default function Detail({ row, open }: Props) {
 
           <Typography variant="subtitle1">Reference Link</Typography>
 
-          {reflinks?.map((link) => (
+          {reflinks?.map((link: any) => (
             <Stack direction="row" columnGap={1}>
               <Typography>{link?.linkType}:</Typography>
               <Typography
