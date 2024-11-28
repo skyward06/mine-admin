@@ -72,6 +72,28 @@ export const OTHER_WALLET = [
   { id: 'ac26f196-d377-4846-8b86-7a7dda622d01', method: 'OTHER' },
 ];
 
+export const PROOF_TYPE = {
+  ADMINISTRATIONSALARY: 'Administration Salary',
+  COMMISSION: 'Commission',
+  DEVELOPERSAPPS: 'Developers Apps',
+  DEVELOPERSINTEGRATIONS: 'Developers Integrations',
+  DEVELOPERSPROTOCOL: 'Developers Protocol',
+  DEVELOPERSWEB: 'Developers Web',
+  EXCHANGEFEE: 'Exchange Fee',
+  INFRASTRUCTURE: 'Infrastructure',
+  MARKETINGMINETXCPROMOTION: 'Marketing MineTXC Promotion',
+  MARKETINGTXCPROMOTION: 'Marketing TXC Promotion',
+  MINEELECTRICITY: 'Mine Electricity',
+  MINEFACILITYRENTMORTAGE: 'Mine Facility Rent Mortage',
+  MINEMAINTAINANCE: 'Mine maintainance',
+  MINENEWEQUIPMENT: 'Mine New Equipment',
+  OVERHEAD: 'Overhead',
+  PREPAY: 'Prepay',
+  PROFIT: 'Profit',
+  PROMOTION: 'Promotion',
+  SALE: 'Sale',
+};
+
 export enum State {
   Approved = 'Approved',
   Draft = 'Draft',
