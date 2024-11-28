@@ -71,3 +71,12 @@ export const OTHER_WALLET = [
   { id: 'f8717a04-6203-482a-bed0-58bfb9c6f7e0', method: 'USDT' },
   { id: 'ac26f196-d377-4846-8b86-7a7dda622d01', method: 'OTHER' },
 ];
+
+export enum State {
+  Approved = 'Approved',
+  Draft = 'Draft',
+  NeedApproval = 'NeedApproval',
+  NeedRevision = 'NeedRevision',
+  Printed = 'Printed',
+  Voided = 'Voided',
+}
