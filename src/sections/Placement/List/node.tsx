@@ -52,12 +52,13 @@ interface Member {
 
 export function StandardNode({
   id,
-  placementParentId,
-  placementPosition,
-  placementParent,
   username,
   fullName,
   createdAt,
+  placementParent,
+  placementParentId,
+  placementPosition,
+  cmnCalculatedWeeks,
 }: NodeProps) {
   const addModal = useBoolean();
   const editModal = useBoolean();
@@ -317,7 +318,7 @@ export function StandardNode({
       >
         <MenuList>
           <MenuItem
-            disabled={id === placementParentId}
+            disabled={id === placementParentId || !!cmnCalculatedWeeks}
             onClick={onRemove}
             sx={{ color: 'error.main' }}
           >
@@ -325,7 +326,7 @@ export function StandardNode({
             Delete
           </MenuItem>
 
-          <MenuItem onClick={onEdit}>
+          <MenuItem onClick={onEdit} disabled={!!cmnCalculatedWeeks}>
             <Iconify icon="bxs:pencil" />
             Edit
           </MenuItem>

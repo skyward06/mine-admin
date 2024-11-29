@@ -38,6 +38,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         syncWithSendy
         preferredContact
         preferredContactDetail
+        cmnCalculatedWeeks
         commission {
           begL
           begR
@@ -61,6 +62,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           syncWithSendy
           preferredContact
           preferredContactDetail
+          cmnCalculatedWeeks
           commission {
             begL
             begR
@@ -87,6 +89,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           preferredContact
           secondaryAddress
           preferredContactDetail
+          cmnCalculatedWeeks
           commission {
             begL
             begR
@@ -112,6 +115,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           totalIntroducers
           placementPosition
           preferredContactDetail
+          cmnCalculatedWeeks
           commission {
             begL
             begR
@@ -201,6 +205,8 @@ export const FETCH_PLACEMENT_MEMBERS_QUERY = gql(/* GraphQL */ `
         id
         username
         fullName
+        sponsorId
+        cmnCalculatedWeeks
         placementParentId
         placementPosition
         placementParent {

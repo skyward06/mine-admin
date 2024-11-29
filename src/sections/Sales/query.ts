@@ -58,6 +58,7 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
           totalIntroducers
           preferredContact
           preferredContactDetail
+          cmnCalculatedWeeks
           createdAt
         }
         package {
