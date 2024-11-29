@@ -388,6 +388,7 @@ export type Member = {
   adminNotes?: Maybe<Array<Maybe<AdminNotes>>>;
   assetId?: Maybe<Scalars['String']['output']>;
   city?: Maybe<Scalars['String']['output']>;
+  cmnCalculatedWeeks: Scalars['Int']['output'];
   commission?: Maybe<CommissionStatus>;
   createdAt?: Maybe<Scalars['DateTimeISO']['output']>;
   deletedAt?: Maybe<Scalars['DateTimeISO']['output']>;

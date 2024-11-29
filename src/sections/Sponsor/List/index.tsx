@@ -33,7 +33,7 @@ import ComponentBlock from 'src/components/Component-Block';
 import { LoadingScreen } from 'src/components/loading-screen';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
-import { useFetchMembers } from 'src/sections/Members/useApollo';
+import { useFetchPlacementMembers } from 'src/sections/Members/useApollo';
 import IndividualMembers from 'src/sections/Placement/List/individualMembers';
 
 import { StandardNode } from './node';
@@ -214,7 +214,7 @@ function PlacementListView() {
   const popover = usePopover();
   const open = useBoolean();
 
-  const { fetchMembers, members, loading, called } = useFetchMembers();
+  const { fetchMembers, members, loading, called } = useFetchPlacementMembers();
 
   const [visibleMap, setVisibleMap] = useState<Record<string, number>>({});
   const exSetVisibleMap = useCallback((newVisibleMap: Record<string, number>) => {
