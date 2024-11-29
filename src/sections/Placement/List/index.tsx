@@ -36,7 +36,10 @@ import ComponentBlock from 'src/components/Component-Block';
 import { LoadingScreen } from 'src/components/loading-screen';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
-import { useFetchMembers, useRecalculateCurrentCommission } from 'src/sections/Members/useApollo';
+import {
+  useFetchPlacementMembers,
+  useRecalculateCurrentCommission,
+} from 'src/sections/Members/useApollo';
 
 import { StandardNode } from './node';
 import CustomEdge from './customEdge';
@@ -241,7 +244,7 @@ function PlacementListView() {
   const searchParams = useSearchParams();
   const memberId = searchParams.get('memberId');
 
-  const { fetchMembers, members, loading, called } = useFetchMembers();
+  const { fetchMembers, members, loading, called } = useFetchPlacementMembers();
   const { recalculateCurrentCommission } = useRecalculateCurrentCommission();
 
   const [visibleMap, setVisibleMap] = useState<Record<string, number>>({});

@@ -10,10 +10,35 @@ import {
   UPDATE_PASSWORD_QUERY,
   REMOVE_MEMBER_PLACEMENT,
   FETCH_MEMBER_STATS_QUERY,
+  FETCH_PLACEMENT_MEMBERS_QUERY,
 } from './query';
 
 export function useFetchMembers() {
   const [fetchMembers, { loading, data, called }] = useLazyQuery(FETCH_MEMBERS_QUERY);
+
+  const rowCountRef = useRef(data?.members.total ?? 0);
+
+  const rowCount = useMemo(() => {
+    const newTotal = data?.members.total ?? undefined;
+
+    if (newTotal !== undefined) {
+      rowCountRef.current = newTotal;
+    }
+
+    return rowCountRef.current;
+  }, [data]);
+
+  return {
+    called,
+    loading,
+    rowCount,
+    members: data?.members.members ?? [],
+    fetchMembers,
+  };
+}
+
+export function useFetchPlacementMembers() {
+  const [fetchMembers, { loading, data, called }] = useLazyQuery(FETCH_PLACEMENT_MEMBERS_QUERY);
 
   const rowCountRef = useRef(data?.members.total ?? 0);
 
