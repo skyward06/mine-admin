@@ -1,3 +1,4 @@
+import { ApolloError } from '@apollo/client';
 import { useState, useEffect, useContext } from 'react';
 
 import Card from '@mui/material/Card';
@@ -124,7 +125,7 @@ export function StandardNode({
         options={members}
         loading={memberLoading}
         loadingText={<LoadingButton loading={memberLoading} />}
-        getOptionLabel={(option) => `${option!.username}-${option!.fullName}`}
+        getOptionLabel={(option) => `${option!.username} (${option!.fullName})`}
         renderInput={(params) => <TextField {...params} label="Miner Name(Child)" margin="none" />}
         renderOption={(props, option) => (
           <li {...props} key={option!.username}>
@@ -167,8 +168,8 @@ export function StandardNode({
         options={members}
         loading={memberLoading}
         loadingText={<LoadingButton loading={memberLoading} />}
-        getOptionLabel={(option) => `${option!.username}-${option!.fullName}`}
-        value={member || placementParent}
+        getOptionLabel={(option) => `${option!.username} (${option!.fullName})`}
+        value={placementParent ?? member}
         renderInput={(params) => <TextField {...params} label="Miner Name(Parent)" margin="none" />}
         renderOption={(props, option) => (
           <li {...props} key={option!.username}>
@@ -424,7 +425,13 @@ export function StandardNode({
                   editModal.onFalse();
                 }
               } catch (err) {
-                console.log('err => ', err);
+                if (err instanceof ApolloError) {
+                  const [error] = err.graphQLErrors;
+
+                  if (error.message.includes('calculated')) {
+                    toast.error(error.message);
+                  }
+                }
               }
             }}
           >
