@@ -47,7 +47,7 @@ export default function LinkForm() {
               fullWidth
               options={PREPAID_TYPE}
               getOptionLabel={(option: any) => option ?? ''}
-              isOptionEqualToValue={(option, value) => option.value === value.value}
+              isOptionEqualToValue={(option, value) => option === value}
               renderOption={(props, option) => (
                 <li {...props} key={option}>
                   {option}

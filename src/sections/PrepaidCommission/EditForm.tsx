@@ -208,7 +208,7 @@ export default function EditForm({ current }: Props) {
                 getOptionLabel={(option: Member | string) =>
                   `${(option as Member).username} (${(option as Member).fullName})`
                 }
-                isOptionEqualToValue={(option, value) => option.value === value.value}
+                isOptionEqualToValue={(option, value) => option === value}
                 renderOption={(props, option) => (
                   <li {...props} key={option!.username}>
                     {option.username}
