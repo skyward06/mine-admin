@@ -21,6 +21,7 @@ import { useSearchParams } from 'src/routes/hooks';
 import { useBoolean } from 'src/hooks/useBoolean';
 
 import { DashboardContent } from 'src/layouts/dashboard';
+import { SuccessResult } from 'src/__generated__/graphql';
 import {
   PLACEMENTTREE_NODE_WIDTH,
   PLACEMENTTREE_NODE_HEIGHT,
@@ -485,8 +486,12 @@ function PlacementListView() {
 
   const recaluclateCurrentCommissionHandler = useCallback(async () => {
     try {
-      await recalculateCurrentCommission();
-      toast.success('Successfully recalculated current commission statuses!');
+      const res = await recalculateCurrentCommission();
+      if (res.data?.calculatePreview.result === SuccessResult.Failed) {
+        toast.error(res.data.calculatePreview.message);
+      } else {
+        toast.success('Successfully recalculated current commission statuses!');
+      }
     } catch (err) {
       toast.error(err.message);
     }

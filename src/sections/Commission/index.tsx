@@ -15,6 +15,7 @@ import { useBoolean } from 'src/hooks/useBoolean';
 
 import { CONFIG } from 'src/config';
 import { DashboardContent } from 'src/layouts/dashboard';
+import { SuccessResult } from 'src/__generated__/graphql';
 
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
@@ -84,8 +85,12 @@ export default function CommissionListView() {
 
   const handleRecalculatePreview = async () => {
     try {
-      await updateCommissionPreview();
-      toast.success('Successfully updated the commission preview');
+      const res = await updateCommissionPreview();
+      if (res.data?.calculatePreview.result === SuccessResult.Failed) {
+        toast.error(res.data.calculatePreview.message);
+      } else {
+        toast.success('Successfully recalculated current commission statuses!');
+      }
     } catch (err) {
       toast.error(err.message);
     }
