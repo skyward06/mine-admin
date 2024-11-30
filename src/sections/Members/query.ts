@@ -204,6 +204,7 @@ export const FETCH_PLACEMENT_MEMBERS_QUERY = gql(/* GraphQL */ `
       members {
         id
         username
+        email
         fullName
         sponsorId
         cmnCalculatedWeeks
