@@ -9,9 +9,7 @@ import type {
 import { useMemo } from 'react';
 
 import Card from '@mui/material/Card';
-import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
@@ -25,9 +23,9 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { AgGrid } from 'src/components/AgGrid';
 import { Iconify } from 'src/components/Iconify';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
-import { FileThumbnail } from 'src/components/FileThumbnail';
 
 import { parseType } from './parseType';
+import { FileRenderer } from './FileRenderer';
 import { useFetchProofs } from '../useApollo';
 import { ActionRender } from './ActionRenderer';
 
@@ -79,15 +77,7 @@ export default function ProofListView() {
         resizable: true,
         editable: false,
         sortable: false,
-        cellRenderer: ({ data }: CustomCellRendererProps<Proof>) => (
-          <Stack direction="row">
-            {!!data?.files?.length && <FileThumbnail file="png" sx={{ width: 24 }} />}
-            <Typography sx={{ p: 1 }}>
-              {!!data?.files?.length &&
-                `${data?.files.length} file${data?.files.length > 1 ? 's' : ''}`}
-            </Typography>
-          </Stack>
-        ),
+        cellRenderer: FileRenderer,
       },
       {
         field: 'createdAt',
