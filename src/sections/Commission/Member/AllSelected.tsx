@@ -47,6 +47,13 @@ export default function AllSelected({ status, table, popover }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [all]);
 
+  useEffect(() => {
+    if (table.selected.length === 0) {
+      all.onFalse();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [table]);
+
   return (
     <>
       <Checkbox onClick={all.onToggle} checked={all.value} />
