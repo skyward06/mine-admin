@@ -118,10 +118,19 @@ export const FETCH_COMMISSION_BY_WEEK = gql(/* GraphQL */ `
   }
 `);
 
+export const UPDATE_COMMISSION = gql(/* GraphQL */ `
+  mutation UpdateCommission($data: WeeklyCommissionUpdateInput!) {
+    updateCommission(data: $data) {
+      ID
+    }
+  }
+`);
+
 export const UPDATE_COMMISSION_STATUS = gql(/* GraphQL */ `
-  mutation UpdateCommissionStatus($data: WeeklyCommissionUpdateInput!) {
-    updateCommissionStatus(data: $data) {
-      id
+  mutation UpdateCommissionsStatus($data: WeeklyCommissionsStatusUpdateInput!) {
+    updateCommissionsStatus(data: $data) {
+      message
+      result
     }
   }
 `);
