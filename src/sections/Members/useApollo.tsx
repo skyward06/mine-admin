@@ -70,7 +70,7 @@ export function useFetchMembersStats() {
 export function useUpdateMember() {
   const [updateMember, { loading }] = useMutation(UPDATE_MEMBER, {
     awaitRefetchQueries: true,
-    refetchQueries: ['FetchMembers'],
+    refetchQueries: ['FetchPlacementMembers'],
   });
 
   return { loading, updateMember };

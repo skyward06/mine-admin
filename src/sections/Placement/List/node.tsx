@@ -1,5 +1,5 @@
 import { ApolloError } from '@apollo/client';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useCallback } from 'react';
 
 import Card from '@mui/material/Card';
 import Paper from '@mui/material/Paper';
@@ -44,18 +44,11 @@ import type { NodeProps } from './type';
 
 // ----------------------------------------------------------------------
 
-interface Member {
-  id: string;
-  username: string;
-  fullName?: string;
-}
-
 export function StandardNode({
   id,
   username,
   fullName,
   createdAt,
-  placementParent,
   placementParentId,
   placementPosition,
   cmnCalculatedWeeks,
@@ -69,7 +62,8 @@ export function StandardNode({
 
   const [position, setPosition] = useState<PlacementPosition>(PlacementPosition.Left);
   const [checked, setChecked] = useState<boolean>(false);
-  const [member, setMember] = useState<Member>();
+  const [memberUsername, setMemberUserName] = useState<string | null>(null);
+  const [targetUserId, setTargetUserId] = useState<string | null>('');
 
   const { loading, updateMember } = useUpdateMember();
   const { loading: memberLoading, members, fetchMembers } = useFetchMembers();
@@ -80,26 +74,26 @@ export function StandardNode({
     removeModal.onTrue();
   };
 
-  const onEdit = () => {
+  const onEdit = async () => {
+    await fetchMembers({
+      variables: {
+        filter: {
+          id: placementParentId,
+        },
+      },
+    });
+    setTargetUserId(placementParentId!);
     popover.onClose();
     editModal.onTrue();
-
-    fetchMembers({ variables: { page: '1,10' } });
   };
 
   const onAdd = () => {
     popover.onClose();
     addModal.onTrue();
-
-    fetchMembers({
-      variables: {
-        filter: { placementParentId: null },
-        page: '1,10',
-      },
-    });
   };
 
   useEffect(() => {
+    if (memberUsername === null) return;
     fetchMembers({
       variables: {
         filter: {
@@ -107,15 +101,20 @@ export function StandardNode({
             placementParentId: null,
           }),
           OR: [
-            { username: { contains: member?.username, mode: 'insensitive' } },
-            { fullName: { contains: member?.username, mode: 'insensitive' } },
+            { username: { contains: memberUsername, mode: 'insensitive' } },
+            { fullName: { contains: memberUsername, mode: 'insensitive' } },
           ],
         },
         page: '1,10',
       },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [member]);
+  }, [memberUsername]);
+
+  const getMemberById = useCallback(
+    (_id: string) => members.find((mb) => mb!.id === _id),
+    [members]
+  );
 
   const { visibleMap, expandTree, collapseTree, expandAll, collapseAll } = useContext(NodeContext);
 
@@ -123,21 +122,31 @@ export function StandardNode({
     <Paper sx={{ py: 1 }}>
       <Autocomplete
         fullWidth
-        options={members}
+        options={members.map((mb) => mb!.id)}
         loading={memberLoading}
         loadingText={<LoadingButton loading={memberLoading} />}
-        getOptionLabel={(option) => `${option!.username} (${option!.fullName})`}
+        getOptionLabel={(option) => {
+          const mbr = getMemberById(option);
+          return mbr ? mbr.username : memberUsername || '';
+        }}
         renderInput={(params) => <TextField {...params} label="Miner Name(Child)" margin="none" />}
-        renderOption={(props, option) => (
-          <li {...props} key={option!.username}>
-            {option!.username}
-          </li>
-        )}
+        renderOption={(props, option) => {
+          const mbr = getMemberById(option);
+          return (
+            <li {...props} key={option}>
+              {`${mbr!.username} (${mbr!.fullName})`};
+            </li>
+          );
+        }}
         onInputChange={(_, name: string) => {
-          setMember({ id: '', username: name });
+          if (!memberLoading) {
+            setMemberUserName(name);
+          }
         }}
         onChange={(_, value) => {
-          setMember({ id: value?.id ?? '', username: value?.username ?? '' });
+          if (!memberLoading) {
+            setTargetUserId(value);
+          }
         }}
       />
       <RadioGroup
@@ -166,23 +175,34 @@ export function StandardNode({
     <Paper sx={{ py: 1 }}>
       <Autocomplete
         fullWidth
-        options={members}
+        options={members.map((mb) => mb!.id)}
         loading={memberLoading}
         loadingText={<LoadingButton loading={memberLoading} />}
-        getOptionLabel={(option) => `${option!.username} (${option!.fullName})`}
-        value={placementParent ?? member}
-        renderInput={(params) => <TextField {...params} label="Miner Name(Parent)" margin="none" />}
-        renderOption={(props, option) => (
-          <li {...props} key={option!.username}>
-            {option!.username}
-          </li>
-        )}
+        getOptionLabel={(option) => {
+          const mbr = getMemberById(option);
+          return mbr ? mbr.username : memberUsername || '';
+        }}
+        renderInput={(params) => <TextField {...params} label="Miner Name(Child)" margin="none" />}
+        renderOption={(props, option) => {
+          const mbr = getMemberById(option);
+          return (
+            <li {...props} key={option}>
+              {`${mbr!.username} (${mbr!.fullName})`};
+            </li>
+          );
+        }}
         onInputChange={(_, name: string) => {
-          setMember({ id: placementParent?.id ?? '', username: name });
+          if (!memberLoading) {
+            setMemberUserName(name);
+          }
         }}
         onChange={(_, value) => {
-          setMember({ id: value?.id ?? '', username: value?.username ?? '' });
+          if (!memberLoading) {
+            setTargetUserId(value);
+          }
         }}
+        value={targetUserId}
+        inputValue={memberUsername || ''}
       />
       <RadioGroup
         row
@@ -370,7 +390,7 @@ export function StandardNode({
               try {
                 const { data } = await updateMember({
                   variables: {
-                    data: { id: member?.id, placementParentId: id, placementPosition: position },
+                    data: { id: targetUserId, placementParentId: id, placementPosition: position },
                   },
                 });
 
@@ -406,7 +426,7 @@ export function StandardNode({
                   variables: {
                     data: {
                       id,
-                      placementParentId: member?.id,
+                      placementParentId: targetUserId,
                       placementPosition: position,
                     },
                   },
@@ -419,8 +439,8 @@ export function StandardNode({
                     expandTree(placementParentId);
                   }
 
-                  if (member?.id) {
-                    expandTree(member.id);
+                  if (targetUserId) {
+                    expandTree(targetUserId);
                   }
 
                   editModal.onFalse();
