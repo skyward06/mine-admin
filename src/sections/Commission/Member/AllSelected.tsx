@@ -1,15 +1,18 @@
+import type { TableProps } from 'src/components/Table';
+
 import { useEffect } from 'react';
 
-import Tooltip from '@mui/material/Tooltip';
+import Checkbox from '@mui/material/Checkbox';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
-import IconButton from '@mui/material/IconButton';
+
+import { useBoolean } from 'src/hooks/useBoolean';
 
 import { ConfirmationStatus } from 'src/__generated__/graphql';
 
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
-import { usePopover, CustomPopover } from 'src/components/custom-popover';
+import { CustomPopover, type UsePopoverReturn } from 'src/components/custom-popover';
 
 import { useFetchCommissions, useUpdateCommissionStatus } from '../useApollo';
 
@@ -17,10 +20,12 @@ import type { CommissionRole } from './types';
 
 interface Props {
   status: CommissionRole;
+  table: TableProps;
+  popover: UsePopoverReturn;
 }
 
-export default function AllSelected({ status }: Props) {
-  const popover = usePopover();
+export default function AllSelected({ status, table, popover }: Props) {
+  const all = useBoolean();
 
   const { data, updateCommissionStatus } = useUpdateCommissionStatus();
   const { weeklyCommissions, fetchCommissions } = useFetchCommissions();
@@ -30,14 +35,21 @@ export default function AllSelected({ status }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
+  useEffect(() => {
+    if (all.value) {
+      table.onSelectAllRows(
+        true,
+        weeklyCommissions!.map((row) => row!.id)
+      );
+    } else {
+      table.setSelected([]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [all]);
+
   return (
     <>
-      <Tooltip title="All Select" placement="top" arrow>
-        <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
-          <Iconify icon="si:more-horiz-fill" />
-        </IconButton>
-      </Tooltip>
-
+      <Checkbox onClick={all.onToggle} checked={all.value} />
       <CustomPopover
         open={popover.open}
         anchorEl={popover.anchorEl}
@@ -50,12 +62,7 @@ export default function AllSelected({ status }: Props) {
             disabled={status === 'approved' || status === 'paid'}
             onClick={async () => {
               await updateCommissionStatus({
-                variables: {
-                  data: {
-                    ids: weeklyCommissions.map((row) => row?.id ?? ''),
-                    status: ConfirmationStatus.Approved,
-                  },
-                },
+                variables: { data: { ids: table.selected, status: ConfirmationStatus.Approved } },
               });
 
               if (data) {
@@ -64,7 +71,9 @@ export default function AllSelected({ status }: Props) {
                 toast.message('Something went wrong!');
               }
 
+              all.onFalse();
               popover.onClose();
+              table.setSelected([]);
             }}
           >
             <Iconify icon="mage:check-circle-fill" />
@@ -75,12 +84,7 @@ export default function AllSelected({ status }: Props) {
             disabled={status === 'paid'}
             onClick={async () => {
               await updateCommissionStatus({
-                variables: {
-                  data: {
-                    ids: weeklyCommissions.map((row) => row?.id ?? ''),
-                    status: ConfirmationStatus.Paid,
-                  },
-                },
+                variables: { data: { ids: table.selected, status: ConfirmationStatus.Paid } },
               });
 
               if (data) {
@@ -89,7 +93,9 @@ export default function AllSelected({ status }: Props) {
                 toast.message('Something went wrong!');
               }
 
+              all.onFalse();
               popover.onClose();
+              table.setSelected([]);
             }}
           >
             <Iconify icon="ic:round-paid" />
@@ -100,12 +106,7 @@ export default function AllSelected({ status }: Props) {
             disabled={status === 'declined' || status === 'paid'}
             onClick={async () => {
               await updateCommissionStatus({
-                variables: {
-                  data: {
-                    ids: weeklyCommissions.map((row) => row?.id ?? ''),
-                    status: ConfirmationStatus.Declined,
-                  },
-                },
+                variables: { data: { ids: table.selected, status: ConfirmationStatus.Declined } },
               });
 
               if (data) {
@@ -114,7 +115,9 @@ export default function AllSelected({ status }: Props) {
                 toast.message('Something went wrong!');
               }
 
+              all.onFalse();
               popover.onClose();
+              table.setSelected([]);
             }}
           >
             <Iconify icon="material-symbols:cancel" />

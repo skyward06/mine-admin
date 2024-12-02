@@ -12,8 +12,6 @@ import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
 import Tooltip from '@mui/material/Tooltip';
 import { alpha } from '@mui/material/styles';
-import MenuList from '@mui/material/MenuList';
-import MenuItem from '@mui/material/MenuItem';
 import TableBody from '@mui/material/TableBody';
 import IconButton from '@mui/material/IconButton';
 import TableContainer from '@mui/material/TableContainer';
@@ -23,15 +21,13 @@ import { useQuery } from 'src/routes/hooks';
 import { customizeDate } from 'src/utils/format-time';
 
 import { COMMISSION_TYPE } from 'src/consts';
-import { ConfirmationStatus } from 'src/__generated__/graphql';
 
 import { Label } from 'src/components/Label';
-import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 import { ScrollBar } from 'src/components/ScrollBar';
 import { ConfirmDialog } from 'src/components/Dialog';
 import { SearchInput } from 'src/components/SearchInput';
-import { usePopover, CustomPopover } from 'src/components/custom-popover';
+import { usePopover } from 'src/components/custom-popover';
 import {
   useTable,
   TableNoData,
@@ -45,11 +41,7 @@ import AllSelected from './AllSelected';
 import ProductTableRow from './CommissionTableRow';
 import SearchPeriod from '../../Placement/List/searchPeriod';
 import ProductTableFiltersResult from './CommissionTableFiltersResult';
-import {
-  useFetchCommissions,
-  useFetchCommissionStats,
-  useUpdateCommissionStatus,
-} from '../useApollo';
+import { useFetchCommissions, useFetchCommissionStats } from '../useApollo';
 
 import type { CommissionRole, ICommissionPrismaFilter, ICommissionTableFilters } from './types';
 
@@ -92,7 +84,6 @@ export default function CommissionListView({ openWeek }: Props) {
 
   const { fetchCommissionStats, data: statsData } = useFetchCommissionStats();
   const { fetchCommissions, loading, rowCount, weeklyCommissions } = useFetchCommissions();
-  const { updateCommissionStatus, data } = useUpdateCommissionStatus();
 
   const [query, { setQueryParams: setQuery, setPage, setPageSize }] =
     useQuery<ICommissionTableFilters>();
@@ -241,11 +232,11 @@ export default function CommissionListView({ openWeek }: Props) {
         </Tabs>
 
         <Stack direction="row">
+          <Stack width={0.025} sx={{ pl: 2, pt: 2.5 }}>
+            <AllSelected status={status} table={table} popover={popover} />
+          </Stack>
           <Stack width={0.97}>
             <SearchInput search={filter.search} onSearchChange={handleSearchChange} />
-          </Stack>
-          <Stack width={0.025} sx={{ pt: 2.5 }}>
-            <AllSelected status={status} />
           </Stack>
         </Stack>
 
@@ -354,79 +345,6 @@ export default function CommissionListView({ openWeek }: Props) {
         content={<SearchPeriod current={weekStartDate} onChange={onPeriodChange} />}
         action={null}
       />
-
-      <CustomPopover
-        open={popover.open}
-        anchorEl={popover.anchorEl}
-        onClose={popover.onClose}
-        slotProps={{ arrow: { placement: 'right-center' } }}
-      >
-        <MenuList>
-          <MenuItem
-            sx={{ color: 'secondary.main' }}
-            disabled={status === 'approved' || status === 'paid'}
-            onClick={async () => {
-              await updateCommissionStatus({
-                variables: { data: { ids: table.selected, status: ConfirmationStatus.Approved } },
-              });
-
-              if (data) {
-                toast.message('Successfully Approved!');
-              } else {
-                toast.message('Something went wrong!');
-              }
-
-              popover.onClose();
-              table.setSelected([]);
-            }}
-          >
-            <Iconify icon="mage:check-circle-fill" />
-            Approve
-          </MenuItem>
-          <MenuItem
-            sx={{ color: 'success.main' }}
-            disabled={status === 'paid'}
-            onClick={async () => {
-              await updateCommissionStatus({
-                variables: { data: { ids: table.selected, status: ConfirmationStatus.Paid } },
-              });
-
-              if (data) {
-                toast.message('Successfully Paid!');
-              } else {
-                toast.message('Something went wrong!');
-              }
-
-              popover.onClose();
-              table.setSelected([]);
-            }}
-          >
-            <Iconify icon="ic:round-paid" />
-            Pay
-          </MenuItem>
-          <MenuItem
-            sx={{ color: 'error.main' }}
-            disabled={status === 'declined' || status === 'paid'}
-            onClick={async () => {
-              await updateCommissionStatus({
-                variables: { data: { ids: table.selected, status: ConfirmationStatus.Declined } },
-              });
-
-              if (data) {
-                toast.message('Successfully Declined!');
-              } else {
-                toast.message('Something went wrong!');
-              }
-
-              popover.onClose();
-              table.setSelected([]);
-            }}
-          >
-            <Iconify icon="material-symbols:cancel" />
-            Decline
-          </MenuItem>
-        </MenuList>
-      </CustomPopover>
     </>
   );
 }
