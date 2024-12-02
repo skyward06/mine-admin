@@ -212,6 +212,8 @@ export const FETCH_PLACEMENT_MEMBERS_QUERY = gql(/* GraphQL */ `
         placementPosition
         placementParent {
           id
+          username
+          fullName
         }
         sponsor {
           username
