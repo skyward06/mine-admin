@@ -3,37 +3,53 @@ import type { SortOrder } from 'src/routes/hooks/useQuery';
 import type { UseBooleanReturn } from 'src/hooks/useBoolean';
 
 import dayjs from 'dayjs';
-import { useMemo, useEffect, useCallback } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
+import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
+import Tooltip from '@mui/material/Tooltip';
 import { alpha } from '@mui/material/styles';
+import MenuList from '@mui/material/MenuList';
+import MenuItem from '@mui/material/MenuItem';
 import TableBody from '@mui/material/TableBody';
+import IconButton from '@mui/material/IconButton';
+import TableContainer from '@mui/material/TableContainer';
 
 import { useQuery } from 'src/routes/hooks';
 
 import { customizeDate } from 'src/utils/format-time';
 
 import { COMMISSION_TYPE } from 'src/consts';
+import { ConfirmationStatus } from 'src/__generated__/graphql';
 
 import { Label } from 'src/components/Label';
+import { toast } from 'src/components/SnackBar';
+import { Iconify } from 'src/components/Iconify';
 import { ScrollBar } from 'src/components/ScrollBar';
 import { ConfirmDialog } from 'src/components/Dialog';
 import { SearchInput } from 'src/components/SearchInput';
+import { usePopover, CustomPopover } from 'src/components/custom-popover';
 import {
   useTable,
   TableNoData,
   TableSkeleton,
   TableHeadCustom,
+  TableSelectedAction,
   TablePaginationCustom,
 } from 'src/components/Table';
 
+import AllSelected from './AllSelected';
 import ProductTableRow from './CommissionTableRow';
 import SearchPeriod from '../../Placement/List/searchPeriod';
 import ProductTableFiltersResult from './CommissionTableFiltersResult';
-import { useFetchCommissions, useFetchCommissionStats } from '../useApollo';
+import {
+  useFetchCommissions,
+  useFetchCommissionStats,
+  useUpdateCommissionStatus,
+} from '../useApollo';
 
 import type { CommissionRole, ICommissionPrismaFilter, ICommissionTableFilters } from './types';
 
@@ -51,10 +67,10 @@ const TABLE_HEAD = [
   { id: 'weekStartDate', label: 'Week', width: 120, sortable: true },
   { id: 'member.username', label: 'Username', sortable: true },
   { id: 'member.assetId', label: 'AssetId', sortable: true },
-  { id: 'begLR', label: 'BegLR', sortable: false },
-  { id: 'newLR', label: 'NewLR', sortable: false },
-  { id: 'maxLR', label: 'MaxLR', sortable: false },
-  { id: 'endLR', label: 'EndLR', sortable: true },
+  { id: 'begLR', label: 'BegLR', width: 100, sortable: false },
+  { id: 'newLR', label: 'NewLR', width: 100, sortable: false },
+  { id: 'maxLR', label: 'MaxLR', width: 100, sortable: false },
+  { id: 'endLR', label: 'EndLR', width: 100, sortable: true },
   { id: 'pkgLR', label: 'Package', sortable: true },
   { id: 'commission', label: 'Commissions', width: 200, sortable: true },
   { id: 'action', label: 'Action', width: 250, sortable: true, align: 'center' },
@@ -70,10 +86,13 @@ interface Props {
 }
 
 export default function CommissionListView({ openWeek }: Props) {
+  const popover = usePopover();
   const table = useTable({ defaultDense: true });
+  const [status, setStatus] = useState<CommissionRole>('pending');
 
   const { fetchCommissionStats, data: statsData } = useFetchCommissionStats();
   const { fetchCommissions, loading, rowCount, weeklyCommissions } = useFetchCommissions();
+  const { updateCommissionStatus, data } = useUpdateCommissionStatus();
 
   const [query, { setQueryParams: setQuery, setPage, setPageSize }] =
     useQuery<ICommissionTableFilters>();
@@ -147,12 +166,16 @@ export default function CommissionListView({ openWeek }: Props) {
         sort: graphQuerySort,
       },
     });
+
+    setStatus(filter.status);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
 
   const notFound = (canReset && !weeklyCommissions?.length) || !weeklyCommissions?.length;
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: CommissionRole) => {
+    setStatus(newValue);
+
     setQuery({
       ...query,
       filter: { ...filter, status: newValue },
@@ -217,56 +240,96 @@ export default function CommissionListView({ openWeek }: Props) {
           ))}
         </Tabs>
 
-        <SearchInput search={filter.search} onSearchChange={handleSearchChange} />
+        <Stack direction="row">
+          <Stack width={0.97}>
+            <SearchInput search={filter.search} onSearchChange={handleSearchChange} />
+          </Stack>
+          <Stack width={0.025} sx={{ pt: 2.5 }}>
+            <AllSelected status={status} />
+          </Stack>
+        </Stack>
 
         {canReset && !loading && (
           <ProductTableFiltersResult results={rowCount!} sx={{ p: 2.5, pt: 0 }} />
         )}
 
-        <ScrollBar>
-          <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
-            <TableHeadCustom
-              order={sort && sort[Object.keys(sort)[0]]}
-              orderBy={sort && Object.keys(sort)[0]}
-              headLabel={TABLE_HEAD}
-              rowCount={loading ? 0 : weeklyCommissions!.length}
-              onSort={(id) => {
-                if (
-                  id === 'weekStartDate' ||
-                  id === 'member.username' ||
-                  id === 'commission' ||
-                  id === 'member.assetId'
-                ) {
-                  const isAsc = sort && sort[id] === 'asc';
-                  const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
-                  setQuery({ ...query, sort: newSort });
-                }
-              }}
-            />
-            {loading ? (
-              <>
-                <TableSkeleton height={26} />
-                <TableSkeleton height={26} />
-                <TableSkeleton height={26} />
-                <TableSkeleton height={26} />
-                <TableSkeleton height={26} />
-                <TableSkeleton height={26} />
-                <TableSkeleton height={26} />
-                <TableSkeleton height={26} />
-                <TableSkeleton height={26} />
-                <TableSkeleton height={26} />
-              </>
-            ) : (
-              <TableBody>
-                {weeklyCommissions!.map((row: any) => (
-                  <ProductTableRow key={row!.id} row={row!} />
-                ))}
+        <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+          <TableSelectedAction
+            dense={table.dense}
+            numSelected={table.selected.length}
+            rowCount={loading ? 0 : weeklyCommissions!.length}
+            onSelectAllRows={(checked) =>
+              table.onSelectAllRows(
+                checked,
+                weeklyCommissions!.map((row) => row!.id)
+              )
+            }
+            action={
+              <Tooltip title="Transfer" placement="top" arrow>
+                <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
+                  <Iconify icon="si:more-horiz-fill" />
+                </IconButton>
+              </Tooltip>
+            }
+          />
 
-                <TableNoData notFound={notFound} />
-              </TableBody>
-            )}
-          </Table>
-        </ScrollBar>
+          <ScrollBar>
+            <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+              <TableHeadCustom
+                order={sort && sort[Object.keys(sort)[0]]}
+                orderBy={sort && Object.keys(sort)[0]}
+                headLabel={TABLE_HEAD}
+                rowCount={loading ? 0 : weeklyCommissions!.length}
+                numSelected={table.selected.length}
+                onSort={(id) => {
+                  if (
+                    id === 'weekStartDate' ||
+                    id === 'member.username' ||
+                    id === 'commission' ||
+                    id === 'member.assetId'
+                  ) {
+                    const isAsc = sort && sort[id] === 'asc';
+                    const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
+                    setQuery({ ...query, sort: newSort });
+                  }
+                }}
+                onSelectAllRows={(checked) =>
+                  table.onSelectAllRows(
+                    checked,
+                    weeklyCommissions!.map((row) => row!.id)
+                  )
+                }
+              />
+              {loading ? (
+                <>
+                  <TableSkeleton height={26} />
+                  <TableSkeleton height={26} />
+                  <TableSkeleton height={26} />
+                  <TableSkeleton height={26} />
+                  <TableSkeleton height={26} />
+                  <TableSkeleton height={26} />
+                  <TableSkeleton height={26} />
+                  <TableSkeleton height={26} />
+                  <TableSkeleton height={26} />
+                  <TableSkeleton height={26} />
+                </>
+              ) : (
+                <TableBody>
+                  {weeklyCommissions!.map((row: any) => (
+                    <ProductTableRow
+                      key={row!.id}
+                      row={row!}
+                      selected={table.selected.includes(row!.id)}
+                      onSelectRow={() => table.onSelectRow(row!.id)}
+                    />
+                  ))}
+
+                  <TableNoData notFound={notFound} />
+                </TableBody>
+              )}
+            </Table>
+          </ScrollBar>
+        </TableContainer>
 
         <TablePaginationCustom
           count={loading ? 0 : rowCount!}
@@ -291,6 +354,79 @@ export default function CommissionListView({ openWeek }: Props) {
         content={<SearchPeriod current={weekStartDate} onChange={onPeriodChange} />}
         action={null}
       />
+
+      <CustomPopover
+        open={popover.open}
+        anchorEl={popover.anchorEl}
+        onClose={popover.onClose}
+        slotProps={{ arrow: { placement: 'right-center' } }}
+      >
+        <MenuList>
+          <MenuItem
+            sx={{ color: 'secondary.main' }}
+            disabled={status === 'approved' || status === 'paid'}
+            onClick={async () => {
+              await updateCommissionStatus({
+                variables: { data: { ids: table.selected, status: ConfirmationStatus.Approved } },
+              });
+
+              if (data) {
+                toast.message('Successfully Approved!');
+              } else {
+                toast.message('Something went wrong!');
+              }
+
+              popover.onClose();
+              table.setSelected([]);
+            }}
+          >
+            <Iconify icon="mage:check-circle-fill" />
+            Approve
+          </MenuItem>
+          <MenuItem
+            sx={{ color: 'success.main' }}
+            disabled={status === 'paid'}
+            onClick={async () => {
+              await updateCommissionStatus({
+                variables: { data: { ids: table.selected, status: ConfirmationStatus.Paid } },
+              });
+
+              if (data) {
+                toast.message('Successfully Paid!');
+              } else {
+                toast.message('Something went wrong!');
+              }
+
+              popover.onClose();
+              table.setSelected([]);
+            }}
+          >
+            <Iconify icon="ic:round-paid" />
+            Pay
+          </MenuItem>
+          <MenuItem
+            sx={{ color: 'error.main' }}
+            disabled={status === 'declined' || status === 'paid'}
+            onClick={async () => {
+              await updateCommissionStatus({
+                variables: { data: { ids: table.selected, status: ConfirmationStatus.Declined } },
+              });
+
+              if (data) {
+                toast.message('Successfully Declined!');
+              } else {
+                toast.message('Something went wrong!');
+              }
+
+              popover.onClose();
+              table.setSelected([]);
+            }}
+          >
+            <Iconify icon="material-symbols:cancel" />
+            Decline
+          </MenuItem>
+        </MenuList>
+      </CustomPopover>
     </>
   );
 }

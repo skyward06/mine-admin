@@ -4,6 +4,7 @@ import utcPlugin from 'dayjs/plugin/utc';
 import Dialog from '@mui/material/Dialog';
 import Tooltip from '@mui/material/Tooltip';
 import TableRow from '@mui/material/TableRow';
+import Checkbox from '@mui/material/Checkbox';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 import TableCell from '@mui/material/TableCell';
@@ -27,16 +28,18 @@ import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
 import Detail from './Detail';
 import PlacementTreeView from './Placement';
-import { useUpdateCommissionStatus } from '../useApollo';
+import { useUpdateCommission } from '../useApollo';
 
 // ----------------------------------------------------------------------
 dayjs.extend(utcPlugin);
 
 type Props = {
   row: WeeklyCommission;
+  selected: boolean;
+  onSelectRow: VoidFunction;
 };
 
-export default function CommissionTableRow({ row }: Props) {
+export default function CommissionTableRow({ row, selected, onSelectRow }: Props) {
   const placementOpen = useBoolean();
   const detailOpen = useBoolean();
 
@@ -46,7 +49,7 @@ export default function CommissionTableRow({ row }: Props) {
 
   const commission_type = ConfirmationStatus;
 
-  const { updateCommissionStatus } = useUpdateCommissionStatus();
+  const { updateCommission } = useUpdateCommission();
 
   const {
     id,
@@ -70,6 +73,9 @@ export default function CommissionTableRow({ row }: Props) {
   return (
     <>
       <TableRow hover>
+        <TableCell padding="checkbox">
+          <Checkbox checked={selected} onClick={onSelectRow} />
+        </TableCell>
         <TableCell align="left">{formatID(ID, 'C')}</TableCell>
         <TableCell align="left">
           <ListItemText
@@ -150,7 +156,7 @@ export default function CommissionTableRow({ row }: Props) {
               status === COMMISSION_TYPE.APPROVED.label || status === COMMISSION_TYPE.PAID.label
             }
             onClick={async () => {
-              const { data } = await updateCommissionStatus({
+              const { data } = await updateCommission({
                 variables: { data: { id, status: commission_type.Approved } },
               });
 
@@ -168,7 +174,7 @@ export default function CommissionTableRow({ row }: Props) {
             sx={{ color: 'success.main' }}
             disabled={status === COMMISSION_TYPE.PAID.label}
             onClick={async () => {
-              const { data } = await updateCommissionStatus({
+              const { data } = await updateCommission({
                 variables: { data: { id, status: commission_type.Paid } },
               });
 
@@ -188,7 +194,7 @@ export default function CommissionTableRow({ row }: Props) {
               status === COMMISSION_TYPE.DECLINED.label || status === COMMISSION_TYPE.PAID.label
             }
             onClick={async () => {
-              const { data } = await updateCommissionStatus({
+              const { data } = await updateCommission({
                 variables: { data: { id, status: commission_type.Declined } },
               });
 

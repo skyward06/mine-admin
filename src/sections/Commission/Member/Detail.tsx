@@ -35,7 +35,7 @@ import { FileRecentItem as EditFileItem } from 'src/sections/Sales/Edit/FileRece
 
 import LinkForm from './LinkForm';
 import { Schema, type SchemaType } from './schema';
-import { useUpdateCommissionStatus } from '../useApollo';
+import { useUpdateCommission } from '../useApollo';
 
 interface Props {
   row: WeeklyCommission;
@@ -75,13 +75,13 @@ export default function Detail({ open, row }: Props) {
   const [note, setNote] = useState<any>();
   const [files, setFiles] = useState<any>();
 
-  const { loading, updateCommissionStatus } = useUpdateCommissionStatus();
+  const { loading, updateCommission } = useUpdateCommission();
 
   const saveNote = async () => {
     noteEdit.onToggle();
 
     if (noteEdit.value) {
-      await updateCommissionStatus({ variables: { data: { id, note } } });
+      await updateCommission({ variables: { data: { id, note } } });
     }
   };
 
@@ -89,7 +89,7 @@ export default function Detail({ open, row }: Props) {
     fileEdit.onToggle();
 
     if (fileEdit.value) {
-      await updateCommissionStatus({
+      await updateCommission({
         variables: { data: { id, fileIds: files?.map((file: any) => file.id) } },
       });
     }
@@ -97,7 +97,7 @@ export default function Detail({ open, row }: Props) {
 
   const onSubmit = handleSubmit(async (newData) => {
     if (linkEdit.value) {
-      await updateCommissionStatus({ variables: { data: { id, reflinks: newData.reflinks } } });
+      await updateCommission({ variables: { data: { id, reflinks: newData.reflinks } } });
 
       if (!loading) {
         linkEdit.onFalse();
