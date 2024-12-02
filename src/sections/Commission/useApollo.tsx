@@ -2,6 +2,7 @@ import { useRef, useMemo } from 'react';
 import { useMutation, useLazyQuery } from '@apollo/client';
 
 import {
+  UPDATE_COMMISSION,
   FETCH_COMMISSION_QUERY,
   FETCH_COMMISSION_BY_WEEK,
   UPDATE_COMMISSION_STATUS,
@@ -59,6 +60,15 @@ export function useFetchCommissionsByWeek() {
     weeklyCommissions: data?.commissionsByWeek.commissions ?? [],
     fetchWeekCommissions,
   };
+}
+
+export function useUpdateCommission() {
+  const [updateCommission, { loading, data, error }] = useMutation(UPDATE_COMMISSION, {
+    awaitRefetchQueries: true,
+    refetchQueries: ['WeeklyCommissions', 'FetchCommissionStats'],
+  });
+
+  return { loading, data, error, updateCommission };
 }
 
 export function useUpdateCommissionStatus() {
