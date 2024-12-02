@@ -396,8 +396,6 @@ export function StandardNode({
 
                 if (data?.updateMember.id && !loading) {
                   toast.success('Successfully added!');
-
-                  expandTree(id);
                   addModal.onFalse();
                 }
               } catch (err) {
@@ -434,15 +432,6 @@ export function StandardNode({
 
                 if (data?.updateMember.id && !loading) {
                   toast.success('Successfully added!');
-
-                  if (placementParentId) {
-                    expandTree(placementParentId);
-                  }
-
-                  if (targetUserId) {
-                    expandTree(targetUserId);
-                  }
-
                   editModal.onFalse();
                 }
               } catch (err) {
