@@ -399,7 +399,11 @@ export function StandardNode({
                   addModal.onFalse();
                 }
               } catch (err) {
-                console.log('err => ', err);
+                if (err instanceof ApolloError) {
+                  const [error] = err.graphQLErrors;
+
+                  toast.error(error.message);
+                }
               }
             }}
           >
@@ -438,9 +442,7 @@ export function StandardNode({
                 if (err instanceof ApolloError) {
                   const [error] = err.graphQLErrors;
 
-                  if (error.message.includes('calculated')) {
-                    toast.error(error.message);
-                  }
+                  toast.error(error.message);
                 }
               }
             }}
