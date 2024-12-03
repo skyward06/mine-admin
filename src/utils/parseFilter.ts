@@ -110,17 +110,21 @@ function parseNumberFilter({ type, filter, filterTo }: NumberFilterModel) {
 function parseTextFilter({ type, filter }: TextFilterModel) {
   switch (type) {
     case 'equals':
-      return { eq: filter };
+      return { equals: filter };
     case 'notEqual':
-      return { ne: filter };
+      return { not: { equals: filter } };
     case 'contains':
-      return { contains: `%${filter}%`, mode: 'insensitive' };
+      return { contains: `${filter}`, mode: 'insensitive' };
     case 'notContains':
-      return { not: { contains: `%${filter}%`, mode: 'insensitive' } };
+      return { not: { contains: `${filter}`, mode: 'insensitive' } };
     case 'startsWith':
       return { startsWith: filter, mode: 'insensitive' };
     case 'endsWith':
       return { endsWith: filter, mode: 'insensitive' };
+    case 'blank':
+      return null;
+    case 'notBlank':
+      return { not: null };
     default:
       console.log(`unknown text filter type: ${type}`);
       return null;
@@ -160,6 +164,7 @@ export function parseFilter(curFilter: any = {}, filter?: GridFilterModel) {
 
   (filter?.items ?? []).forEach((item) => {
     const { value, field, operator } = item;
+
     if (operator === 'isEmpty') {
       filterObj[field] = null;
     } else if (operator === 'isNotEmpty') {
@@ -182,11 +187,15 @@ export function parseFilter(curFilter: any = {}, filter?: GridFilterModel) {
       } else if (operator === 'isAnyOf') {
         filterObj[field] = { in: value };
       } else if (operator === 'contains') {
-        filterObj[field] = { contains: `%${value}%`, mode: 'insensitive' };
+        filterObj[field] = { contains: `${value}`, mode: 'insensitive' };
       } else if (operator === 'startsWith') {
         filterObj[field] = { startsWith: value, mode: 'insensitive' };
       } else if (operator === 'endsWith') {
         filterObj[field] = { endsWith: value, mode: 'insensitive' };
+      } else if (operator === 'blank') {
+        filterObj[field] = null;
+      } else if (operator === 'notBlank') {
+        filterObj[field] = { not: null };
       }
     }
   });
