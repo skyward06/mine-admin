@@ -161,7 +161,7 @@ export default function CommissionTableRow({ row, selected, onSelectRow }: Props
               });
 
               if (data) {
-                toast.message('Successfully Confirmed!');
+                toast.message('Successfully Approved!');
               } else {
                 toast.message('Something went wrong!');
               }
@@ -179,7 +179,7 @@ export default function CommissionTableRow({ row, selected, onSelectRow }: Props
               });
 
               if (data) {
-                toast.message('Successfully Cancelled!');
+                toast.message('Successfully Paid!');
               } else {
                 toast.message('Something went wrong!');
               }
@@ -199,7 +199,7 @@ export default function CommissionTableRow({ row, selected, onSelectRow }: Props
               });
 
               if (data) {
-                toast.message('Successfully Cancelled!');
+                toast.message('Successfully Declined!');
               } else {
                 toast.message('Something went wrong!');
               }
