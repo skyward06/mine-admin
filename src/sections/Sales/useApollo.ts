@@ -1,5 +1,9 @@
 import { useRef, useMemo } from 'react';
-import { useMutation, useLazyQuery } from '@apollo/client';
+import { useQuery, useMutation, useLazyQuery } from '@apollo/client';
+
+import { useAgQuery as useQueryString } from 'src/routes/hooks';
+
+import { parseFilterModel } from 'src/utils/parseFilter';
 
 import {
   CREATE_SALE,
@@ -10,7 +14,13 @@ import {
 } from './query';
 
 export function useFetchSales() {
-  const [fetchSales, { loading, data, called }] = useLazyQuery(FETCH_SALES_QUERY);
+  const [{ page = '1,25', sort = 'orderedAt', filter }] = useQueryString();
+
+  const graphQueryFilter = useMemo(() => parseFilterModel({}, filter), [filter]);
+
+  const { loading, data, called } = useQuery(FETCH_SALES_QUERY, {
+    variables: { filter: graphQueryFilter, page, sort },
+  });
 
   const rowCountRef = useRef(data?.sales.total ?? 0);
 
@@ -29,8 +39,15 @@ export function useFetchSales() {
     loading,
     rowCount,
     sales: data?.sales.sales ?? [],
-    fetchSales,
   };
+}
+
+export function useFetchSale(ID: number) {
+  const { loading, data } = useQuery(FETCH_SALES_QUERY, {
+    variables: { filter: { ID } },
+  });
+
+  return { loading, sale: data?.sales.sales ?? [] };
 }
 
 export function useFetchSaleStats() {
