@@ -1,4 +1,5 @@
 import type { Sale } from 'src/sections/Sales/List/type';
+import type { PaymentMethodLink } from 'src/sections/Payment/List/type';
 
 export type Package = {
   __typename?: 'Package';
@@ -7,10 +8,11 @@ export type Package = {
   token: number;
   amount: number;
   productName: string;
-  enrollVisibility: boolean;
   status: boolean;
-  sales?: Array<Sale> | null;
+  enrollVisibility: boolean;
   date: any;
+  sales?: Array<Sale> | null;
+  paymentMethodLinks?: Array<PaymentMethodLink> | null;
   createdAt?: any | null;
   updatedAt?: any | null;
   deletedAt?: any | null;
