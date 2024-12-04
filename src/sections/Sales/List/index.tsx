@@ -1,159 +1,156 @@
-import type { LabelColor } from 'src/components/Label';
-import type { SortOrder } from 'src/routes/hooks/useQuery';
+import type { CustomCellRendererProps } from '@ag-grid-community/react';
+import type { ColDef, IDateFilterParams, ITextFilterParams } from '@ag-grid-community/core';
 
-import { useMemo, useState, useEffect, useCallback } from 'react';
+import { useMemo } from 'react';
 
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
-import Table from '@mui/material/Table';
-import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import { alpha } from '@mui/material/styles';
-import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
-import { useQuery } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
-import { CONFIG } from 'src/config';
+import { formatID } from 'src/utils/helper';
+import { formatDate } from 'src/utils/format-time';
+
 import { DashboardContent } from 'src/layouts/dashboard';
 
-import { Label } from 'src/components/Label';
+import { AgGrid } from 'src/components/AgGrid';
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
-import { ScrollBar } from 'src/components/ScrollBar';
 import { ConfirmDialog } from 'src/components/Dialog';
-import ExportButton from 'src/components/ExportButton';
-import { SearchInput } from 'src/components/SearchInput';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
+import { CustomName } from 'src/components/AgGrid/Renderers';
 import { LoadingScreen } from 'src/components/loading-screen';
-import {
-  useTable,
-  TableNoData,
-  TableSkeleton,
-  TableHeadCustom,
-  TablePaginationCustom,
-} from 'src/components/Table';
 
-import SaleTableRow from './SaleTableRow';
-import SaleTableFiltersResult from './SaleTableFiltersResult';
-import { useRemoveSale, useFetchSales, useFetchSaleStats } from '../useApollo';
+import { ActionRender } from './ActionRenderer';
+import { useRemoveSale, useFetchSales } from '../useApollo';
 
-import type { SaleRole, ISalePrismaFilter, ISaleTableFilters } from './types';
-
-// ----------------------------------------------------------------------
-
-const STATUS_OPTIONS: { value: SaleRole; label: string; color: LabelColor }[] = [
-  { value: 'all', label: 'All', color: 'info' },
-  { value: 'inactive', label: 'Inactive', color: 'error' },
-];
-
-const TABLE_HEAD = [
-  { id: 'ID', label: 'ID', sortable: true, width: 140, align: 'left' },
-  { id: 'member.username', label: 'Name', sortable: true },
-  { id: 'member.assetId', label: 'Asset ID', width: 90 },
-  { id: 'package.productName', label: 'Product Name' },
-  { id: 'paymentMethod', label: 'Payment Method', width: 250, sortable: true },
-  { id: 'package.amount', label: 'Amount', width: 90 },
-  { id: 'package.hashPower', label: 'Hash Power', width: 150 },
-  { id: 'package.point', label: 'Point', width: 50 },
-  { id: 'orderedAt', label: 'Ordered At', width: 110, sortable: true },
-  { id: 'action', label: 'Action', align: 'center' },
-];
-
-const defaultFilter: ISaleTableFilters = {
-  search: '',
-  status: 'all',
-};
+import type { Sale } from './type';
 
 export default function SaleListView() {
-  const table = useTable({ defaultDense: true });
-  const [selected, setSelected] = useState<string>('');
-
-  const [query, { setQueryParams: setQuery, setPage, setPageSize }] = useQuery<ISaleTableFilters>();
-
-  const {
-    page = { page: 1, pageSize: 10 },
-    sort = { createdAt: 'asc' },
-    filter = defaultFilter,
-  } = query;
-
-  const graphQueryFilter = useMemo(() => {
-    const filterObj: ISalePrismaFilter = {};
-    if (filter.search) {
-      filterObj.OR = [
-        { paymentMethod: { contains: filter.search, mode: 'insensitive' } },
-        { member: { username: { contains: filter.search, mode: 'insensitive' } } },
-        { member: { fullName: { contains: filter.search, mode: 'insensitive' } } },
-        { member: { email: { contains: filter.search, mode: 'insensitive' } } },
-        { package: { productName: { contains: filter.search, mode: 'insensitive' } } },
-      ];
-    }
-
-    if (filter.status === 'inactive') {
-      filterObj.status = false;
-    } else {
-      filterObj.status = true;
-    }
-
-    return filterObj;
-  }, [filter]);
-
-  const graphQuerySort = useMemo(() => {
-    if (!sort) return undefined;
-
-    return Object.entries(sort)
-      .map(([key, value]) => `${value === 'asc' ? '' : '-'}${key}`)
-      .join(',');
-  }, [sort]);
+  const { loading, rowCount, sales } = useFetchSales();
+  const { loading: removeLoading, removeSale } = useRemoveSale();
 
   const confirm = useBoolean();
 
-  const canReset = !!filter.search;
-
-  const { loading, rowCount, sales, fetchSales } = useFetchSales();
-  const { stats, fetchSaleStats } = useFetchSaleStats();
-  const { loading: removeLoading, removeSale } = useRemoveSale();
-
-  const notFound = (canReset && !sales?.length) || !sales?.length;
-
-  const token = localStorage.getItem(CONFIG.storageTokenKey) ?? '';
-
-  const handleTabChange = (event: React.SyntheticEvent, newValue: SaleRole) => {
-    setQuery({
-      ...query,
-      filter: { ...filter, status: newValue },
-      page: { page: 1, pageSize: query.page?.pageSize ?? 10 },
-    });
-  };
-
-  const handleSearchChange = useCallback(
-    (value: string) => {
-      setQuery({ ...query, filter: { ...filter, search: value } });
-    },
-    [setQuery, query, filter]
-  );
-
-  useEffect(() => {
-    fetchSales({
-      variables: {
-        page: page && `${page.page},${page.pageSize}`,
-        filter: graphQueryFilter,
-        sort: graphQuerySort,
+  const colDefs = useMemo<ColDef<Sale>[]>(
+    () => [
+      {
+        field: 'ID',
+        headerName: 'ID',
+        width: 140,
+        filter: 'agNumberColumnFilter',
+        resizable: true,
+        editable: false,
+        cellRenderer: ({ data }: CustomCellRendererProps<Sale>) => formatID(data?.ID ?? '', 'S'),
+        cellClass: 'ag-number-cell ag-cell-center',
       },
-    });
-
-    fetchSaleStats({
-      variables: {
-        inactiveFilter: { status: false },
+      {
+        field: 'member.username',
+        headerName: 'Name',
+        width: 150,
+        filter: 'agTextColumnFilter',
+        resizable: true,
+        editable: false,
+        filterParams: { buttons: ['reset'] } as ITextFilterParams,
+        cellRenderer: ({ data }: CustomCellRendererProps<Sale>) => (
+          <CustomName
+            id={data?.memberId ?? ''}
+            username={data?.member?.username ?? ''}
+            email={data?.member?.email ?? ''}
+          />
+        ),
       },
-    });
+      {
+        field: 'member.assetId',
+        headerName: 'Asset ID',
+        width: 110,
+        filter: 'agTextColumnFilter',
+        resizable: true,
+        editable: false,
+        filterParams: { buttons: ['reset'] } as ITextFilterParams,
+        cellClass: 'ag-cell-center',
+      },
+      {
+        field: 'package.productName',
+        headerName: 'ProductName',
+        flex: 1,
+        filter: 'agTextColumnFilter',
+        resizable: true,
+        editable: false,
+        filterParams: { buttons: ['reset'] } as ITextFilterParams,
+        cellClass: 'ag-cell-center',
+      },
+      {
+        field: 'paymentMethod',
+        headerName: 'Payment Method',
+        width: 180,
+        filter: 'agTextColumnFilter',
+        resizable: true,
+        editable: false,
+        filterParams: { buttons: ['reset'] } as ITextFilterParams,
+        cellClass: 'ag-cell-center',
+      },
+      {
+        field: 'package.amount',
+        headerName: 'Amount',
+        width: 100,
+        filter: 'agNumberColumnFilter',
+        resizable: true,
+        editable: false,
+        cellClass: 'ag-number-cell ag-cell-center',
+      },
+      {
+        field: 'package.token',
+        headerName: 'Hash Power',
+        width: 130,
+        filter: 'agNumberColumnFilter',
+        resizable: true,
+        editable: false,
+        cellClass: 'ag-cell-center',
+      },
+      {
+        field: 'package.point',
+        headerName: 'Point',
+        width: 90,
+        filter: 'agNumberColumnFilter',
+        resizable: true,
+        editable: false,
+        cellClass: 'ag-number-cell ag-cell-center',
+      },
+      {
+        field: 'orderedAt',
+        headerName: 'Ordered At',
+        width: 130,
+        filter: 'agDateColumnFilter',
+        filterParams: {
+          buttons: ['reset'],
+          defaultOption: 'greaterThan',
+          filterOptions: ['greaterThan', 'lessThan', 'equals', 'notEqual'],
+        } as IDateFilterParams,
+        resizable: true,
+        editable: false,
+        initialSort: 'desc',
+        cellRenderer: ({ data }: CustomCellRendererProps<Sale>) => formatDate(data?.createdAt),
+        cellClass: 'ag-cell-center',
+      },
+      {
+        colId: 'action',
+        headerName: 'Action',
+        width: 140,
+        resizable: false,
+        editable: false,
+        sortable: false,
+        cellClass: 'ag-cell-center',
+        cellRenderer: ActionRender,
+      },
+    ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query]);
+    []
+  );
 
   return (
     <DashboardContent>
@@ -175,104 +172,20 @@ export default function SaleListView() {
         }}
       />
 
-      <Card>
-        <Tabs
-          value={filter.status}
-          onChange={handleTabChange}
-          sx={{
-            px: 2.5,
-            boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
-          }}
-        >
-          {STATUS_OPTIONS.map((tab) => (
-            <Tab
-              key={tab.value}
-              iconPosition="end"
-              value={tab.value}
-              label={tab.label}
-              icon={
-                <Label
-                  variant={(tab.value === filter.status && 'filled') || 'soft'}
-                  color={tab.color}
-                >
-                  {stats ? stats[tab.value].total! : 0}
-                </Label>
-              }
-            />
-          ))}
-        </Tabs>
-
-        <Stack direction="row">
-          <Stack width={1}>
-            <SearchInput search={filter.search} onSearchChange={handleSearchChange} />
-          </Stack>
-          <Stack width={0.1} sx={{ p: 2.5 }}>
-            <ExportButton target="sales" token={token} />
-          </Stack>
-        </Stack>
-
-        {canReset && !loading && (
-          <SaleTableFiltersResult results={rowCount!} sx={{ p: 2.5, pt: 0 }} />
-        )}
-
-        <ScrollBar>
-          <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 1260 }}>
-            <TableHeadCustom
-              order={sort && sort[Object.keys(sort)[0]]}
-              orderBy={sort && Object.keys(sort)[0]}
-              headLabel={TABLE_HEAD}
-              rowCount={loading ? 0 : sales!.length}
-              onSort={(id) => {
-                if (id !== 'action') {
-                  const isAsc = sort && sort[id] === 'asc';
-                  const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
-                  setQuery({ ...query, sort: newSort });
-                }
-              }}
-            />
-            {loading ? (
-              <>
-                <TableSkeleton height={26} />
-                <TableSkeleton height={26} />
-                <TableSkeleton height={26} />
-                <TableSkeleton height={26} />
-                <TableSkeleton height={26} />
-                <TableSkeleton height={26} />
-                <TableSkeleton height={26} />
-                <TableSkeleton height={26} />
-                <TableSkeleton height={26} />
-                <TableSkeleton height={26} />
-              </>
-            ) : (
-              <TableBody>
-                {sales!.map((row) => (
-                  <SaleTableRow
-                    key={row!.id}
-                    row={row!}
-                    confirm={confirm}
-                    setSelected={setSelected}
-                  />
-                ))}
-
-                <TableNoData notFound={notFound} />
-              </TableBody>
-            )}
-          </Table>
-        </ScrollBar>
-
-        <TablePaginationCustom
-          count={loading ? 0 : rowCount!}
-          page={loading ? 0 : page!.page - 1}
-          rowsPerPage={page?.pageSize}
-          onPageChange={(_, curPage) => {
-            setPage(curPage + 1);
-          }}
-          onRowsPerPageChange={(event) => {
-            setPageSize(parseInt(event.target.value, 10));
-          }}
-          //
-          dense={table.dense}
-          onChangeDense={table.onChangeDense}
+      <Card
+        sx={{
+          flexGrow: 1,
+          display: 'flex',
+          overflow: 'hidden',
+        }}
+      >
+        <AgGrid<Sale>
+          gridKey="sale-list"
+          loading={loading}
+          rowData={sales}
+          columnDefs={colDefs}
+          totalRowCount={rowCount}
+          rowHeight={50}
         />
       </Card>
 
@@ -295,7 +208,7 @@ export default function SaleListView() {
             variant="contained"
             color="error"
             onClick={async () => {
-              const promise = await removeSale({ variables: { data: { id: selected } } });
+              const promise = await removeSale({ variables: { data: { id: 'selected' } } });
               const result = promise.data?.removeSale.result;
 
               if (result === 'success') {

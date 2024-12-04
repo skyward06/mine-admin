@@ -1,5 +1,5 @@
+import { parseInt } from 'lodash';
 import { Helmet } from 'react-helmet-async';
-import { useState, useEffect } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 
 import { paths } from 'src/routes/paths';
@@ -11,36 +11,28 @@ import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import { LoadingScreen } from 'src/components/loading-screen';
 
 import SaleGeneral from './General';
-import { useFetchSales } from '../useApollo';
+import { useFetchSale } from '../useApollo';
 
 // ----------------------------------------------------------------------
 export default function SaleEditView() {
   // Loading state including first initial render
-  const [isLoading, setIsLoading] = useState(true);
 
   const params = useParams();
 
-  const { fetchSales, loading, sales, called } = useFetchSales();
-
   const { id } = params;
+  const { loading, sale } = useFetchSale(parseInt(id?.split('-')[1] ?? '', 10));
 
-  useEffect(() => {
-    fetchSales({ variables: { filter: { ID: parseInt(id?.split('-')[1] ?? '', 10) } } });
-  }, [fetchSales, id]);
+  const current = sale?.[0] ?? {};
 
-  useEffect(() => {
-    setIsLoading(!called || loading);
-  }, [loading, called]);
-
-  const sale = sales?.[0];
-
-  if (isLoading) {
+  if (loading) {
     return <LoadingScreen />;
   }
 
-  if (!sale) {
+  if (!current) {
     return <Navigate to={paths.notFound} replace />;
   }
+
+  console.log('current => ', current);
 
   return (
     <>
@@ -56,7 +48,7 @@ export default function SaleEditView() {
           }}
         />
 
-        <SaleGeneral currentSale={sale} />
+        <SaleGeneral currentSale={current} />
       </DashboardContent>
     </>
   );

@@ -1,7 +1,7 @@
 import type { LabelColor } from 'src/components/Label';
 import type { SortOrder } from 'src/routes/hooks/useQuery';
 
-import { useMemo, useEffect, useCallback } from 'react';
+import { useEffect, useCallback } from 'react';
 
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
@@ -30,7 +30,7 @@ import { useFetchSales, useFetchSaleStats } from 'src/sections/Sales/useApollo';
 import SaleTableRow from './SaleTableRow';
 import SaleTableFiltersResult from './SaleTableFiltersResult';
 
-import type { SaleRole, ISalePrismaFilter, ISaleTableFilters } from './types';
+import type { SaleRole, ISaleTableFilters } from './types';
 
 // ----------------------------------------------------------------------
 
@@ -68,43 +68,10 @@ export default function SaleListView() {
     filter = defaultFilter,
   } = query;
 
-  const graphQueryFilter = useMemo(() => {
-    const filterObj: ISalePrismaFilter = {};
-    if (filter.search) {
-      filterObj.OR = [
-        { paymentMethod: { contains: filter.search, mode: 'insensitive' } },
-        { member: { username: { contains: filter.search, mode: 'insensitive' } } },
-        { member: { email: { contains: filter.search, mode: 'insensitive' } } },
-        { member: { mobile: { contains: filter.search, mode: 'insensitive' } } },
-        { package: { productName: { contains: filter.search, mode: 'insensitive' } } },
-      ];
-    }
-
-    if (filter.status === 'inactive') {
-      filterObj.status = false;
-    } else {
-      filterObj.status = true;
-    }
-
-    if (params.id) {
-      filterObj.memberId = params.id;
-    }
-
-    return filterObj;
-  }, [filter, params]);
-
-  const graphQuerySort = useMemo(() => {
-    if (!sort) return undefined;
-
-    return Object.entries(sort)
-      .map(([key, value]) => `${value === 'asc' ? '' : '-'}${key}`)
-      .join(',');
-  }, [sort]);
-
   const canReset = !!filter.search;
 
   const { fetchSaleStats, stats } = useFetchSaleStats();
-  const { fetchSales, loading, sales, rowCount } = useFetchSales();
+  const { loading, sales, rowCount } = useFetchSales();
 
   useEffect(() => {
     fetchSaleStats({
@@ -114,13 +81,13 @@ export default function SaleListView() {
       },
     });
 
-    fetchSales({
-      variables: {
-        page: page && `${page.page},${page.pageSize}`,
-        filter: graphQueryFilter,
-        sort: graphQuerySort,
-      },
-    });
+    // fetchSales({
+    //   variables: {
+    //     page: page && `${page.page},${page.pageSize}`,
+    //     filter: graphQueryFilter,
+    //     sort: graphQuerySort,
+    //   },
+    // });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
 

@@ -15,8 +15,6 @@ import { formatDate } from 'src/utils/format-time';
 
 import { Iconify } from 'src/components/Iconify';
 
-import Detail from 'src/sections/Sales/List/Detail';
-
 // ----------------------------------------------------------------------
 
 type Props = {
@@ -71,7 +69,7 @@ export default function SaleTableRow({ row }: Props) {
         </TableCell>
       </TableRow>
 
-      <Detail open={open} row={row} />
+      {/* <Detail open={open} row={row} /> */}
     </>
   );
 }

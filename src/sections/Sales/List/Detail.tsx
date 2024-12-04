@@ -1,4 +1,3 @@
-import type { Sale } from 'src/__generated__/graphql';
 import type { UseBooleanReturn } from 'src/hooks/useBoolean';
 
 import { isEmpty } from 'lodash';
@@ -20,6 +19,8 @@ import { ScrollBar } from 'src/components/ScrollBar';
 import { EmptyContent } from 'src/components/EmptyContent';
 
 import { FileRecentItem } from './FileRecentItem';
+
+import type { Sale } from './type';
 
 interface Props {
   open: UseBooleanReturn;
