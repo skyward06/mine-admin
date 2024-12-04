@@ -36,6 +36,10 @@ const documents = {
     "\n  mutation RemoveMember($data: IDInput!) {\n    removeMember(data: $data) {\n      message\n      result\n    }\n  }\n": types.RemoveMemberDocument,
     "\n  mutation RemoveCompleteMemberPlacement($data: IDInput!) {\n    removeCompleteMemberPlacement(data: $data) {\n      message\n      result\n    }\n  }\n": types.RemoveCompleteMemberPlacementDocument,
     "\n  mutation Mutation($data: IDInput!) {\n    approveMember(data: $data) {\n      message\n      result\n      result\n    }\n  }\n": types.MutationDocument,
+    "\n  query PaymentMethods($sort: String, $page: String, $filter: JSONObject) {\n    paymentMethods(sort: $sort, page: $page, filter: $filter) {\n      paymentMethods {\n        id\n        name\n        visible\n        createdAt\n        defaultLink\n        paymentMethodLinks {\n          id\n          link\n          packageId\n          paymentMethodId\n        }\n      }\n      total\n    }\n  }\n": types.PaymentMethodsDocument,
+    "\n  mutation CreatePaymentMethod($data: CreatePaymentMethodInput!) {\n    createPaymentMethod(data: $data) {\n      id\n    }\n  }\n": types.CreatePaymentMethodDocument,
+    "\n  mutation UpdatePaymentMethod($data: UpdatePaymentMethodInput!) {\n    updatePaymentMethod(data: $data) {\n      id\n    }\n  }\n": types.UpdatePaymentMethodDocument,
+    "\n  mutation RemovePaymentMethod($data: IDInput!) {\n    removePaymentMethod(data: $data) {\n      message\n      result\n    }\n  }\n": types.RemovePaymentMethodDocument,
     "\n  query PrepaidCommissions($sort: String, $page: String, $filter: JSONObject) {\n    prepaidCommissions(sort: $sort, page: $page, filter: $filter) {\n      prepaidCommissions {\n        createdAt\n        updatedAt\n        deletedAt\n        id\n        commissionId\n        txId\n        txType\n        orderedAt\n        commission {\n          commission\n          weekStartDate\n          pkgL\n          pkgR\n          member {\n            createdAt\n            updatedAt\n            deletedAt\n            id\n            username\n            fullName\n            sponsorId\n            email\n            ID\n            mobile\n            assetId\n            primaryAddress\n            secondaryAddress\n            city\n            state\n            zipCode\n            placementParentId\n            placementPosition\n            point\n            emailVerified\n            status\n            totalIntroducers\n            syncWithSendy\n            preferredContact\n            preferredContactDetail\n            commission {\n              begL\n              begR\n              newL\n              newR\n            }\n          }\n        }\n        proof {\n          createdAt\n          updatedAt\n          deletedAt\n          id\n          refId\n          type\n          amount\n          note\n          orderedAt\n          files {\n            createdAt\n            updatedAt\n            deletedAt\n            id\n            url\n            originalName\n            mimeType\n            size\n          }\n          reflinks {\n            linkType\n            link\n          }\n        }\n      }\n      total\n    }\n  }\n": types.PrepaidCommissionsDocument,
     "\n  query CommissionByMemberIDAndWeek($data: WeeklyCommissionGetInput!) {\n    commissionByMemberIDAndWeek(data: $data) {\n      id\n      commission\n      pkgL\n      pkgR\n    }\n  }\n": types.CommissionByMemberIdAndWeekDocument,
     "\n  mutation CreatePrepaidCommission($data: CreatePrepaidCommissionInput!) {\n    createPrepaidCommission(data: $data) {\n      id\n    }\n  }\n": types.CreatePrepaidCommissionDocument,
@@ -195,6 +199,22 @@ export function gql(source: "\n  mutation RemoveCompleteMemberPlacement($data: I
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  mutation Mutation($data: IDInput!) {\n    approveMember(data: $data) {\n      message\n      result\n      result\n    }\n  }\n"): (typeof documents)["\n  mutation Mutation($data: IDInput!) {\n    approveMember(data: $data) {\n      message\n      result\n      result\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  query PaymentMethods($sort: String, $page: String, $filter: JSONObject) {\n    paymentMethods(sort: $sort, page: $page, filter: $filter) {\n      paymentMethods {\n        id\n        name\n        visible\n        createdAt\n        defaultLink\n        paymentMethodLinks {\n          id\n          link\n          packageId\n          paymentMethodId\n        }\n      }\n      total\n    }\n  }\n"): (typeof documents)["\n  query PaymentMethods($sort: String, $page: String, $filter: JSONObject) {\n    paymentMethods(sort: $sort, page: $page, filter: $filter) {\n      paymentMethods {\n        id\n        name\n        visible\n        createdAt\n        defaultLink\n        paymentMethodLinks {\n          id\n          link\n          packageId\n          paymentMethodId\n        }\n      }\n      total\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation CreatePaymentMethod($data: CreatePaymentMethodInput!) {\n    createPaymentMethod(data: $data) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation CreatePaymentMethod($data: CreatePaymentMethodInput!) {\n    createPaymentMethod(data: $data) {\n      id\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation UpdatePaymentMethod($data: UpdatePaymentMethodInput!) {\n    updatePaymentMethod(data: $data) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation UpdatePaymentMethod($data: UpdatePaymentMethodInput!) {\n    updatePaymentMethod(data: $data) {\n      id\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation RemovePaymentMethod($data: IDInput!) {\n    removePaymentMethod(data: $data) {\n      message\n      result\n    }\n  }\n"): (typeof documents)["\n  mutation RemovePaymentMethod($data: IDInput!) {\n    removePaymentMethod(data: $data) {\n      message\n      result\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
