@@ -22,13 +22,12 @@ import { useRouter } from 'src/routes/hooks';
 import { formatID } from 'src/utils/helper';
 import { formatDate, customizeDate } from 'src/utils/format-time';
 
-import { PAYMENT_TYPE } from 'src/consts';
-
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
 
 import LinkForm from 'src/sections/PrepaidCommission/LinkForm';
 import { useFetchMembers } from 'src/sections/Members/useApollo';
+import { useFetchPayments } from 'src/sections/Payment/useApollo';
 import { useFetchPackages } from 'src/sections/Products/useApollo';
 
 import { useUpdateSale } from '../useApollo';
@@ -77,6 +76,7 @@ export default function SaleGeneral({ currentSale }: Props) {
   const [status, setStatus] = useState(currentStatus);
   const [paymentMethod, setPaymentMethod] = useState<string>();
 
+  const { payments } = useFetchPayments();
   const { members, fetchMembers } = useFetchMembers();
   const { packages, fetchPackages } = useFetchPackages();
 
@@ -209,9 +209,9 @@ export default function SaleGeneral({ currentSale }: Props) {
               <Autocomplete
                 freeSolo
                 fullWidth
-                options={PAYMENT_TYPE}
-                getOptionLabel={(option: any) => option.value}
-                value={{ value: paymentMethod ?? currentSale.paymentMethod }}
+                options={payments}
+                getOptionLabel={(option: any) => option!.name}
+                value={{ name: paymentMethod ?? currentSale.paymentMethod }}
                 renderInput={(params) => (
                   <TextField
                     {...params}
@@ -222,12 +222,12 @@ export default function SaleGeneral({ currentSale }: Props) {
                   />
                 )}
                 renderOption={(props, option) => (
-                  <li {...props} key={option!.value}>
-                    {option.value}
+                  <li {...props} key={option!.name}>
+                    {option.name}
                   </li>
                 )}
                 onInputChange={(_, value: any) => setPaymentMethod(value)}
-                onChange={(_, value: any) => setPaymentMethod(value.value)}
+                onChange={(_, value: any) => setPaymentMethod(value.name)}
               />
 
               <Field.Select

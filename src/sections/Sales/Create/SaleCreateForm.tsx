@@ -20,13 +20,12 @@ import { useRouter } from 'src/routes/hooks';
 
 import { today, formatDate, customizeDate } from 'src/utils/format-time';
 
-import { PAYMENT_TYPE } from 'src/consts';
-
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
 
 import LinkForm from 'src/sections/PrepaidCommission/LinkForm';
 import { useFetchMembers } from 'src/sections/Members/useApollo';
+import { useFetchPayments } from 'src/sections/Payment/useApollo';
 import { FETCH_PACKAGES_QUERY } from 'src/sections/Products/query';
 
 import { useCreateSale } from '../useApollo';
@@ -84,6 +83,7 @@ export default function SaleCreateForm() {
     defaultValues,
   });
 
+  const { payments } = useFetchPayments();
   const { fetchMembers, members } = useFetchMembers();
 
   const [fetchPackages, { data: packageData }] = useLazyQuery(FETCH_PACKAGES_QUERY, {
@@ -204,8 +204,8 @@ export default function SaleCreateForm() {
               <Autocomplete
                 freeSolo
                 fullWidth
-                options={PAYMENT_TYPE}
-                getOptionLabel={(option: any) => option.value}
+                options={payments}
+                getOptionLabel={(option: any) => option.name}
                 renderInput={(params) => (
                   <TextField
                     {...params}
@@ -216,11 +216,11 @@ export default function SaleCreateForm() {
                   />
                 )}
                 renderOption={(props, option) => (
-                  <li {...props} key={option!.label}>
-                    {option.value}
+                  <li {...props} key={option!.name}>
+                    {option.name}
                   </li>
                 )}
-                onChange={(_, value: any) => setPaymentMethod(value.value)}
+                onChange={(_, value: any) => setPaymentMethod(value.name)}
                 onInputChange={(_, value: any) => setPaymentMethod(value)}
               />
 
