@@ -13,6 +13,7 @@ const ROOTS = {
   PREPAID_COMMISSION: '/prepaid-commission',
   COMMISSION: '/commission',
   REWARD: '/reward',
+  PAYMENT: '/payment',
   USERS: '/users',
   REPORTS: '/reports',
 };
@@ -67,6 +68,11 @@ export const paths = {
       root: ROOTS.PROOF,
       edit: (id: string) => `${ROOTS.PROOF}/${id}`,
       new: `${ROOTS.PROOF}/new`,
+    },
+    payment: {
+      root: ROOTS.PAYMENT,
+      edit: (id: string) => `${ROOTS.PAYMENT}/${id}`,
+      new: `${ROOTS.PAYMENT}/new`,
     },
     reward: {
       root: ROOTS.REWARD,

@@ -60,6 +60,12 @@ const ProofEditPage = lazy(() => import('src/pages/Proof/Edit'));
 // ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
+const PaymentListPage = lazy(() => import('src/pages/Payment/List'));
+const PaymentCreatePage = lazy(() => import('src/pages/Payment/Create'));
+const PaymentEditPage = lazy(() => import('src/pages/Payment/Edit'));
+// ----------------------------------------------------------------------
+
+// ----------------------------------------------------------------------
 const PrepaidCommissionPage = lazy(() => import('src/pages/PrepaidCommission/List'));
 const PrepaidCommissionCreatePage = lazy(() => import('src/pages/PrepaidCommission/Create'));
 const PrepaidCommissionEditPage = lazy(() => import('src/pages/PrepaidCommission/Edit'));
@@ -135,6 +141,14 @@ export const dashboardRoutes = [
           { index: true, element: <ProofListPage /> },
           { path: 'new', element: <ProofCreatePage /> },
           { path: ':id', element: <ProofEditPage /> },
+        ],
+      },
+      {
+        path: 'payment',
+        children: [
+          { index: true, element: <PaymentListPage /> },
+          { path: 'new', element: <PaymentCreatePage /> },
+          { path: ':id', element: <PaymentEditPage /> },
         ],
       },
       {

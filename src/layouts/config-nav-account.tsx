@@ -86,6 +86,11 @@ export const _account = [
     icon: <Iconify icon="oui:app-reporting" />,
   },
   {
+    label: 'Payment',
+    href: '/payment',
+    icon: <Iconify icon="icon-park-outline:payment-method" />,
+  },
+  {
     label: 'Admin',
     href: '/users',
     icon: <Iconify icon="grommet-icons:user-admin" />,
