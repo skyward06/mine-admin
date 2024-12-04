@@ -137,6 +137,7 @@ export default function ProofListView() {
           </Button>
         }
       />
+
       <Card
         sx={{
           flexGrow: 1,

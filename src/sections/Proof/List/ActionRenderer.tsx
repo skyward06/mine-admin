@@ -35,7 +35,6 @@ export const ActionRender = memo(
           <IconButton
             color="primary"
             onClick={() => {
-              console.log('path => ', paths.dashboard.proof.edit(data?.id ?? ''));
               router.push(`${paths.dashboard.proof.edit(data?.id ?? '')}`);
             }}
           >
