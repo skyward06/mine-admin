@@ -154,3 +154,7 @@ input[type='number']::-webkit-inner-spin-button {
   overflow: visible;
   justify-content: flex-start;
 }
+
+.ag-cell-center {
+  padding-top: 7px;
+}
