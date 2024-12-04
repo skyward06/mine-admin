@@ -76,6 +76,8 @@ export function parseFilterModel(curFilter: any = {}, filter?: FilterModel) {
         } else {
           filterObj.push({ [field]: parseNumberFilter(value) });
         }
+      } else {
+        filterObj.push({ [field]: value });
       }
     });
   }
