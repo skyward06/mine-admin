@@ -49,6 +49,7 @@ export function StandardNode({
   username,
   fullName,
   createdAt,
+  commission,
   placementParentId,
   placementPosition,
   cmnCalculatedWeeks,
@@ -303,6 +304,15 @@ export function StandardNode({
               </Label>
             )}
           </Stack>
+        </Stack>
+
+        <Stack direction="row" justifyContent="space-between">
+          <Typography variant="caption" color="gray" component="div" noWrap sx={{ mt: 1 }}>
+            L {commission?.begL || 0}/{commission?.newL || 0}
+          </Typography>
+          <Typography variant="caption" color="gray" component="div" noWrap sx={{ mt: 1 }}>
+            {commission?.begR || 0}/{commission?.newR || 0} R
+          </Typography>
         </Stack>
 
         <Stack direction="row" justifyContent="space-between">

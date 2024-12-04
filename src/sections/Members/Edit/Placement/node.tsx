@@ -17,7 +17,14 @@ import NodeContext from './nodeContext';
 
 import type { NodeProps } from './type';
 
-export function StandardNode({ id, placementPosition, username, fullName, createdAt }: NodeProps) {
+export function StandardNode({
+  id,
+  placementPosition,
+  username,
+  fullName,
+  commission,
+  createdAt,
+}: NodeProps) {
   const router = useRouter();
 
   const { visibleMap, expandTree, collapseTree } = useContext(NodeContext);
@@ -70,6 +77,15 @@ export function StandardNode({ id, placementPosition, username, fullName, create
             </Label>
           )}
         </Stack>
+      </Stack>
+
+      <Stack direction="row" justifyContent="space-between">
+        <Typography variant="caption" color="gray" component="div" noWrap sx={{ mt: 1 }}>
+          L {commission?.begL || 0}/{commission?.newL || 0}
+        </Typography>
+        <Typography variant="caption" color="gray" component="div" noWrap sx={{ mt: 1 }}>
+          {commission?.begR || 0}/{commission?.newR || 0} R
+        </Typography>
       </Stack>
 
       <Stack direction="row" justifyContent="space-between" sx={{ background: 'translation' }}>
