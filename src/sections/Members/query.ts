@@ -218,6 +218,12 @@ export const FETCH_PLACEMENT_MEMBERS_QUERY = gql(/* GraphQL */ `
         sponsor {
           username
         }
+        commission {
+          begL
+          begR
+          newL
+          newR
+        }
         createdAt
       }
       total
