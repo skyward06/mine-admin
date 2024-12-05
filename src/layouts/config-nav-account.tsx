@@ -46,19 +46,19 @@ export const _account = [
     icon: <Iconify icon="hugeicons:sale-tag-01" />,
   },
   {
-    label: 'Sponsor',
-    href: '/sponsor',
-    icon: <Iconify icon="bi:diagram-3" />,
-  },
-  {
     label: 'Placement',
     href: '/placement',
     icon: <Iconify icon="clarity:flow-chart-line" />,
   },
   {
-    label: 'Report',
-    href: '/reports',
-    icon: <Iconify icon="oui:app-reporting" />,
+    label: 'Commission',
+    href: '/commission',
+    icon: <Iconify icon="fluent:reward-32-regular" />,
+  },
+  {
+    label: 'Proof',
+    href: '/proof',
+    icon: <Iconify icon="hugeicons:notebook" />,
   },
   {
     label: 'Admin',
