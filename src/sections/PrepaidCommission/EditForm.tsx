@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import { useForm } from 'react-hook-form';
+import { useLocation } from 'react-router';
 import { useMemo, useState, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -45,6 +46,12 @@ export default function EditForm({ current }: Props) {
   const [files, setFiles] = useState<string[]>();
 
   const router = useRouter();
+
+  const location = useLocation();
+  const memberId = location.state?.memberId;
+  const uName = location.state?.username;
+  const fName = location.state?.fullName;
+  const weekStartDate = location.state?.weekStartDate;
 
   const defaultValues = useMemo(
     () => {
@@ -167,15 +174,15 @@ export default function EditForm({ current }: Props) {
     fetchCommissions({
       variables: {
         data: {
-          memberId: current ? current.commission.member.id : member?.id ?? '',
+          memberId: memberId ?? (current ? current.commission.member.id : member?.id ?? ''),
           weekStartDate: customizeDate(
-            `${dayjs(current ? formatDate(current.commission.weekStartDate) : week).startOf('week')}`
+            `${dayjs(weekStartDate ?? (current ? formatDate(current.commission.weekStartDate) : week)).startOf('week')}`
           ),
         },
       },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [member, week, current]);
+  }, [member, week, current, memberId, weekStartDate]);
 
   return (
     <Form methods={methods} onSubmit={onSubmit}>
@@ -203,7 +210,11 @@ export default function EditForm({ current }: Props) {
                 disabled={!!current}
                 options={members}
                 loading={memberLoading}
-                value={current?.commission?.member ?? member}
+                value={
+                  memberId
+                    ? { id: memberId, username: uName, fullName: fName }
+                    : current?.commission?.member ?? member
+                }
                 loadingText={<LoadingButton loading={memberLoading} />}
                 getOptionLabel={(option: Member | string) =>
                   `${(option as Member).username} (${(option as Member).fullName})`
@@ -227,7 +238,7 @@ export default function EditForm({ current }: Props) {
                 label="Week"
                 format="YYYY-MM-DD"
                 disabled={!!current}
-                value={dayjs(week)}
+                value={weekStartDate ? dayjs(weekStartDate) : dayjs(week)}
                 onChange={(value) => setWeek(value)}
               />
 

@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import utcPlugin from 'dayjs/plugin/utc';
+import { useNavigate } from 'react-router';
 
 import Dialog from '@mui/material/Dialog';
 import Tooltip from '@mui/material/Tooltip';
@@ -13,7 +14,7 @@ import { useRouter } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
-import { formatWeekNumber } from 'src/utils/format-time';
+import { formatDate, formatWeekNumber } from 'src/utils/format-time';
 
 import { COMMISSION_TYPE } from 'src/consts';
 import { type WeeklyCommission } from 'src/__generated__/graphql';
@@ -31,6 +32,8 @@ type Props = {
 
 export default function CommissionTableRow({ row }: Props) {
   const placementOpen = useBoolean();
+
+  const navigate = useNavigate();
 
   const router = useRouter();
 
@@ -50,6 +53,13 @@ export default function CommissionTableRow({ row }: Props) {
     commission,
     weekStartDate,
   } = row;
+
+  const state = {
+    memberId: member?.id ?? '',
+    username: member?.username ?? '',
+    fullName: member?.fullName ?? '',
+    weekStartDate: formatDate(weekStartDate, 'YYYY-MM-DD'),
+  };
 
   return (
     <>
@@ -99,7 +109,10 @@ export default function CommissionTableRow({ row }: Props) {
             </IconButton>
           </Tooltip>
           <Tooltip title="Prepay" placement="top" arrow>
-            <IconButton color="default">
+            <IconButton
+              color="default"
+              onClick={() => navigate(paths.dashboard.prepaidCommission.new, { state })}
+            >
               <Iconify icon="f7:money-dollar-circle-fill" />
             </IconButton>
           </Tooltip>
