@@ -55,13 +55,17 @@ export const navData = [
   /**
    * Overview
    */
+
   {
-    subheader: 'mineTXC Administration',
+    subheader: 'Overview',
+    items: [{ title: 'Dashboard', path: paths.dashboard.history.root, icon: ICONS.analytics }],
+  },
+  /**
+   * Main
+   */
+  {
+    subheader: 'Main',
     items: [
-      { title: 'Dashboard', path: paths.dashboard.history.root, icon: ICONS.analytics },
-      { title: 'Miner', path: paths.dashboard.members.root, icon: ICONS.user },
-      { title: 'Sale', path: paths.dashboard.sales.root, icon: ICONS.sale },
-      { title: 'Product', path: paths.dashboard.products.root, icon: ICONS.package },
       { title: 'Sponsor', path: paths.dashboard.sponsor.root, icon: ICONS.sponsor },
       { title: 'Placement', path: paths.dashboard.placement.root, icon: ICONS.diagram },
       {
@@ -73,6 +77,18 @@ export const navData = [
       { title: 'Proof', path: paths.dashboard.proof.root, icon: ICONS.proof },
       { title: 'Reward', path: paths.dashboard.reward.root, icon: ICONS.reward },
       { title: 'Report', path: paths.dashboard.report.root, icon: ICONS.report },
+    ],
+  },
+
+  /**
+   * Basic
+   */
+  {
+    subheader: 'Management',
+    items: [
+      { title: 'Miner', path: paths.dashboard.members.root, icon: ICONS.user },
+      { title: 'Sale', path: paths.dashboard.sales.root, icon: ICONS.sale },
+      { title: 'Product', path: paths.dashboard.products.root, icon: ICONS.package },
       { title: 'Payment', path: paths.dashboard.payment.root, icon: ICONS.payment },
       { title: 'Admin', path: paths.dashboard.user.root, icon: ICONS.admin },
     ],
