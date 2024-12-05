@@ -89,7 +89,7 @@ export const navData = [
       { title: 'Miner', path: paths.dashboard.members.root, icon: ICONS.user },
       { title: 'Sale', path: paths.dashboard.sales.root, icon: ICONS.sale },
       { title: 'Product', path: paths.dashboard.products.root, icon: ICONS.package },
-      { title: 'Payment', path: paths.dashboard.payment.root, icon: ICONS.payment },
+      { title: 'Payment Method', path: paths.dashboard.payment.root, icon: ICONS.payment },
       { title: 'Admin', path: paths.dashboard.user.root, icon: ICONS.admin },
     ],
   },

@@ -46,11 +46,6 @@ export const _account = [
     icon: <Iconify icon="hugeicons:sale-tag-01" />,
   },
   {
-    label: 'Product',
-    href: '/products',
-    icon: <Iconify icon="mdi:package-outline" width="0.8em" />,
-  },
-  {
     label: 'Sponsor',
     href: '/sponsor',
     icon: <Iconify icon="bi:diagram-3" />,
@@ -61,34 +56,9 @@ export const _account = [
     icon: <Iconify icon="clarity:flow-chart-line" />,
   },
   {
-    label: 'Prepayment',
-    href: '/prepaid-commission',
-    icon: <Iconify icon="ic:outline-paid" />,
-  },
-  {
-    label: 'Commission',
-    href: '/commission',
-    icon: <Iconify icon="fluent:reward-32-regular" />,
-  },
-  {
-    label: 'Proof',
-    href: '/proof',
-    icon: <Iconify icon="hugeicons:notebook" />,
-  },
-  {
-    label: 'Reward',
-    href: '/reward',
-    icon: <Iconify icon="marketeq:reward" />,
-  },
-  {
     label: 'Report',
     href: '/reports',
     icon: <Iconify icon="oui:app-reporting" />,
-  },
-  {
-    label: 'Payment',
-    href: '/payment',
-    icon: <Iconify icon="icon-park-outline:payment-method" />,
   },
   {
     label: 'Admin',
