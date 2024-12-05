@@ -1,3 +1,4 @@
+import debounce from 'lodash/debounce';
 import { ApolloError } from '@apollo/client';
 import { useState, useEffect, useContext, useCallback } from 'react';
 
@@ -88,10 +89,16 @@ export function StandardNode({
     editModal.onTrue();
   };
 
-  const onAdd = () => {
+  const onAdd = async () => {
+    setMemberUserName('');
+    setTargetUserId('');
     popover.onClose();
     addModal.onTrue();
   };
+
+  const handleChange = debounce((value: string) => {
+    setMemberUserName(value);
+  }, 300);
 
   useEffect(() => {
     if (memberUsername === null) return;
@@ -141,14 +148,14 @@ export function StandardNode({
         }}
         onInputChange={(_, name: string) => {
           if (!memberLoading) {
-            setMemberUserName(name);
+            handleChange(name);
           }
         }}
         onChange={(_, value) => {
-          if (!memberLoading) {
             setTargetUserId(value);
-          }
         }}
+        value={targetUserId}
+        filterOptions={(options) => options}
       />
       <RadioGroup
         row
@@ -194,16 +201,14 @@ export function StandardNode({
         }}
         onInputChange={(_, name: string) => {
           if (!memberLoading) {
-            setMemberUserName(name);
+            handleChange(name);
           }
         }}
         onChange={(_, value) => {
-          if (!memberLoading) {
             setTargetUserId(value);
-          }
         }}
         value={targetUserId}
-        inputValue={memberUsername || ''}
+        filterOptions={(options) => options}
       />
       <RadioGroup
         row
