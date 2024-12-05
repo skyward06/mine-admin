@@ -16,13 +16,21 @@ import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 import { ConfirmDialog } from 'src/components/Dialog';
 
+import Detail from './Detail';
 import { useRemovePayment } from '../useApollo';
 
 import type { PaymentMethod } from './type';
 
 export const ActionRender = memo(
   ({ data }: CustomCellRendererProps<PaymentMethod>) => {
+    const defaultValue = {
+      id: '',
+      name: '',
+      visible: true,
+    };
     const router = useRouter();
+
+    const open = useBoolean();
     const confirm = useBoolean();
 
     const { loading, removePayment } = useRemovePayment();
@@ -37,6 +45,11 @@ export const ActionRender = memo(
             }}
           >
             <Iconify icon="solar:pen-2-bold" />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="View" placement="top" arrow>
+          <IconButton color="default" onClick={open.onTrue}>
+            <Iconify icon="solar:eye-bold" />
           </IconButton>
         </Tooltip>
         <Tooltip title="Delete" placement="top" arrow>
@@ -84,6 +97,8 @@ export const ActionRender = memo(
             </LoadingButton>
           }
         />
+
+        <Detail open={open} row={data ?? defaultValue} />
       </>
     );
   },
