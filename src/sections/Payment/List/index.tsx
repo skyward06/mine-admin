@@ -91,8 +91,8 @@ export default function PaymentListView() {
   return (
     <DashboardContent>
       <Breadcrumbs
-        heading="Payment"
-        links={[{ name: 'Payment', href: paths.dashboard.payment.root }, { name: 'List' }]}
+        heading="Payment Methods"
+        links={[{ name: 'Payment Methods', href: paths.dashboard.payment.root }, { name: 'List' }]}
         sx={{
           mb: { xs: 1, md: 2 },
         }}
