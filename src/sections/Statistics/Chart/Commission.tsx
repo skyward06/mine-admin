@@ -39,7 +39,7 @@ export default function MemberReward() {
   return (
     <Card>
       <CardHeader
-        title="Commission"
+        title="Commission & Revenue"
         action={
           <ChartSelect
             options={series.map((item) => item.label)}
@@ -57,6 +57,10 @@ export default function MemberReward() {
             {
               name: 'Commission',
               data: commission.map((item) => item.commission).reverse(),
+            },
+            {
+              name: 'Revenue',
+              data: commission.map((item) => item.revenue).reverse(),
             },
           ],
           options: {
@@ -79,9 +83,10 @@ export default function MemberReward() {
               },
             },
           },
-          colors: [alpha(theme.palette.primary.dark, 0.8)],
+          colors: [alpha(theme.palette.warning.light, 0.9), alpha(theme.palette.primary.dark, 0.8)],
         }}
         card
+        type="bar"
       />
     </Card>
   );
