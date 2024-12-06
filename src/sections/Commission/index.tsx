@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { useState } from 'react';
 
+import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
-import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import LoadingButton from '@mui/lab/LoadingButton';
 
@@ -102,17 +102,27 @@ export default function CommissionListView() {
         heading="Commission"
         links={[{ name: 'Commission', href: paths.dashboard.commission.root }, { name: 'All' }]}
         action={
-          <Stack direction="row" columnGap={2}>
+          <Box
+            display="grid"
+            columnGap={2}
+            sx={{ pr: 4, gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: '30% 30% 40%' } }}
+          >
             <LoadingButton
               variant="contained"
               startIcon={<Iconify icon="uil:export" />}
               loading={loading}
               color="primary"
               onClick={handleExport}
+              sx={{ mb: 1 }}
             >
               Export
             </LoadingButton>
-            <Button variant="contained" color="primary" onClick={() => openWeek.onTrue()}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => openWeek.onTrue()}
+              sx={{ mb: 1 }}
+            >
               Select Week
             </Button>
             <Button
@@ -120,10 +130,11 @@ export default function CommissionListView() {
               color="primary"
               startIcon={<Iconify icon="fluent:preview-link-16-regular" />}
               onClick={handleRecalculatePreview}
+              sx={{ mb: 1 }}
             >
-              RECALCULATION
+              Recalculation
             </Button>
-          </Stack>
+          </Box>
         }
         sx={{
           mb: { xs: 1, md: 2 },
