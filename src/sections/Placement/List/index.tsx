@@ -583,7 +583,7 @@ function PlacementListView() {
         anchor="right"
         onClose={open.onFalse}
         slotProps={{ backdrop: { invisible: true } }}
-        PaperProps={{ sx: { width: { xs: 1, sm: 700 }, p: 2 } }}
+        PaperProps={{ sx: { width: { xs: 375, sm: 700 }, p: 2 } }}
       >
         <IndividualMembers
           members={members?.filter((item: any) => item.placementParentId === null) ?? []}
