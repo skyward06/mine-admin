@@ -57,7 +57,7 @@ export default function ProductTableRow({ row, confirm, memberId, setSelected }:
         open={open.value}
         onClose={() => open.onFalse()}
         anchor="right"
-        PaperProps={{ sx: { width: 550, background: '#fff' } }}
+        PaperProps={{ sx: { width: 375, background: '#fff' } }}
       >
         <EditForm open={open} memberId={memberId} current={row} />
       </Drawer>
