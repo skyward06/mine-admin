@@ -6,6 +6,7 @@ import { useTheme } from '@mui/material/styles';
 import TableContainer from '@mui/material/TableContainer';
 import { tableCellClasses } from '@mui/material/TableCell';
 
+import { ScrollBar } from 'src/components/ScrollBar';
 import { TableNoData, TableSkeleton, TableHeadCustom } from 'src/components/Table';
 
 import LogTableRow from './LogTableRow';
@@ -31,51 +32,53 @@ export default function LogView({ loading, currentMember }: Props) {
 
   return (
     <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-      <Table
-        size="small"
-        sx={{ minWidth: 960, borderCollapse: 'separate', borderSpacing: '0 4px' }}
-      >
-        <TableHeadCustom
-          headLabel={TABLE_HEAD}
-          rowCount={loading ? 0 : logs!.length}
-          sx={{
-            [`& .${tableCellClasses.head}`]: {
-              '&:first-of-type': { borderTopLeftRadius: 8, borderBottomLeftRadius: 8 },
-              '&:last-of-type': { borderTopRightRadius: 8, borderBottomRightRadius: 8 },
-            },
-          }}
-        />
-        {loading ? (
-          <>
-            <TableSkeleton height={26} />
-            <TableSkeleton height={26} />
-            <TableSkeleton height={26} />
-            <TableSkeleton height={26} />
-            <TableSkeleton height={26} />
-            <TableSkeleton height={26} />
-            <TableSkeleton height={26} />
-            <TableSkeleton height={26} />
-            <TableSkeleton height={26} />
-            <TableSkeleton height={26} />
-          </>
-        ) : (
-          <TableBody>
-            {logs!.map((row) => (
-              <LogTableRow key={row!.id} row={row!} />
-            ))}
+      <ScrollBar>
+        <Table
+          size="small"
+          sx={{ minWidth: 960, borderCollapse: 'separate', borderSpacing: '0 4px' }}
+        >
+          <TableHeadCustom
+            headLabel={TABLE_HEAD}
+            rowCount={loading ? 0 : logs!.length}
+            sx={{
+              [`& .${tableCellClasses.head}`]: {
+                '&:first-of-type': { borderTopLeftRadius: 8, borderBottomLeftRadius: 8 },
+                '&:last-of-type': { borderTopRightRadius: 8, borderBottomRightRadius: 8 },
+              },
+            }}
+          />
+          {loading ? (
+            <>
+              <TableSkeleton height={26} />
+              <TableSkeleton height={26} />
+              <TableSkeleton height={26} />
+              <TableSkeleton height={26} />
+              <TableSkeleton height={26} />
+              <TableSkeleton height={26} />
+              <TableSkeleton height={26} />
+              <TableSkeleton height={26} />
+              <TableSkeleton height={26} />
+              <TableSkeleton height={26} />
+            </>
+          ) : (
+            <TableBody>
+              {logs!.map((row) => (
+                <LogTableRow key={row!.id} row={row!} />
+              ))}
 
-            <TableNoData
-              notFound={notFound}
-              sx={{
-                m: -2,
-                mt: -1,
-                borderRadius: 1,
-                border: `dashed 1px ${theme.vars.palette.divider}`,
-              }}
-            />
-          </TableBody>
-        )}
-      </Table>
+              <TableNoData
+                notFound={notFound}
+                sx={{
+                  m: -2,
+                  mt: -1,
+                  borderRadius: 1,
+                  border: `dashed 1px ${theme.vars.palette.divider}`,
+                }}
+              />
+            </TableBody>
+          )}
+        </Table>
+      </ScrollBar>
     </TableContainer>
   );
 }

@@ -78,7 +78,9 @@ export default function Difference({
               {rest[item] ?? ''}
             </Label>
           ) : (
-            <Typography>{rest[item] ?? ''}</Typography>
+            <Typography sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              {rest[item] ?? ''}
+            </Typography>
           )}
         </Stack>
       ))}
@@ -91,7 +93,9 @@ export default function Difference({
             {sponsor?.fullName}
           </Label>
         ) : (
-          <Typography>{sponsor?.fullName}</Typography>
+          <Typography sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            {sponsor?.fullName}
+          </Typography>
         )}
       </Stack>
 
@@ -103,7 +107,9 @@ export default function Difference({
             {placement?.fullName}
           </Label>
         ) : (
-          <Typography>{placement?.fullName}</Typography>
+          <Typography sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            {placement?.fullName}
+          </Typography>
         )}
       </Stack>
 
@@ -129,7 +135,11 @@ export default function Difference({
                       {row === 'payout' ? item[row].method : item[row]}
                     </Label>
                   ) : (
-                    <Typography>{row === 'payout' ? item[row].method : item[row]}</Typography>
+                    <Typography
+                      sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+                    >
+                      {row === 'payout' ? item[row].method : item[row]}
+                    </Typography>
                   )}
                 </>
               )}
