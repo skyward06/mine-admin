@@ -68,50 +68,48 @@ export default function OtherWallets({ wallets }: Props) {
         Other Wallets
       </Typography>
       {forms?.map((item, index) => (
-        <Stack key={item.id} sx={{ mb: 1 }}>
-          <Box
-            key={item.id}
-            rowGap={3}
-            columnGap={1}
-            display="grid"
-            sx={{ mb: 1, gridTemplateColumns: '30% auto' }}
-          >
-            <Field.Select
-              name={`otherWallets[${index}].payoutId`}
-              label="Payout"
-              defaultValue={item.payoutId}
-              size="small"
+        <Stack sx={{ mb: 2 }}>
+          <Stack key={item.id} sx={{ mb: 2 }}>
+            <Box
+              key={item.id}
+              rowGap={2}
+              columnGap={1}
+              display="grid"
+              sx={{ mb: 2, gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: '30% auto' } }}
             >
-              {OTHER_WALLET.map((option) => (
-                <MenuItem key={option?.id} value={option?.id}>
-                  {option?.method}
-                </MenuItem>
-              ))}
-            </Field.Select>
+              <Field.Select
+                name={`otherWallets[${index}].payoutId`}
+                label="Payout"
+                defaultValue={item.payoutId}
+              >
+                {OTHER_WALLET.map((option) => (
+                  <MenuItem key={option?.id} value={option?.id}>
+                    {option?.method}
+                  </MenuItem>
+                ))}
+              </Field.Select>
 
-            <Field.Text
-              name={`otherWallets[${index}].address`}
-              label="Address"
-              defaultValue={item.address}
-              size="small"
-            />
-          </Box>
-          <Box display="grid" sx={{ gridTemplateColumns: '90% auto' }}>
-            <Field.Text name={`otherWallets[${index}].note`} label="Note" size="small" />
+              <Field.Text
+                name={`otherWallets[${index}].address`}
+                label="Address"
+                defaultValue={item.address}
+              />
+            </Box>
+            <Box display="grid" sx={{ gridTemplateColumns: { xs: '80% auto', sm: '90% auto' } }}>
+              <Field.Text name={`otherWallets[${index}].note`} label="Note" />
 
-            <Button
-              size="small"
-              color="error"
-              sx={{ mt: 1.5, width: 80 }}
-              startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
-              onClick={() => handleRemove(index)}
-            />
-          </Box>
+              <Button
+                color="error"
+                sx={{ mt: 0.5, width: 80 }}
+                startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
+                onClick={() => handleRemove(index)}
+              />
+            </Box>
+          </Stack>
+          <Divider flexItem sx={{ borderStyle: 'dashed' }} />
         </Stack>
       ))}
-      <Divider flexItem sx={{ borderStyle: 'dashed', mb: 1 }} />
       <IconButton
-        size="small"
         color="default"
         sx={{
           borderRadius: 0,
