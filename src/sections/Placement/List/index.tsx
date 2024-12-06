@@ -9,6 +9,7 @@ import {
   type FitViewOptions,
 } from '@xyflow/react';
 
+import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Drawer from '@mui/material/Drawer';
 import MenuList from '@mui/material/MenuList';
@@ -509,12 +510,16 @@ function PlacementListView() {
           mb: { xs: 1, md: 2 },
         }}
         action={
-          <Stack direction="row" columnGap={1}>
+          <Box
+            display="grid"
+            columnGap={1}
+            sx={{ gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: '85% 15%' } }}
+          >
             <SearchMiner onMinerChange={onMinerChange} />
             <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
               <Iconify icon="eva:more-horizontal-fill" />
             </IconButton>
-          </Stack>
+          </Box>
         }
       />
 
