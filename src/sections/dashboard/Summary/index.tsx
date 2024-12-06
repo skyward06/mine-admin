@@ -2,12 +2,11 @@ import Grid from '@mui/material/Unstable_Grid2';
 
 import Revenue from 'src/sections/Statistics/Chart/Revenue';
 import HashRate from 'src/sections/Statistics/Chart/HashRate';
+import TXCShared from 'src/sections/Statistics/Chart/TXCShared';
 import TotalMiner from 'src/sections/Statistics/Chart/TotalMiner';
 import Commission from 'src/sections/Statistics/Chart/Commission';
 import MemberCount from 'src/sections/Statistics/Chart/MemberCount';
 import MemberReward from 'src/sections/Statistics/Chart/MemberReward';
-
-import TXCShared from './TXCShared';
 
 export default function Summary() {
   return (
