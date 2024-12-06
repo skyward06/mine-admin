@@ -40,7 +40,7 @@ export default function PaymentListView() {
       {
         field: 'visible',
         headerName: 'Visible',
-        flex: 1,
+        width: 300,
         // filter: 'agBooleanColumnFilter',
         filter: false,
         resizable: true,
