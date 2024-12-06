@@ -3,6 +3,7 @@ import { useMutation, useLazyQuery } from '@apollo/client';
 
 import {
   UPDATE_COMMISSION,
+  UPDATE_COMMISSION_NOTE,
   FETCH_COMMISSION_QUERY,
   FETCH_COMMISSION_BY_WEEK,
   UPDATE_COMMISSION_STATUS,
@@ -88,5 +89,15 @@ export function useRecalculateCommissionPreview() {
       refetchQueries: ['WeeklyCommissions'],
     }
   );
+
   return { loading, data, error, updateCommissionPreview };
+}
+
+export function useUpdateCommissionNote() {
+  const [updateCommissionNote, { loading, data, error }] = useMutation(UPDATE_COMMISSION_NOTE, {
+    awaitRefetchQueries: true,
+    refetchQueries: ['WeeklyCommissions'],
+  });
+
+  return { loading, data, error, updateCommissionNote };
 }

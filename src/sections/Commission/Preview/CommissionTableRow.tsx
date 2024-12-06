@@ -21,6 +21,7 @@ import { type WeeklyCommission } from 'src/__generated__/graphql';
 
 import { Iconify } from 'src/components/Iconify';
 
+import Detail from './Detail';
 import PlacementTreeView from '../Member/Placement';
 
 // ----------------------------------------------------------------------
@@ -31,6 +32,7 @@ type Props = {
 };
 
 export default function CommissionTableRow({ row }: Props) {
+  const noteOpen = useBoolean();
   const placementOpen = useBoolean();
 
   const navigate = useNavigate();
@@ -50,6 +52,7 @@ export default function CommissionTableRow({ row }: Props) {
     pkgR,
     member,
     status,
+    shortNote,
     commission,
     weekStartDate,
   } = row;
@@ -90,6 +93,9 @@ export default function CommissionTableRow({ row }: Props) {
             secondaryTypographyProps={{
               component: 'span',
               color: 'text.disabled',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
             }}
           />
         </TableCell>
@@ -102,6 +108,12 @@ export default function CommissionTableRow({ row }: Props) {
           {status !== COMMISSION_TYPE.NONE.label ? `L${pkgL}, R${pkgR}` : 'None'}
         </TableCell>
         <TableCell align="left">{commission ?? 0}</TableCell>
+        <TableCell
+          align="left"
+          sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+        >
+          {shortNote}
+        </TableCell>
         <TableCell align="center">
           <Tooltip title="Placement" placement="top" arrow>
             <IconButton color="default" onClick={() => placementOpen.onTrue()}>
@@ -116,8 +128,15 @@ export default function CommissionTableRow({ row }: Props) {
               <Iconify icon="f7:money-dollar-circle-fill" />
             </IconButton>
           </Tooltip>
+          <Tooltip title="Note" placement="top" arrow>
+            <IconButton color="default" onClick={noteOpen.onTrue}>
+              <Iconify icon="solar:eye-bold" />
+            </IconButton>
+          </Tooltip>
         </TableCell>
       </TableRow>
+
+      <Detail open={noteOpen} row={row} />
 
       <Dialog
         fullWidth

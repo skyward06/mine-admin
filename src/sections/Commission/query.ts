@@ -20,6 +20,7 @@ export const FETCH_COMMISSION_QUERY = gql(/* GraphQL */ `
         pkgR
         commission
         status
+        shortNote
         proof {
           createdAt
           updatedAt
@@ -140,6 +141,14 @@ export const CALCULATE_COMMISSION_PREVIEW = gql(/* GraphQL */ `
     calculatePreview {
       message
       result
+    }
+  }
+`);
+
+export const UPDATE_COMMISSION_NOTE = gql(/* GraphQL */ `
+  mutation UpdateCommissionShortNote($data: WeeklyCommissionNoteInput!) {
+    updateCommissionShortNote(data: $data) {
+      ID
     }
   }
 `);
