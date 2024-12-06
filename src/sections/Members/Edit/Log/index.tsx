@@ -16,7 +16,7 @@ interface Props {
 }
 
 const TABLE_HEAD = [
-  { id: 'who', label: 'Username', sortable: false },
+  { id: 'who', label: 'Actor', sortable: false },
   { id: 'role', label: 'Role', sortable: false },
   { id: 'action', label: 'Action', sortable: false },
   { id: 'when', label: 'Time', sortable: false },
