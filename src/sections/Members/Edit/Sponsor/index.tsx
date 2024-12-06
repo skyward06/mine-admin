@@ -8,6 +8,7 @@ import { Card, Stack, Table, TableBody, TableContainer } from '@mui/material';
 
 import { useQuery } from 'src/routes/hooks';
 
+import { ScrollBar } from 'src/components/ScrollBar';
 import { SearchInput } from 'src/components/SearchInput';
 import {
   useTable,
@@ -119,43 +120,45 @@ export default function PlacementListViewWithReactFlowProvider({ currentMember }
       )}
 
       <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-        <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
-          <TableHeadCustom
-            order={sort && sort[Object.keys(sort)[0]]}
-            orderBy={sort && Object.keys(sort)[0]}
-            headLabel={TABLE_HEAD}
-            rowCount={loading ? 0 : members!.length}
-            onSort={(id) => {
-              if (id !== 'action') {
-                const isAsc = sort && sort[id] === 'asc';
-                const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
-                setQuery({ ...query, sort: newSort });
-              }
-            }}
-          />
-          {loading ? (
-            <>
-              <TableSkeleton height={26} />
-              <TableSkeleton height={26} />
-              <TableSkeleton height={26} />
-              <TableSkeleton height={26} />
-              <TableSkeleton height={26} />
-              <TableSkeleton height={26} />
-              <TableSkeleton height={26} />
-              <TableSkeleton height={26} />
-              <TableSkeleton height={26} />
-              <TableSkeleton height={26} />
-            </>
-          ) : (
-            <TableBody>
-              {members!.map((row) => (
-                <MemberTableRow key={row!.id} row={row!} />
-              ))}
+        <ScrollBar>
+          <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+            <TableHeadCustom
+              order={sort && sort[Object.keys(sort)[0]]}
+              orderBy={sort && Object.keys(sort)[0]}
+              headLabel={TABLE_HEAD}
+              rowCount={loading ? 0 : members!.length}
+              onSort={(id) => {
+                if (id !== 'action') {
+                  const isAsc = sort && sort[id] === 'asc';
+                  const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
+                  setQuery({ ...query, sort: newSort });
+                }
+              }}
+            />
+            {loading ? (
+              <>
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+              </>
+            ) : (
+              <TableBody>
+                {members!.map((row) => (
+                  <MemberTableRow key={row!.id} row={row!} />
+                ))}
 
-              <TableNoData notFound={notFound} />
-            </TableBody>
-          )}
-        </Table>
+                <TableNoData notFound={notFound} />
+              </TableBody>
+            )}
+          </Table>
+        </ScrollBar>
       </TableContainer>
 
       <TablePaginationCustom
