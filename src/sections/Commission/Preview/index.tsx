@@ -25,7 +25,7 @@ import ProductTableFiltersResult from '../Member/CommissionTableFiltersResult';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'weekStartDate', label: 'Week', width: 130, sortable: true },
+  { id: 'weekStartDate', label: 'Week', sortable: true },
   { id: 'member.username', label: 'Username', sortable: true },
   { id: 'member.assetId', label: 'AssetId', sortable: true },
   { id: 'begLR', label: 'BegLR', sortable: false },
@@ -33,9 +33,9 @@ const TABLE_HEAD = [
   { id: 'maxLR', label: 'MaxLR', sortable: false },
   { id: 'endLR', label: 'EndLR', sortable: true },
   { id: 'pkgLR', label: 'Package', sortable: true },
-  { id: 'commission', label: 'Commissions', width: 100, sortable: true },
+  { id: 'commission', label: 'Commissions', sortable: true },
   { id: 'note', label: 'Note', sortable: true },
-  { id: 'action', label: 'Action', width: 250, sortable: true, align: 'center' },
+  { id: 'action', label: 'Action', sortable: true, align: 'center' },
 ];
 
 const additionalFilter = [
@@ -119,7 +119,7 @@ export default function CommissionPreviewList() {
       )}
 
       <ScrollBar>
-        <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+        <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 1260 }}>
           <TableHeadCustom
             order={sort && sort[Object.keys(sort)[0]]}
             orderBy={sort && Object.keys(sort)[0]}

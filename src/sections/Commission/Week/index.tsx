@@ -28,13 +28,13 @@ import SearchPeriod from '../../Placement/List/searchPeriod';
 import type { ICommissionTableFilters } from './types';
 
 const TABLE_HEAD = [
-  { id: 'weekStartDate', label: 'Week', width: 200, sortable: false },
-  { id: 'total sales', label: 'Total Sales', width: 150, sortable: false },
+  { id: 'weekStartDate', label: 'Week', sortable: false },
+  { id: 'total sales', label: 'Total Sales', sortable: false },
   { id: 'total revenue', label: 'Revenue($)', sortable: false },
-  { id: 'total members', label: 'Total Members', width: 150, sortable: false },
+  { id: 'total members', label: 'Total Members', sortable: false },
   { id: 'commission', label: 'Commission', sortable: false },
   { id: '%', label: '%', sortable: false },
-  { id: 'action', label: 'Action', width: 150, sortable: false, align: 'center' },
+  { id: 'action', label: 'Action', sortable: false, align: 'center' },
 ];
 
 interface Props {

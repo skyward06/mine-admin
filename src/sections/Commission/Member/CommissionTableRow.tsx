@@ -73,11 +73,13 @@ export default function CommissionTableRow({ row, selected, onSelectRow }: Props
   return (
     <>
       <TableRow hover>
-        <TableCell padding="checkbox">
+        <TableCell sx={{ whiteSpace: 'nowrap' }} padding="checkbox">
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell>
-        <TableCell align="left">{formatID(ID, 'C')}</TableCell>
-        <TableCell align="left">
+        <TableCell sx={{ whiteSpace: 'nowrap' }} align="left">
+          {formatID(ID, 'C')}
+        </TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }} align="left">
           <ListItemText
             primary={`week #${formatWeekNumber(weekStartDate)}`}
             secondary={`${dayjs(weekStartDate).utc().format('MM/DD')} - ${dayjs(weekStartDate).utc().add(6, 'day').format('MM/DD')}`}
@@ -91,6 +93,7 @@ export default function CommissionTableRow({ row, selected, onSelectRow }: Props
         <TableCell
           sx={{
             alignItems: 'center',
+            whiteSpace: 'nowrap',
             cursor: 'pointer',
             '&:hover': { bgcolor: (theme) => theme.vars.palette.action.hover },
           }}
@@ -106,16 +109,20 @@ export default function CommissionTableRow({ row, selected, onSelectRow }: Props
             }}
           />
         </TableCell>
-        <TableCell align="left">{member?.assetId}</TableCell>
-        <TableCell align="left">{`L${begL}, R${begR}`}</TableCell>
-        <TableCell align="left">{`L${newL}, R${newR}`}</TableCell>
-        <TableCell align="left">{`L${maxL}, R${maxR}`}</TableCell>
-        <TableCell align="left">{`L${endL}, R${endR}`}</TableCell>
-        <TableCell align="left">
+        <TableCell sx={{ whiteSpace: 'nowrap' }} align="left">
+          {member?.assetId}
+        </TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }} align="left">{`L${begL}, R${begR}`}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }} align="left">{`L${newL}, R${newR}`}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }} align="left">{`L${maxL}, R${maxR}`}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }} align="left">{`L${endL}, R${endR}`}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }} align="left">
           {status !== COMMISSION_TYPE.NONE.label ? `L${pkgL}, R${pkgR}` : 'None'}
         </TableCell>
-        <TableCell align="left">{commission ?? 0}</TableCell>
-        <TableCell align="center">
+        <TableCell sx={{ whiteSpace: 'nowrap' }} align="left">
+          {commission ?? 0}
+        </TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }} align="center">
           <Tooltip title="Placement" placement="top" arrow>
             <IconButton color="default" onClick={() => placementOpen.onTrue()}>
               <Iconify icon="clarity:flow-chart-line" />

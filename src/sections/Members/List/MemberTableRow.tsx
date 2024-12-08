@@ -109,11 +109,12 @@ export default function MemberTableRow({
   return (
     <>
       <TableRow hover selected={selected}>
-        <TableCell>{formatID(ID)}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{formatID(ID)}</TableCell>
 
         <TableCell
           sx={{
             alignItems: 'center',
+            whiteSpace: 'nowrap',
             cursor: 'pointer',
             '&:hover': { bgcolor: (theme) => theme.vars.palette.action.hover },
           }}
@@ -132,17 +133,18 @@ export default function MemberTableRow({
           />
         </TableCell>
 
-        <TableCell>{fullName}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{fullName}</TableCell>
 
-        <TableCell>{mobile}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{mobile}</TableCell>
 
-        <TableCell>{assetId}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{assetId}</TableCell>
 
-        <TableCell>{point}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{point}</TableCell>
 
         <TableCell
           sx={{
             cursor: 'pointer',
+            whiteSpace: 'nowrap',
             '&:hover': { bgcolor: (theme) => theme.vars.palette.action.hover },
           }}
           onClick={() => handleSponsors()}
@@ -150,7 +152,7 @@ export default function MemberTableRow({
           {totalIntroducers}
         </TableCell>
 
-        <TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>
           <Stack direction="row" columnGap={1}>
             {!emailVerified && (
               <Label variant="soft" color="error">
@@ -169,7 +171,7 @@ export default function MemberTableRow({
           </Stack>
         </TableCell>
 
-        <TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>
           <ListItemText
             primary={formatDate(createdAt)}
             secondary={formatTime(createdAt)}

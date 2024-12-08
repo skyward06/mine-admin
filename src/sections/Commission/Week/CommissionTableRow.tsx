@@ -35,7 +35,7 @@ export default function CommissionTableRow({ row }: Props) {
   return (
     <>
       <TableRow hover>
-        <TableCell align="left">
+        <TableCell sx={{ whiteSpace: 'nowrap' }} align="left">
           <ListItemText
             primary={`week #${formatWeekNumber(weekStartDate)}`}
             secondary={`${dayjs(weekStartDate).utc().format('MM/DD')} - ${dayjs(weekStartDate).utc().add(6, 'day').format('MM/DD')}`}
@@ -46,14 +46,22 @@ export default function CommissionTableRow({ row }: Props) {
             }}
           />
         </TableCell>
-        <TableCell align="left">{totalSale}</TableCell>
-        <TableCell align="left">{totalRevenue}</TableCell>
-        <TableCell align="left">{totalMember}</TableCell>
-        <TableCell align="left">{totalAmount}</TableCell>
-        <TableCell align="left">
+        <TableCell sx={{ whiteSpace: 'nowrap' }} align="left">
+          {totalSale}
+        </TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }} align="left">
+          {totalRevenue}
+        </TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }} align="left">
+          {totalMember}
+        </TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }} align="left">
+          {totalAmount}
+        </TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }} align="left">
           {(totalRevenue ? (totalAmount / totalRevenue) * 100 : 0).toFixed(2)}
         </TableCell>
-        <TableCell align="center">
+        <TableCell sx={{ whiteSpace: 'nowrap' }} align="center">
           <Tooltip title="Placement" placement="top" arrow>
             <IconButton color="default" onClick={() => open.onTrue()}>
               <Iconify icon="clarity:flow-chart-line" />

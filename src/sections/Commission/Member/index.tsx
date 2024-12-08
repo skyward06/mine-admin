@@ -55,17 +55,17 @@ const STATUS_OPTIONS: { value: CommissionRole; label: string; color: LabelColor 
 ];
 
 const TABLE_HEAD = [
-  { id: 'ID', label: 'ID', width: 120, sortable: true },
-  { id: 'weekStartDate', label: 'Week', width: 120, sortable: true },
+  { id: 'ID', label: 'ID', sortable: true },
+  { id: 'weekStartDate', label: 'Week', sortable: true },
   { id: 'member.username', label: 'Username', sortable: true },
   { id: 'member.assetId', label: 'AssetId', sortable: true },
-  { id: 'begLR', label: 'BegLR', width: 100, sortable: false },
-  { id: 'newLR', label: 'NewLR', width: 100, sortable: false },
-  { id: 'maxLR', label: 'MaxLR', width: 100, sortable: false },
-  { id: 'endLR', label: 'EndLR', width: 100, sortable: true },
+  { id: 'begLR', label: 'BegLR', sortable: false },
+  { id: 'newLR', label: 'NewLR', sortable: false },
+  { id: 'maxLR', label: 'MaxLR', sortable: false },
+  { id: 'endLR', label: 'EndLR', sortable: true },
   { id: 'pkgLR', label: 'Package', sortable: true },
-  { id: 'commission', label: 'Commissions', width: 200, sortable: true },
-  { id: 'action', label: 'Action', width: 250, sortable: true, align: 'center' },
+  { id: 'commission', label: 'Commissions', sortable: true },
+  { id: 'action', label: 'Action', sortable: true, align: 'center' },
 ];
 
 const defaultFilter: ICommissionTableFilters = {
