@@ -13,6 +13,8 @@ import { useScrollOffSetTop } from 'src/hooks/use-scroll-offset-top';
 
 import { bgBlur, varAlpha } from 'src/theme/styles';
 
+import { useSettingsContext } from 'src/components/settings';
+
 import { layoutClasses } from '../classes';
 
 // ----------------------------------------------------------------------
@@ -65,6 +67,8 @@ export function HeaderSection({
 }: HeaderSectionProps) {
   const theme = useTheme();
 
+  const settings = useSettingsContext();
+
   const { offsetTop } = useScrollOffSetTop();
 
   const toolbarStyles = {
@@ -110,7 +114,7 @@ export function HeaderSection({
       >
         <Container
           {...slotProps?.container}
-          maxWidth="xl"
+          maxWidth={settings.compactLayout ? 'xl' : false}
           sx={{
             height: 1,
             display: 'flex',

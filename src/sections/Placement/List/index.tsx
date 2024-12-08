@@ -527,7 +527,7 @@ function PlacementListView() {
         <LoadingScreen />
       ) : (
         <ComponentBlock sx={{ px: 0, pb: 0 }}>
-          <Stack sx={{ overflow: 'auto', height: '600px', width: '100%' }}>
+          <Stack sx={{ overflow: 'auto', height: 'calc(100vh - 280px)', width: '100%' }}>
             <NodeContext.Provider value={contextValue}>
               <ReactFlow
                 nodes={nodes}
