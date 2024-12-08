@@ -4,6 +4,7 @@ import type { ColDef, IDateFilterParams, ITextFilterParams } from '@ag-grid-comm
 import { useMemo } from 'react';
 
 import Card from '@mui/material/Card';
+import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
@@ -15,12 +16,14 @@ import { useBoolean } from 'src/hooks/useBoolean';
 import { formatID } from 'src/utils/helper';
 import { formatDate } from 'src/utils/format-time';
 
+import { CONFIG } from 'src/config';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { AgGrid } from 'src/components/AgGrid';
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 import { ConfirmDialog } from 'src/components/Dialog';
+import ExportButton from 'src/components/ExportButton';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import { CustomName } from 'src/components/AgGrid/Renderers';
 import { LoadingScreen } from 'src/components/loading-screen';
@@ -152,20 +155,25 @@ export default function SaleListView() {
     []
   );
 
+  const token = localStorage.getItem(CONFIG.storageTokenKey) ?? '';
+
   return (
     <DashboardContent>
       <Breadcrumbs
         heading="Sale"
         links={[{ name: 'Sale', href: paths.dashboard.sales.root }, { name: 'List' }]}
         action={
-          <Button
-            component={RouterLink}
-            href={paths.dashboard.sales.new}
-            variant="contained"
-            startIcon={<Iconify icon="mingcute:add-line" />}
-          >
-            New Sale
-          </Button>
+          <Stack direction={{ xs: 'column', md: 'row' }} gap={1.5}>
+            <Button
+              component={RouterLink}
+              href={paths.dashboard.sales.new}
+              variant="contained"
+              startIcon={<Iconify icon="mingcute:add-line" />}
+            >
+              New Sale
+            </Button>
+            <ExportButton target="sales" token={token} variant="contained" />
+          </Stack>
         }
         sx={{
           mb: { xs: 1, md: 2 },

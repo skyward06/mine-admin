@@ -12,9 +12,10 @@ import { Iconify } from 'src/components/Iconify';
 interface Props {
   target: string;
   token: string;
+  [key: string]: string;
 }
 
-export default function ExportButton({ target, token }: Props) {
+export default function ExportButton({ target, token, ...rest }: Props) {
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleExport = async () => {
@@ -51,6 +52,7 @@ export default function ExportButton({ target, token }: Props) {
       startIcon={<Iconify icon="uil:export" />}
       loading={loading}
       onClick={handleExport}
+      {...rest}
     >
       Export
     </LoadingButton>

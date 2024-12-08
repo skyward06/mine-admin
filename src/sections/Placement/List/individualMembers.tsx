@@ -61,7 +61,7 @@ export default function IndividualMembers({ members }: Props) {
 
               <TableCell>{row.fullName}</TableCell>
 
-              <TableCell>{row.sponsor.username}</TableCell>
+              <TableCell>{row?.sponsor?.username}</TableCell>
 
               <TableCell>
                 <ListItemText
