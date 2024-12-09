@@ -282,6 +282,7 @@ export default function MemberGeneral({ currentMember }: Props) {
                 label="ID"
                 required
                 value={ID}
+                onChange={(event) => setID(event.target.value)}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">

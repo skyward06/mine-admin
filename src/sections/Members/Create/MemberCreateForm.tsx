@@ -248,6 +248,7 @@ export default function MemberCreateForm() {
                 label="ID"
                 required
                 value={ID}
+                onChange={(event) => setID(event.target.value)}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
