@@ -65,7 +65,7 @@ export function StandardNode({
   const [position, setPosition] = useState<PlacementPosition>(PlacementPosition.Left);
   const [checked, setChecked] = useState<boolean>(false);
   const [memberUsername, setMemberUserName] = useState<string | null>(null);
-  const [targetUserId, setTargetUserId] = useState<string | null>('');
+  const [targetUserId, setTargetUserId] = useState<string>('');
 
   const { loading, updateMember } = useUpdateMember();
   const { loading: memberLoading, members, fetchMembers } = useFetchMembers();
@@ -152,7 +152,7 @@ export function StandardNode({
           }
         }}
         onChange={(_, value) => {
-            setTargetUserId(value);
+          setTargetUserId(value ?? '');
         }}
         value={targetUserId}
         filterOptions={(options) => options}
@@ -205,7 +205,7 @@ export function StandardNode({
           }
         }}
         onChange={(_, value) => {
-            setTargetUserId(value);
+          setTargetUserId(value ?? '');
         }}
         value={targetUserId}
         filterOptions={(options) => options}
