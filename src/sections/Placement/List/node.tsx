@@ -6,6 +6,8 @@ import Card from '@mui/material/Card';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Radio from '@mui/material/Radio';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
 import Checkbox from '@mui/material/Checkbox';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
@@ -14,7 +16,10 @@ import IconButton from '@mui/material/IconButton';
 import RadioGroup from '@mui/material/RadioGroup';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
+import DialogTitle from '@mui/material/DialogTitle';
 import Autocomplete from '@mui/material/Autocomplete';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { paths } from 'src/routes/paths';
@@ -25,7 +30,7 @@ import { useBoolean } from 'src/hooks/useBoolean';
 import { formatDate } from 'src/utils/format-time';
 import { customizeFullName } from 'src/utils/helper';
 
-import { PlacementPosition } from 'src/__generated__/graphql';
+import { type TeamStrategy, PlacementPosition } from 'src/__generated__/graphql';
 
 import { Label } from 'src/components/Label';
 import { toast } from 'src/components/SnackBar';
@@ -55,9 +60,12 @@ export function StandardNode({
   placementPosition,
   cmnCalculatedWeeks,
 }: NodeProps) {
+  const status = useBoolean();
+  const isCreate = useBoolean();
   const addModal = useBoolean();
   const editModal = useBoolean();
   const removeModal = useBoolean();
+  const confirmModal = useBoolean();
 
   const router = useRouter();
   const popover = usePopover();
@@ -66,6 +74,7 @@ export function StandardNode({
   const [checked, setChecked] = useState<boolean>(false);
   const [memberUsername, setMemberUserName] = useState<string | null>(null);
   const [targetUserId, setTargetUserId] = useState<string>('');
+  const [strategy, setStrategy] = useState<'LEFT' | 'RIGHT'>();
 
   const { loading, updateMember } = useUpdateMember();
   const { loading: memberLoading, members, fetchMembers } = useFetchMembers();
@@ -190,7 +199,7 @@ export function StandardNode({
           const mbr = getMemberById(option);
           return mbr ? mbr.username : memberUsername || '';
         }}
-        renderInput={(params) => <TextField {...params} label="Miner Name(Child)" margin="none" />}
+        renderInput={(params) => <TextField {...params} label="Miner Name(Parent)" margin="none" />}
         renderOption={(props, option) => {
           const mbr = getMemberById(option);
           return (
@@ -249,6 +258,44 @@ export function StandardNode({
       />
     </Paper>
   );
+
+  const confirmStrategy = async (curId: string, curPId: string, curPos: string) => {
+    try {
+      const newData: any = {
+        id: curId,
+        placementParentId: curPId,
+        placementPosition: curPos,
+      };
+
+      if (status) {
+        newData.teamStrategy = strategy as TeamStrategy;
+      }
+
+      const { data } = await updateMember({
+        variables: {
+          data: newData,
+        },
+      });
+
+      if (data?.updateMember.id && !loading) {
+        toast.success('Successfully added!');
+
+        if (isCreate.value) {
+          addModal.onFalse();
+        } else {
+          editModal.onFalse();
+        }
+      }
+
+      confirmModal.onFalse();
+    } catch (err) {
+      if (err instanceof ApolloError) {
+        const [error] = err.graphQLErrors;
+
+        toast.error(error.message);
+      }
+    }
+  };
 
   return (
     <>
@@ -401,24 +448,14 @@ export function StandardNode({
             variant="contained"
             color="success"
             loading={loading}
-            onClick={async () => {
-              try {
-                const { data } = await updateMember({
-                  variables: {
-                    data: { id: targetUserId, placementParentId: id, placementPosition: position },
-                  },
-                });
+            onClick={() => {
+              confirmModal.onTrue();
+              isCreate.onTrue();
 
-                if (data?.updateMember.id && !loading) {
-                  toast.success('Successfully added!');
-                  addModal.onFalse();
-                }
-              } catch (err) {
-                if (err instanceof ApolloError) {
-                  const [error] = err.graphQLErrors;
-
-                  toast.error(error.message);
-                }
+              if (position === PlacementPosition.Left) {
+                setStrategy(PlacementPosition.Right);
+              } else {
+                setStrategy(PlacementPosition.Left);
               }
             }}
           >
@@ -437,28 +474,14 @@ export function StandardNode({
             variant="contained"
             color="success"
             loading={loading}
-            onClick={async () => {
-              try {
-                const { data } = await updateMember({
-                  variables: {
-                    data: {
-                      id,
-                      placementParentId: targetUserId,
-                      placementPosition: position,
-                    },
-                  },
-                });
+            onClick={() => {
+              confirmModal.onTrue();
+              isCreate.onFalse();
 
-                if (data?.updateMember.id && !loading) {
-                  toast.success('Successfully added!');
-                  editModal.onFalse();
-                }
-              } catch (err) {
-                if (err instanceof ApolloError) {
-                  const [error] = err.graphQLErrors;
-
-                  toast.error(error.message);
-                }
+              if (position === PlacementPosition.Left) {
+                setStrategy(PlacementPosition.Right);
+              } else {
+                setStrategy(PlacementPosition.Left);
               }
             }}
           >
@@ -499,6 +522,50 @@ export function StandardNode({
           </LoadingButton>
         }
       />
+
+      <Dialog fullWidth maxWidth="xs" open={confirmModal.value} onClose={confirmModal.onFalse}>
+        <DialogTitle sx={{ pb: 2 }}>Confirm Team Strategy</DialogTitle>
+
+        <DialogContent>{`Do you want to change your team strategy to "${strategy}"`}</DialogContent>
+
+        <DialogActions>
+          <LoadingButton
+            variant="contained"
+            color="success"
+            loading={status.value && loading}
+            onClick={() => {
+              status.onTrue();
+              if (isCreate.value) {
+                confirmStrategy(targetUserId, id, position);
+              } else {
+                confirmStrategy(id, targetUserId, position);
+              }
+            }}
+          >
+            Change
+          </LoadingButton>
+
+          <LoadingButton
+            variant="contained"
+            color="info"
+            loading={!status.value && loading}
+            onClick={() => {
+              status.onFalse();
+              if (isCreate.value) {
+                confirmStrategy(targetUserId, id, position);
+              } else {
+                confirmStrategy(id, targetUserId, position);
+              }
+            }}
+          >
+            Skip
+          </LoadingButton>
+
+          <Button variant="outlined" color="inherit" onClick={confirmModal.onFalse}>
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
