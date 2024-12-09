@@ -16,6 +16,8 @@ export const Schema = zod.object({
   primaryAddress: zod.string({ required_error: 'Address is required' }),
   secondaryAddress: zod.string({ required_error: 'Address Line 2 is required' }),
   sponsorId: zod.string({ required_error: 'Sponsor Name is required' }),
+  ID: zod.string({ required_error: 'ID is required' }),
+  teamStrategy: zod.string({ required_error: 'Team Strategy is required' }),
   assetId: zod.string().optional().nullable(),
   preferredContact: zod.string().optional().nullable(),
   preferredContactDetail: zod.string().optional().nullable(),

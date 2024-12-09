@@ -1,5 +1,3 @@
-import type { Member } from 'src/__generated__/graphql';
-
 import states from 'states-us';
 import isEqual from 'lodash/isEqual';
 import { useForm } from 'react-hook-form';
@@ -13,20 +11,27 @@ import Stack from '@mui/material/Stack';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Unstable_Grid2';
+import IconButton from '@mui/material/IconButton';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Autocomplete from '@mui/material/Autocomplete';
+import InputAdornment from '@mui/material/InputAdornment';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { CONTACT, TXC_WALLET, OTHER_WALLET } from 'src/consts';
+import { generateRandomString } from 'src/utils/helper';
+
+import { CONTACT } from 'src/consts';
+import { type Member, TeamStrategy } from 'src/__generated__/graphql';
 
 import { toast } from 'src/components/SnackBar';
+import { Iconify } from 'src/components/Iconify';
 import { Form, Field } from 'src/components/Form';
 
 import TXCWallets from './txcWallets';
 import OtherWallets from './otherWallets';
 import { Schema, type SchemaType } from './schema';
+import { getWallets, hasDuplicates } from './helper';
 import { UPDATE_MEMBER, FETCH_MEMBERS_QUERY } from '../../query';
 
 // ----------------------------------------------------------------------
@@ -41,32 +46,6 @@ interface Edit {
   fullName?: string;
 }
 
-const getWallets = (memberWallets: any) => {
-  if (!Array.isArray(memberWallets)) return [[], []];
-
-  const txcWallets: any[] = memberWallets
-    .filter((mw) => TXC_WALLET.findIndex((TXCWALLET) => TXCWALLET.id === mw.payout.id) !== -1)
-    .map((mw) => ({
-      id: mw.id,
-      payoutId: mw.payout.id,
-      address: mw.address,
-      note: mw.note,
-      percent: mw.percent,
-    }));
-
-  const otherWallets: any = memberWallets
-    .filter((mw) => OTHER_WALLET.findIndex((TXCWALLET) => TXCWALLET.id === mw.payout.id) !== -1)
-    .map((mw) => ({
-      id: mw.id,
-      payoutId: mw.payout.id,
-      address: mw.address,
-      note: mw.note,
-      percent: mw.percent,
-    }));
-
-  return [txcWallets, otherWallets];
-};
-
 export default function MemberGeneral({ currentMember }: Props) {
   const router = useRouter();
 
@@ -79,6 +58,7 @@ export default function MemberGeneral({ currentMember }: Props) {
   const [firstName, setFirstName] = useState<string>(first);
   const [lastName, setLastName] = useState<string>(last);
   const [state, setState] = useState<string>();
+  const [ID, setID] = useState<string>();
 
   const [fetchMembers, { loading: memberLoading, data: memberData }] =
     useLazyQuery(FETCH_MEMBERS_QUERY);
@@ -101,20 +81,6 @@ export default function MemberGeneral({ currentMember }: Props) {
   });
 
   const { setError, handleSubmit } = methods;
-
-  const hasDuplicates = (arr: any[]) => {
-    const seen = new Set();
-
-    return arr.some((item: any) => {
-      if (seen.has(item.address)) {
-        return true;
-      }
-
-      seen.add(item.address);
-
-      return false;
-    });
-  };
 
   const onSubmit = handleSubmit(async (newMember) => {
     try {
@@ -157,6 +123,8 @@ export default function MemberGeneral({ currentMember }: Props) {
               preferredContact: newMember.preferredContact,
               preferredContactDetail: newMember.preferredContactDetail,
               zipCode: newMember.zipCode,
+              teamStrategy: newMember.teamStrategy as TeamStrategy,
+              ID,
               wallets: [...newMember.txcWallets, ...newMember.otherWallets].map(
                 ({ percent, ...rest }) => ({
                   percent: percent * 100,
@@ -215,6 +183,10 @@ export default function MemberGeneral({ currentMember }: Props) {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [member]);
+
+  useEffect(() => {
+    setID(currentMember.ID);
+  }, [currentMember]);
 
   return (
     <Form methods={methods} onSubmit={onSubmit}>
@@ -305,6 +277,28 @@ export default function MemberGeneral({ currentMember }: Props) {
                 ))}
               </Field.Select>
               <Field.Text name="preferredContactDetail" label="Preferred Contact Detail" />
+              <Field.Text
+                name="ID"
+                label="ID"
+                required
+                value={ID}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton edge="end" onClick={() => setID(generateRandomString())}>
+                        <Iconify icon="lets-icons:sort-random" width={24} />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <Field.Select name="teamStrategy" label="Team Strategy">
+                {Object.values(TeamStrategy).map((option) => (
+                  <MenuItem key={option} value={option}>
+                    {option}
+                  </MenuItem>
+                ))}
+              </Field.Select>
               <Field.Switch name="syncWithSendy" label="Subscribe to Sendy" sx={{ p: 0 }} />
             </Box>
           </Card>
