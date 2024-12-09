@@ -11,7 +11,6 @@ import IconButton from '@mui/material/IconButton';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { formatID } from 'src/utils/helper';
 import { formatDate } from 'src/utils/format-time';
 
 import { Iconify } from 'src/components/Iconify';
@@ -51,7 +50,7 @@ export const Personal = () => {
           <Typography variant="subtitle1">{member?.fullName}</Typography>
           <Stack direction="row">
             <Typography variant="body2" sx={{ pt: 0.9 }}>
-              {formatID(member?.ID ?? '')}
+              {member?.ID}
             </Typography>
             <IconButton
               color="success"
@@ -190,6 +189,17 @@ export const Personal = () => {
           </Stack>
 
           <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
+
+          <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+            <Stack width={0.5}>
+              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                Team Strategy:
+              </Typography>
+            </Stack>
+            <Stack width={1}>
+              <Typography variant="body2">{member?.teamStrategy}</Typography>
+            </Stack>
+          </Stack>
 
           <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
             <Stack width={0.5}>
