@@ -170,3 +170,19 @@ export const customizeFullName = (fullName: string) => {
 
   return `${firstName} ${lastName?.length ? `${lastName[0].toUpperCase()}.` : ''}`;
 };
+
+export const generateRandomString = (length: number = 8): string => {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+
+  // Create an array of 'length' items and fill it using forEach
+  Array(length).forEach(() => {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    result += characters[randomIndex];
+  });
+
+  return result;
+};
+
+// Example usage
+console.log(generateRandomString()); // Generates a random 8-character string
