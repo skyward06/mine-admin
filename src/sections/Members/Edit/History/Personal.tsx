@@ -33,7 +33,7 @@ export const Personal = () => {
   useEffect(() => {
     setChildren(
       member?.placementChildren?.reduce(
-        (prev, save) => ({ ...prev, [save?.placementPosition ?? '']: save?.fullName }),
+        (prev, save) => ({ ...prev, [save.placementPosition]: save?.fullName }),
         {}
       )
     );

@@ -237,7 +237,7 @@ function PlacementListView({ weekStartDate }: Props) {
       commission: commission?.commission,
     }))
     .sort((mb1, mb2) =>
-      (mb1?.placementPosition as string)?.localeCompare(mb2?.placementPosition as string)
+      (mb1.placementPosition as string)?.localeCompare(mb2.placementPosition as string)
     );
 
   const [visibleMap, setVisibleMap] = useState<Record<string, number>>({});

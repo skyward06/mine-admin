@@ -69,7 +69,7 @@ export function StandardNode({
             {formatDate(createdAt)}
           </Typography>
           <Stack direction="row" justifyContent="flex-end">
-            {placementPosition && (
+            {placementPosition !== 'NONE' && (
               <Label
                 variant="soft"
                 color={placementPosition === 'LEFT' ? 'primary' : 'info'}

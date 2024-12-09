@@ -67,7 +67,7 @@ export function StandardNode({
         </Typography>
 
         <Stack>
-          {placementPosition && (
+          {placementPosition !== 'NONE' && (
             <Label
               variant={placementPosition === 'LEFT' ? 'soft' : 'outlined'}
               color="info"
