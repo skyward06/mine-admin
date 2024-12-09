@@ -39,6 +39,8 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         preferredContact
         preferredContactDetail
         cmnCalculatedWeeks
+        teamStrategy
+        placementPosition
         commission {
           begL
           begR
@@ -63,6 +65,8 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           preferredContact
           preferredContactDetail
           cmnCalculatedWeeks
+          teamStrategy
+          placementPosition
           commission {
             begL
             begR
@@ -90,6 +94,8 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           secondaryAddress
           preferredContactDetail
           cmnCalculatedWeeks
+          teamStrategy
+          placementPosition
           commission {
             begL
             begR
@@ -116,6 +122,8 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           placementPosition
           preferredContactDetail
           cmnCalculatedWeeks
+          teamStrategy
+          placementPosition
           commission {
             begL
             begR

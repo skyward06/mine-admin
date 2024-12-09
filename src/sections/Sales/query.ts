@@ -59,6 +59,8 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
           preferredContact
           preferredContactDetail
           cmnCalculatedWeeks
+          placementPosition
+          teamStrategy
           createdAt
         }
         package {
