@@ -108,10 +108,10 @@ export default function MemberListView() {
 
     if (filter.status === 'pending') {
       filterObj.status = false;
-    }
-
-    if (filter.status === 'inactive') {
+    } else if (filter.status === 'inactive') {
       filterObj.deletedAt = { not: null };
+    } else {
+      filterObj.status = true;
     }
 
     if (sponsorId) {

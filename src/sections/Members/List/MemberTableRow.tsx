@@ -19,7 +19,6 @@ import { useRouter } from 'src/routes/hooks';
 
 import { useBoolean, type UseBooleanReturn } from 'src/hooks/useBoolean';
 
-import { formatID } from 'src/utils/helper';
 import { formatDate, formatTime } from 'src/utils/format-time';
 
 import { Label } from 'src/components/Label';
@@ -109,7 +108,7 @@ export default function MemberTableRow({
   return (
     <>
       <TableRow hover selected={selected}>
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{formatID(ID)}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{ID}</TableCell>
 
         <TableCell
           sx={{
