@@ -11,7 +11,7 @@ import { useRouter } from 'src/routes/hooks';
 
 import { formatDate } from 'src/utils/format-time';
 
-import { FREE_SHARE_ID_1, FREE_SHARE_ID_2 } from 'src/consts';
+import { NO_PRODUCT, FREE_SHARE_ID_1, FREE_SHARE_ID_2 } from 'src/consts';
 
 import { Label } from 'src/components/Label';
 import { Iconify } from 'src/components/Iconify';
@@ -42,6 +42,11 @@ export default function ProductTableRow({ row, confirm, setSelected }: Props) {
         {(id === FREE_SHARE_ID_1 || id === FREE_SHARE_ID_2) && (
           <Label variant="soft" color="primary">
             Free Share
+          </Label>
+        )}
+        {id === NO_PRODUCT && (
+          <Label variant="soft" color="info">
+            No Product
           </Label>
         )}
       </TableCell>
