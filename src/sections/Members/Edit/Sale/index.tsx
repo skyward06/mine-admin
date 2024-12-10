@@ -5,10 +5,12 @@ import type { ColDef, IDateFilterParams, ITextFilterParams } from '@ag-grid-comm
 import { useMemo } from 'react';
 
 import Card from '@mui/material/Card';
+import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
-import { useParams, useAgQuery } from 'src/routes/hooks';
+import { paths } from 'src/routes/paths';
+import { useParams, useRouter, useAgQuery } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
@@ -26,6 +28,7 @@ import { ActionRender } from './ActionRenderer';
 
 export default function SaleListView() {
   const params = useParams();
+  const router = useRouter();
   const [query, { setFilter }] = useAgQuery();
 
   if (!query.filter) {
@@ -46,7 +49,17 @@ export default function SaleListView() {
         filter: 'agNumberColumnFilter',
         resizable: true,
         editable: false,
-        cellRenderer: ({ data }: CustomCellRendererProps<Sale>) => formatID(data?.ID ?? '', 'S'),
+        cellRenderer: ({ data }: CustomCellRendererProps<Sale>) => (
+          <Stack
+            sx={{
+              cursor: 'pointer',
+              '&:hover': { bgcolor: (theme) => theme.vars.palette.action.hover },
+            }}
+            onClick={() => router.push(paths.dashboard.sales.edit(formatID(data?.ID ?? '', 'S')))}
+          >
+            {formatID(data?.ID ?? '', 'S')}
+          </Stack>
+        ),
         cellClass: 'ag-number-cell ',
       },
       {
@@ -119,8 +132,8 @@ export default function SaleListView() {
       },
       {
         colId: 'action',
-        headerName: 'Action',
-        width: 100,
+        width: 60,
+        pinned: 'right',
         resizable: false,
         editable: false,
         sortable: false,
@@ -141,7 +154,7 @@ export default function SaleListView() {
         }}
       >
         <AgGrid<Sale>
-          gridKey="sale-list"
+          gridKey="miner-sale-list"
           loading={loading}
           rowData={sales}
           columnDefs={colDefs}
