@@ -10,21 +10,16 @@ import Stack from '@mui/material/Stack';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Unstable_Grid2';
-import IconButton from '@mui/material/IconButton';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Autocomplete from '@mui/material/Autocomplete';
-import InputAdornment from '@mui/material/InputAdornment';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
-
-import { generateRandomString } from 'src/utils/helper';
 
 import { CONTACT } from 'src/consts';
 import { TeamStrategy } from 'src/__generated__/graphql';
 
 import { toast } from 'src/components/SnackBar';
-import { Iconify } from 'src/components/Iconify';
 import { Form, Field } from 'src/components/Form';
 
 import TXCWallets from './txcWallets';
@@ -47,14 +42,12 @@ export default function MemberCreateForm() {
 
   const [member, setMember] = useState<Member>();
   const [state, setState] = useState<string>();
-  const [ID, setID] = useState<string>();
 
   const router = useRouter();
 
   const defaultValues = useMemo(
     () => ({
       mobile: '',
-      ID: '',
       primaryAddress: '',
       secondaryAddress: '',
       state: '',
@@ -113,7 +106,6 @@ export default function MemberCreateForm() {
                 fullName: `${firstName} ${lastName}`,
                 sponsorId: member?.id,
                 state,
-                ID: ID ?? '',
                 teamStrategy: teamStrategy as TeamStrategy,
                 wallets: [...txcWallets, ...otherWallets].map(({ percent, ...rest }) => ({
                   percent: percent * 100,
@@ -243,23 +235,7 @@ export default function MemberCreateForm() {
                 ))}
               </Field.Select>
               <Field.Text name="preferredContactDetail" label="Preferred Contact Detail" />
-              <Field.Text
-                name="ID"
-                label="ID"
-                required
-                value={ID}
-                onChange={(event) => setID(event.target.value)}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton edge="end" onClick={() => setID(generateRandomString())}>
-                        <Iconify icon="lets-icons:sort-random" width={24} />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-              <Field.Select name="teamStrategy" label="Team Strategy">
+              <Field.Select name="teamStrategy" label="Team Strategy" required>
                 {Object.values(TeamStrategy).map((option) => (
                   <MenuItem key={option} value={option}>
                     {option}

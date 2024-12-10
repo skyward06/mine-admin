@@ -11,21 +11,16 @@ import Stack from '@mui/material/Stack';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Unstable_Grid2';
-import IconButton from '@mui/material/IconButton';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Autocomplete from '@mui/material/Autocomplete';
-import InputAdornment from '@mui/material/InputAdornment';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
-
-import { generateRandomString } from 'src/utils/helper';
 
 import { CONTACT } from 'src/consts';
 import { type Member, TeamStrategy } from 'src/__generated__/graphql';
 
 import { toast } from 'src/components/SnackBar';
-import { Iconify } from 'src/components/Iconify';
 import { Form, Field } from 'src/components/Form';
 
 import TXCWallets from './txcWallets';
@@ -58,7 +53,6 @@ export default function MemberGeneral({ currentMember }: Props) {
   const [firstName, setFirstName] = useState<string>(first);
   const [lastName, setLastName] = useState<string>(last);
   const [state, setState] = useState<string>();
-  const [ID, setID] = useState<string>();
 
   const [fetchMembers, { loading: memberLoading, data: memberData }] =
     useLazyQuery(FETCH_MEMBERS_QUERY);
@@ -124,7 +118,6 @@ export default function MemberGeneral({ currentMember }: Props) {
               preferredContactDetail: newMember.preferredContactDetail,
               zipCode: newMember.zipCode,
               teamStrategy: newMember.teamStrategy as TeamStrategy,
-              ID,
               wallets: [...newMember.txcWallets, ...newMember.otherWallets].map(
                 ({ percent, ...rest }) => ({
                   percent: percent * 100,
@@ -183,10 +176,6 @@ export default function MemberGeneral({ currentMember }: Props) {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [member]);
-
-  useEffect(() => {
-    setID(currentMember.ID);
-  }, [currentMember]);
 
   return (
     <Form methods={methods} onSubmit={onSubmit}>
@@ -277,23 +266,7 @@ export default function MemberGeneral({ currentMember }: Props) {
                 ))}
               </Field.Select>
               <Field.Text name="preferredContactDetail" label="Preferred Contact Detail" />
-              <Field.Text
-                name="ID"
-                label="ID"
-                required
-                value={ID}
-                onChange={(event) => setID(event.target.value)}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton edge="end" onClick={() => setID(generateRandomString())}>
-                        <Iconify icon="lets-icons:sort-random" width={24} />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-              <Field.Select name="teamStrategy" label="Team Strategy">
+              <Field.Select name="teamStrategy" label="Team Strategy" required>
                 {Object.values(TeamStrategy).map((option) => (
                   <MenuItem key={option} value={option}>
                     {option}
