@@ -142,8 +142,8 @@ export default function SaleListView() {
       },
       {
         colId: 'action',
-        headerName: 'Action',
-        width: 140,
+        pinned: 'right',
+        width: 80,
         resizable: false,
         editable: false,
         sortable: false,
