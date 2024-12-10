@@ -12,8 +12,6 @@ import ListItemText from '@mui/material/ListItemText';
 import { formatDateTime } from 'src/utils/format-time';
 import { formatID, customizeFullName } from 'src/utils/helper';
 
-import { FREE_SHARE_ID_1, FREE_SHARE_ID_2 } from 'src/consts';
-
 import { Iconify } from 'src/components/Iconify';
 import { ScrollBar } from 'src/components/ScrollBar';
 import { EmptyContent } from 'src/components/EmptyContent';
@@ -28,7 +26,7 @@ interface Props {
 }
 
 export default function Detail({ open, row }: Props) {
-  const { id, member, package: product, status, proof, updatedAt } = row;
+  const { member, freeShareSale, package: product, status, proof, updatedAt } = row;
 
   return (
     <Drawer
@@ -108,9 +106,7 @@ export default function Detail({ open, row }: Props) {
             <Typography variant="body2" color="text.disabled">
               Free Share:
             </Typography>
-            <Typography variant="body2">
-              {id === FREE_SHARE_ID_1 || id === FREE_SHARE_ID_2 ? 'Yes' : 'No'}
-            </Typography>
+            <Typography variant="body2">{freeShareSale ? 'Yes' : 'No'}</Typography>
           </Stack>
 
           <Stack direction="row" columnGap={2}>

@@ -137,6 +137,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           memberId
           packageId
           paymentMethod
+          freeShareSale
           proof {
             createdAt
             updatedAt

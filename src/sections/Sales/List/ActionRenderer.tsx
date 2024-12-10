@@ -40,6 +40,7 @@ export const ActionRender = memo(
       packageId: '',
       paymentMethod: '',
       status: true,
+      freeShareSale: false,
       orderedAt: new Date(),
     };
 

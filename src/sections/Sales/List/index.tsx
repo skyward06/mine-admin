@@ -19,6 +19,7 @@ import { formatDate } from 'src/utils/format-time';
 import { CONFIG } from 'src/config';
 import { DashboardContent } from 'src/layouts/dashboard';
 
+import { Label } from 'src/components/Label';
 import { AgGrid } from 'src/components/AgGrid';
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
@@ -49,7 +50,16 @@ export default function SaleListView() {
         resizable: true,
         editable: false,
         initialSort: 'desc',
-        cellRenderer: ({ data }: CustomCellRendererProps<Sale>) => formatID(data?.ID ?? '', 'S'),
+        cellRenderer: ({ data }: CustomCellRendererProps<Sale>) => (
+          <Stack direction="row" columnGap={1} sx={{ alignItems: 'center' }}>
+            {formatID(data?.ID ?? '', 'S')}
+            {data?.freeShareSale && (
+              <Label variant="soft" color="success">
+                Free
+              </Label>
+            )}
+          </Stack>
+        ),
         cellClass: 'ag-number-cell ag-cell-center',
       },
       {
