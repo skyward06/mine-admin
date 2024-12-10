@@ -4,9 +4,9 @@ import { useState } from 'react';
 
 import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
-import Tooltip from '@mui/material/Tooltip';
 import TableRow from '@mui/material/TableRow';
-import Grid from '@mui/material/Unstable_Grid2';
+import MenuList from '@mui/material/MenuList';
+import MenuItem from '@mui/material/MenuItem';
 import TableCell from '@mui/material/TableCell';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
@@ -26,6 +26,7 @@ import { Label } from 'src/components/Label';
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 import { ConfirmDialog } from 'src/components/Dialog';
+import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
 import { useApproveMember, useUpdatePassword } from '../useApollo';
 
@@ -48,7 +49,7 @@ export default function MemberTableRow({
 }: Props) {
   const [newPassword, setNewPassword] = useState<any>();
   const router = useRouter();
-
+  const popover = usePopover();
   const confirm = useBoolean();
   const password = useBoolean();
 
@@ -188,60 +189,51 @@ export default function MemberTableRow({
 
         {action && (
           <TableCell sx={{ whiteSpace: 'nowrap' }} align="center">
-            <Grid container lg={12} justifyContent="space-around">
-              <Grid lg={3}>
+            <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
+              <Iconify icon="eva:more-horizontal-fill" />
+            </IconButton>
+
+            <CustomPopover
+              open={popover.open}
+              anchorEl={popover.anchorEl}
+              onClose={popover.onClose}
+              slotProps={{ arrow: { placement: 'right-top' } }}
+            >
+              <MenuList>
                 {!status && (
-                  <Tooltip title="Approve" placement="top" arrow>
-                    <IconButton
-                      color="success"
-                      onClick={() => {
-                        approveMember({ variables: { data: { id } } });
-                      }}
-                    >
-                      <Iconify icon="fa6-solid:circle-check" />
-                    </IconButton>
-                  </Tooltip>
+                  <MenuItem
+                    onClick={() => {
+                      approveMember({ variables: { data: { id } } });
+                    }}
+                  >
+                    <Iconify icon="fa6-solid:circle-check" color="green" />
+                    Approve
+                  </MenuItem>
                 )}
-              </Grid>
-              <Grid lg={3}>
-                <Tooltip title="View" placement="top" arrow>
-                  <IconButton
-                    color="default"
-                    onClick={() => {
-                      router.push(`${paths.dashboard.members.edit(id)}`);
-                    }}
-                  >
-                    <Iconify icon="solar:eye-bold" />
-                  </IconButton>
-                </Tooltip>
-              </Grid>
-              <Grid lg={3}>
-                <Tooltip title="Reset Password" placement="top" arrow>
-                  <IconButton
-                    color="default"
-                    onClick={() => {
-                      confirm.onTrue();
-                    }}
-                  >
-                    <Iconify icon="basil:unlock-solid" />
-                  </IconButton>
-                </Tooltip>
-              </Grid>
-              <Grid lg={3}>
-                <Tooltip title="Delete" placement="top" arrow>
-                  <IconButton
-                    color="error"
-                    disabled={!!sales?.length}
-                    onClick={() => {
-                      removeConfirm.onTrue();
-                      setSelected(id);
-                    }}
-                  >
-                    <Iconify icon="bxs:coffee-togo" />
-                  </IconButton>
-                </Tooltip>
-              </Grid>
-            </Grid>
+                <MenuItem
+                  onClick={() => {
+                    router.push(`${paths.dashboard.members.edit(id)}`);
+                  }}
+                >
+                  <Iconify icon="solar:eye-bold" color="gray" />
+                  View
+                </MenuItem>
+                <MenuItem onClick={confirm.onTrue}>
+                  <Iconify icon="basil:unlock-solid" color="gray" />
+                  Reset Password
+                </MenuItem>
+                <MenuItem
+                  disabled={!!sales?.length}
+                  onClick={() => {
+                    removeConfirm.onTrue();
+                    setSelected(id);
+                  }}
+                >
+                  <Iconify icon="bxs:coffee-togo" color="red" />
+                  Delete
+                </MenuItem>
+              </MenuList>
+            </CustomPopover>
           </TableCell>
         )}
       </TableRow>
