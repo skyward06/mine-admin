@@ -11,6 +11,8 @@ import IconButton from '@mui/material/IconButton';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { useBoolean } from 'src/hooks/useBoolean';
+
 import { formatID } from 'src/utils/helper';
 import { formatDate } from 'src/utils/format-time';
 
@@ -21,6 +23,7 @@ import { useFetchMembers } from '../../useApollo';
 export const Personal = () => {
   const params = useParams();
   const router = useRouter();
+  const copy = useBoolean();
 
   const [children, setChildren] = useState<any>();
 
@@ -29,6 +32,27 @@ export const Personal = () => {
   const { members, fetchMembers } = useFetchMembers();
 
   const member = members[0];
+
+  const address = [
+    member.fullName,
+    member.primaryAddress,
+    member.secondaryAddress,
+    `${member.city}, ${member.state}, ${member.zipCode}`,
+  ];
+
+  const copyAddress = async () => {
+    try {
+      await navigator.clipboard.writeText(address.join('\n'));
+
+      copy.onTrue();
+
+      setTimeout(() => {
+        copy.onFalse();
+      }, 3000);
+    } catch (error) {
+      console.log('Failed to copy text: ', error);
+    }
+  };
 
   useEffect(() => {
     setChildren(
@@ -61,6 +85,9 @@ export const Personal = () => {
               }}
             >
               <Iconify icon="solar:eye-bold" />
+            </IconButton>
+            <IconButton color="success" onClick={copyAddress}>
+              <Iconify icon={copy.value ? 'ci:check' : 'bxs:copy'} />
             </IconButton>
           </Stack>
         </Stack>

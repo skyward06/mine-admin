@@ -52,6 +52,7 @@ export default function MemberTableRow({
   const popover = usePopover();
   const confirm = useBoolean();
   const password = useBoolean();
+  const copy = useBoolean();
 
   const {
     id,
@@ -66,6 +67,11 @@ export default function MemberTableRow({
     emailVerified,
     status,
     createdAt,
+    primaryAddress,
+    secondaryAddress,
+    city,
+    state,
+    zipCode,
     sales,
   } = row;
 
@@ -105,6 +111,22 @@ export default function MemberTableRow({
 
   const handleSponsors = () => {
     window.open(`${paths.dashboard.members.root}?sponsorId=${id}`, '_blank');
+  };
+
+  const address = [fullName, primaryAddress, secondaryAddress, `${city}, ${state}, ${zipCode}`];
+
+  const copyAddress = async () => {
+    try {
+      await navigator.clipboard.writeText(address.join('\n'));
+
+      copy.onTrue();
+
+      setTimeout(() => {
+        copy.onFalse();
+      }, 3000);
+    } catch (error) {
+      console.log('Failed to copy text: ', error);
+    }
   };
 
   return (
@@ -231,6 +253,10 @@ export default function MemberTableRow({
                 >
                   <Iconify icon="bxs:coffee-togo" color="red" />
                   Delete
+                </MenuItem>
+                <MenuItem onClick={copyAddress}>
+                  <Iconify icon={copy.value ? 'ci:check' : 'bxs:copy'} color="green" />
+                  Copy Address
                 </MenuItem>
               </MenuList>
             </CustomPopover>
