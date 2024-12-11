@@ -1,7 +1,8 @@
 import type { Package } from 'src/__generated__/graphql';
 import type { UseBooleanReturn } from 'src/hooks/useBoolean';
 
-import Tooltip from '@mui/material/Tooltip';
+import MenuList from '@mui/material/MenuList';
+import MenuItem from '@mui/material/MenuItem';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
@@ -11,10 +12,11 @@ import { useRouter } from 'src/routes/hooks';
 
 import { formatDate } from 'src/utils/format-time';
 
-import { NO_PRODUCT, FREE_SHARE_ID_1, FREE_SHARE_ID_2 } from 'src/consts';
+import { FREE_SHARE_ID_1, FREE_SHARE_ID_2 } from 'src/consts';
 
-import { Label } from 'src/components/Label';
+// import { Label } from 'src/components/Label';
 import { Iconify } from 'src/components/Iconify';
+import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
 import { useUpdatePackage } from '../useApollo';
 
@@ -28,17 +30,19 @@ type Props = {
 
 export default function ProductTableRow({ row, confirm, setSelected }: Props) {
   const router = useRouter();
+  const popover = usePopover();
 
   const { id, amount, date, productName, point, enrollVisibility, token, sales, status } = row;
 
   const { updatePackage, loading } = useUpdatePackage();
 
   return (
-    <TableRow hover>
-      <TableCell align="left">{formatDate(date)}</TableCell>
-      <TableCell align="left">{amount}</TableCell>
-      <TableCell align="left">{productName}</TableCell>
-      <TableCell align="left">
+    <>
+      <TableRow hover>
+        <TableCell align="left">{formatDate(date)}</TableCell>
+        <TableCell align="left">{amount}</TableCell>
+        <TableCell align="left">{productName}</TableCell>
+        {/* <TableCell align="left">
         {(id === FREE_SHARE_ID_1 || id === FREE_SHARE_ID_2) && (
           <Label variant="soft" color="primary">
             Free Share
@@ -49,54 +53,63 @@ export default function ProductTableRow({ row, confirm, setSelected }: Props) {
             No Product
           </Label>
         )}
-      </TableCell>
-      <TableCell align="left">{point}</TableCell>
-      <TableCell align="left">{token}</TableCell>
-      <TableCell align="center">
-        <IconButton
-          disabled={!status || id === FREE_SHARE_ID_1 || id === FREE_SHARE_ID_2}
-          onClick={() =>
-            updatePackage({
-              variables: { data: { id, enrollVisibility: !enrollVisibility } },
-            })
-          }
-          sx={{
-            color: (theme) =>
-              enrollVisibility ? theme.palette.primary.dark : theme.palette.primary.light,
-          }}
-        >
-          {loading ? (
-            <Iconify icon="line-md:loading-loop" />
-          ) : (
-            <Iconify icon={enrollVisibility ? 'eva:eye-outline' : 'tabler:eye-off'} />
-          )}
-        </IconButton>
-      </TableCell>
-      <TableCell align="center">
-        <Tooltip title="Edit" placement="top" arrow>
+      </TableCell> */}
+        <TableCell align="left">{point}</TableCell>
+        <TableCell align="left">{token}</TableCell>
+        <TableCell align="center">
           <IconButton
-            color="primary"
+            disabled={!status || id === FREE_SHARE_ID_1 || id === FREE_SHARE_ID_2}
+            onClick={() =>
+              updatePackage({
+                variables: { data: { id, enrollVisibility: !enrollVisibility } },
+              })
+            }
+            sx={{
+              color: (theme) =>
+                enrollVisibility ? theme.palette.primary.dark : theme.palette.primary.light,
+            }}
+          >
+            {loading ? (
+              <Iconify icon="line-md:loading-loop" />
+            ) : (
+              <Iconify icon={enrollVisibility ? 'eva:eye-outline' : 'tabler:eye-off'} />
+            )}
+          </IconButton>
+        </TableCell>
+        <TableCell align="center">
+          <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
+            <Iconify icon="eva:more-horizontal-fill" />
+          </IconButton>
+        </TableCell>
+      </TableRow>
+
+      <CustomPopover
+        open={popover.open}
+        anchorEl={popover.anchorEl}
+        onClose={popover.onClose}
+        slotProps={{ arrow: { placement: 'right-top' } }}
+      >
+        <MenuList>
+          <MenuItem
             onClick={() => {
               router.push(`${paths.dashboard.products.edit(id)}`);
             }}
-            disabled={id === FREE_SHARE_ID_1 || id === FREE_SHARE_ID_2 || id === NO_PRODUCT}
           >
-            <Iconify icon="solar:pen-2-bold" />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="Delete" placement="top" arrow>
-          <IconButton
-            color="error"
+            <Iconify icon="solar:pen-2-bold" color="green" />
+            Edit
+          </MenuItem>
+          <MenuItem
             disabled={!!sales?.length}
             onClick={() => {
               confirm.onTrue();
               setSelected(id);
             }}
           >
-            <Iconify icon="bxs:coffee-togo" />
-          </IconButton>
-        </Tooltip>
-      </TableCell>
-    </TableRow>
+            <Iconify icon="bxs:coffee-togo" color="red" />
+            Delete
+          </MenuItem>
+        </MenuList>
+      </CustomPopover>
+    </>
   );
 }
