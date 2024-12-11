@@ -62,18 +62,25 @@ export const ActionRender = memo(
             <MenuItem
               onClick={() => {
                 router.push(`${paths.dashboard.sales.edit(formatID(data?.ID ?? '', 'S'))}`);
+                popover.onClose();
               }}
             >
               <Iconify icon="solar:pen-2-bold" color="green" />
               Edit
             </MenuItem>
-            <MenuItem onClick={open.onTrue}>
+            <MenuItem
+              onClick={() => {
+                open.onTrue();
+                popover.onClose();
+              }}
+            >
               <Iconify icon="solar:eye-bold" color="gray" />
               View
             </MenuItem>
             <MenuItem
               onClick={() => {
                 confirm.onTrue();
+                popover.onClose();
               }}
             >
               <Iconify icon="bxs:coffee-togo" color="red" />

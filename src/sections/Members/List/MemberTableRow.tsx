@@ -235,12 +235,18 @@ export default function MemberTableRow({
                 <MenuItem
                   onClick={() => {
                     router.push(`${paths.dashboard.members.edit(id)}`);
+                    popover.onClose();
                   }}
                 >
                   <Iconify icon="solar:eye-bold" color="gray" />
                   View
                 </MenuItem>
-                <MenuItem onClick={confirm.onTrue}>
+                <MenuItem
+                  onClick={() => {
+                    confirm.onTrue();
+                    popover.onClose();
+                  }}
+                >
                   <Iconify icon="basil:unlock-solid" color="gray" />
                   Reset Password
                 </MenuItem>
@@ -248,6 +254,7 @@ export default function MemberTableRow({
                   disabled={!!sales?.length}
                   onClick={() => {
                     removeConfirm.onTrue();
+                    popover.onClose();
                     setSelected(id);
                   }}
                 >
