@@ -16,7 +16,7 @@ interface Props {
 
 export default function Item({ title }: Props) {
   const [data, setData] = useState<any[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const CONTENT_QUERY = `*[_type == "post" && category->title == "${title}"] | order(date desc) {
     ...,
@@ -52,7 +52,7 @@ export default function Item({ title }: Props) {
 
   return (
     <>
-      {!data.length && <EmptyContent />}
+      {!data.length && !loading && <EmptyContent />}
 
       <Box
         gap={3}
