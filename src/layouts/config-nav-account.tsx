@@ -56,6 +56,11 @@ export const _account = [
     icon: <Iconify icon="fluent:reward-32-regular" />,
   },
   {
+    label: 'Resource',
+    href: '/resource',
+    icon: <Iconify icon="lucide:folder-open" />,
+  },
+  {
     label: 'Proof',
     href: '/proof',
     icon: <Iconify icon="hugeicons:notebook" />,

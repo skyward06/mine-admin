@@ -54,6 +54,11 @@ const CommissionDetailPage = lazy(() => import('src/pages/CommissionDetail'));
 // ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
+const ResourcePage = lazy(() => import('src/pages/Resource/List'));
+const ResourceDetailPage = lazy(() => import('src/pages/Resource/Detail'));
+// ----------------------------------------------------------------------
+
+// ----------------------------------------------------------------------
 const ProofListPage = lazy(() => import('src/pages/Proof/List'));
 const ProofCreatePage = lazy(() => import('src/pages/Proof/Create'));
 const ProofEditPage = lazy(() => import('src/pages/Proof/Edit'));
@@ -133,6 +138,13 @@ export const dashboardRoutes = [
         children: [
           { index: true, element: <CommissionPage /> },
           { path: ':id', element: <CommissionDetailPage /> },
+        ],
+      },
+      {
+        path: 'resource',
+        children: [
+          { index: true, element: <ResourcePage /> },
+          { path: ':slug', children: [{ index: true, element: <ResourceDetailPage /> }] },
         ],
       },
       {

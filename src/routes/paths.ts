@@ -14,6 +14,7 @@ const ROOTS = {
   COMMISSION: '/commission',
   CALCULATOR: '/calculator',
   REWARD: '/reward',
+  RESOURCE: '/resource',
   PAYMENT: '/payment',
   USERS: '/users',
   REPORTS: '/reports',
@@ -85,6 +86,7 @@ export const paths = {
       detail: (id: string) => `${ROOTS.REWARD}/${id}`,
       view: (id: string) => `${ROOTS.REWARD}/statistics/${id}`,
     },
+    resource: { root: ROOTS.RESOURCE, view: (slug: string) => `${ROOTS.RESOURCE}/${slug}` },
     report: {
       root: ROOTS.REPORTS,
     },
