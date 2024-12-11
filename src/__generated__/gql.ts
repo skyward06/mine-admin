@@ -31,7 +31,7 @@ const documents = {
     "\n  query FetchPlacementMembers($page: String, $filter: JSONObject, $sort: String) {\n    members(page: $page, filter: $filter, sort: $sort) {\n      members {\n        id\n        username\n        email\n        fullName\n        sponsorId\n        cmnCalculatedWeeks\n        placementParentId\n        placementPosition\n        placementParent {\n          id\n          username\n          fullName\n        }\n        sponsor {\n          username\n        }\n        commission {\n          begL\n          begR\n          newL\n          newR\n        }\n        createdAt\n      }\n      total\n    }\n  }\n": types.FetchPlacementMembersDocument,
     "\n  mutation CreateMember($data: CreateMemberInput!) {\n    createMember(data: $data) {\n      username\n      fullName\n      email\n      mobile\n      primaryAddress\n      secondaryAddress\n      assetId\n    }\n  }\n": types.CreateMemberDocument,
     "\n  mutation UpdateMember($data: UpdateMemberInput!) {\n    updateMember(data: $data) {\n      id\n      mobile\n      primaryAddress\n      secondaryAddress\n      assetId\n    }\n  }\n": types.UpdateMemberDocument,
-    "\n  query MemberOverview($data: MemberOverviewInput!) {\n    memberOverview(data: $data) {\n      currentHashPower\n      totalTXCShared\n      joinDate\n    }\n  }\n": types.MemberOverviewDocument,
+    "\n  query MemberOverview($data: IDInput!) {\n    memberOverview(data: $data) {\n      currentHashPower\n      totalTXCShared\n      joinDate\n    }\n  }\n": types.MemberOverviewDocument,
     "\n  query MemberStatistics($sort: String, $page: String, $filter: JSONObject) {\n    memberStatistics(sort: $sort, page: $page, filter: $filter) {\n      memberStatistics {\n        issuedAt\n        hashPower\n        txcShared\n      }\n      total\n    }\n  }\n": types.MemberStatisticsDocument,
     "\n  query Payouts($filter: JSONObject, $page: String, $sort: String) {\n    payouts(filter: $filter, page: $page, sort: $sort) {\n      payouts {\n        id\n        method\n        display\n        name\n        status\n        createdAt\n        updatedAt\n        deletedAt\n      }\n      total\n    }\n  }\n": types.PayoutsDocument,
     "\n  mutation UpdatePasswordMemberById($data: UpdateMemberPasswordInputById!) {\n    updatePasswordMemberById(data: $data) {\n      id\n    }\n  }\n": types.UpdatePasswordMemberByIdDocument,
@@ -184,7 +184,7 @@ export function gql(source: "\n  mutation UpdateMember($data: UpdateMemberInput!
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query MemberOverview($data: MemberOverviewInput!) {\n    memberOverview(data: $data) {\n      currentHashPower\n      totalTXCShared\n      joinDate\n    }\n  }\n"): (typeof documents)["\n  query MemberOverview($data: MemberOverviewInput!) {\n    memberOverview(data: $data) {\n      currentHashPower\n      totalTXCShared\n      joinDate\n    }\n  }\n"];
+export function gql(source: "\n  query MemberOverview($data: IDInput!) {\n    memberOverview(data: $data) {\n      currentHashPower\n      totalTXCShared\n      joinDate\n    }\n  }\n"): (typeof documents)["\n  query MemberOverview($data: IDInput!) {\n    memberOverview(data: $data) {\n      currentHashPower\n      totalTXCShared\n      joinDate\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
