@@ -14,7 +14,7 @@ export const COMMISSION_NODE_HEIGHT = 105;
 export const SPONSORTREE_NODE_HEIGHT = 95;
 export const WEEKLY_PLACEMENT_INITIAL_DEPTH = 3;
 
-export const FREE_SHARE_ID_1 = 'c62357db-0572-4600-98dc-43d92621cfa5';
+export const FREE_SHARE_ID_1 = '1176da92-477a-46c3-8a63-e8e22042197f';
 export const FREE_SHARE_ID_2 = 'aa8604b3-3f2a-4f9c-9ee5-1c9d1d76d726';
 export const NO_PRODUCT = '916170a2-6b73-450d-9c2a-6ee9cceab30a';
 
