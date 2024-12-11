@@ -95,6 +95,14 @@ export const PROOF_TYPE = {
   SALE: 'Sale',
 };
 
+export const TARGET = [
+  { label: '100, 000', value: 100000 },
+  { label: '250, 000', value: 250000 },
+  { label: '500, 000', value: 500000 },
+  { label: '1, 000, 000', value: 1000000 },
+  { label: '5, 000, 000', value: 5000000 },
+];
+
 export enum State {
   Approved = 'Approved',
   Draft = 'Draft',

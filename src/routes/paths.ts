@@ -12,6 +12,7 @@ const ROOTS = {
   PROOF: '/proof',
   PREPAID_COMMISSION: '/prepaid-commission',
   COMMISSION: '/commission',
+  CALCULATOR: '/calculator',
   REWARD: '/reward',
   PAYMENT: '/payment',
   USERS: '/users',
@@ -26,6 +27,9 @@ export const paths = {
 
   // STATISTICS
   statistics: { root: ROOTS.STATISTICS },
+
+  // CALCULATOR
+  calculator: { root: ROOTS.CALCULATOR },
 
   // DASHBOARD
   dashboard: {
