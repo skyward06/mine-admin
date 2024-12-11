@@ -44,10 +44,13 @@ export default function Difference({
     ...beforeRest
   } = before;
 
-  const rest = signupFormRequest ?? (action === 'after' ? afterRest : beforeRest);
+  const restData = signupFormRequest ?? (action === 'after' ? afterRest : beforeRest);
   const sponsor = action === 'after' ? afterSponsor : beforeSponsor;
   const placement = action === 'after' ? afterPlacement : beforePlacement;
   const memberWallets = (action === 'after' ? afterMemberWallets : beforeMemberWallets) ?? [];
+  const { packageId, ...rest } = restData;
+
+  console.log('packageId => ', packageId);
 
   return (
     <Card
