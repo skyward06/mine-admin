@@ -79,7 +79,7 @@ export default function ProductTableRow({ row, confirm, setSelected }: Props) {
             onClick={() => {
               router.push(`${paths.dashboard.products.edit(id)}`);
             }}
-            disabled={id === FREE_SHARE_ID_1 || id === FREE_SHARE_ID_2}
+            disabled={id === FREE_SHARE_ID_1 || id === FREE_SHARE_ID_2 || id === NO_PRODUCT}
           >
             <Iconify icon="solar:pen-2-bold" />
           </IconButton>
