@@ -34,10 +34,10 @@ export const Personal = () => {
   const member = members[0];
 
   const address = [
-    member.fullName,
-    member.primaryAddress,
-    member.secondaryAddress,
-    `${member.city}, ${member.state}, ${member.zipCode}`,
+    member?.fullName,
+    member?.primaryAddress,
+    member?.secondaryAddress,
+    `${member?.city}, ${member?.state}, ${member?.zipCode}`,
   ];
 
   const copyAddress = async () => {
