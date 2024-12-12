@@ -19,6 +19,7 @@ import { today, formatDate, customizeDate } from 'src/utils/format-time';
 
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
+import { LoadingScreen } from 'src/components/loading-screen';
 
 import LinkForm from './LinkForm';
 import PaymentForm from './PaymentForm';
@@ -93,7 +94,11 @@ export default function EditForm({ current }: Props) {
   const { loading, createPrepaid } = useCreatePrepaid();
   const { loading: updateLoading, updatePrepaid } = useUpdatePrepaid();
   const { loading: memberLoading, members, fetchMembers } = useFetchMembers();
-  const { commission, fetchCommissions } = useFetchCommissionByMemberAndWeek();
+  const {
+    loading: commissionLodaing,
+    commission,
+    fetchCommissions,
+  } = useFetchCommissionByMemberAndWeek();
 
   const handleUpdate = (data: any) => {
     setFiles((prev) => [...(prev ?? []), ...data.files]);
@@ -247,16 +252,22 @@ export default function EditForm({ current }: Props) {
               <Field.DatePicker name="orderedAt" label="Ordered At" format="YYYY-MM-DD" />
             </Box>
 
-            {commission && (
-              <>
-                <Divider flexItem sx={{ borderStyle: 'dashed', my: 2 }} />
+            {commissionLodaing ? (
+              <Stack sx={{ py: 3 }}>
+                <LoadingScreen />
+              </Stack>
+            ) : (
+              commission && (
+                <>
+                  <Divider flexItem sx={{ borderStyle: 'dashed', my: 2 }} />
 
-                <Stack direction="row">
-                  <Stack width={1}>Commission: {commission.commission}</Stack>
-                  <Stack width={1}>pkgL: {commission.pkgL}</Stack>
-                  <Stack width={1}>pkgR: {commission.pkgR}</Stack>
-                </Stack>
-              </>
+                  <Stack direction="row">
+                    <Stack width={1}>Commission: {commission.commission}</Stack>
+                    <Stack width={1}>pkgL: {commission.pkgL}</Stack>
+                    <Stack width={1}>pkgR: {commission.pkgR}</Stack>
+                  </Stack>
+                </>
+              )
             )}
 
             <Divider flexItem sx={{ borderStyle: 'dashed', my: 2 }} />
