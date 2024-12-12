@@ -98,6 +98,8 @@ export function StandardNode({
     editModal.onTrue();
   };
 
+  console.log('members => ', members);
+
   const onAdd = async () => {
     setMemberUserName('');
     setTargetUserId('');
@@ -449,7 +451,16 @@ export function StandardNode({
             color="success"
             loading={loading}
             onClick={() => {
-              confirmModal.onTrue();
+              const member = getMemberById(targetUserId);
+              console.log('member => ', member);
+              console.log('previous => ', member?.teamStrategy as unknown as PlacementPosition);
+              console.log('now => ', position);
+              if (
+                members.length &&
+                position !== (member?.teamStrategy as unknown as PlacementPosition)
+              ) {
+                confirmModal.onTrue();
+              }
               isCreate.onTrue();
 
               if (position === PlacementPosition.Left) {
