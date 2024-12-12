@@ -34,6 +34,7 @@ export default function PlacementListView({ onMinerChange }: Props) {
             { username: { contains: miner?.username, mode: 'insensitive' } },
             { fullName: { contains: miner?.username, mode: 'insensitive' } },
           ],
+          status: true,
         },
         page: '1,10',
       },

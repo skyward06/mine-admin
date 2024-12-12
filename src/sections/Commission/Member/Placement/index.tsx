@@ -209,7 +209,7 @@ function PlacementListView({ memberId, weekStartDate }: Props) {
 
   useEffect(() => {
     fetchMembers({
-      variables: { sort: '-placementPosition' },
+      variables: { filter: { status: true }, sort: '-placementPosition' },
     });
 
     fetchCommissions({

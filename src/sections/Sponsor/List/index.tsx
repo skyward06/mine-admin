@@ -224,7 +224,7 @@ function PlacementListView() {
   }, []);
 
   useEffect(() => {
-    fetchMembers({});
+    fetchMembers({ variables: { filter: { status: true } } });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

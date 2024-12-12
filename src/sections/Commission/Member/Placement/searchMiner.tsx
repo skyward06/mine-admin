@@ -36,6 +36,7 @@ export default function PlacementListView({ onMinerChange, weekStartDate }: Prop
             { username: { contains: miner?.username, mode: 'insensitive' } },
             { fullName: { contains: miner?.username, mode: 'insensitive' } },
           ],
+          status: true,
           createdAt: {
             lt: dayjs(weekStartDate).add(1, 'week').toDate(),
           },

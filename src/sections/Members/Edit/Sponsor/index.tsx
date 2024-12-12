@@ -67,10 +67,6 @@ export default function PlacementListViewWithReactFlowProvider({ currentMember }
       ];
     }
 
-    if (filter.status === 'inactive') {
-      filterObj.deletedAt = { not: null };
-    }
-
     filterObj.sponsorId = currentMember.id;
 
     return filterObj;

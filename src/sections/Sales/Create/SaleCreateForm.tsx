@@ -137,6 +137,7 @@ export default function SaleCreateForm() {
       variables: {
         filter: {
           emailVerified: true,
+          status: true,
           OR: [{ username: { contains: member?.username ?? '', mode: 'insensitive' } }],
         },
         page: '1,10',

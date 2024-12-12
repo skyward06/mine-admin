@@ -256,7 +256,7 @@ function PlacementListView() {
 
   useEffect(() => {
     fetchMembers({
-      variables: { sort: '-placementPosition' },
+      variables: { filter: { status: true }, sort: '-placementPosition' },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [memberId]);

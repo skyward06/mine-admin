@@ -39,7 +39,7 @@ export default function PlacementListView({ currentMember }: Props) {
   const { loading, members, fetchMembers } = useFetchMembers();
 
   useEffect(() => {
-    fetchMembers({ variables: { sort: '-placementPosition' } });
+    fetchMembers({ variables: { filter: { status: true }, sort: '-placementPosition' } });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentMember]);
 
