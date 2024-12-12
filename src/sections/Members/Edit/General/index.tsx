@@ -1,8 +1,8 @@
 import states from 'states-us';
 import isEqual from 'lodash/isEqual';
 import { useForm } from 'react-hook-form';
-import { useMemo, useState, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 import { ApolloError, useMutation, useLazyQuery } from '@apollo/client';
 
 import Box from '@mui/material/Box';
@@ -16,6 +16,8 @@ import Autocomplete from '@mui/material/Autocomplete';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
+
+import { debounce } from 'src/utils/debounce';
 
 import { CONTACT } from 'src/consts';
 import { type Member, TeamStrategy } from 'src/__generated__/graphql';
@@ -35,12 +37,6 @@ type Props = {
   currentMember: Member;
 };
 
-interface Edit {
-  id: string;
-  username: string;
-  fullName?: string;
-}
-
 export default function MemberGeneral({ currentMember }: Props) {
   const router = useRouter();
 
@@ -57,11 +53,17 @@ export default function MemberGeneral({ currentMember }: Props) {
   const [fetchMembers, { loading: memberLoading, data: memberData }] =
     useLazyQuery(FETCH_MEMBERS_QUERY);
 
-  const members = memberData?.members.members ?? [];
-
-  const [member, setMember] = useState<Edit>();
+  const members = useMemo(() => memberData?.members.members ?? [], [memberData]);
 
   const [submit, { loading }] = useMutation(UPDATE_MEMBER);
+
+  const getMemberById = useCallback(
+    (_id: string) => members.find((mb) => mb!.id === _id),
+    [members]
+  );
+
+  const [username, setUsername] = useState<string | null>(null);
+  const [sponsorId, setSponsorId] = useState<string | null>(null);
 
   const defaultValues = useMemo(() => {
     const { data } = Schema.safeParse({ ...currentMember, txcWallets, otherWallets });
@@ -73,6 +75,10 @@ export default function MemberGeneral({ currentMember }: Props) {
     resolver: zodResolver(Schema),
     defaultValues,
   });
+
+  const handleChange = debounce((value: string) => {
+    setUsername(value);
+  }, 300);
 
   const { setError, handleSubmit } = methods;
 
@@ -93,7 +99,7 @@ export default function MemberGeneral({ currentMember }: Props) {
         return;
       }
 
-      if (!member?.id.length) {
+      if (!sponsorId) {
         toast.error('Sponsor Name is required');
         return;
       }
@@ -109,7 +115,7 @@ export default function MemberGeneral({ currentMember }: Props) {
               mobile: newMember.mobile,
               primaryAddress: newMember.primaryAddress,
               secondaryAddress: newMember.secondaryAddress,
-              sponsorId: member?.id || null,
+              sponsorId: sponsorId || null,
               assetId: newMember.assetId,
               city: newMember.city,
               state,
@@ -165,20 +171,35 @@ export default function MemberGeneral({ currentMember }: Props) {
   });
 
   useEffect(() => {
-    fetchMembers({
-      variables: {
-        page: '1,5',
-        filter: {
-          OR: [
-            { username: { contains: member?.username ?? '', mode: 'insensitive' } },
-            { fullName: { contains: member?.username ?? '', mode: 'insensitive' } },
-          ],
-          status: true,
+    if (username === null) {
+      fetchMembers({
+        variables: {
+          page: '1,5',
+          filter: {
+            id: currentMember.sponsorId,
+          },
         },
-      },
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [member, currentMember]);
+      });
+    } else {
+      fetchMembers({
+        variables: {
+          page: '1,5',
+          filter: {
+            OR: [
+              { username: { contains: username, mode: 'insensitive' } },
+              { fullName: { contains: username, mode: 'insensitive' } },
+            ],
+            status: true,
+          },
+        },
+      });
+    }
+  }, [username, currentMember, fetchMembers]);
+
+  useEffect(() => {
+    setSponsorId(currentMember.sponsorId || null);
+    setUsername(null);
+  }, [currentMember]);
 
   return (
     <Form methods={methods} onSubmit={onSubmit}>
@@ -214,27 +235,34 @@ export default function MemberGeneral({ currentMember }: Props) {
               <Field.Autocomplete
                 fullWidth
                 name="sponsorId"
-                label="Miner"
+                label="Sponsor"
                 autoHighlight
-                options={members}
+                options={members.map((mb) => mb.id)}
                 loading={memberLoading}
-                value={currentMember!.sponsor ?? member}
+                value={sponsorId}
                 loadingText={<LoadingButton loading={memberLoading} />}
-                getOptionLabel={(option: Member | string) =>
-                  `${(option as Member).username} (${(option as Member).fullName})`
-                }
+                getOptionLabel={(option) => {
+                  const mbr = getMemberById(option);
+                  return mbr ? mbr.username : username || '';
+                }}
                 isOptionEqualToValue={(option, value) => option === value}
-                renderOption={(props, option) => (
-                  <li {...props} key={option!.username}>
-                    {option.username}
-                  </li>
-                )}
-                onInputChange={(_, username: string) => {
-                  setMember({ id: currentMember?.sponsorId ?? '', username });
+                renderOption={(props, option) => {
+                  const mbr = getMemberById(option);
+                  return (
+                    <li {...props} key={option!.username}>
+                      {`${mbr!.username} (${mbr!.fullName})`};
+                    </li>
+                  );
+                }}
+                onInputChange={(_, value: string) => {
+                  if (!memberLoading) {
+                    handleChange(value);
+                  }
                 }}
                 onChange={(_, value) => {
-                  setMember({ id: value?.id ?? '', username: value?.username ?? '' });
+                  setSponsorId(value ?? '');
                 }}
+                filterOptions={(options) => options}
               />
               <Field.Text name="primaryAddress" label="Address" />
               <Field.Text name="secondaryAddress" label="Address Line 2" />
