@@ -169,13 +169,16 @@ export default function MemberGeneral({ currentMember }: Props) {
       variables: {
         page: '1,5',
         filter: {
-          OR: [{ username: { contains: member?.username ?? '', mode: 'insensitive' } }],
+          OR: [
+            { username: { contains: member?.username ?? '', mode: 'insensitive' } },
+            { fullName: { contains: member?.username ?? '', mode: 'insensitive' } },
+          ],
           status: true,
         },
       },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [member]);
+  }, [member, currentMember]);
 
   return (
     <Form methods={methods} onSubmit={onSubmit}>
@@ -208,25 +211,22 @@ export default function MemberGeneral({ currentMember }: Props) {
                 required
               />
               <Field.Phone name="mobile" label="Mobile" />
-              <Autocomplete
+              <Field.Autocomplete
                 fullWidth
+                name="sponsorId"
+                label="Miner"
+                autoHighlight
                 options={members}
                 loading={memberLoading}
+                value={currentMember!.sponsor ?? member}
                 loadingText={<LoadingButton loading={memberLoading} />}
-                getOptionLabel={(option) => option!.username}
-                value={member ?? currentMember!.sponsor}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Sponsor Name"
-                    margin="none"
-                    required
-                    error={!member?.id.length}
-                  />
-                )}
+                getOptionLabel={(option: Member | string) =>
+                  `${(option as Member).username} (${(option as Member).fullName})`
+                }
+                isOptionEqualToValue={(option, value) => option === value}
                 renderOption={(props, option) => (
                   <li {...props} key={option!.username}>
-                    {`${option!.username} (${option!.fullName})`}
+                    {option.username}
                   </li>
                 )}
                 onInputChange={(_, username: string) => {

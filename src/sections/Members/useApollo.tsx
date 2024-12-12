@@ -88,7 +88,7 @@ export function useUpdatePassword() {
 export function useRemoveMember() {
   const [removeMember, { loading, error }] = useMutation(REMOVE_MEMBER_QUERY, {
     awaitRefetchQueries: true,
-    refetchQueries: ['FetchMembers'],
+    refetchQueries: ['FetchMembers', 'FetchMemberStats'],
   });
 
   return { loading, error, removeMember };
@@ -106,7 +106,7 @@ export function useRemoveMemberPlacement() {
 export function useApproveMember() {
   const [approveMember, { loading, error }] = useMutation(APPROVE_MEMBER, {
     awaitRefetchQueries: true,
-    refetchQueries: ['FetchMembers'],
+    refetchQueries: ['FetchMembers', 'FetchMemberStats'],
   });
 
   return { loading, error, approveMember };

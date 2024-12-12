@@ -224,8 +224,15 @@ export default function MemberTableRow({
               <MenuList>
                 {!status && (
                   <MenuItem
-                    onClick={() => {
-                      approveMember({ variables: { data: { id } } });
+                    onClick={async () => {
+                      try {
+                        await approveMember({ variables: { data: { id } } });
+
+                        toast.success('Successfully approved');
+                      } catch (error) {
+                        console.log('error => ', error);
+                        toast.error('Something went wrong!');
+                      }
                     }}
                   >
                     <Iconify icon="fa6-solid:circle-check" color="green" />
