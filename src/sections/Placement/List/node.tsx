@@ -30,7 +30,7 @@ import { useBoolean } from 'src/hooks/useBoolean';
 import { formatDate } from 'src/utils/format-time';
 import { customizeFullName } from 'src/utils/helper';
 
-import { type TeamStrategy, PlacementPosition } from 'src/__generated__/graphql';
+import { type Member, type TeamStrategy, PlacementPosition } from 'src/__generated__/graphql';
 
 import { Label } from 'src/components/Label';
 import { toast } from 'src/components/SnackBar';
@@ -61,7 +61,6 @@ export function StandardNode({
   cmnCalculatedWeeks,
 }: NodeProps) {
   const status = useBoolean();
-  const isCreate = useBoolean();
   const addModal = useBoolean();
   const editModal = useBoolean();
   const removeModal = useBoolean();
@@ -75,6 +74,7 @@ export function StandardNode({
   const [memberUsername, setMemberUserName] = useState<string | null>(null);
   const [targetUserId, setTargetUserId] = useState<string>('');
   const [strategy, setStrategy] = useState<'LEFT' | 'RIGHT'>();
+  const [member, setMember] = useState<Member>();
 
   const { loading, updateMember } = useUpdateMember();
   const { loading: memberLoading, members, fetchMembers } = useFetchMembers();
@@ -97,8 +97,6 @@ export function StandardNode({
     popover.onClose();
     editModal.onTrue();
   };
-
-  console.log('members => ', members);
 
   const onAdd = async () => {
     setMemberUserName('');
@@ -164,6 +162,7 @@ export function StandardNode({
         }}
         onChange={(_, value) => {
           setTargetUserId(value ?? '');
+          setMember(getMemberById(value ?? ''));
         }}
         value={targetUserId}
         filterOptions={(options) => options}
@@ -261,7 +260,7 @@ export function StandardNode({
     </Paper>
   );
 
-  const confirmStrategy = async (curId: string, curPId: string, curPos: string) => {
+  const confirmStrategy = async (curId: string, curPId: string, curPos: string, st: boolean) => {
     try {
       const newData: any = {
         id: curId,
@@ -269,7 +268,7 @@ export function StandardNode({
         placementPosition: curPos,
       };
 
-      if (status) {
+      if (st) {
         newData.teamStrategy = strategy as TeamStrategy;
       }
 
@@ -282,11 +281,7 @@ export function StandardNode({
       if (data?.updateMember.id && !loading) {
         toast.success('Successfully added!');
 
-        if (isCreate.value) {
-          addModal.onFalse();
-        } else {
-          editModal.onFalse();
-        }
+        addModal.onFalse();
       }
 
       confirmModal.onFalse();
@@ -451,22 +446,16 @@ export function StandardNode({
             color="success"
             loading={loading}
             onClick={() => {
-              const member = getMemberById(targetUserId);
-              console.log('member => ', member);
-              console.log('previous => ', member?.teamStrategy as unknown as PlacementPosition);
-              console.log('now => ', position);
-              if (
-                members.length &&
-                position !== (member?.teamStrategy as unknown as PlacementPosition)
-              ) {
-                confirmModal.onTrue();
-              }
-              isCreate.onTrue();
-
               if (position === PlacementPosition.Left) {
                 setStrategy(PlacementPosition.Right);
               } else {
                 setStrategy(PlacementPosition.Left);
+              }
+
+              if (position === (member?.teamStrategy as unknown as PlacementPosition)) {
+                confirmModal.onTrue();
+              } else {
+                confirmStrategy(targetUserId, id, position, true);
               }
             }}
           >
@@ -486,14 +475,15 @@ export function StandardNode({
             color="success"
             loading={loading}
             onClick={() => {
-              confirmModal.onTrue();
-              isCreate.onFalse();
-
               if (position === PlacementPosition.Left) {
                 setStrategy(PlacementPosition.Right);
               } else {
                 setStrategy(PlacementPosition.Left);
               }
+
+              confirmStrategy(id, targetUserId, position, false);
+
+              editModal.onFalse();
             }}
           >
             OK
@@ -546,11 +536,7 @@ export function StandardNode({
             loading={status.value && loading}
             onClick={() => {
               status.onTrue();
-              if (isCreate.value) {
-                confirmStrategy(targetUserId, id, position);
-              } else {
-                confirmStrategy(id, targetUserId, position);
-              }
+              confirmStrategy(targetUserId, id, position, true);
             }}
           >
             Change
@@ -561,12 +547,7 @@ export function StandardNode({
             color="info"
             loading={!status.value && loading}
             onClick={() => {
-              status.onFalse();
-              if (isCreate.value) {
-                confirmStrategy(targetUserId, id, position);
-              } else {
-                confirmStrategy(id, targetUserId, position);
-              }
+              confirmStrategy(targetUserId, id, position, false);
             }}
           >
             Skip
