@@ -216,6 +216,7 @@ export const FETCH_PLACEMENT_MEMBERS_QUERY = gql(/* GraphQL */ `
         email
         fullName
         sponsorId
+        status
         cmnCalculatedWeeks
         placementParentId
         placementPosition
