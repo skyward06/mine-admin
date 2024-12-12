@@ -18,7 +18,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { today, formatDate, customizeDate } from 'src/utils/format-time';
+import { today, customizeDate } from 'src/utils/format-time';
 
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
@@ -84,7 +84,7 @@ export default function SaleCreateForm() {
   });
 
   const { payments } = useFetchPayments();
-  const { fetchMembers, members } = useFetchMembers();
+  const { fetchMembers, members, loading: memberLoading } = useFetchMembers();
 
   const [fetchPackages, { data: packageData }] = useLazyQuery(FETCH_PACKAGES_QUERY, {
     variables: { filter: { status: true } },
@@ -162,25 +162,29 @@ export default function SaleCreateForm() {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <Autocomplete
+              <Field.Autocomplete
                 fullWidth
+                name="sponsorId"
+                label="Miner"
+                autoHighlight
                 options={members}
-                getOptionLabel={(option) =>
-                  `${option!.username} (${formatDate(option?.createdAt)})`
+                loading={memberLoading}
+                value={member}
+                loadingText={<LoadingButton loading={memberLoading} />}
+                getOptionLabel={(option: Member | string) =>
+                  `${(option as Member).username} (${(option as Member).fullName})`
                 }
-                renderInput={(params) => (
-                  <TextField {...params} required label="Miner" margin="none" />
-                )}
+                isOptionEqualToValue={(option, value) => option === value}
                 renderOption={(props, option) => (
                   <li {...props} key={option!.username}>
-                    {option!.username}
+                    {option.username}
                   </li>
                 )}
-                onChange={(_, value) =>
-                  setMember({ id: value?.id ?? '', username: value?.username ?? '' })
-                }
                 onInputChange={(_, username: string) => {
                   setMember({ id: '', username });
+                }}
+                onChange={(_, value) => {
+                  setMember({ id: value?.id ?? '', username: value?.username ?? '' });
                 }}
               />
 
