@@ -134,7 +134,9 @@ function parseTextFilter({ type, filter }: TextFilterModel) {
 }
 
 function parseSetFilter({ values }: SetFilterModel) {
-  return { in: values };
+  return {
+    in: values.map((item) => (item === 'true' ? true : item === 'false' ? false : item)),
+  };
 }
 
 function parseDateFilter({ type, dateFrom, dateTo }: DateFilterModel) {
