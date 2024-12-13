@@ -138,7 +138,10 @@ export default function SaleCreateForm() {
         filter: {
           emailVerified: true,
           status: true,
-          OR: [{ username: { contains: member?.username ?? '', mode: 'insensitive' } }],
+          OR: [
+            { username: { contains: member?.username ?? '', mode: 'insensitive' } },
+            { fullName: { contains: member?.username ?? '', mode: 'insensitive' } },
+          ],
         },
         page: '1,10',
       },
@@ -165,7 +168,7 @@ export default function SaleCreateForm() {
             >
               <Field.Autocomplete
                 fullWidth
-                name="sponsorId"
+                name="memberId"
                 label="Miner"
                 autoHighlight
                 options={members}
