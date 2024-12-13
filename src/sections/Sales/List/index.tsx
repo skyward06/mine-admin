@@ -1,5 +1,10 @@
 import type { CustomCellRendererProps } from '@ag-grid-community/react';
-import type { ColDef, IDateFilterParams, ITextFilterParams } from '@ag-grid-community/core';
+import type {
+  ColDef,
+  ISetFilterParams,
+  IDateFilterParams,
+  ITextFilterParams,
+} from '@ag-grid-community/core';
 
 import { useMemo } from 'react';
 
@@ -28,6 +33,8 @@ import ExportButton from 'src/components/ExportButton';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import { CustomName } from 'src/components/AgGrid/Renderers';
 import { LoadingScreen } from 'src/components/loading-screen';
+import { StatusRenderer } from 'src/components/AgGrid/Renderers/Status';
+import { BooleanFormatter } from 'src/components/AgGrid/Renderers/BooleanFormatter';
 
 import { ActionRender } from './ActionRenderer';
 import { useRemoveSale, useFetchSales } from '../useApollo';
@@ -65,7 +72,7 @@ export default function SaleListView() {
       {
         field: 'member.username',
         headerName: 'Name',
-        width: 150,
+        width: 200,
         filter: 'agTextColumnFilter',
         resizable: true,
         editable: false,
@@ -134,6 +141,17 @@ export default function SaleListView() {
         resizable: true,
         editable: false,
         cellClass: 'ag-number-cell ag-cell-center',
+      },
+      {
+        field: 'status',
+        headerName: 'Status',
+        width: 120,
+        filter: 'agMultiColumnFilter',
+        filterParams: {
+          values: ['true', 'false'],
+          valueFormatter: BooleanFormatter,
+        } as ISetFilterParams<Sale>,
+        cellRenderer: StatusRenderer,
       },
       {
         field: 'orderedAt',
