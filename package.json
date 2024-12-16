@@ -65,6 +65,7 @@
     "dayjs": "^1.11.11",
     "framer-motion": "^11.2.10",
     "graphql": "^16.8.2",
+    "graphql-ws": "^5.16.0",
     "history": "^5.3.0",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.7",
@@ -89,6 +90,7 @@
     "states-us": "^1.1.1",
     "stylis": "^4.3.2",
     "stylis-plugin-rtl": "^2.1.1",
+    "subscriptions-transport-ws": "^0.11.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {

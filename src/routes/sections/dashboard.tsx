@@ -83,6 +83,10 @@ const SponsorListPage = lazy(() => import('src/pages/Sponsor/List'));
 const ReportListPage = lazy(() => import('src/pages/Report/List'));
 // ----------------------------------------------------------------------
 
+// ----------------------------------------------------------------------
+const NotificationListPage = lazy(() => import('src/pages/Notification/List'));
+// ----------------------------------------------------------------------
+
 export const dashboardRoutes = [
   {
     path: '',
@@ -208,6 +212,17 @@ export const dashboardRoutes = [
             ],
           },
         ],
+      },
+      {
+        path: 'notifications',
+        element: (
+          <AuthGuard>
+            <Suspense fallback={<LoadingScreen />}>
+              <Outlet />
+            </Suspense>
+          </AuthGuard>
+        ),
+        children: [{ index: true, element: <NotificationListPage /> }],
       },
     ],
   },
