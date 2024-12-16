@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import { Container } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -61,7 +62,7 @@ export default function EditForm() {
   }, []);
 
   return (
-    <>
+    <Container maxWidth="md" sx={{ mt: '32px' }}>
       <Form methods={methods} onSubmit={onSubmit}>
         <Box
           rowGap={3}
@@ -110,6 +111,6 @@ export default function EditForm() {
       </Form>
 
       <View loading={loading} data={data} />
-    </>
+    </Container>
   );
 }

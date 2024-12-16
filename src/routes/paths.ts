@@ -94,6 +94,9 @@ export const paths = {
     notifications: {
       root: ROOTS.NOTIFICATIONS,
     },
+    calculator: {
+      root: ROOTS.CALCULATOR,
+    },
   },
   notFound: '/404',
 };
