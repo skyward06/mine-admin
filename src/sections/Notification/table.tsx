@@ -19,16 +19,25 @@ import { AgGrid } from 'src/components/AgGrid';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import { BooleanFormatter } from 'src/components/AgGrid/Renderers/BooleanFormatter';
 
-import { useFetchNotifications } from './useApollo';
+import { useFetchNotifications, useReadAllNotifications } from './useApollo';
 
 import type { NotificationClient } from './type';
 
 export default function NotificationTable() {
-  const [{ page = '1,25', sort = 'read,createdAt', filter }] = useQueryString();
+  const [{ page = '1,25', sort = '-read,createdAt', filter }] = useQueryString();
 
   const graphQueryFilter = useMemo(() => parseFilterModel({}, filter), [filter]);
 
+  const { readAllNotifications } = useReadAllNotifications();
   const { loading, notifications, rowCount, fetchNotification } = useFetchNotifications();
+
+  useEffect(
+    () => () => {
+      readAllNotifications();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   useEffect(() => {
     fetchNotification({ variables: { filter: graphQueryFilter, page, sort } });

@@ -8,6 +8,8 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 
+import { paths } from 'src/routes/paths';
+
 import { Iconify } from 'src/components/Iconify';
 import { ScrollBar } from 'src/components/ScrollBar';
 
@@ -25,7 +27,10 @@ export function Content({ drawer, notifications, totalUnRead }: Props) {
 
   const handleMarkAllAsRead = async () => {
     try {
-      await readAllNotifications();
+      await readAllNotifications({
+        awaitRefetchQueries: true,
+        refetchQueries: ['Notifications'],
+      });
     } catch (error) {
       console.log('error => ', error);
     }
@@ -55,7 +60,9 @@ export function Content({ drawer, notifications, totalUnRead }: Props) {
         <Box sx={{ bgcolor: 'background.neutral' }}>
           {notifications?.map((notification) => <NotificationItem notification={notification} />)}
           <Box sx={{ px: 3, py: 2 }}>
-            <Link sx={{ cursor: 'pointer' }}>Show all notifications</Link>
+            <Link sx={{ cursor: 'pointer' }} href={paths.dashboard.notifications.root}>
+              Show all notifications
+            </Link>
           </Box>
         </Box>
       </ScrollBar>
