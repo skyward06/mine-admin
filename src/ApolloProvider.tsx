@@ -20,7 +20,7 @@ const httpLink = createHttpLink({
 
 const wsLink = new GraphQLWsLink(
   createClient({
-    url: 'ws://faa8-107-155-105-218.ngrok-free.app/graphql',
+    url: CONFIG.WS_PATH,
     connectionParams: () => {
       const token = localStorage.getItem(CONFIG.storageTokenKey);
       return {

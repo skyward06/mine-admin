@@ -10,6 +10,7 @@ export type ConfigValue = {
     basePath: string;
     version: string;
   };
+  WS_PATH: string;
   SITE_PATH: string;
   SITE_URL: string;
   SERVER_URL: string;
@@ -27,6 +28,7 @@ export const CONFIG: ConfigValue = {
     basePath: import.meta.env.VITE_BASE_PATH ?? '',
     version: packageJson.version,
   },
+  WS_PATH: import.meta.env.WS_PATH ?? '',
   SITE_PATH: import.meta.env.SITE_PATH ?? '',
   SITE_URL: import.meta.env.VITE_BASE_URL ?? '',
   SERVER_URL: import.meta.env.VITE_SERVER_URL ?? '',
