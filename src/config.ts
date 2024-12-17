@@ -28,12 +28,14 @@ export const CONFIG: ConfigValue = {
     basePath: import.meta.env.VITE_BASE_PATH ?? '',
     version: packageJson.version,
   },
-  WS_PATH: import.meta.env.WS_PATH ?? '',
-  SITE_PATH: import.meta.env.SITE_PATH ?? '',
+  WS_PATH: import.meta.env.VITE_WS_PATH ?? '',
+  SITE_PATH: import.meta.env.VITE_SITE_PATH ?? '',
   SITE_URL: import.meta.env.VITE_BASE_URL ?? '',
   SERVER_URL: import.meta.env.VITE_SERVER_URL ?? '',
   ASSET_URL: import.meta.env.VITE_ASSET_URL ?? '',
-  TRANSACTION_COUNT: import.meta.env.TRANSACTION_COUNT ?? 150,
+  TRANSACTION_COUNT: import.meta.env.VITE_TRANSACTION_COUNT ?? 150,
   redirectPath: paths.statistics.root,
   storageTokenKey: 'token',
 };
+
+console.log('config => ', import.meta.env);
