@@ -37,5 +37,3 @@ export const CONFIG: ConfigValue = {
   redirectPath: paths.statistics.root,
   storageTokenKey: 'token',
 };
-
-console.log('config => ', import.meta.env);
