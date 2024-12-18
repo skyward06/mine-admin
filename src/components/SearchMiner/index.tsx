@@ -9,7 +9,7 @@ interface Props {
   name: string;
   username?: string;
   members: Member[];
-  currentMember?: Member;
+  currentMember?: Member | null;
   setMemberId: Function;
   setUsername: Function;
 }

@@ -21,6 +21,7 @@ import { TeamStrategy } from 'src/__generated__/graphql';
 
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
+import SearchMiner from 'src/components/SearchMiner';
 
 import TXCWallets from './txcWallets';
 import OtherWallets from './otherWallets';
@@ -29,18 +30,14 @@ import { CREATE_MEMBER, FETCH_MEMBERS_QUERY } from '../query';
 
 // ----------------------------------------------------------------------
 
-interface Member {
-  id: string;
-  username: string;
-}
-
 export default function MemberCreateForm() {
   const [fetchMembers, { loading: memberLoading, data: memberData }] =
     useLazyQuery(FETCH_MEMBERS_QUERY);
 
   const members = memberData?.members.members ?? [];
 
-  const [member, setMember] = useState<Member>();
+  const [memberId, setMemberId] = useState<string>('');
+  const [username, setUsername] = useState<string>();
   const [state, setState] = useState<string>();
 
   const router = useRouter();
@@ -93,7 +90,7 @@ export default function MemberCreateForm() {
           return;
         }
 
-        if (!member?.id.length) {
+        if (!username?.length) {
           toast.error('Sponsor Name is required');
           return;
         }
@@ -104,7 +101,7 @@ export default function MemberCreateForm() {
               data: {
                 ...data,
                 fullName: `${firstName} ${lastName}`,
-                sponsorId: member?.id,
+                sponsorId: memberId,
                 state,
                 teamStrategy: teamStrategy as TeamStrategy,
                 wallets: [...txcWallets, ...otherWallets].map(({ percent, ...rest }) => ({
@@ -156,15 +153,15 @@ export default function MemberCreateForm() {
         page: '1,5',
         filter: {
           OR: [
-            { username: { contains: member?.username ?? '', mode: 'insensitive' } },
-            { fullName: { contains: member?.username ?? '', mode: 'insensitive' } },
+            { username: { contains: username ?? '', mode: 'insensitive' } },
+            { fullName: { contains: username ?? '', mode: 'insensitive' } },
           ],
           status: true,
         },
       },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [member]);
+  }, [username]);
 
   return (
     <Form methods={methods} onSubmit={onSubmit}>
@@ -185,26 +182,13 @@ export default function MemberCreateForm() {
               <Field.Text name="firstName" label="First Name" required />
               <Field.Text name="lastName" label="Last Name" required />
               <Field.Phone name="mobile" label="Mobile" />
-              <Autocomplete
-                fullWidth
-                options={members}
+              <SearchMiner
                 loading={memberLoading}
-                loadingText={<LoadingButton loading={memberLoading} />}
-                getOptionLabel={(option) => `${option!.username}-${option!.fullName}`}
-                renderInput={(params) => (
-                  <TextField {...params} label="Sponsor Name" margin="none" required />
-                )}
-                renderOption={(props, option) => (
-                  <li {...props} key={option!.username}>
-                    {`${option!.username} (${option!.fullName})`}
-                  </li>
-                )}
-                onInputChange={(_, username: string) => {
-                  setMember({ id: '', username: username.split('-')[0] });
-                }}
-                onChange={(_, value) => {
-                  setMember({ id: value?.id ?? '', username: value?.username ?? '' });
-                }}
+                name="memberId"
+                members={members}
+                username={username}
+                setMemberId={setMemberId}
+                setUsername={setUsername}
               />
               <Field.Text name="primaryAddress" label="Address" />
               <Field.Text name="secondaryAddress" label="Address Line 2" />

@@ -65,7 +65,7 @@ const SaleGeneralSchema = zod.object({
 export default function SaleGeneral({ currentSale }: Props) {
   const router = useRouter();
 
-  const [memberId, setMemberId] = useState<string>();
+  const [memberId, setMemberId] = useState<string>('');
   const [username, setUsername] = useState<string>();
 
   const { status: currentStatus, ID } = currentSale;

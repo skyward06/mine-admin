@@ -1,8 +1,8 @@
 import states from 'states-us';
 import isEqual from 'lodash/isEqual';
 import { useForm } from 'react-hook-form';
+import { useMemo, useState, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMemo, useState, useEffect, useCallback } from 'react';
 import { ApolloError, useMutation, useLazyQuery } from '@apollo/client';
 
 import Box from '@mui/material/Box';
@@ -17,13 +17,12 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { debounce } from 'src/utils/debounce';
-
 import { CONTACT } from 'src/consts';
 import { type Member, TeamStrategy } from 'src/__generated__/graphql';
 
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
+import SearchMiner from 'src/components/SearchMiner';
 
 import TXCWallets from './txcWallets';
 import OtherWallets from './otherWallets';
@@ -46,6 +45,8 @@ export default function MemberGeneral({ currentMember }: Props) {
 
   const [, first, last]: any = fullName.match(/^(\S+)\s+(.*)/);
 
+  const [memberId, setMemberId] = useState<string>('');
+  const [username, setUsername] = useState<string>();
   const [firstName, setFirstName] = useState<string>(first);
   const [lastName, setLastName] = useState<string>(last);
   const [state, setState] = useState<string>();
@@ -57,14 +58,6 @@ export default function MemberGeneral({ currentMember }: Props) {
 
   const [submit, { loading }] = useMutation(UPDATE_MEMBER);
 
-  const getMemberById = useCallback(
-    (_id: string) => members.find((mb) => mb!.id === _id),
-    [members]
-  );
-
-  const [username, setUsername] = useState<string | null>(null);
-  const [sponsorId, setSponsorId] = useState<string | null>(null);
-
   const defaultValues = useMemo(() => {
     const { data } = Schema.safeParse({ ...currentMember, txcWallets, otherWallets });
 
@@ -75,10 +68,6 @@ export default function MemberGeneral({ currentMember }: Props) {
     resolver: zodResolver(Schema),
     defaultValues,
   });
-
-  const handleChange = debounce((value: string) => {
-    setUsername(value);
-  }, 300);
 
   const { setError, handleSubmit } = methods;
 
@@ -99,7 +88,7 @@ export default function MemberGeneral({ currentMember }: Props) {
         return;
       }
 
-      if (!sponsorId) {
+      if (!username?.length) {
         toast.error('Sponsor Name is required');
         return;
       }
@@ -115,7 +104,7 @@ export default function MemberGeneral({ currentMember }: Props) {
               mobile: newMember.mobile,
               primaryAddress: newMember.primaryAddress,
               secondaryAddress: newMember.secondaryAddress,
-              sponsorId: sponsorId || null,
+              sponsorId: memberId,
               assetId: newMember.assetId,
               city: newMember.city,
               state,
@@ -171,35 +160,19 @@ export default function MemberGeneral({ currentMember }: Props) {
   });
 
   useEffect(() => {
-    if (username === null) {
-      fetchMembers({
-        variables: {
-          page: '1,5',
-          filter: {
-            id: currentMember.sponsorId,
-          },
+    fetchMembers({
+      variables: {
+        page: '1,5',
+        filter: {
+          OR: [
+            { username: { contains: username ?? '', mode: 'insensitive' } },
+            { fullName: { contains: username ?? '', mode: 'insensitive' } },
+          ],
+          status: true,
         },
-      });
-    } else {
-      fetchMembers({
-        variables: {
-          page: '1,5',
-          filter: {
-            OR: [
-              { username: { contains: username, mode: 'insensitive' } },
-              { fullName: { contains: username, mode: 'insensitive' } },
-            ],
-            status: true,
-          },
-        },
-      });
-    }
+      },
+    });
   }, [username, currentMember, fetchMembers]);
-
-  useEffect(() => {
-    setSponsorId(currentMember.sponsorId || null);
-    setUsername(null);
-  }, [currentMember]);
 
   return (
     <Form methods={methods} onSubmit={onSubmit}>
@@ -232,37 +205,14 @@ export default function MemberGeneral({ currentMember }: Props) {
                 required
               />
               <Field.Phone name="mobile" label="Mobile" />
-              <Field.Autocomplete
-                fullWidth
-                name="sponsorId"
-                label="Sponsor"
-                autoHighlight
-                options={members.map((mb) => mb.id)}
+              <SearchMiner
                 loading={memberLoading}
-                value={sponsorId}
-                loadingText={<LoadingButton loading={memberLoading} />}
-                getOptionLabel={(option) => {
-                  const mbr = getMemberById(option);
-                  return mbr ? mbr.username : username || '';
-                }}
-                isOptionEqualToValue={(option, value) => option === value}
-                renderOption={(props, option) => {
-                  const mbr = getMemberById(option);
-                  return (
-                    <li {...props} key={option!.username}>
-                      {`${mbr!.username} (${mbr!.fullName})`};
-                    </li>
-                  );
-                }}
-                onInputChange={(_, value: string) => {
-                  if (!memberLoading) {
-                    handleChange(value);
-                  }
-                }}
-                onChange={(_, value) => {
-                  setSponsorId(value ?? '');
-                }}
-                filterOptions={(options) => options}
+                name="memberId"
+                members={members}
+                username={username}
+                setMemberId={setMemberId}
+                setUsername={setUsername}
+                currentMember={currentMember?.sponsor}
               />
               <Field.Text name="primaryAddress" label="Address" />
               <Field.Text name="secondaryAddress" label="Address Line 2" />
