@@ -22,6 +22,7 @@ import { today, customizeDate } from 'src/utils/format-time';
 
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
+import SearchMiner from 'src/components/SearchMiner';
 
 import LinkForm from 'src/sections/PrepaidCommission/LinkForm';
 import { useFetchMembers } from 'src/sections/Members/useApollo';
@@ -33,12 +34,6 @@ import { FileManagerNewFolderDialog } from '../Upload';
 
 // ----------------------------------------------------------------------
 export type NewSaleSchemaType = zod.infer<typeof NewSaleSchema>;
-
-interface Member {
-  id: string;
-  username: string;
-  fullName?: string;
-}
 
 const NewSaleSchema = zod.object({
   orderedAt: zod.string({ required_error: 'Ordered At is required' }),
@@ -59,7 +54,8 @@ const NewSaleSchema = zod.object({
 export default function SaleCreateForm() {
   const router = useRouter();
 
-  const [member, setMember] = useState<Member>();
+  const [memberId, setMemberId] = useState<string>('');
+  const [username, setUsername] = useState<string>();
   const [fileIds, setFileIds] = useState<string[]>();
   const [packageId, setPackageId] = useState<string>('');
   const [paymentMethod, setPaymentMethod] = useState<string>('');
@@ -101,7 +97,7 @@ export default function SaleCreateForm() {
             fileIds,
             status: !!status,
             orderedAt: customizeDate(orderedAt),
-            memberId: member?.id ?? '',
+            memberId,
             packageId,
             paymentMethod,
           },
@@ -139,15 +135,15 @@ export default function SaleCreateForm() {
           emailVerified: true,
           status: true,
           OR: [
-            { username: { contains: member?.username ?? '', mode: 'insensitive' } },
-            { fullName: { contains: member?.username ?? '', mode: 'insensitive' } },
+            { username: { contains: username ?? '', mode: 'insensitive' } },
+            { fullName: { contains: username ?? '', mode: 'insensitive' } },
           ],
         },
         page: '1,10',
       },
     });
     fetchPackages();
-  }, [member, fetchMembers, fetchPackages]);
+  }, [username, fetchMembers, fetchPackages]);
 
   return (
     <Form methods={methods} onSubmit={onSubmit}>
@@ -166,30 +162,13 @@ export default function SaleCreateForm() {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <Field.Autocomplete
-                fullWidth
-                name="memberId"
-                label="Miner"
-                autoHighlight
-                options={members}
+              <SearchMiner
                 loading={memberLoading}
-                value={member}
-                loadingText={<LoadingButton loading={memberLoading} />}
-                getOptionLabel={(option: Member | string) =>
-                  `${(option as Member).username} (${(option as Member).fullName})`
-                }
-                isOptionEqualToValue={(option, value) => option === value}
-                renderOption={(props, option) => (
-                  <li {...props} key={option!.username}>
-                    {option.username}
-                  </li>
-                )}
-                onInputChange={(_, username: string) => {
-                  setMember({ id: '', username });
-                }}
-                onChange={(_, value) => {
-                  setMember({ id: value?.id ?? '', username: value?.username ?? '' });
-                }}
+                name="memberId"
+                members={members}
+                username={username}
+                setMemberId={setMemberId}
+                setUsername={setUsername}
               />
 
               <Autocomplete

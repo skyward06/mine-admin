@@ -24,6 +24,7 @@ import { formatDate, customizeDate } from 'src/utils/format-time';
 
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
+import SearchMiner from 'src/components/SearchMiner';
 
 import LinkForm from 'src/sections/PrepaidCommission/LinkForm';
 import { useFetchMembers } from 'src/sections/Members/useApollo';
@@ -43,11 +44,6 @@ type Props = {
 
 // ----------------------------------------------------------------------
 export type SaleGeneralSchemaType = zod.infer<typeof SaleGeneralSchema>;
-
-interface Member {
-  id: string;
-  username: string;
-}
 
 const SaleGeneralSchema = zod.object({
   orderedAt: zod.string({ required_error: 'Ordered At is required' }),
@@ -69,10 +65,12 @@ const SaleGeneralSchema = zod.object({
 export default function SaleGeneral({ currentSale }: Props) {
   const router = useRouter();
 
+  const [memberId, setMemberId] = useState<string>();
+  const [username, setUsername] = useState<string>();
+
   const { status: currentStatus, ID } = currentSale;
 
   const [files, setFiles] = useState<string[]>();
-  const [member, setMember] = useState<Member>();
   const [status, setStatus] = useState(currentStatus);
   const [paymentMethod, setPaymentMethod] = useState<string>();
 
@@ -96,10 +94,21 @@ export default function SaleGeneral({ currentSale }: Props) {
   }, [currentSale]);
 
   useEffect(() => {
-    fetchMembers();
+    fetchMembers({
+      variables: {
+        page: '1,10',
+        filter: {
+          OR: [
+            { username: { contains: username ?? '', mode: 'insensitive' } },
+            { fullName: { contains: username ?? '', mode: 'insensitive' } },
+          ],
+          status: true,
+        },
+      },
+    });
     fetchPackages({ variables: { filter: { status: true } } });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [username]);
 
   useEffect(() => {
     if (currentSale && currentSale.proof?.files) {
@@ -131,7 +140,7 @@ export default function SaleGeneral({ currentSale }: Props) {
             ...newSale,
             id: currentSale.id,
             orderedAt: customizeDate(orderedAt),
-            memberId: member?.id,
+            memberId,
             fileIds: files?.map((file: any) => file.id),
             status,
             paymentMethod,
@@ -177,23 +186,13 @@ export default function SaleGeneral({ currentSale }: Props) {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <Autocomplete
-                fullWidth
-                options={members}
-                getOptionLabel={(option) => option!.username}
-                value={member ?? currentSale.member}
-                renderInput={(params) => <TextField {...params} label="Miner" margin="none" />}
-                renderOption={(props, option) => (
-                  <li {...props} key={option!.username}>
-                    {option!.username}
-                  </li>
-                )}
-                onChange={(_, value) =>
-                  setMember({ id: value?.id ?? '', username: value?.username ?? '' })
-                }
-                onInputChange={(_, username: string) => {
-                  setMember({ id: member?.id ?? currentSale.memberId, username });
-                }}
+              <SearchMiner
+                name="memberId"
+                members={members}
+                username={username}
+                setMemberId={setMemberId}
+                setUsername={setUsername}
+                currentMember={currentSale.member}
               />
 
               <Field.Select name="packageId" label="Package">
