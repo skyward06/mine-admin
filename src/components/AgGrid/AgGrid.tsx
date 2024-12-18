@@ -43,7 +43,7 @@ export const AgGrid = <TData,>(props: Props<TData>) => {
   const gridWrapperRef = useRef<HTMLDivElement>(null);
 
   const [query, { setPage, setPageSize, setSort, setFilter }] = useAgQuery<FilterModel>();
-  const { pageModel = { page: 1, pageSize: 25 }, sortModel, filter } = query;
+  const { pageModel = { page: 1, pageSize: 50 }, sortModel, filter } = query;
   const theme = useTheme();
 
   const agGridTheme = useMemo(
