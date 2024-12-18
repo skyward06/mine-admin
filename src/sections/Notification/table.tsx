@@ -24,7 +24,7 @@ import { useFetchNotifications, useReadAllNotifications } from './useApollo';
 import type { NotificationClient } from './type';
 
 export default function NotificationTable() {
-  const [{ page = '1,25', sort = '-read,createdAt', filter }] = useQueryString();
+  const [{ page = '1,50', sort = '-read,createdAt', filter }] = useQueryString();
 
   const graphQueryFilter = useMemo(() => parseFilterModel({}, filter), [filter]);
 
