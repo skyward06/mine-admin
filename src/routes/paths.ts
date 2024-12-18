@@ -18,6 +18,7 @@ const ROOTS = {
   PAYMENT: '/payment',
   USERS: '/users',
   REPORTS: '/reports',
+  WEEKLYREPORTS: '/weekly-reports',
   NOTIFICATIONS: '/notifications',
 };
 
@@ -90,6 +91,9 @@ export const paths = {
     resource: { root: ROOTS.RESOURCE, view: (slug: string) => `${ROOTS.RESOURCE}/${slug}` },
     report: {
       root: ROOTS.REPORTS,
+    },
+    weeklyReports: {
+      root: ROOTS.WEEKLYREPORTS,
     },
     notifications: {
       root: ROOTS.NOTIFICATIONS,
