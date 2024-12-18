@@ -8,7 +8,7 @@ import { parseFilterModel } from 'src/utils/parseFilter';
 import { CREATE_PAYMENT, REMOVE_PAYMENT, UPDATE_PAYMENT, FETCH_PAYMENT_QUERY } from './query';
 
 export function useFetchPayments() {
-  const [{ page = '1,25', sort = 'createdAt', filter }] = useQueryString();
+  const [{ page = '1,50', sort = 'createdAt', filter }] = useQueryString();
 
   const graphQueryFilter = useMemo(() => parseFilterModel({}, filter), [filter]);
 

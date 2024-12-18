@@ -14,7 +14,7 @@ import {
 } from './query';
 
 export function useFetchSales() {
-  const [{ page = '1,25', sort = 'ID', filter }] = useQueryString();
+  const [{ page = '1,50', sort = 'ID', filter }] = useQueryString();
 
   const graphQueryFilter = useMemo(() => parseFilterModel({}, filter), [filter]);
 

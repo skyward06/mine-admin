@@ -1,7 +1,11 @@
 import { useRef, useMemo } from 'react';
-import { useLazyQuery } from '@apollo/client';
+import { useMutation, useLazyQuery } from '@apollo/client';
 
-import { FETCH_ONEPOINT_AWAY_MEMBERS_QUERY } from './query';
+import {
+  FETCH_WEEKLY_REPORT,
+  GENERATE_WEEKLY_REPORT,
+  FETCH_ONEPOINT_AWAY_MEMBERS_QUERY,
+} from './query';
 
 export function useFetchOnepointAwayMembers() {
   const [fetchMembers, { loading, data, called }] = useLazyQuery(FETCH_ONEPOINT_AWAY_MEMBERS_QUERY);
@@ -25,4 +29,38 @@ export function useFetchOnepointAwayMembers() {
     members: data?.onepointAwayMembers.members ?? [],
     fetchMembers,
   };
+}
+
+export function useFetchWeeklyReports() {
+  const [fetchWeeklyReports, { loading, data }] = useLazyQuery(FETCH_WEEKLY_REPORT, {
+    variables: { sort: 'createdAt' },
+  });
+
+  const rowCountRef = useRef(data?.weeklyReports.total ?? 0);
+
+  const rowCount = useMemo(() => {
+    const newTotal = data?.weeklyReports.total ?? undefined;
+
+    if (newTotal !== undefined) {
+      rowCountRef.current = newTotal;
+    }
+
+    return rowCountRef.current;
+  }, [data]);
+
+  return {
+    loading,
+    rowCount,
+    weeklyReports: data?.weeklyReports.weeklyReports ?? [],
+    fetchWeeklyReports,
+  };
+}
+
+export function useGenerateWeeklyReports() {
+  const [generateWeeklyReport, { loading, data }] = useMutation(GENERATE_WEEKLY_REPORT, {
+    awaitRefetchQueries: true,
+    refetchQueries: ['WeeklyReports'],
+  });
+
+  return { loading, data, generateWeeklyReport };
 }
