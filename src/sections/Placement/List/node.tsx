@@ -1,5 +1,5 @@
 import { ApolloError } from '@apollo/client';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useContext } from 'react';
 
 import Card from '@mui/material/Card';
 import Paper from '@mui/material/Paper';
@@ -36,11 +36,7 @@ import SearchMiner from 'src/components/SearchMiner';
 import { ConfirmDialog } from 'src/components/Dialog';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
-import {
-  useFetchMembers,
-  useUpdateMember,
-  useRemoveMemberPlacement,
-} from 'src/sections/Members/useApollo';
+import { useUpdateMember, useRemoveMemberPlacement } from 'src/sections/Members/useApollo';
 
 import NodeContext from './nodeContext';
 
@@ -67,7 +63,6 @@ export function StandardNode({
   const router = useRouter();
   const popover = usePopover();
 
-  const [uname, setUname] = useState<string>();
   const [teamStrategy, setTeamStrategy] = useState<string>('');
   const [position, setPosition] = useState<PlacementPosition>(PlacementPosition.Left);
   const [checked, setChecked] = useState<boolean>(false);
@@ -75,7 +70,6 @@ export function StandardNode({
   const [strategy, setStrategy] = useState<'LEFT' | 'RIGHT'>();
 
   const { loading, updateMember } = useUpdateMember();
-  const { loading: memberLoading, members, fetchMembers } = useFetchMembers();
   const { loading: removeLoading, removeMemberPlacement } = useRemoveMemberPlacement();
 
   const onRemove = () => {
@@ -84,13 +78,6 @@ export function StandardNode({
   };
 
   const onEdit = async () => {
-    await fetchMembers({
-      variables: {
-        filter: {
-          id: placementParentId,
-        },
-      },
-    });
     setMemberId(placementParentId!);
     popover.onClose();
     editModal.onTrue();
@@ -102,36 +89,14 @@ export function StandardNode({
     addModal.onTrue();
   };
 
-  useEffect(() => {
-    fetchMembers({
-      variables: {
-        filter: {
-          ...(addModal.value && {
-            placementParentId: null,
-          }),
-          OR: [
-            { username: { contains: uname, mode: 'insensitive' } },
-            { fullName: { contains: uname, mode: 'insensitive' } },
-          ],
-          status: true,
-        },
-        page: '1,10',
-      },
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [uname]);
-
   const { visibleMap, expandTree, collapseTree, expandAll, collapseAll } = useContext(NodeContext);
 
   const addContent = (
     <Paper sx={{ py: 1 }}>
       <SearchMiner
-        loading={memberLoading}
-        members={members}
-        username={uname}
         setMemberId={setMemberId}
         setTeamStrategy={setTeamStrategy}
-        setUsername={setUname}
+        filter={{ placementParentId: null }}
       />
       <RadioGroup
         row
@@ -157,14 +122,7 @@ export function StandardNode({
 
   const editContent = (
     <Paper sx={{ py: 1 }}>
-      <SearchMiner
-        loading={memberLoading}
-        members={members}
-        username={uname}
-        setMemberId={setMemberId}
-        setTeamStrategy={setTeamStrategy}
-        setUsername={setUname}
-      />
+      <SearchMiner setMemberId={setMemberId} setTeamStrategy={setTeamStrategy} />
       <RadioGroup
         row
         defaultValue={placementPosition}

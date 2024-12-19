@@ -25,7 +25,6 @@ import { Form, Field } from 'src/components/Form';
 import SearchMiner from 'src/components/SearchMiner';
 
 import LinkForm from 'src/sections/PrepaidCommission/LinkForm';
-import { useFetchMembers } from 'src/sections/Members/useApollo';
 import { useFetchPayments } from 'src/sections/Payment/useApollo';
 import { FETCH_PACKAGES_QUERY } from 'src/sections/Products/query';
 
@@ -55,7 +54,6 @@ export default function SaleCreateForm() {
   const router = useRouter();
 
   const [memberId, setMemberId] = useState<string>('');
-  const [username, setUsername] = useState<string>();
   const [fileIds, setFileIds] = useState<string[]>();
   const [packageId, setPackageId] = useState<string>('');
   const [paymentMethod, setPaymentMethod] = useState<string>('');
@@ -80,7 +78,6 @@ export default function SaleCreateForm() {
   });
 
   const { payments } = useFetchPayments();
-  const { fetchMembers, members, loading: memberLoading } = useFetchMembers();
 
   const [fetchPackages, { data: packageData }] = useLazyQuery(FETCH_PACKAGES_QUERY, {
     variables: { filter: { status: true } },
@@ -129,21 +126,8 @@ export default function SaleCreateForm() {
   const packages = packageData?.packages.packages ?? [];
 
   useEffect(() => {
-    fetchMembers({
-      variables: {
-        filter: {
-          emailVerified: true,
-          status: true,
-          OR: [
-            { username: { contains: username ?? '', mode: 'insensitive' } },
-            { fullName: { contains: username ?? '', mode: 'insensitive' } },
-          ],
-        },
-        page: '1,10',
-      },
-    });
     fetchPackages();
-  }, [username, fetchMembers, fetchPackages]);
+  }, [fetchPackages]);
 
   return (
     <Form methods={methods} onSubmit={onSubmit}>
@@ -162,13 +146,7 @@ export default function SaleCreateForm() {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <SearchMiner
-                loading={memberLoading}
-                members={members}
-                username={username}
-                setMemberId={setMemberId}
-                setUsername={setUsername}
-              />
+              <SearchMiner setMemberId={setMemberId} />
 
               <Autocomplete
                 fullWidth

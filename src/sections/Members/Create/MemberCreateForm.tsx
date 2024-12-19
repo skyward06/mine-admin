@@ -1,8 +1,8 @@
 import states from 'states-us';
 import { useForm } from 'react-hook-form';
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ApolloError, useMutation, useLazyQuery } from '@apollo/client';
+import { ApolloError, useMutation } from '@apollo/client';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -24,20 +24,14 @@ import { Form, Field } from 'src/components/Form';
 import SearchMiner from 'src/components/SearchMiner';
 
 import TXCWallets from './txcWallets';
+import { CREATE_MEMBER } from '../query';
 import OtherWallets from './otherWallets';
 import { Schema, type SchemaType } from './schema';
-import { CREATE_MEMBER, FETCH_MEMBERS_QUERY } from '../query';
 
 // ----------------------------------------------------------------------
 
 export default function MemberCreateForm() {
-  const [fetchMembers, { loading: memberLoading, data: memberData }] =
-    useLazyQuery(FETCH_MEMBERS_QUERY);
-
-  const members = memberData?.members.members ?? [];
-
   const [memberId, setMemberId] = useState<string>('');
-  const [username, setUsername] = useState<string>();
   const [state, setState] = useState<string>();
 
   const router = useRouter();
@@ -90,7 +84,7 @@ export default function MemberCreateForm() {
           return;
         }
 
-        if (!username?.length) {
+        if (!memberId?.length) {
           toast.error('Sponsor Name is required');
           return;
         }
@@ -147,22 +141,6 @@ export default function MemberCreateForm() {
     }
   );
 
-  useEffect(() => {
-    fetchMembers({
-      variables: {
-        page: '1,5',
-        filter: {
-          OR: [
-            { username: { contains: username ?? '', mode: 'insensitive' } },
-            { fullName: { contains: username ?? '', mode: 'insensitive' } },
-          ],
-          status: true,
-        },
-      },
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [username]);
-
   return (
     <Form methods={methods} onSubmit={onSubmit}>
       <Grid container spacing={3}>
@@ -182,13 +160,7 @@ export default function MemberCreateForm() {
               <Field.Text name="firstName" label="First Name" required />
               <Field.Text name="lastName" label="Last Name" required />
               <Field.Phone name="mobile" label="Mobile" />
-              <SearchMiner
-                loading={memberLoading}
-                members={members}
-                username={username}
-                setMemberId={setMemberId}
-                setUsername={setUsername}
-              />
+              <SearchMiner setMemberId={setMemberId} />
               <Field.Text name="primaryAddress" label="Address" />
               <Field.Text name="secondaryAddress" label="Address Line 2" />
               <Field.Text name="city" label="City" />

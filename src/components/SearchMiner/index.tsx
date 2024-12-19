@@ -1,29 +1,48 @@
 import type { Member } from 'src/__generated__/graphql';
 
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 
+import { useFetchMembers } from 'src/sections/Members/useApollo';
+
+import { Iconify } from '../Iconify';
+
 interface Props {
-  loading?: boolean;
-  username?: string;
-  members: Member[];
   currentMember?: Member | null;
   setMemberId?: Function;
-  setUsername: Function;
   setTeamStrategy?: Function;
+  filter?: any;
 }
 
 export default function SearchMiner({
-  loading,
-  members,
-  username,
   currentMember,
   setMemberId,
-  setUsername,
   setTeamStrategy,
+  filter,
 }: Props) {
+  const [username, setUsername] = useState<string>();
+
+  const { loading, members, fetchMembers } = useFetchMembers();
+
+  useEffect(() => {
+    fetchMembers({
+      variables: {
+        filter: {
+          ...filter,
+          status: true,
+          OR: [
+            { username: { contains: username ?? '', mode: 'insensitive' } },
+            { fullName: { contains: username ?? '', mode: 'insensitive' } },
+          ],
+        },
+        page: '1,10',
+      },
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [username]);
+
   useEffect(() => {
     if (setMemberId) {
       setMemberId(members.find((member) => member.username === username?.split(' (')[0])?.id);
@@ -46,13 +65,14 @@ export default function SearchMiner({
         username ?? (currentMember && `${currentMember?.username} (${currentMember?.fullName})`)
       }
       loading={loading}
+      loadingText={<Iconify icon="line-md:loading-loop" />}
       renderInput={(params) => <TextField {...params} label="Miner Name(Child)" margin="none" />}
       renderOption={(props, option) => (
         <li {...props} key={option}>
           {option}
         </li>
       )}
-      onChange={(_, value) => setUsername(value)}
+      onChange={(_, value) => setUsername(value ?? '')}
       onInputChange={(_, value) => setUsername(value)}
     />
   );

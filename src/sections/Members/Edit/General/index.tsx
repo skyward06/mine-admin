@@ -1,9 +1,9 @@
 import states from 'states-us';
 import isEqual from 'lodash/isEqual';
 import { useForm } from 'react-hook-form';
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ApolloError, useMutation, useLazyQuery } from '@apollo/client';
+import { ApolloError, useMutation } from '@apollo/client';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -26,9 +26,9 @@ import SearchMiner from 'src/components/SearchMiner';
 
 import TXCWallets from './txcWallets';
 import OtherWallets from './otherWallets';
+import { UPDATE_MEMBER } from '../../query';
 import { Schema, type SchemaType } from './schema';
 import { getWallets, hasDuplicates } from './helper';
-import { UPDATE_MEMBER, FETCH_MEMBERS_QUERY } from '../../query';
 
 // ----------------------------------------------------------------------
 
@@ -45,16 +45,10 @@ export default function MemberGeneral({ currentMember }: Props) {
 
   const [, first, last]: any = fullName.match(/^(\S+)\s+(.*)/);
 
+  const [state, setState] = useState<string>();
   const [memberId, setMemberId] = useState<string>('');
-  const [username, setUsername] = useState<string>();
   const [firstName, setFirstName] = useState<string>(first);
   const [lastName, setLastName] = useState<string>(last);
-  const [state, setState] = useState<string>();
-
-  const [fetchMembers, { loading: memberLoading, data: memberData }] =
-    useLazyQuery(FETCH_MEMBERS_QUERY);
-
-  const members = useMemo(() => memberData?.members.members ?? [], [memberData]);
 
   const [submit, { loading }] = useMutation(UPDATE_MEMBER);
 
@@ -88,7 +82,7 @@ export default function MemberGeneral({ currentMember }: Props) {
         return;
       }
 
-      if (!username?.length) {
+      if (!memberId?.length) {
         toast.error('Sponsor Name is required');
         return;
       }
@@ -159,21 +153,6 @@ export default function MemberGeneral({ currentMember }: Props) {
     }
   });
 
-  useEffect(() => {
-    fetchMembers({
-      variables: {
-        page: '1,5',
-        filter: {
-          OR: [
-            { username: { contains: username ?? '', mode: 'insensitive' } },
-            { fullName: { contains: username ?? '', mode: 'insensitive' } },
-          ],
-          status: true,
-        },
-      },
-    });
-  }, [username, currentMember, fetchMembers]);
-
   return (
     <Form methods={methods} onSubmit={onSubmit}>
       <Grid container spacing={3}>
@@ -205,14 +184,7 @@ export default function MemberGeneral({ currentMember }: Props) {
                 required
               />
               <Field.Phone name="mobile" label="Mobile" />
-              <SearchMiner
-                loading={memberLoading}
-                members={members}
-                username={username}
-                setMemberId={setMemberId}
-                setUsername={setUsername}
-                currentMember={currentMember?.sponsor}
-              />
+              <SearchMiner setMemberId={setMemberId} currentMember={currentMember.sponsor} />
               <Field.Text name="primaryAddress" label="Address" />
               <Field.Text name="secondaryAddress" label="Address Line 2" />
               <Field.Text name="city" label="City" />

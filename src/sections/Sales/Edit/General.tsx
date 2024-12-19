@@ -27,7 +27,6 @@ import { Form, Field } from 'src/components/Form';
 import SearchMiner from 'src/components/SearchMiner';
 
 import LinkForm from 'src/sections/PrepaidCommission/LinkForm';
-import { useFetchMembers } from 'src/sections/Members/useApollo';
 import { useFetchPayments } from 'src/sections/Payment/useApollo';
 import { useFetchPackages } from 'src/sections/Products/useApollo';
 
@@ -66,7 +65,6 @@ export default function SaleGeneral({ currentSale }: Props) {
   const router = useRouter();
 
   const [memberId, setMemberId] = useState<string>('');
-  const [username, setUsername] = useState<string>();
 
   const { status: currentStatus, ID } = currentSale;
 
@@ -75,7 +73,6 @@ export default function SaleGeneral({ currentSale }: Props) {
   const [paymentMethod, setPaymentMethod] = useState<string>();
 
   const { payments } = useFetchPayments();
-  const { members, fetchMembers } = useFetchMembers();
   const { packages, fetchPackages } = useFetchPackages();
 
   const { loading, updateSale } = useUpdateSale();
@@ -94,21 +91,9 @@ export default function SaleGeneral({ currentSale }: Props) {
   }, [currentSale]);
 
   useEffect(() => {
-    fetchMembers({
-      variables: {
-        page: '1,10',
-        filter: {
-          OR: [
-            { username: { contains: username ?? '', mode: 'insensitive' } },
-            { fullName: { contains: username ?? '', mode: 'insensitive' } },
-          ],
-          status: true,
-        },
-      },
-    });
     fetchPackages({ variables: { filter: { status: true } } });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [username]);
+  }, []);
 
   useEffect(() => {
     if (currentSale && currentSale.proof?.files) {
@@ -186,13 +171,7 @@ export default function SaleGeneral({ currentSale }: Props) {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <SearchMiner
-                members={members}
-                username={username}
-                setMemberId={setMemberId}
-                setUsername={setUsername}
-                currentMember={currentSale.member}
-              />
+              <SearchMiner setMemberId={setMemberId} currentMember={currentSale.member} />
 
               <Field.Select name="packageId" label="Package">
                 {packages.map((option) => (
