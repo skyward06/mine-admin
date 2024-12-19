@@ -164,7 +164,6 @@ export default function SaleCreateForm() {
             >
               <SearchMiner
                 loading={memberLoading}
-                name="memberId"
                 members={members}
                 username={username}
                 setMemberId={setMemberId}

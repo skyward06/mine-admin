@@ -207,7 +207,6 @@ export default function MemberGeneral({ currentMember }: Props) {
               <Field.Phone name="mobile" label="Mobile" />
               <SearchMiner
                 loading={memberLoading}
-                name="memberId"
                 members={members}
                 username={username}
                 setMemberId={setMemberId}

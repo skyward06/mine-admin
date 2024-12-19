@@ -187,7 +187,6 @@ export default function SaleGeneral({ currentSale }: Props) {
               }}
             >
               <SearchMiner
-                name="memberId"
                 members={members}
                 username={username}
                 setMemberId={setMemberId}

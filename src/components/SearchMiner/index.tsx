@@ -2,11 +2,11 @@ import type { Member } from 'src/__generated__/graphql';
 
 import { useEffect } from 'react';
 
-import { Field } from '../Form';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 
 interface Props {
   loading?: boolean;
-  name: string;
   username?: string;
   members: Member[];
   currentMember?: Member | null;
@@ -16,7 +16,6 @@ interface Props {
 
 export default function SearchMiner({
   loading,
-  name,
   members,
   username,
   setMemberId,
@@ -29,16 +28,15 @@ export default function SearchMiner({
   }, [username]);
 
   return (
-    <Field.Autocomplete
-      name={name}
+    <Autocomplete
       fullWidth
       options={members.map((item) => `${item.username} (${item.fullName})`)}
-      getOptionLabel={(option) => option}
       isOptionEqualToValue={(option, value) => option === value}
       value={
         username ?? (currentMember && `${currentMember?.username} (${currentMember?.fullName})`)
       }
       loading={loading}
+      renderInput={(params) => <TextField {...params} label="Miner Name(Child)" margin="none" />}
       renderOption={(props, option) => (
         <li {...props} key={option}>
           {option}
