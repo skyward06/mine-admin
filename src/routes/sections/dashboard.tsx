@@ -65,6 +65,12 @@ const ProofEditPage = lazy(() => import('src/pages/Proof/Edit'));
 // ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
+const GroupSettingsListPage = lazy(() => import('src/pages/GroupSettings/List'));
+// const ProofCreatePage = lazy(() => import('src/pages/Proof/Create'));
+// const ProofEditPage = lazy(() => import('src/pages/Proof/Edit'));
+// ----------------------------------------------------------------------
+
+// ----------------------------------------------------------------------
 const PaymentListPage = lazy(() => import('src/pages/Payment/List'));
 const PaymentCreatePage = lazy(() => import('src/pages/Payment/Create'));
 const PaymentEditPage = lazy(() => import('src/pages/Payment/Edit'));
@@ -165,6 +171,14 @@ export const dashboardRoutes = [
           { index: true, element: <ProofListPage /> },
           { path: 'new', element: <ProofCreatePage /> },
           { path: ':id', element: <ProofEditPage /> },
+        ],
+      },
+      {
+        path: 'group-settings',
+        children: [
+          { index: true, element: <GroupSettingsListPage /> },
+          // { path: 'new', element: <ProofCreatePage /> },
+          // { path: ':id', element: <ProofEditPage /> },
         ],
       },
       {

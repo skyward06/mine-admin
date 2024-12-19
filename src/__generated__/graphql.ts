@@ -173,6 +173,19 @@ export type CreateBlockInput = {
   issuedAt: Scalars['DateTimeISO']['input'];
 };
 
+export type CreateGroupSettingCommissionBonusInput = {
+  commission: Scalars['Int']['input'];
+  lPoint: Scalars['Int']['input'];
+  rPoint: Scalars['Int']['input'];
+};
+
+export type CreateGroupSettingInput = {
+  groupSettingCommissionBonuses: Array<CreateGroupSettingCommissionBonusInput>;
+  limitDate: Scalars['DateTimeISO']['input'];
+  name: Scalars['String']['input'];
+  sponsorBonusPackageId: Scalars['ID']['input'];
+};
+
 export type CreateManyMemberStatisticsInput = {
   memberStatistics: Array<CreateMemberStatisticsInput>;
 };
@@ -342,6 +355,35 @@ export type EntityStats = {
 
 export type GenerateWeeklyReportInput = {
   all: Scalars['Boolean']['input'];
+};
+
+export type GroupSetting = {
+  __typename?: 'GroupSetting';
+  createdAt?: Maybe<Scalars['DateTimeISO']['output']>;
+  deletedAt?: Maybe<Scalars['DateTimeISO']['output']>;
+  groupSettingCommissionBonuses: Array<GroupSettingCommissionBonus>;
+  id: Scalars['ID']['output'];
+  limitDate: Scalars['DateTimeISO']['output'];
+  name: Scalars['String']['output'];
+  sponsorBonusPackage?: Maybe<Package>;
+  sponsorBonusPackageId: Scalars['String']['output'];
+  updatedAt?: Maybe<Scalars['DateTimeISO']['output']>;
+};
+
+export type GroupSettingCommissionBonus = {
+  __typename?: 'GroupSettingCommissionBonus';
+  commission: Scalars['Int']['output'];
+  createdAt?: Maybe<Scalars['DateTimeISO']['output']>;
+  deletedAt?: Maybe<Scalars['DateTimeISO']['output']>;
+  lPoint: Scalars['Int']['output'];
+  rPoint: Scalars['Int']['output'];
+  updatedAt?: Maybe<Scalars['DateTimeISO']['output']>;
+};
+
+export type GroupSettingResponse = {
+  __typename?: 'GroupSettingResponse';
+  groupSettings?: Maybe<Array<GroupSetting>>;
+  total?: Maybe<Scalars['Int']['output']>;
 };
 
 export type HashPowerResponse = {
@@ -567,6 +609,7 @@ export type Mutation = {
   createAdmin: Admin;
   createAdminNote: AdminNotes;
   createBlock: Block;
+  createGroupSetting: GroupSetting;
   createManyMemberStatistics: ManySuccessResponse;
   createManyStatisticsSales: ManySuccessResponse;
   createMember: Member;
@@ -585,6 +628,7 @@ export type Mutation = {
   removeAdminNote: SuccessResponse;
   removeAdmins: ManySuccessResponse;
   removeCompleteMemberPlacement: SuccessResponse;
+  removeGroupSetting: GroupSetting;
   removeManyMemberStatistics: ManySuccessResponse;
   removeManyStatistics: ManySuccessResponse;
   removeManyStatisticsSales: ManySuccessResponse;
@@ -608,6 +652,7 @@ export type Mutation = {
   updateCommission: WeeklyCommission;
   updateCommissionShortNote: WeeklyCommission;
   updateCommissionsStatus: SuccessResponse;
+  updateGroupSetting: GroupSetting;
   updateMember: Member;
   updateMemberWallet: SuccessResponse;
   updatePackage: Package;
@@ -650,6 +695,11 @@ export type MutationCreateAdminNoteArgs = {
 
 export type MutationCreateBlockArgs = {
   data: CreateBlockInput;
+};
+
+
+export type MutationCreateGroupSettingArgs = {
+  data: CreateGroupSettingInput;
 };
 
 
@@ -739,6 +789,11 @@ export type MutationRemoveAdminsArgs = {
 
 
 export type MutationRemoveCompleteMemberPlacementArgs = {
+  data: IdInput;
+};
+
+
+export type MutationRemoveGroupSettingArgs = {
   data: IdInput;
 };
 
@@ -850,6 +905,11 @@ export type MutationUpdateCommissionShortNoteArgs = {
 
 export type MutationUpdateCommissionsStatusArgs = {
   data: WeeklyCommissionsStatusUpdateInput;
+};
+
+
+export type MutationUpdateGroupSettingArgs = {
+  data: UpdateGroupSettingInput;
 };
 
 
@@ -1160,6 +1220,7 @@ export type Query = {
   countRightMembers: CountResponse;
   dailyRewards: DailyRewards;
   generateReferenceLink: ReferenceLink;
+  groupSettings: GroupSettingResponse;
   hashPowerResponse: HashPowerResponse;
   introducers: IntroducersResponse;
   latestStatistics: Array<LatestStatistics>;
@@ -1268,6 +1329,13 @@ export type QueryDailyRewardsArgs = {
   from: Scalars['DateTimeISO']['input'];
   memberId?: InputMaybe<Scalars['ID']['input']>;
   to: Scalars['DateTimeISO']['input'];
+};
+
+
+export type QueryGroupSettingsArgs = {
+  filter?: InputMaybe<Scalars['JSONObject']['input']>;
+  page?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -1633,6 +1701,14 @@ export type UpdateAdminPasswordInput = {
   oldPassword: Scalars['String']['input'];
 };
 
+export type UpdateGroupSettingInput = {
+  groupSettingCommissionBonuses?: InputMaybe<Array<CreateGroupSettingCommissionBonusInput>>;
+  id: Scalars['ID']['input'];
+  limitDate?: InputMaybe<Scalars['DateTimeISO']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  sponsorBonusPackageId?: InputMaybe<Scalars['ID']['input']>;
+};
+
 export type UpdateMemberInput = {
   assetId?: InputMaybe<Scalars['String']['input']>;
   city?: InputMaybe<Scalars['String']['input']>;
@@ -1877,6 +1953,15 @@ export type UpdateCommissionShortNoteMutationVariables = Exact<{
 
 
 export type UpdateCommissionShortNoteMutation = { __typename?: 'Mutation', updateCommissionShortNote: { __typename?: 'WeeklyCommission', ID: number } };
+
+export type GroupSettingsQueryVariables = Exact<{
+  sort?: InputMaybe<Scalars['String']['input']>;
+  page?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<Scalars['JSONObject']['input']>;
+}>;
+
+
+export type GroupSettingsQuery = { __typename?: 'Query', groupSettings: { __typename?: 'GroupSettingResponse', total?: number | null, groupSettings?: Array<{ __typename?: 'GroupSetting', createdAt?: any | null, id: string, name: string, limitDate: any, sponsorBonusPackageId: string, groupSettingCommissionBonuses: Array<{ __typename?: 'GroupSettingCommissionBonus', lPoint: number, rPoint: number, commission: number }> }> | null } };
 
 export type AdminNotesQueryVariables = Exact<{
   sort?: InputMaybe<Scalars['String']['input']>;
@@ -2460,6 +2545,7 @@ export const UpdateCommissionDocument = {"kind":"Document","definitions":[{"kind
 export const UpdateCommissionsStatusDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateCommissionsStatus"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"WeeklyCommissionsStatusUpdateInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateCommissionsStatus"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"result"}}]}}]}}]} as unknown as DocumentNode<UpdateCommissionsStatusMutation, UpdateCommissionsStatusMutationVariables>;
 export const CalculatePreviewDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CalculatePreview"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"calculatePreview"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"result"}}]}}]}}]} as unknown as DocumentNode<CalculatePreviewMutation, CalculatePreviewMutationVariables>;
 export const UpdateCommissionShortNoteDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateCommissionShortNote"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"WeeklyCommissionNoteInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateCommissionShortNote"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ID"}}]}}]}}]} as unknown as DocumentNode<UpdateCommissionShortNoteMutation, UpdateCommissionShortNoteMutationVariables>;
+export const GroupSettingsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GroupSettings"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sort"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"page"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"filter"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSONObject"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"groupSettings"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"sort"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sort"}}},{"kind":"Argument","name":{"kind":"Name","value":"page"},"value":{"kind":"Variable","name":{"kind":"Name","value":"page"}}},{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"Variable","name":{"kind":"Name","value":"filter"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"groupSettings"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"limitDate"}},{"kind":"Field","name":{"kind":"Name","value":"sponsorBonusPackageId"}},{"kind":"Field","name":{"kind":"Name","value":"groupSettingCommissionBonuses"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"lPoint"}},{"kind":"Field","name":{"kind":"Name","value":"rPoint"}},{"kind":"Field","name":{"kind":"Name","value":"commission"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"total"}}]}}]}}]} as unknown as DocumentNode<GroupSettingsQuery, GroupSettingsQueryVariables>;
 export const AdminNotesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AdminNotes"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sort"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"page"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"filter"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSONObject"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminNotes"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"sort"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sort"}}},{"kind":"Argument","name":{"kind":"Name","value":"page"},"value":{"kind":"Variable","name":{"kind":"Name","value":"page"}}},{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"Variable","name":{"kind":"Name","value":"filter"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminNotes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"deletedAt"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"adminId"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"member"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"deletedAt"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"fullName"}},{"kind":"Field","name":{"kind":"Name","value":"sponsorId"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"mobile"}},{"kind":"Field","name":{"kind":"Name","value":"assetId"}},{"kind":"Field","name":{"kind":"Name","value":"primaryAddress"}},{"kind":"Field","name":{"kind":"Name","value":"secondaryAddress"}},{"kind":"Field","name":{"kind":"Name","value":"city"}},{"kind":"Field","name":{"kind":"Name","value":"state"}},{"kind":"Field","name":{"kind":"Name","value":"zipCode"}},{"kind":"Field","name":{"kind":"Name","value":"placementParentId"}},{"kind":"Field","name":{"kind":"Name","value":"placementPosition"}},{"kind":"Field","name":{"kind":"Name","value":"point"}},{"kind":"Field","name":{"kind":"Name","value":"emailVerified"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"totalIntroducers"}},{"kind":"Field","name":{"kind":"Name","value":"syncWithSendy"}},{"kind":"Field","name":{"kind":"Name","value":"preferredContact"}},{"kind":"Field","name":{"kind":"Name","value":"preferredContactDetail"}},{"kind":"Field","name":{"kind":"Name","value":"commission"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"begL"}},{"kind":"Field","name":{"kind":"Name","value":"begR"}},{"kind":"Field","name":{"kind":"Name","value":"newL"}},{"kind":"Field","name":{"kind":"Name","value":"newR"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"admin"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"deletedAt"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"total"}}]}}]}}]} as unknown as DocumentNode<AdminNotesQuery, AdminNotesQueryVariables>;
 export const CreateAdminNoteDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateAdminNote"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateAdminNotesInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createAdminNote"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adminId"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}}]}}]}}]} as unknown as DocumentNode<CreateAdminNoteMutation, CreateAdminNoteMutationVariables>;
 export const UpdateAdminNoteDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateAdminNote"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateAdminNotesInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateAdminNote"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"admin"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}}]}}]}}]}}]} as unknown as DocumentNode<UpdateAdminNoteMutation, UpdateAdminNoteMutationVariables>;

@@ -20,6 +20,7 @@ const ROOTS = {
   REPORTS: '/reports',
   WEEKLYREPORTS: '/weekly-reports',
   NOTIFICATIONS: '/notifications',
+  GROUP_SETTINGS: '/group-settings',
 };
 
 // ----------------------------------------------------------------------
@@ -80,6 +81,11 @@ export const paths = {
       root: ROOTS.PAYMENT,
       edit: (id: string) => `${ROOTS.PAYMENT}/${id}`,
       new: `${ROOTS.PAYMENT}/new`,
+    },
+    groupSettings: {
+      root: ROOTS.GROUP_SETTINGS,
+      edit: (id: string) => `${ROOTS.GROUP_SETTINGS}/${id}`,
+      new: `${ROOTS.GROUP_SETTINGS}/new`,
     },
     reward: {
       root: ROOTS.REWARD,
