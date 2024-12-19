@@ -1,6 +1,5 @@
-import debounce from 'lodash/debounce';
 import { ApolloError } from '@apollo/client';
-import { useState, useEffect, useContext, useCallback } from 'react';
+import { useState, useEffect, useContext } from 'react';
 
 import Card from '@mui/material/Card';
 import Paper from '@mui/material/Paper';
@@ -11,13 +10,11 @@ import Dialog from '@mui/material/Dialog';
 import Checkbox from '@mui/material/Checkbox';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
-import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import RadioGroup from '@mui/material/RadioGroup';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 import DialogTitle from '@mui/material/DialogTitle';
-import Autocomplete from '@mui/material/Autocomplete';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -30,11 +27,12 @@ import { useBoolean } from 'src/hooks/useBoolean';
 import { formatDate } from 'src/utils/format-time';
 import { customizeFullName } from 'src/utils/helper';
 
-import { type Member, type TeamStrategy, PlacementPosition } from 'src/__generated__/graphql';
+import { type TeamStrategy, PlacementPosition } from 'src/__generated__/graphql';
 
 import { Label } from 'src/components/Label';
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
+import SearchMiner from 'src/components/SearchMiner';
 import { ConfirmDialog } from 'src/components/Dialog';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
@@ -69,12 +67,12 @@ export function StandardNode({
   const router = useRouter();
   const popover = usePopover();
 
+  const [uname, setUname] = useState<string>();
+  const [teamStrategy, setTeamStrategy] = useState<string>('');
   const [position, setPosition] = useState<PlacementPosition>(PlacementPosition.Left);
   const [checked, setChecked] = useState<boolean>(false);
-  const [memberUsername, setMemberUserName] = useState<string | null>(null);
-  const [targetUserId, setTargetUserId] = useState<string>('');
+  const [memberId, setMemberId] = useState<string>('');
   const [strategy, setStrategy] = useState<'LEFT' | 'RIGHT'>();
-  const [member, setMember] = useState<Member>();
 
   const { loading, updateMember } = useUpdateMember();
   const { loading: memberLoading, members, fetchMembers } = useFetchMembers();
@@ -93,24 +91,18 @@ export function StandardNode({
         },
       },
     });
-    setTargetUserId(placementParentId!);
+    setMemberId(placementParentId!);
     popover.onClose();
     editModal.onTrue();
   };
 
   const onAdd = async () => {
-    setMemberUserName('');
-    setTargetUserId('');
+    setMemberId('');
     popover.onClose();
     addModal.onTrue();
   };
 
-  const handleChange = debounce((value: string) => {
-    setMemberUserName(value);
-  }, 300);
-
   useEffect(() => {
-    if (memberUsername === null) return;
     fetchMembers({
       variables: {
         filter: {
@@ -118,54 +110,28 @@ export function StandardNode({
             placementParentId: null,
           }),
           OR: [
-            { username: { contains: memberUsername, mode: 'insensitive' } },
-            { fullName: { contains: memberUsername, mode: 'insensitive' } },
+            { username: { contains: uname, mode: 'insensitive' } },
+            { fullName: { contains: uname, mode: 'insensitive' } },
           ],
+          status: true,
         },
         page: '1,10',
       },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [memberUsername]);
-
-  const getMemberById = useCallback(
-    (_id: string) => members.find((mb) => mb!.id === _id),
-    [members]
-  );
+  }, [uname]);
 
   const { visibleMap, expandTree, collapseTree, expandAll, collapseAll } = useContext(NodeContext);
 
   const addContent = (
     <Paper sx={{ py: 1 }}>
-      <Autocomplete
-        fullWidth
-        options={members.map((mb) => mb!.id)}
+      <SearchMiner
         loading={memberLoading}
-        loadingText={<LoadingButton loading={memberLoading} />}
-        getOptionLabel={(option) => {
-          const mbr = getMemberById(option);
-          return mbr ? mbr.username : memberUsername || '';
-        }}
-        renderInput={(params) => <TextField {...params} label="Miner Name(Child)" margin="none" />}
-        renderOption={(props, option) => {
-          const mbr = getMemberById(option);
-          return (
-            <li {...props} key={option}>
-              {`${mbr!.username} (${mbr!.fullName})`};
-            </li>
-          );
-        }}
-        onInputChange={(_, name: string) => {
-          if (!memberLoading) {
-            handleChange(name);
-          }
-        }}
-        onChange={(_, value) => {
-          setTargetUserId(value ?? '');
-          setMember(getMemberById(value ?? ''));
-        }}
-        value={targetUserId}
-        filterOptions={(options) => options}
+        members={members}
+        username={uname}
+        setMemberId={setMemberId}
+        setTeamStrategy={setTeamStrategy}
+        setUsername={setUname}
       />
       <RadioGroup
         row
@@ -191,34 +157,13 @@ export function StandardNode({
 
   const editContent = (
     <Paper sx={{ py: 1 }}>
-      <Autocomplete
-        fullWidth
-        options={members.map((mb) => mb!.id)}
+      <SearchMiner
         loading={memberLoading}
-        loadingText={<LoadingButton loading={memberLoading} />}
-        getOptionLabel={(option) => {
-          const mbr = getMemberById(option);
-          return mbr ? mbr.username : memberUsername || '';
-        }}
-        renderInput={(params) => <TextField {...params} label="Miner Name(Parent)" margin="none" />}
-        renderOption={(props, option) => {
-          const mbr = getMemberById(option);
-          return (
-            <li {...props} key={option}>
-              {`${mbr!.username} (${mbr!.fullName})`};
-            </li>
-          );
-        }}
-        onInputChange={(_, name: string) => {
-          if (!memberLoading) {
-            handleChange(name);
-          }
-        }}
-        onChange={(_, value) => {
-          setTargetUserId(value ?? '');
-        }}
-        value={targetUserId}
-        filterOptions={(options) => options}
+        members={members}
+        username={uname}
+        setMemberId={setMemberId}
+        setTeamStrategy={setTeamStrategy}
+        setUsername={setUname}
       />
       <RadioGroup
         row
@@ -279,9 +224,10 @@ export function StandardNode({
       });
 
       if (data?.updateMember.id && !loading) {
-        toast.success('Successfully added!');
+        toast.success('Successfully updated!');
 
         addModal.onFalse();
+        editModal.onFalse();
       }
 
       confirmModal.onFalse();
@@ -452,10 +398,10 @@ export function StandardNode({
                 setStrategy(PlacementPosition.Left);
               }
 
-              if (position === (member?.teamStrategy as unknown as PlacementPosition)) {
+              if (position === (teamStrategy as unknown as PlacementPosition)) {
                 confirmModal.onTrue();
               } else {
-                confirmStrategy(targetUserId, id, position, true);
+                confirmStrategy(memberId, id, position, true);
               }
             }}
           >
@@ -481,9 +427,7 @@ export function StandardNode({
                 setStrategy(PlacementPosition.Left);
               }
 
-              confirmStrategy(id, targetUserId, position, false);
-
-              editModal.onFalse();
+              confirmStrategy(id, memberId, position, false);
             }}
           >
             OK
@@ -536,7 +480,7 @@ export function StandardNode({
             loading={status.value && loading}
             onClick={() => {
               status.onTrue();
-              confirmStrategy(targetUserId, id, position, true);
+              confirmStrategy(memberId, id, position, true);
             }}
           >
             Change
@@ -547,7 +491,7 @@ export function StandardNode({
             color="info"
             loading={!status.value && loading}
             onClick={() => {
-              confirmStrategy(targetUserId, id, position, false);
+              confirmStrategy(memberId, id, position, false);
             }}
           >
             Skip

@@ -10,20 +10,30 @@ interface Props {
   username?: string;
   members: Member[];
   currentMember?: Member | null;
-  setMemberId: Function;
+  setMemberId?: Function;
   setUsername: Function;
+  setTeamStrategy?: Function;
 }
 
 export default function SearchMiner({
   loading,
   members,
   username,
+  currentMember,
   setMemberId,
   setUsername,
-  currentMember,
+  setTeamStrategy,
 }: Props) {
   useEffect(() => {
-    setMemberId(members.find((member) => member.username === username?.split(' (')[0])?.id);
+    if (setMemberId) {
+      setMemberId(members.find((member) => member.username === username?.split(' (')[0])?.id);
+    }
+
+    if (setTeamStrategy) {
+      setTeamStrategy(
+        members.find((member) => member.username === username?.split(' (')[0])?.teamStrategy
+      );
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username]);
 
