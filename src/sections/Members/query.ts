@@ -33,6 +33,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         point
         sponsorId
         status
+        groupName
         emailVerified
         totalIntroducers
         syncWithSendy
@@ -58,6 +59,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           secondaryAddress
           mobile
           assetId
+          groupName
           status
           emailVerified
           totalIntroducers
@@ -86,6 +88,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           assetId
           username
           fullName
+          groupName
           emailVerified
           syncWithSendy
           primaryAddress
@@ -113,6 +116,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           assetId
           username
           fullName
+          groupName
           emailVerified
           syncWithSendy
           primaryAddress
@@ -216,6 +220,7 @@ export const FETCH_PLACEMENT_MEMBERS_QUERY = gql(/* GraphQL */ `
         email
         fullName
         sponsorId
+        groupName
         status
         cmnCalculatedWeeks
         placementParentId

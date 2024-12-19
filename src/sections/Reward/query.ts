@@ -53,6 +53,7 @@ export const FETCH_MEMBERSTATISTICS_QUERY = gql(/* GraphQL */ `
           mobile
           assetId
           status
+          groupName
           emailVerified
           totalIntroducers
           primaryAddress

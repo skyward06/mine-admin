@@ -1,7 +1,12 @@
 import { useRef, useMemo } from 'react';
-import { useLazyQuery } from '@apollo/client';
+import { useMutation, useLazyQuery } from '@apollo/client';
 
-import { FETCH_GROUP_SETTINGS } from './query';
+import {
+  FETCH_GROUP_SETTINGS,
+  CREATE_GROUP_SETTINGS,
+  UPDATE_GROUP_SETTINGS,
+  REMOVE_GROUP_SETTINGS,
+} from './query';
 
 export function useFetchGroupSettings() {
   const [fetchGroupSettings, { loading, data, called }] = useLazyQuery(FETCH_GROUP_SETTINGS);
@@ -25,4 +30,31 @@ export function useFetchGroupSettings() {
     groupSettings: data?.groupSettings.groupSettings ?? [],
     fetchGroupSettings,
   };
+}
+
+export function useCreateGroupSettings() {
+  const [createGroupSettings, { loading, data, error }] = useMutation(CREATE_GROUP_SETTINGS, {
+    awaitRefetchQueries: true,
+    refetchQueries: ['GroupSettings'],
+  });
+
+  return { loading, data, error, createGroupSettings };
+}
+
+export function useUpdateGroupSettings() {
+  const [updateGroupSettings, { loading, data, error }] = useMutation(UPDATE_GROUP_SETTINGS, {
+    awaitRefetchQueries: true,
+    refetchQueries: ['GroupSettings'],
+  });
+
+  return { loading, data, error, updateGroupSettings };
+}
+
+export function useRemoveGroupSettings() {
+  const [removeGroupSettings, { loading, data, error }] = useMutation(REMOVE_GROUP_SETTINGS, {
+    awaitRefetchQueries: true,
+    refetchQueries: ['GroupSettings'],
+  });
+
+  return { loading, data, error, removeGroupSettings };
 }

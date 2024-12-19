@@ -12,9 +12,6 @@ import { useRouter } from 'src/routes/hooks';
 
 import { formatDate } from 'src/utils/format-time';
 
-import { FREE_SHARE_ID_1, FREE_SHARE_ID_2 } from 'src/consts';
-
-// import { Label } from 'src/components/Label';
 import { Iconify } from 'src/components/Iconify';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
@@ -32,7 +29,18 @@ export default function ProductTableRow({ row, confirm, setSelected }: Props) {
   const router = useRouter();
   const popover = usePopover();
 
-  const { id, amount, date, productName, point, enrollVisibility, token, sales, status } = row;
+  const {
+    id,
+    amount,
+    date,
+    productName,
+    point,
+    enrollVisibility,
+    token,
+    sales,
+    status,
+    freeShare,
+  } = row;
 
   const { updatePackage, loading } = useUpdatePackage();
 
@@ -42,23 +50,11 @@ export default function ProductTableRow({ row, confirm, setSelected }: Props) {
         <TableCell align="left">{formatDate(date)}</TableCell>
         <TableCell align="left">{amount}</TableCell>
         <TableCell align="left">{productName}</TableCell>
-        {/* <TableCell align="left">
-        {(id === FREE_SHARE_ID_1 || id === FREE_SHARE_ID_2) && (
-          <Label variant="soft" color="primary">
-            Free Share
-          </Label>
-        )}
-        {id === NO_PRODUCT && (
-          <Label variant="soft" color="info">
-            No Product
-          </Label>
-        )}
-      </TableCell> */}
         <TableCell align="left">{point}</TableCell>
         <TableCell align="left">{token}</TableCell>
         <TableCell align="center">
           <IconButton
-            disabled={!status || id === FREE_SHARE_ID_1 || id === FREE_SHARE_ID_2}
+            disabled={!status || freeShare}
             onClick={() =>
               updatePackage({
                 variables: { data: { id, enrollVisibility: !enrollVisibility } },
@@ -77,7 +73,11 @@ export default function ProductTableRow({ row, confirm, setSelected }: Props) {
           </IconButton>
         </TableCell>
         <TableCell align="center">
-          <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
+          <IconButton
+            color={popover.open ? 'inherit' : 'default'}
+            onClick={popover.onOpen}
+            disabled={freeShare}
+          >
             <Iconify icon="eva:more-horizontal-fill" />
           </IconButton>
         </TableCell>

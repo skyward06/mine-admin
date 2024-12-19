@@ -71,7 +71,13 @@ export const Personal = () => {
   return (
     <Grid xl={12}>
       <Card sx={{ mt: 2, p: 3 }}>
-        <Stack direction="row" justifyContent="space-between" sx={{ pb: 0 }} columnGap={2}>
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          sx={{ pb: 2 }}
+          columnGap={2}
+          alignItems="center"
+        >
           <Typography variant="subtitle1">{member?.fullName}</Typography>
           <Stack direction="row">
             <Typography variant="body2" sx={{ pt: 0.9 }}>
@@ -217,6 +223,17 @@ export const Personal = () => {
           </Stack>
 
           <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
+
+          <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+            <Stack width={0.5}>
+              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                Group:
+              </Typography>
+            </Stack>
+            <Stack width={1}>
+              <Typography variant="body2">{member?.groupName}</Typography>
+            </Stack>
+          </Stack>
 
           <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
             <Stack width={0.5}>

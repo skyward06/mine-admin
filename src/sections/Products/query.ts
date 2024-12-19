@@ -10,6 +10,7 @@ export const FETCH_PACKAGES_QUERY = gql(/* GraphQL */ `
         token
         amount
         status
+        freeShare
         createdAt
         updatedAt
         deletedAt

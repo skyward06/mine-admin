@@ -66,8 +66,8 @@ const ProofEditPage = lazy(() => import('src/pages/Proof/Edit'));
 
 // ----------------------------------------------------------------------
 const GroupSettingsListPage = lazy(() => import('src/pages/GroupSettings/List'));
-// const ProofCreatePage = lazy(() => import('src/pages/Proof/Create'));
-// const ProofEditPage = lazy(() => import('src/pages/Proof/Edit'));
+const GroupSettingsCreatePage = lazy(() => import('src/pages/GroupSettings/Create'));
+const GroupSettingsEditPage = lazy(() => import('src/pages/GroupSettings/Edit'));
 // ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
@@ -177,8 +177,8 @@ export const dashboardRoutes = [
         path: 'group-settings',
         children: [
           { index: true, element: <GroupSettingsListPage /> },
-          // { path: 'new', element: <ProofCreatePage /> },
-          // { path: ':id', element: <ProofEditPage /> },
+          { path: 'new', element: <GroupSettingsCreatePage /> },
+          { path: ':id', element: <GroupSettingsEditPage /> },
         ],
       },
       {

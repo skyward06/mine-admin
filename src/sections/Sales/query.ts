@@ -52,6 +52,7 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
           }
           username
           fullName
+          groupName
           syncWithSendy
           emailVerified
           primaryAddress
@@ -71,6 +72,7 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
           point
           amount
           status
+          freeShare
           productName
           enrollVisibility
         }
