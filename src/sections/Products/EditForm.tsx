@@ -147,7 +147,6 @@ export default function EditForm({ current }: Props) {
             label="Status"
             value={status ? 1 : 0}
             onChange={(e) => (Number(e.target.value) === 1 ? setStatus(true) : setStatus(false))}
-            // disabled={!!(current?.sales ?? []).length}
           >
             <MenuItem value={1}>Active</MenuItem>
             <MenuItem value={0}>Inactive</MenuItem>
@@ -159,7 +158,6 @@ export default function EditForm({ current }: Props) {
             onChange={(e) =>
               Number(e.target.value) === 1 ? setVisibility(true) : setVisibility(false)
             }
-            // disabled={!!(current?.sales ?? []).length}
           >
             <MenuItem value={1}>Show</MenuItem>
             <MenuItem value={0}>Hide</MenuItem>

@@ -7,6 +7,8 @@ import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 
+import { NO_PRODUCT } from 'src/consts';
+
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
@@ -54,7 +56,7 @@ export default function ProductTableRow({ row, confirm, setSelected }: Props) {
         <TableCell align="left">{token}</TableCell>
         <TableCell align="center">
           <IconButton
-            disabled={!status || freeShare}
+            disabled={!status || id === NO_PRODUCT}
             onClick={() =>
               updatePackage({
                 variables: { data: { id, enrollVisibility: !enrollVisibility } },
@@ -76,7 +78,7 @@ export default function ProductTableRow({ row, confirm, setSelected }: Props) {
           <IconButton
             color={popover.open ? 'inherit' : 'default'}
             onClick={popover.onOpen}
-            disabled={freeShare}
+            disabled={freeShare || id === NO_PRODUCT}
           >
             <Iconify icon="eva:more-horizontal-fill" />
           </IconButton>
