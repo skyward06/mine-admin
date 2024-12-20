@@ -241,7 +241,8 @@ export type CreateGroupSettingInput = {
   groupSettingCommissionBonuses: Array<CreateGroupSettingCommissionBonusInput>;
   limitDate: Scalars['DateTimeISO']['input'];
   name: Scalars['String']['input'];
-  sponsorBonusPackageId: Scalars['ID']['input'];
+  rollSponsorBonusPackageId?: InputMaybe<Scalars['ID']['input']>;
+  sponsorBonusPackageId?: InputMaybe<Scalars['ID']['input']>;
 };
 
 export type CreateManyMemberStatisticsInput = {
@@ -1919,6 +1920,7 @@ export type UpdateGroupSettingInput = {
   id: Scalars['ID']['input'];
   limitDate?: InputMaybe<Scalars['DateTimeISO']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  rollSponsorBonusPackageId?: InputMaybe<Scalars['ID']['input']>;
   sponsorBonusPackageId?: InputMaybe<Scalars['ID']['input']>;
 };
 

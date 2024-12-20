@@ -9,6 +9,7 @@ export const FETCH_GROUP_SETTINGS = gql(/* GraphQL */ `
         name
         limitDate
         sponsorBonusPackageId
+        rollSponsorBonusPackageId
         groupSettingCommissionBonuses {
           lPoint
           rPoint
