@@ -180,7 +180,7 @@ export function GroupCard({ group }: Props) {
               const promise = await removeGroupSettings({ variables: { data: { id: group.id } } });
               const result = promise.data?.removeGroupSetting.id;
 
-              if (result === 'success') {
+              if (result) {
                 toast.success('Group removed successfully');
               } else {
                 toast.error('You are not allowed to remove this group');
