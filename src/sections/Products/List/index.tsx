@@ -53,7 +53,7 @@ const TABLE_HEAD = [
   { id: 'date', label: 'Date', width: 200, sortable: true },
   { id: 'amonut', label: 'Amount', width: 200, sortable: true },
   { id: 'productName', label: 'Product Name', sortable: true },
-  // { id: 'type', label: 'Type', sortable: true },
+  { id: 'type', label: 'Type', sortable: true },
   { id: 'point', label: 'Point', sortable: true },
   { id: 'token', label: 'Hash Power', width: 200, sortable: true },
   { id: 'enrollVisibility', label: 'Visibility', align: 'center', sortable: true },
