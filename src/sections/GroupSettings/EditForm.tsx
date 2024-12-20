@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
+import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import LoadingButton from '@mui/lab/LoadingButton';
 
@@ -35,6 +36,8 @@ export default function EditForm({ current }: Props) {
         ? Schema.safeParse(current).data ?? ({} as SchemaType)
         : {
             name: '',
+            sponsorBonusPackageId: null,
+            rollSponsorBonusPackageId: null,
             limitDate: `${today('YYYY-MM-DD')}`,
           },
     [current]
@@ -51,24 +54,43 @@ export default function EditForm({ current }: Props) {
 
   const { reset, handleSubmit } = methods;
 
-  const onSubmit = handleSubmit(async ({ limitDate, ...newData }) => {
-    try {
-      if (current) {
-        await updateGroupSettings({
-          variables: { data: { ...newData, id: current.id, limitDate: customizeDate(limitDate) } },
-        });
-      } else {
-        await createGroupSettings({
-          variables: { data: { ...newData, limitDate: customizeDate(limitDate) } },
-        });
-      }
+  const onSubmit = handleSubmit(
+    async ({ limitDate, sponsorBonusPackageId, rollSponsorBonusPackageId, ...newData }) => {
+      try {
+        if (current) {
+          await updateGroupSettings({
+            variables: {
+              data: {
+                ...newData,
+                id: current.id,
+                sponsorBonusPackageId: sponsorBonusPackageId === '' ? null : sponsorBonusPackageId,
+                rollSponsorBonusPackageId:
+                  rollSponsorBonusPackageId === '' ? null : rollSponsorBonusPackageId,
+                limitDate: customizeDate(limitDate),
+              },
+            },
+          });
+        } else {
+          await createGroupSettings({
+            variables: {
+              data: {
+                ...newData,
+                sponsorBonusPackageId: sponsorBonusPackageId === '' ? null : sponsorBonusPackageId,
+                rollSponsorBonusPackageId:
+                  rollSponsorBonusPackageId === '' ? null : rollSponsorBonusPackageId,
+                limitDate: customizeDate(limitDate),
+              },
+            },
+          });
+        }
 
-      reset();
-      router.push(paths.dashboard.groupSettings.root);
-    } catch (error) {
-      toast.error(error.message);
+        reset();
+        router.push(paths.dashboard.groupSettings.root);
+      } catch (error) {
+        toast.error(error.message);
+      }
     }
-  });
+  );
 
   useEffect(() => {
     fetchPackages({ variables: { filter: { status: true } } });
@@ -91,6 +113,8 @@ export default function EditForm({ current }: Props) {
           <Field.DatePicker name="limitDate" label="Limit Date" format="YYYY-MM-DD" />
 
           <Field.Select name="sponsorBonusPackageId" label="Sponsor Bonus Package">
+            <MenuItem value="">None</MenuItem>
+            <Divider sx={{ borderStyle: 'dashed' }} />
             {packages.map((option) => (
               <MenuItem key={option?.id} value={option?.id}>
                 {option?.productName}
@@ -99,6 +123,8 @@ export default function EditForm({ current }: Props) {
           </Field.Select>
 
           <Field.Select name="rollSponsorBonusPackageId" label="Roll Sponsor Bonus Package">
+            <MenuItem value="">None</MenuItem>
+            <Divider sx={{ borderStyle: 'dashed' }} />
             {packages.map((option) => (
               <MenuItem key={option?.id} value={option?.id}>
                 {option?.productName}
