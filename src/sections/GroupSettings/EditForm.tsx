@@ -84,13 +84,21 @@ export default function EditForm({ current }: Props) {
           display="grid"
           gridTemplateColumns={{
             xs: 'repeat(1, 1fr)',
-            sm: 'repeat(3, 1fr)',
+            sm: 'repeat(2, 1fr)',
           }}
         >
           <Field.Text name="name" label="Name" />
           <Field.DatePicker name="limitDate" label="Limit Date" format="YYYY-MM-DD" />
 
-          <Field.Select name="sponsorBonusPackageId" label="Package">
+          <Field.Select name="sponsorBonusPackageId" label="Sponsor Bonus Package">
+            {packages.map((option) => (
+              <MenuItem key={option?.id} value={option?.id}>
+                {option?.productName}
+              </MenuItem>
+            ))}
+          </Field.Select>
+
+          <Field.Select name="rollSponsorBonusPackageId" label="Roll Sponsor Bonus Package">
             {packages.map((option) => (
               <MenuItem key={option?.id} value={option?.id}>
                 {option?.productName}
