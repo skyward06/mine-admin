@@ -106,7 +106,7 @@ export default function Detail({ open, row }: Props) {
             <Typography variant="body2" color="text.disabled">
               Free Share:
             </Typography>
-            <Typography variant="body2">{freeShareSale ? 'Yes' : 'No'}</Typography>
+            <Typography variant="body2">{freeShareSponsor ? 'Yes' : 'No'}</Typography>
           </Stack>
 
           <Stack direction="row" columnGap={2}>
