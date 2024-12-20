@@ -5,8 +5,8 @@ export type SchemaType = zod.infer<typeof Schema>;
 export const Schema = zod.object({
   name: zod.string({ required_error: 'Name is required' }),
   limitDate: zod.string({ required_error: 'Limit Date is required' }),
-  sponsorBonusPackageId: zod.string({ required_error: 'Sponsor Package is required' }),
-  rollSponsorBonusPackageId: zod.string({ required_error: 'Roll Sponsor Package is required' }),
+  sponsorBonusPackageId: zod.string().nullable(),
+  rollSponsorBonusPackageId: zod.string().nullable(),
   groupSettingCommissionBonuses: zod.array(
     zod.object({
       commission: zod.number(),
