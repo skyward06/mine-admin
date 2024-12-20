@@ -38,6 +38,7 @@ const NewSaleSchema = zod.object({
   orderedAt: zod.string({ required_error: 'Ordered At is required' }),
   paymentMethod: zod.string({ required_error: 'Payment Method is required' }),
   status: zod.number({ required_error: 'Status is required' }).default(1),
+  freeShareSponsor: zod.number({ required_error: 'FreeShare Sponsor is required' }).default(0),
   note: zod.string().optional().nullable(),
   reflinks: zod
     .array(
@@ -66,6 +67,7 @@ export default function SaleCreateForm() {
       note: '',
       memberId: '',
       status: 1,
+      freeShareSponsor: 0,
     }),
     []
   );
@@ -188,10 +190,14 @@ export default function SaleCreateForm() {
                 onInputChange={(_, value: any) => setPaymentMethod(value)}
               />
 
-              <Field.Select name="status" label="Status" required>
-                <MenuItem value={1}>Active</MenuItem>
-                <MenuItem value={0}>Inactive</MenuItem>
-              </Field.Select>
+              <Stack direction="row" spacing={2}>
+                <Field.Select name="status" label="Status" required>
+                  <MenuItem value={1}>Active</MenuItem>
+                  <MenuItem value={0}>Inactive</MenuItem>
+                </Field.Select>
+
+                <Field.Text type="number" name="freeShareSponsor" label="FreeShare Sponsor" />
+              </Stack>
 
               <Field.Text name="note" label="Note" />
             </Box>

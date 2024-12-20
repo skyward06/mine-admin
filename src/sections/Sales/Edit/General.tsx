@@ -48,6 +48,7 @@ const SaleGeneralSchema = zod.object({
   orderedAt: zod.string({ required_error: 'Ordered At is required' }),
   paymentMethod: zod.string({ required_error: 'Payment Method is required' }),
   status: zod.boolean({ required_error: 'Status is required' }).default(true),
+  freeShareSponsor: zod.number({ required_error: 'FreeShare Sponsor is required' }).default(0),
   packageId: zod.string({ required_error: 'Package is required' }),
   note: zod.string().optional().nullable(),
   reflinks: zod
@@ -207,17 +208,21 @@ export default function SaleGeneral({ currentSale }: Props) {
                 onChange={(_, value: any) => setPaymentMethod(value.name)}
               />
 
-              <Field.Select
-                name="status"
-                label="Status"
-                value={status ? 1 : 0}
-                onChange={(e) =>
-                  Number(e.target.value) === 1 ? setStatus(true) : setStatus(false)
-                }
-              >
-                <MenuItem value={1}>Active</MenuItem>
-                <MenuItem value={0}>Inactive</MenuItem>
-              </Field.Select>
+              <Stack direction="row" spacing={2}>
+                <Field.Select
+                  name="status"
+                  label="Status"
+                  value={status ? 1 : 0}
+                  onChange={(e) =>
+                    Number(e.target.value) === 1 ? setStatus(true) : setStatus(false)
+                  }
+                >
+                  <MenuItem value={1}>Active</MenuItem>
+                  <MenuItem value={0}>Inactive</MenuItem>
+                </Field.Select>
+
+                <Field.Text type="number" name="freeShareSponsor" label="FreeShare Sponsor" />
+              </Stack>
 
               <Field.Text name="note" label="Note" />
             </Box>
