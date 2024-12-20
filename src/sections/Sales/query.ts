@@ -8,7 +8,7 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
         ID
         memberId
         packageId
-        freeShareSale
+        freeShareSponsor
         createdAt
         updatedAt
         proof {
