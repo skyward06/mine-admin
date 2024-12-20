@@ -160,7 +160,7 @@ export default function MemberCreateForm() {
               <Field.Text name="firstName" label="First Name" required />
               <Field.Text name="lastName" label="Last Name" required />
               <Field.Phone name="mobile" label="Mobile" />
-              <SearchMiner setMemberId={setMemberId} />
+              <SearchMiner label="Sponsor" setMemberId={setMemberId} />
               <Field.Text name="primaryAddress" label="Address" />
               <Field.Text name="secondaryAddress" label="Address Line 2" />
               <Field.Text name="city" label="City" />

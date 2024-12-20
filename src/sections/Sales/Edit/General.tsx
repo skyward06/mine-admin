@@ -125,7 +125,7 @@ export default function SaleGeneral({ currentSale }: Props) {
             ...newSale,
             id: currentSale.id,
             orderedAt: customizeDate(orderedAt),
-            memberId,
+            memberId: memberId ?? currentSale.member.id,
             fileIds: files?.map((file: any) => file.id),
             status,
             paymentMethod,

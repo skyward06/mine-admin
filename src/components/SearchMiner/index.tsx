@@ -14,6 +14,7 @@ interface Props {
   setMemberId?: Function;
   setTeamStrategy?: Function;
   filter?: any;
+  label?: string;
 }
 
 export default function SearchMiner({
@@ -21,6 +22,7 @@ export default function SearchMiner({
   setMemberId,
   setTeamStrategy,
   filter,
+  label = 'Miner',
 }: Props) {
   const [username, setUsername] = useState<string>();
 
@@ -56,6 +58,9 @@ export default function SearchMiner({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username]);
 
+  console.log('username => ', username);
+  console.log('currentMember => ', currentMember);
+
   return (
     <Autocomplete
       fullWidth
@@ -66,7 +71,7 @@ export default function SearchMiner({
       }
       loading={loading}
       loadingText={<Iconify icon="line-md:loading-loop" />}
-      renderInput={(params) => <TextField {...params} label="Miner Name(Child)" margin="none" />}
+      renderInput={(params) => <TextField {...params} label={label} margin="none" />}
       renderOption={(props, option) => (
         <li {...props} key={option}>
           {option}

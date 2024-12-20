@@ -82,7 +82,7 @@ export default function MemberGeneral({ currentMember }: Props) {
         return;
       }
 
-      if (!memberId?.length) {
+      if (!memberId?.length && !currentMember.sponsorId) {
         toast.error('Sponsor Name is required');
         return;
       }
@@ -98,7 +98,7 @@ export default function MemberGeneral({ currentMember }: Props) {
               mobile: newMember.mobile,
               primaryAddress: newMember.primaryAddress,
               secondaryAddress: newMember.secondaryAddress,
-              sponsorId: memberId,
+              sponsorId: memberId ?? currentMember.sponsorId,
               assetId: newMember.assetId,
               city: newMember.city,
               state,
@@ -184,7 +184,11 @@ export default function MemberGeneral({ currentMember }: Props) {
                 required
               />
               <Field.Phone name="mobile" label="Mobile" />
-              <SearchMiner setMemberId={setMemberId} currentMember={currentMember.sponsor} />
+              <SearchMiner
+                label="Sponsor"
+                setMemberId={setMemberId}
+                currentMember={currentMember.sponsor}
+              />
               <Field.Text name="primaryAddress" label="Address" />
               <Field.Text name="secondaryAddress" label="Address Line 2" />
               <Field.Text name="city" label="City" />

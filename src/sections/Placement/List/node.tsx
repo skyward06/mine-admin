@@ -94,6 +94,7 @@ export function StandardNode({
   const addContent = (
     <Paper sx={{ py: 1 }}>
       <SearchMiner
+        label="Miner(Child)"
         setMemberId={setMemberId}
         setTeamStrategy={setTeamStrategy}
         filter={{ placementParentId: null }}
@@ -122,7 +123,11 @@ export function StandardNode({
 
   const editContent = (
     <Paper sx={{ py: 1 }}>
-      <SearchMiner setMemberId={setMemberId} setTeamStrategy={setTeamStrategy} />
+      <SearchMiner
+        label="Miner(Parent)"
+        setMemberId={setMemberId}
+        setTeamStrategy={setTeamStrategy}
+      />
       <RadioGroup
         row
         defaultValue={placementPosition}
