@@ -57,7 +57,7 @@ const STATUS_OPTIONS: { value: CommissionRole; label: string; color: LabelColor 
 const TABLE_HEAD = [
   { id: 'ID', label: 'ID', sortable: true },
   { id: 'weekStartDate', label: 'Week', sortable: true },
-  { id: 'member.username', label: 'Username', sortable: true },
+  { id: 'member.username', label: 'Username', width: 150, sortable: true },
   { id: 'member.assetId', label: 'AssetId', sortable: true },
   { id: 'begLR', label: 'BegLR', sortable: false },
   { id: 'newLR', label: 'NewLR', sortable: false },
@@ -65,7 +65,8 @@ const TABLE_HEAD = [
   { id: 'endLR', label: 'EndLR', sortable: true },
   { id: 'pkgLR', label: 'Package', sortable: true },
   { id: 'commission', label: 'Commissions', sortable: true },
-  { id: 'action', label: 'Action', sortable: true, align: 'center' },
+  { id: 'shortNote', label: 'Note', width: 250, sortable: true },
+  { id: 'action', label: 'Action', sortable: true, align: 'center', pinned: 'right' },
 ];
 
 const defaultFilter: ICommissionTableFilters = {

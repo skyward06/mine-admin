@@ -66,6 +66,7 @@ export default function CommissionTableRow({ row, selected, onSelectRow }: Props
     pkgR,
     member,
     status,
+    shortNote,
     commission,
     weekStartDate,
   } = row;
@@ -106,6 +107,9 @@ export default function CommissionTableRow({ row, selected, onSelectRow }: Props
             secondaryTypographyProps={{
               component: 'span',
               color: 'text.disabled',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
             }}
           />
         </TableCell>
@@ -122,6 +126,7 @@ export default function CommissionTableRow({ row, selected, onSelectRow }: Props
         <TableCell sx={{ whiteSpace: 'nowrap' }} align="left">
           {commission ?? 0}
         </TableCell>
+        <TableCell align="left">{shortNote}</TableCell>
         <TableCell sx={{ whiteSpace: 'nowrap' }} align="center">
           <Tooltip title="Placement" placement="top" arrow>
             <IconButton color="default" onClick={() => placementOpen.onTrue()}>

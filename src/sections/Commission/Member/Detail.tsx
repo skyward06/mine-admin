@@ -43,7 +43,7 @@ interface Props {
 }
 
 export default function Detail({ open, row }: Props) {
-  const { id, status, member, proof } = row;
+  const { id, status, member, proof, shortNote } = row;
 
   const defaultValues = useMemo(
     () =>
@@ -150,6 +150,11 @@ export default function Detail({ open, row }: Props) {
 
             <Typography variant="body2">{formatDateTime(member?.updatedAt)}</Typography>
           </Stack>
+
+          <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
+
+          <Typography variant="subtitle1">Preview Note</Typography>
+          <Typography variant="body2">{shortNote}</Typography>
 
           <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
 
