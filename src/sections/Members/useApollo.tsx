@@ -5,6 +5,7 @@ import { CALCULATE_COMMISSION_PREVIEW } from '../Commission/query';
 import {
   UPDATE_MEMBER,
   APPROVE_MEMBER,
+  SEND_WELCOME_EMAIL,
   FETCH_MEMBERS_QUERY,
   REMOVE_MEMBER_QUERY,
   UPDATE_PASSWORD_QUERY,
@@ -114,9 +115,14 @@ export function useApproveMember() {
 
 export function useRecalculateCurrentCommission() {
   const [recalculateCurrentCommission, { loading, error }] = useMutation(
-    CALCULATE_COMMISSION_PREVIEW,
-    {}
+    CALCULATE_COMMISSION_PREVIEW
   );
 
   return { loading, error, recalculateCurrentCommission };
+}
+
+export function useSendWelcomeEmail() {
+  const [sendWelcomeEmail, { loading, data, error }] = useMutation(SEND_WELCOME_EMAIL);
+
+  return { loading, data, error, sendWelcomeEmail };
 }

@@ -42,6 +42,7 @@ const documents = {
     "\n  mutation RemoveMember($data: IDInput!) {\n    removeMember(data: $data) {\n      message\n      result\n    }\n  }\n": types.RemoveMemberDocument,
     "\n  mutation RemoveCompleteMemberPlacement($data: IDInput!) {\n    removeCompleteMemberPlacement(data: $data) {\n      message\n      result\n    }\n  }\n": types.RemoveCompleteMemberPlacementDocument,
     "\n  mutation Mutation($data: IDInput!) {\n    approveMember(data: $data) {\n      message\n      result\n      result\n    }\n  }\n": types.MutationDocument,
+    "\n  mutation SendWelcomeEmail($data: EmailInput!) {\n    sendWelcomeEmail(data: $data) {\n      message\n      result\n    }\n  }\n": types.SendWelcomeEmailDocument,
     "\n  query Notifications($sort: String, $page: String, $filter: JSONObject) {\n    notifications(sort: $sort, page: $page, filter: $filter) {\n      notifications {\n        id\n        read\n        level\n        message\n        createdAt\n        updatedAt\n        readMembers\n        totalMembers\n      }\n      total\n    }\n  }\n": types.NotificationsDocument,
     "\n  mutation SetReadNotification($data: IDInput!) {\n    setReadNotification(data: $data) {\n      message\n      result\n    }\n  }\n": types.SetReadNotificationDocument,
     "\n  mutation SetReadAllNotifications {\n    setReadAllNotifications {\n      count\n    }\n  }\n": types.SetReadAllNotificationsDocument,
@@ -235,6 +236,10 @@ export function gql(source: "\n  mutation RemoveCompleteMemberPlacement($data: I
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  mutation Mutation($data: IDInput!) {\n    approveMember(data: $data) {\n      message\n      result\n      result\n    }\n  }\n"): (typeof documents)["\n  mutation Mutation($data: IDInput!) {\n    approveMember(data: $data) {\n      message\n      result\n      result\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation SendWelcomeEmail($data: EmailInput!) {\n    sendWelcomeEmail(data: $data) {\n      message\n      result\n    }\n  }\n"): (typeof documents)["\n  mutation SendWelcomeEmail($data: EmailInput!) {\n    sendWelcomeEmail(data: $data) {\n      message\n      result\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

@@ -348,3 +348,12 @@ export const APPROVE_MEMBER = gql(/* GraphQL */ `
     }
   }
 `);
+
+export const SEND_WELCOME_EMAIL = gql(/* GraphQL */ `
+  mutation SendWelcomeEmail($data: EmailInput!) {
+    sendWelcomeEmail(data: $data) {
+      message
+      result
+    }
+  }
+`);
