@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { ApolloError } from '@apollo/client';
 import { useParams } from 'react-router-dom';
 
 import Card from '@mui/material/Card';
@@ -16,9 +17,10 @@ import { useBoolean } from 'src/hooks/useBoolean';
 import { formatID } from 'src/utils/helper';
 import { formatDate } from 'src/utils/format-time';
 
+import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 
-import { useFetchMembers } from '../../useApollo';
+import { useFetchMembers, useSendWelcomeEmail } from '../../useApollo';
 
 export const Personal = () => {
   const params = useParams();
@@ -30,6 +32,7 @@ export const Personal = () => {
   const { id } = params;
 
   const { members, fetchMembers } = useFetchMembers();
+  const { loading, sendWelcomeEmail } = useSendWelcomeEmail();
 
   const member = members[0];
 
@@ -51,6 +54,22 @@ export const Personal = () => {
       }, 3000);
     } catch (error) {
       console.log('Failed to copy text: ', error);
+    }
+  };
+
+  const sendEmail = async () => {
+    try {
+      const { data } = await sendWelcomeEmail({ variables: { data: { email: member.email } } });
+
+      if (data) {
+        toast.success('Successfully sent welcome email');
+      }
+    } catch (error) {
+      if (error instanceof ApolloError) {
+        const [err] = error.graphQLErrors;
+
+        toast.error(err.message);
+      }
     }
   };
 
@@ -94,6 +113,9 @@ export const Personal = () => {
             </IconButton>
             <IconButton color="success" onClick={copyAddress}>
               <Iconify icon={copy.value ? 'ci:check' : 'bxs:copy'} />
+            </IconButton>
+            <IconButton color="success" onClick={sendEmail}>
+              <Iconify icon={loading ? 'line-md:loading-loop' : 'mingcute:send-plane-fill'} />
             </IconButton>
           </Stack>
         </Stack>
