@@ -1,8 +1,7 @@
-import { z as zod } from 'zod';
 import { useForm } from 'react-hook-form';
+import { ApolloError } from '@apollo/client';
 import { useMemo, useState, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ApolloError, useLazyQuery } from '@apollo/client';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -18,7 +17,11 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { useBoolean } from 'src/hooks/useBoolean';
+
 import { today, customizeDate } from 'src/utils/format-time';
+
+import { PEER } from 'src/consts';
 
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
@@ -26,36 +29,20 @@ import SearchMiner from 'src/components/SearchMiner';
 
 import LinkForm from 'src/sections/PrepaidCommission/LinkForm';
 import { useFetchPayments } from 'src/sections/Payment/useApollo';
-import { FETCH_PACKAGES_QUERY } from 'src/sections/Products/query';
+import { useFetchPackages } from 'src/sections/Products/useApollo';
 
 import { useCreateSale } from '../useApollo';
+import { Schema, type SchemaType } from './Schema';
 import { FileManagerNewFolderDialog } from '../Upload';
-
-// ----------------------------------------------------------------------
-export type NewSaleSchemaType = zod.infer<typeof NewSaleSchema>;
-
-const NewSaleSchema = zod.object({
-  orderedAt: zod.string({ required_error: 'Ordered At is required' }),
-  paymentMethod: zod.string({ required_error: 'Payment Method is required' }),
-  status: zod.number({ required_error: 'Status is required' }).default(1),
-  note: zod.string().optional().nullable(),
-  reflinks: zod
-    .array(
-      zod.object({
-        linkType: zod.string(),
-        link: zod.string(),
-      })
-    )
-    .optional()
-    .nullable(),
-});
 
 export default function SaleCreateForm() {
   const router = useRouter();
+  const isShow = useBoolean();
 
-  const [memberId, setMemberId] = useState<string>('');
   const [fileIds, setFileIds] = useState<string[]>();
+  const [memberId, setMemberId] = useState<string>('');
   const [packageId, setPackageId] = useState<string>('');
+  const [toMemberId, setToMemberId] = useState<string>('');
   const [paymentMethod, setPaymentMethod] = useState<string>('');
 
   const defaultValues = useMemo(
@@ -70,20 +57,15 @@ export default function SaleCreateForm() {
     []
   );
 
-  const { loading, createSale } = useCreateSale();
-
-  const methods = useForm<NewSaleSchemaType>({
-    resolver: zodResolver(NewSaleSchema),
+  const methods = useForm<SchemaType>({
+    resolver: zodResolver(Schema),
     defaultValues,
   });
+  const { reset, setError, handleSubmit } = methods;
 
   const { payments } = useFetchPayments();
-
-  const [fetchPackages, { data: packageData }] = useLazyQuery(FETCH_PACKAGES_QUERY, {
-    variables: { filter: { status: true } },
-  });
-
-  const { reset, setError, handleSubmit } = methods;
+  const { loading, createSale } = useCreateSale();
+  const { packages, fetchPackages } = useFetchPackages();
 
   const onSubmit = handleSubmit(async ({ status, orderedAt, ...data }) => {
     try {
@@ -96,15 +78,14 @@ export default function SaleCreateForm() {
             orderedAt: customizeDate(orderedAt),
             memberId,
             packageId,
+            toMemberId,
             paymentMethod,
           },
         },
       });
 
       reset();
-
       toast.success('Create success!');
-
       router.push(paths.dashboard.sales.root);
     } catch (err) {
       if (err instanceof ApolloError) {
@@ -123,11 +104,18 @@ export default function SaleCreateForm() {
     setFileIds([...data.files.map((item: any) => item.id)]);
   };
 
-  const packages = packageData?.packages.packages ?? [];
+  useEffect(() => {
+    fetchPackages({ variables: { filter: { status: true } } });
+  }, [fetchPackages]);
 
   useEffect(() => {
-    fetchPackages();
-  }, [fetchPackages]);
+    if (paymentMethod === PEER) {
+      isShow.onTrue();
+    } else {
+      isShow.onFalse();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paymentMethod]);
 
   return (
     <Form methods={methods} onSubmit={onSubmit}>
@@ -165,6 +153,11 @@ export default function SaleCreateForm() {
 
               <Field.DatePicker name="orderedAt" label="Ordered At" format="YYYY-MM-DD" />
 
+              <Field.Select name="status" label="Status" required>
+                <MenuItem value={1}>Active</MenuItem>
+                <MenuItem value={0}>Inactive</MenuItem>
+              </Field.Select>
+
               <Autocomplete
                 freeSolo
                 fullWidth
@@ -188,12 +181,11 @@ export default function SaleCreateForm() {
                 onInputChange={(_, value: any) => setPaymentMethod(value)}
               />
 
-              <Field.Select name="status" label="Status" required>
-                <MenuItem value={1}>Active</MenuItem>
-                <MenuItem value={0}>Inactive</MenuItem>
-              </Field.Select>
-
               <Field.Text name="note" label="Note" />
+
+              {isShow.value && (
+                <SearchMiner setMemberId={setToMemberId} label="Peer to Peer Miner" />
+              )}
             </Box>
 
             <Divider flexItem sx={{ borderStyle: 'dashed', my: 2 }} />

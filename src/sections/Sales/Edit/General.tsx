@@ -1,4 +1,3 @@
-import { z as zod } from 'zod';
 import isEqual from 'lodash/isEqual';
 import { useForm } from 'react-hook-form';
 import { ApolloError } from '@apollo/client';
@@ -19,8 +18,12 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { useBoolean } from 'src/hooks/useBoolean';
+
 import { formatID } from 'src/utils/helper';
 import { formatDate, customizeDate } from 'src/utils/format-time';
+
+import { PEER } from 'src/consts';
 
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
@@ -32,6 +35,7 @@ import { useFetchPackages } from 'src/sections/Products/useApollo';
 
 import { useUpdateSale } from '../useApollo';
 import { FileRecentItem } from './FileRecentItem';
+import { Schema, type SchemaType } from './Schema';
 import { FileManagerNewFolderDialog } from '../Upload';
 
 // ----------------------------------------------------------------------
@@ -41,30 +45,9 @@ type Props = {
   currentSale: any;
 };
 
-// ----------------------------------------------------------------------
-export type SaleGeneralSchemaType = zod.infer<typeof SaleGeneralSchema>;
-
-const SaleGeneralSchema = zod.object({
-  orderedAt: zod.string({ required_error: 'Ordered At is required' }),
-  paymentMethod: zod.string({ required_error: 'Payment Method is required' }),
-  status: zod.boolean({ required_error: 'Status is required' }).default(true),
-  packageId: zod.string({ required_error: 'Package is required' }),
-  note: zod.string().optional().nullable(),
-  reflinks: zod
-    .array(
-      zod.object({
-        linkType: zod.string(),
-        link: zod.string(),
-      })
-    )
-    .optional()
-    .nullable(),
-});
-
 export default function SaleGeneral({ currentSale }: Props) {
   const router = useRouter();
-
-  const [memberId, setMemberId] = useState<string>('');
+  const isShow = useBoolean();
 
   const { status: currentStatus, ID } = currentSale;
 
@@ -73,12 +56,13 @@ export default function SaleGeneral({ currentSale }: Props) {
   const [paymentMethod, setPaymentMethod] = useState<string>();
 
   const { payments } = useFetchPayments();
-  const { packages, fetchPackages } = useFetchPackages();
-
   const { loading, updateSale } = useUpdateSale();
+  const [memberId, setMemberId] = useState<string>('');
+  const { packages, fetchPackages } = useFetchPackages();
+  const [toMemberId, setToMemberId] = useState<string>('');
 
   const defaultValues = useMemo(() => {
-    const { data } = SaleGeneralSchema.safeParse(currentSale);
+    const { data } = Schema.safeParse(currentSale);
 
     return currentSale
       ? {
@@ -87,7 +71,7 @@ export default function SaleGeneral({ currentSale }: Props) {
           reflinks: currentSale.proof?.reflinks,
           note: currentSale.proof?.note,
         }
-      : ({} as SaleGeneralSchemaType);
+      : ({} as SchemaType);
   }, [currentSale]);
 
   useEffect(() => {
@@ -101,8 +85,17 @@ export default function SaleGeneral({ currentSale }: Props) {
     }
   }, [currentSale]);
 
-  const methods = useForm<SaleGeneralSchemaType>({
-    resolver: zodResolver(SaleGeneralSchema),
+  useEffect(() => {
+    if (paymentMethod === PEER) {
+      isShow.onTrue();
+    } else {
+      isShow.onFalse();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paymentMethod]);
+
+  const methods = useForm<SchemaType>({
+    resolver: zodResolver(Schema),
     defaultValues,
   });
 
@@ -128,6 +121,7 @@ export default function SaleGeneral({ currentSale }: Props) {
             memberId: memberId ?? currentSale.member.id,
             fileIds: files?.map((file: any) => file.id),
             status,
+            toMemberId,
             paymentMethod,
           },
         },
@@ -183,6 +177,18 @@ export default function SaleGeneral({ currentSale }: Props) {
 
               <Field.DatePicker name="orderedAt" label="Ordered At" format="YYYY-MM-DD" />
 
+              <Field.Select
+                name="status"
+                label="Status"
+                value={status ? 1 : 0}
+                onChange={(e) =>
+                  Number(e.target.value) === 1 ? setStatus(true) : setStatus(false)
+                }
+              >
+                <MenuItem value={1}>Active</MenuItem>
+                <MenuItem value={0}>Inactive</MenuItem>
+              </Field.Select>
+
               <Autocomplete
                 freeSolo
                 fullWidth
@@ -207,19 +213,15 @@ export default function SaleGeneral({ currentSale }: Props) {
                 onChange={(_, value: any) => setPaymentMethod(value.name)}
               />
 
-              <Field.Select
-                name="status"
-                label="Status"
-                value={status ? 1 : 0}
-                onChange={(e) =>
-                  Number(e.target.value) === 1 ? setStatus(true) : setStatus(false)
-                }
-              >
-                <MenuItem value={1}>Active</MenuItem>
-                <MenuItem value={0}>Inactive</MenuItem>
-              </Field.Select>
-
               <Field.Text name="note" label="Note" />
+
+              {isShow.value && (
+                <SearchMiner
+                  currentMember={currentSale.toMember}
+                  setMemberId={setToMemberId}
+                  label="Peer to Peer Miner"
+                />
+              )}
             </Box>
 
             <Divider flexItem sx={{ borderStyle: 'dashed', my: 2 }} />
