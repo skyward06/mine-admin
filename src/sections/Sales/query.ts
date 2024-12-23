@@ -65,6 +65,35 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
           teamStrategy
           createdAt
         }
+        toMember {
+          id
+          ID
+          email
+          point
+          mobile
+          status
+          assetId
+          commission {
+            begL
+            begR
+            newL
+            newR
+          }
+          username
+          fullName
+          groupName
+          syncWithSendy
+          emailVerified
+          primaryAddress
+          secondaryAddress
+          totalIntroducers
+          preferredContact
+          preferredContactDetail
+          cmnCalculatedWeeks
+          placementPosition
+          teamStrategy
+          createdAt
+        }
         package {
           id
           date
