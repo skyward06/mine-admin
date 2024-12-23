@@ -20,6 +20,8 @@ export const NO_PRODUCT = '916170a2-6b73-450d-9c2a-6ee9cceab30a';
 
 export const ROOT_ID = 'affe34e8-891b-41c2-8405-d31df4dadb8c';
 
+export const PEER = 'Peer';
+
 export const COMMISSION_TYPE = {
   PREVIEW: { label: 'PREVIEW', value: 'Preview' },
   PENDING: { label: 'PENDING', value: 'Pending' },
