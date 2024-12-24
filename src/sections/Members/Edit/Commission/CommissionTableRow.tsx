@@ -13,6 +13,8 @@ import { useRouter } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
+import { formatWeekNumber } from 'src/utils/format-time';
+
 import { Iconify } from 'src/components/Iconify';
 
 import Detail from 'src/sections/Commission/Member/Detail';
@@ -49,7 +51,7 @@ export default function CommissionTableRow({ row }: Props) {
       <TableRow hover>
         <TableCell align="left">
           <ListItemText
-            primary={dayjs(weekStartDate).utc().format('MMM-ww')}
+            primary={`week #${formatWeekNumber(weekStartDate)}`}
             secondary={`${dayjs(weekStartDate).utc().format('MM/DD')} - ${dayjs(weekStartDate).utc().add(6, 'day').format('MM/DD')}`}
             primaryTypographyProps={{ typography: 'body2' }}
             secondaryTypographyProps={{
