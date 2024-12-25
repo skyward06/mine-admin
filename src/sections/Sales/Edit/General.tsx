@@ -53,13 +53,13 @@ export default function SaleGeneral({ currentSale }: Props) {
 
   const [files, setFiles] = useState<string[]>();
   const [status, setStatus] = useState(currentStatus);
+  const [memberId, setMemberId] = useState<string>('');
+  const [toMemberId, setToMemberId] = useState<string>();
   const [paymentMethod, setPaymentMethod] = useState<string>();
 
   const { payments } = useFetchPayments();
   const { loading, updateSale } = useUpdateSale();
-  const [memberId, setMemberId] = useState<string>('');
   const { packages, fetchPackages } = useFetchPackages();
-  const [toMemberId, setToMemberId] = useState<string>('');
 
   const defaultValues = useMemo(() => {
     const { data } = Schema.safeParse(currentSale);
