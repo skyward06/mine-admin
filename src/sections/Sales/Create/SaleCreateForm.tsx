@@ -42,7 +42,7 @@ export default function SaleCreateForm() {
   const [fileIds, setFileIds] = useState<string[]>();
   const [memberId, setMemberId] = useState<string>('');
   const [packageId, setPackageId] = useState<string>('');
-  const [toMemberId, setToMemberId] = useState<string>('');
+  const [toMemberId, setToMemberId] = useState<string>();
   const [paymentMethod, setPaymentMethod] = useState<string>('');
 
   const defaultValues = useMemo(
