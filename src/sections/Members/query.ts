@@ -23,6 +23,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         username
         fullName
         email
+        country
         primaryAddress
         secondaryAddress
         assetId

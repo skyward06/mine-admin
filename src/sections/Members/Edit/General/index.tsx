@@ -1,4 +1,5 @@
 import states from 'states-us';
+import countries from 'country-list';
 import isEqual from 'lodash/isEqual';
 import { useForm } from 'react-hook-form';
 import { useMemo, useState } from 'react';
@@ -46,6 +47,7 @@ export default function MemberGeneral({ currentMember }: Props) {
   const [, first, last]: any = fullName.match(/^(\S+)\s+(.*)/);
 
   const [state, setState] = useState<string>();
+  const [country, setCountry] = useState<string>();
   const [memberId, setMemberId] = useState<string>('');
   const [firstName, setFirstName] = useState<string>(first);
   const [lastName, setLastName] = useState<string>(last);
@@ -102,6 +104,7 @@ export default function MemberGeneral({ currentMember }: Props) {
               assetId: newMember.assetId,
               city: newMember.city,
               state,
+              country,
               syncWithSendy: newMember.syncWithSendy,
               preferredContact: newMember.preferredContact,
               preferredContactDetail: newMember.preferredContactDetail,
@@ -153,6 +156,8 @@ export default function MemberGeneral({ currentMember }: Props) {
     }
   });
 
+  console.log('currentMember => ', currentMember);
+
   return (
     <Form methods={methods} onSubmit={onSubmit}>
       <Grid container spacing={3}>
@@ -191,7 +196,23 @@ export default function MemberGeneral({ currentMember }: Props) {
               />
               <Field.Text name="primaryAddress" label="Address" />
               <Field.Text name="secondaryAddress" label="Address Line 2" />
-              <Field.Text name="city" label="City" />
+              <Autocomplete
+                freeSolo
+                fullWidth
+                options={countries.getNames()}
+                getOptionLabel={(option: any) => option}
+                value={country ?? currentMember.country}
+                renderInput={(params) => (
+                  <TextField {...params} name="country" label="Country" margin="none" />
+                )}
+                renderOption={(props, option) => (
+                  <li {...props} key={option}>
+                    {option}
+                  </li>
+                )}
+                onChange={(_, value: any) => setCountry(value)}
+                onInputChange={(_, value: any) => setCountry(value)}
+              />
               <Autocomplete
                 freeSolo
                 fullWidth
@@ -209,6 +230,7 @@ export default function MemberGeneral({ currentMember }: Props) {
                 onChange={(_, value: any) => setState(value.name)}
                 onInputChange={(_, value: any) => setState(value)}
               />
+              <Field.Text name="city" label="City" />
               <Field.Text name="zipCode" label="ZIP Code" />
               <Field.Text name="assetId" label="Coin ID" />
               <Field.Select name="preferredContact" label="Preferred Contact">

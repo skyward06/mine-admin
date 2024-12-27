@@ -1,4 +1,5 @@
 import states from 'states-us';
+import countries from 'country-list';
 import { useForm } from 'react-hook-form';
 import { useMemo, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -33,6 +34,7 @@ import { Schema, type SchemaType } from './schema';
 export default function MemberCreateForm() {
   const [memberId, setMemberId] = useState<string>('');
   const [state, setState] = useState<string>();
+  const [country, setCountry] = useState<string>();
 
   const router = useRouter();
 
@@ -97,6 +99,7 @@ export default function MemberCreateForm() {
                 fullName: `${firstName} ${lastName}`,
                 sponsorId: memberId,
                 state,
+                country,
                 teamStrategy: teamStrategy as TeamStrategy,
                 wallets: [...txcWallets, ...otherWallets].map(({ percent, ...rest }) => ({
                   percent: percent * 100,
@@ -163,14 +166,29 @@ export default function MemberCreateForm() {
               <SearchMiner label="Sponsor" setMemberId={setMemberId} />
               <Field.Text name="primaryAddress" label="Address" />
               <Field.Text name="secondaryAddress" label="Address Line 2" />
-              <Field.Text name="city" label="City" />
+              <Autocomplete
+                freeSolo
+                fullWidth
+                options={countries.getNames()}
+                getOptionLabel={(option: any) => option}
+                renderInput={(params) => (
+                  <TextField {...params} name="country" label="Country" margin="none" />
+                )}
+                renderOption={(props, option) => (
+                  <li {...props} key={option}>
+                    {option}
+                  </li>
+                )}
+                onChange={(_, value: any) => setCountry(value)}
+                onInputChange={(_, value: any) => setCountry(value)}
+              />
               <Autocomplete
                 freeSolo
                 fullWidth
                 options={states}
                 getOptionLabel={(option: any) => option.name}
                 renderInput={(params) => (
-                  <TextField {...params} name="state" label="States" margin="none" />
+                  <TextField {...params} name="state" label="State" margin="none" />
                 )}
                 renderOption={(props, option) => (
                   <li {...props} key={option!.name}>
@@ -180,6 +198,7 @@ export default function MemberCreateForm() {
                 onChange={(_, value: any) => setState(value.name)}
                 onInputChange={(_, value: any) => setState(value)}
               />
+              <Field.Text name="city" label="City" />
               <Field.Text name="zipCode" label="ZIP Code" />
               <Field.Text name="assetId" label="Coin ID" />
               <Field.Select name="preferredContact" label="Preferred Contact">

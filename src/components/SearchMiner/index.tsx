@@ -58,9 +58,6 @@ export default function SearchMiner({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username]);
 
-  console.log('username => ', username);
-  console.log('currentMember => ', currentMember);
-
   return (
     <Autocomplete
       fullWidth
