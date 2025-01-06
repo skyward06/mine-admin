@@ -12,6 +12,7 @@ export type Sale = {
   paymentMethod: string;
   proof?: Proof | null;
   member?: Member | null;
+  toMember?: Member | null;
   package?: Package | null;
   statisticsSales?: Array<StatisticsSale> | null;
   status: boolean;

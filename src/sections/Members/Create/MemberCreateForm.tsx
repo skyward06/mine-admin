@@ -40,7 +40,6 @@ export default function MemberCreateForm() {
 
   const defaultValues = useMemo(
     () => ({
-      mobile: '',
       primaryAddress: '',
       secondaryAddress: '',
       state: '',

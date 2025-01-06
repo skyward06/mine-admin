@@ -18,9 +18,10 @@ import { RouterLink } from 'src/routes/components';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
-import { formatID } from 'src/utils/helper';
 import { formatDate } from 'src/utils/format-time';
+import { formatID, customizeFullName } from 'src/utils/helper';
 
+import { PEER } from 'src/consts';
 import { CONFIG } from 'src/config';
 import { DashboardContent } from 'src/layouts/dashboard';
 
@@ -114,6 +115,17 @@ export default function SaleListView() {
         editable: false,
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
         cellClass: 'ag-cell-center',
+        cellRenderer: ({ data }: CustomCellRendererProps<Sale>) =>
+          data?.paymentMethod === PEER ? (
+            <Stack direction="row" justifyContent="space-between">
+              <Typography variant="body2">{PEER}</Typography>
+              <Typography variant="body2">
+                {customizeFullName(data.toMember?.fullName ?? '')}
+              </Typography>
+            </Stack>
+          ) : (
+            data?.paymentMethod
+          ),
       },
       {
         field: 'package.amount',

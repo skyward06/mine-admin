@@ -1,6 +1,9 @@
 import type { IFileManager } from 'src/types/file';
 import type { PaperProps } from '@mui/material/Paper';
 
+import axios from 'axios';
+import { useState } from 'react';
+
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import IconButton from '@mui/material/IconButton';
@@ -10,6 +13,8 @@ import { useBoolean } from 'src/hooks/useBoolean';
 
 import { fData } from 'src/utils/formatNumber';
 import { fDateTime } from 'src/utils/format-time';
+
+import { CONFIG } from 'src/config';
 
 import { Iconify } from 'src/components/Iconify';
 import { FileThumbnail } from 'src/components/FileThumbnail';
@@ -23,6 +28,9 @@ type Props = PaperProps & {
 
 export function FileRecentItem({ file, onDelete, sx, ...other }: Props) {
   const details = useBoolean();
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const fileType = file.mimeType.split('/')[1];
 
   const renderText = (
     <ListItemText
@@ -55,6 +63,34 @@ export function FileRecentItem({ file, onDelete, sx, ...other }: Props) {
     />
   );
 
+  const handleExport = async (fileData: any) => {
+    setLoading(true);
+
+    const token = localStorage.getItem(CONFIG.storageTokenKey);
+
+    const { data } = await axios.get(`${fileData.url}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      responseType: 'arraybuffer',
+    });
+
+    const blob = new Blob([data], { type: fileType });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${fileData.originalName}`;
+
+    document.body.appendChild(a);
+    a.click();
+
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    setLoading(false);
+  };
+
   return (
     <Paper
       variant="outlined"
@@ -73,15 +109,25 @@ export function FileRecentItem({ file, onDelete, sx, ...other }: Props) {
           bgcolor: 'background.paper',
           boxShadow: (theme) => theme.customShadows.z20,
         },
+        opacity: loading ? 0.5 : 1,
         ...sx,
       }}
+      onClick={() => handleExport(file)}
       {...other}
     >
       <FileThumbnail file={file.mimeType.split('/')[1]} />
 
       {renderText}
 
-      <IconButton size="small" onClick={() => onDelete(file.id)}>
+      {loading && <Iconify icon="eos-icons:bubble-loading" />}
+
+      <IconButton
+        size="small"
+        onClick={(e) => {
+          e.stopPropagation();
+          onDelete(file.id);
+        }}
+      >
         <Iconify icon="mingcute:close-line" width={16} />
       </IconButton>
     </Paper>
