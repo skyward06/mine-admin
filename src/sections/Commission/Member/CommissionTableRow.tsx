@@ -64,9 +64,9 @@ export default function CommissionTableRow({ row, selected, onSelectRow }: Props
     endR,
     pkgL,
     pkgR,
+    proof,
     member,
     status,
-    shortNote,
     commission,
     weekStartDate,
   } = row;
@@ -118,15 +118,15 @@ export default function CommissionTableRow({ row, selected, onSelectRow }: Props
         </TableCell>
         <TableCell sx={{ whiteSpace: 'nowrap' }} align="left">{`L${begL}, R${begR}`}</TableCell>
         <TableCell sx={{ whiteSpace: 'nowrap' }} align="left">{`L${newL}, R${newR}`}</TableCell>
-        <TableCell sx={{ whiteSpace: 'nowrap' }} align="left">{`L${maxL}, R${maxR}`}</TableCell>
         <TableCell sx={{ whiteSpace: 'nowrap' }} align="left">{`L${endL}, R${endR}`}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }} align="left">{`L${maxL}, R${maxR}`}</TableCell>
         <TableCell sx={{ whiteSpace: 'nowrap' }} align="left">
           {status !== COMMISSION_TYPE.NONE.label ? `L${pkgL}, R${pkgR}` : 'None'}
         </TableCell>
         <TableCell sx={{ whiteSpace: 'nowrap' }} align="left">
           {commission ?? 0}
         </TableCell>
-        <TableCell align="left">{shortNote}</TableCell>
+        <TableCell align="left">{proof?.note}</TableCell>
         <TableCell sx={{ whiteSpace: 'nowrap' }} align="center">
           <Tooltip title="Placement" placement="top" arrow>
             <IconButton color="default" onClick={() => placementOpen.onTrue()}>
