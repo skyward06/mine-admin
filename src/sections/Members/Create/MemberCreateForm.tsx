@@ -170,6 +170,7 @@ export default function MemberCreateForm() {
                 fullWidth
                 options={countries.getNames()}
                 getOptionLabel={(option: any) => option}
+                defaultValue="United States of America"
                 renderInput={(params) => (
                   <TextField {...params} name="country" label="Country" margin="none" />
                 )}
