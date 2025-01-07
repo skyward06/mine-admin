@@ -118,10 +118,8 @@ export default function SaleListView() {
         cellRenderer: ({ data }: CustomCellRendererProps<Sale>) =>
           data?.paymentMethod === PEER ? (
             <Stack direction="row" justifyContent="space-between">
-              <Typography variant="body2">{PEER}</Typography>
-              <Typography variant="body2">
-                {customizeFullName(data.toMember?.fullName ?? '')}
-              </Typography>
+              <Stack>{PEER}</Stack>
+              <Stack>{customizeFullName(data.toMember?.fullName ?? '')}</Stack>
             </Stack>
           ) : (
             data?.paymentMethod
