@@ -209,7 +209,12 @@ export default function MemberCreateForm() {
                 ))}
               </Field.Select>
               <Field.Text name="preferredContactDetail" label="Preferred Contact Detail" />
-              <Field.Select name="teamStrategy" label="Team Strategy" required>
+              <Field.Select
+                name="teamStrategy"
+                label="Team Strategy"
+                defaultValue="MANUAL"
+                required
+              >
                 {Object.values(TeamStrategy).map((option) => (
                   <MenuItem key={option} value={option}>
                     {option}
