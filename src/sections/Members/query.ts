@@ -42,6 +42,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         preferredContactDetail
         cmnCalculatedWeeks
         teamStrategy
+        teamReport
         placementPosition
         commission {
           begL
@@ -69,6 +70,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           preferredContactDetail
           cmnCalculatedWeeks
           teamStrategy
+          teamReport
           placementPosition
           commission {
             begL
@@ -99,6 +101,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           preferredContactDetail
           cmnCalculatedWeeks
           teamStrategy
+          teamReport
           placementPosition
           commission {
             begL
@@ -128,6 +131,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           preferredContactDetail
           cmnCalculatedWeeks
           teamStrategy
+          teamReport
           placementPosition
           commission {
             begL
@@ -223,6 +227,7 @@ export const FETCH_PLACEMENT_MEMBERS_QUERY = gql(/* GraphQL */ `
         sponsorId
         groupName
         status
+        teamReport
         cmnCalculatedWeeks
         placementParentId
         placementPosition

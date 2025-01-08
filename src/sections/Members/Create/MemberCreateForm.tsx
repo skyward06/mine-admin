@@ -18,7 +18,7 @@ import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
 import { CONTACT } from 'src/consts';
-import { TeamStrategy } from 'src/__generated__/graphql';
+import { TeamReport, TeamStrategy } from 'src/__generated__/graphql';
 
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
@@ -44,6 +44,8 @@ export default function MemberCreateForm() {
       secondaryAddress: '',
       state: '',
       city: '',
+      teamStrategy: 'MANUAL',
+      teamReport: 'NONE',
       syncWithSendy: true,
       zipCode: '',
       sponsorId: '',
@@ -76,7 +78,15 @@ export default function MemberCreateForm() {
   };
 
   const onSubmit = handleSubmit(
-    async ({ firstName, lastName, txcWallets, otherWallets, teamStrategy, ...data }) => {
+    async ({
+      firstName,
+      lastName,
+      txcWallets,
+      otherWallets,
+      teamReport,
+      teamStrategy,
+      ...data
+    }) => {
       try {
         const total = txcWallets.reduce((prev: number, save: any) => prev + save.percent, 0);
 
@@ -99,6 +109,7 @@ export default function MemberCreateForm() {
                 sponsorId: memberId,
                 state,
                 country,
+                teamReport: teamReport as TeamReport,
                 teamStrategy: teamStrategy as TeamStrategy,
                 wallets: [...txcWallets, ...otherWallets].map(({ percent, ...rest }) => ({
                   percent: percent * 100,
@@ -216,6 +227,13 @@ export default function MemberCreateForm() {
                 required
               >
                 {Object.values(TeamStrategy).map((option) => (
+                  <MenuItem key={option} value={option}>
+                    {option}
+                  </MenuItem>
+                ))}
+              </Field.Select>
+              <Field.Select name="teamReport" label="Team Report" defaultValue="NONE" required>
+                {Object.values(TeamReport).map((option) => (
                   <MenuItem key={option} value={option}>
                     {option}
                   </MenuItem>

@@ -19,7 +19,7 @@ import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
 import { CONTACT } from 'src/consts';
-import { type Member, TeamStrategy } from 'src/__generated__/graphql';
+import { TeamReport, type Member, TeamStrategy } from 'src/__generated__/graphql';
 
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
@@ -109,6 +109,7 @@ export default function MemberGeneral({ currentMember }: Props) {
               preferredContact: newMember.preferredContact,
               preferredContactDetail: newMember.preferredContactDetail,
               zipCode: newMember.zipCode,
+              teamReport: newMember.teamReport as TeamReport,
               teamStrategy: newMember.teamStrategy as TeamStrategy,
               wallets: [...newMember.txcWallets, ...newMember.otherWallets].map(
                 ({ percent, ...rest }) => ({
@@ -243,6 +244,13 @@ export default function MemberGeneral({ currentMember }: Props) {
               <Field.Text name="preferredContactDetail" label="Preferred Contact Detail" />
               <Field.Select name="teamStrategy" label="Team Strategy" required>
                 {Object.values(TeamStrategy).map((option) => (
+                  <MenuItem key={option} value={option}>
+                    {option}
+                  </MenuItem>
+                ))}
+              </Field.Select>
+              <Field.Select name="teamReport" label="Team Report" defaultValue="NONE" required>
+                {Object.values(TeamReport).map((option) => (
                   <MenuItem key={option} value={option}>
                     {option}
                   </MenuItem>

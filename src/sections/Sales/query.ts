@@ -63,6 +63,7 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
           cmnCalculatedWeeks
           placementPosition
           teamStrategy
+          teamReport
           createdAt
         }
         toMember {
@@ -92,6 +93,7 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
           cmnCalculatedWeeks
           placementPosition
           teamStrategy
+          teamReport
           createdAt
         }
         package {

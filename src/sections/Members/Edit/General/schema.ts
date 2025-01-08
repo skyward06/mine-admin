@@ -14,6 +14,7 @@ export const Schema = zod.object({
   state: zod.string().optional().nullable(),
   primaryAddress: zod.string({ required_error: 'Address is required' }),
   teamStrategy: zod.string({ required_error: 'Team Strategy is required' }),
+  teamReport: zod.string({ required_error: 'Team Report is required' }),
   secondaryAddress: zod.string().optional().nullable(),
   sponsorId: zod.string().optional().nullable(),
   assetId: zod.string({ required_error: 'Coin ID is required' }),
