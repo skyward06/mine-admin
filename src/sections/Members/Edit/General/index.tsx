@@ -89,6 +89,11 @@ export default function MemberGeneral({ currentMember }: Props) {
         return;
       }
 
+      if (!newMember.assetId) {
+        toast.error('Coin ID is required');
+        return;
+      }
+
       if (total === 100) {
         await submit({
           variables: {
@@ -156,8 +161,6 @@ export default function MemberGeneral({ currentMember }: Props) {
       toast.error(err.message);
     }
   });
-
-  console.log('currentMember => ', currentMember);
 
   return (
     <Form methods={methods} onSubmit={onSubmit}>

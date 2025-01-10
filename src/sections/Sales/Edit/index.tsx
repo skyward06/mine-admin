@@ -32,8 +32,6 @@ export default function SaleEditView() {
     return <Navigate to={paths.notFound} replace />;
   }
 
-  console.log('current => ', current);
-
   return (
     <>
       <Helmet>
