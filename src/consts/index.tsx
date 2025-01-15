@@ -95,6 +95,7 @@ export const PROOF_TYPE = {
   PROFIT: 'Profit',
   PROMOTION: 'Promotion',
   SALE: 'Sale',
+  TRANSACTIONPROCESSING: 'Transaction Processing',
 };
 
 export const TARGET = [

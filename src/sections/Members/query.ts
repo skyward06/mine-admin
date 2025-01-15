@@ -20,6 +20,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
       members {
         id
         ID
+        balance
         username
         fullName
         email
@@ -53,6 +54,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         sponsor {
           id
           ID
+          balance
           username
           fullName
           email
@@ -89,6 +91,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           mobile
           status
           assetId
+          balance
           username
           fullName
           groupName
@@ -118,6 +121,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           mobile
           status
           assetId
+          balance
           username
           fullName
           groupName
@@ -233,10 +237,12 @@ export const FETCH_PLACEMENT_MEMBERS_QUERY = gql(/* GraphQL */ `
         placementPosition
         placementParent {
           id
+          balance
           username
           fullName
         }
         sponsor {
+          balance
           username
         }
         commission {
@@ -360,6 +366,25 @@ export const SEND_WELCOME_EMAIL = gql(/* GraphQL */ `
     sendWelcomeEmail(data: $data) {
       message
       result
+    }
+  }
+`);
+
+export const FETCH_BALANCES = gql(/* GraphQL */ `
+  query Balances($sort: String, $page: String, $filter: JSONObject) {
+    balances(sort: $sort, page: $page, filter: $filter) {
+      balances {
+        createdAt
+        updatedAt
+        deletedAt
+        id
+        date
+        type
+        note
+        amountInCents
+        memberId
+      }
+      total
     }
   }
 `);

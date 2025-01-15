@@ -255,6 +255,17 @@ export const Personal = () => {
             </Stack>
           </Stack>
 
+          <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+            <Stack width={0.5}>
+              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                Balance:
+              </Typography>
+            </Stack>
+            <Stack width={1}>
+              <Typography variant="body2">$ {((member?.balance ?? 0) / 100).toFixed(2)}</Typography>
+            </Stack>
+          </Stack>
+
           <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
 
           <Stack direction="row" spacing={2} sx={{ pb: 1 }}>

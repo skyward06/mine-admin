@@ -50,6 +50,7 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
             newL
             newR
           }
+          balance
           username
           fullName
           groupName
@@ -80,6 +81,9 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
             newL
             newR
           }
+          balance
+          balance
+          balance
           username
           fullName
           groupName

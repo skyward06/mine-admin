@@ -79,7 +79,7 @@ export default function EditForm({ current }: Props) {
 
   const router = useRouter();
 
-  const defaultValues = useMemo(
+  const defaultValues = useMemo<SchemaType>(
     () =>
       current
         ? Schema.safeParse({ ...current, orderedAt: formatDate(current.orderedAt) })?.data ??
