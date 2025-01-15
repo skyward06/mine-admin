@@ -13,12 +13,12 @@ import { useRouter } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
+import { formatID } from 'src/utils/helper';
 import { formatWeekNumber } from 'src/utils/format-time';
 
 import { Iconify } from 'src/components/Iconify';
 
 import Detail from 'src/sections/Commission/Member/Detail';
-import { formatID } from 'src/utils/helper';
 
 // ----------------------------------------------------------------------
 
