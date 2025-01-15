@@ -18,6 +18,7 @@ import { formatWeekNumber } from 'src/utils/format-time';
 import { Iconify } from 'src/components/Iconify';
 
 import Detail from 'src/sections/Commission/Member/Detail';
+import { formatID } from 'src/utils/helper';
 
 // ----------------------------------------------------------------------
 
@@ -31,6 +32,7 @@ export default function CommissionTableRow({ row }: Props) {
   const open = useBoolean();
 
   const {
+    ID,
     member,
     begL,
     begR,
@@ -60,6 +62,7 @@ export default function CommissionTableRow({ row }: Props) {
             }}
           />
         </TableCell>
+        <TableCell>{formatID(ID, 'C')}</TableCell>
         <TableCell
           align="left"
           onClick={() => router.push(paths.dashboard.members.edit(member?.id ?? ''))}
