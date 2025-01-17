@@ -21,7 +21,7 @@ import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 import { Form, Field } from 'src/components/Form';
 
-import { ADMIN_RESET_PASSWORD_REQUEST } from './query';
+import { ADMIN_RESET_PASSWORD_TOKEN } from './query';
 
 // ----------------------------------------------------------------------
 
@@ -63,7 +63,7 @@ export function SplitUpdatePasswordView({ token }: Props) {
 
   const { handleSubmit } = methods;
 
-  const [updatePassword, { loading }] = useMutation(ADMIN_RESET_PASSWORD_REQUEST);
+  const [updatePassword, { loading }] = useMutation(ADMIN_RESET_PASSWORD_TOKEN);
 
   const onSubmit = handleSubmit(async ({ password }) => {
     try {

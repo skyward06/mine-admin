@@ -17,7 +17,7 @@ import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 import { Form, Field } from 'src/components/Form';
 
-import { ADMIN_RESET_PASSWORD_TOKEN } from './query';
+import { ADMIN_RESET_PASSWORD_REQUEST } from './query';
 
 // ----------------------------------------------------------------------
 
@@ -40,7 +40,7 @@ export function SplitResetPasswordView() {
     defaultValues,
   });
 
-  const [resetPassword, { loading }] = useMutation(ADMIN_RESET_PASSWORD_TOKEN);
+  const [resetPassword, { loading }] = useMutation(ADMIN_RESET_PASSWORD_REQUEST);
 
   const { handleSubmit } = methods;
 
