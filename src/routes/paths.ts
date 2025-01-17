@@ -2,6 +2,8 @@
 
 const ROOTS = {
   SIGN_IN: '/sign-in',
+  FORGOT_PASSWORD: '/forgot-password',
+  RESET_PASSWORD: '/reset-password',
   DASHBOARD: '/dashboard',
   STATISTICS: '/statistics',
   SALES: '/sales',
@@ -27,7 +29,11 @@ const ROOTS = {
 
 export const paths = {
   // AUTH
-  signIn: ROOTS.SIGN_IN,
+  auth: {
+    signIn: ROOTS.SIGN_IN,
+    forgotPassword: ROOTS.FORGOT_PASSWORD,
+    resetPassword: ROOTS.RESET_PASSWORD,
+  },
 
   // STATISTICS
   statistics: { root: ROOTS.STATISTICS },
