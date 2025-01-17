@@ -14,7 +14,7 @@ import { toast } from 'src/components/SnackBar';
 
 import { SplitUpdatePasswordView } from 'src/sections/ResetPassword/resetPassoword';
 
-import { RESET_TOKEN_VERIFY } from './query';
+import { ADMIN_RESET_TOKEN_VERIFY } from './query';
 
 // ----------------------------------------------------------------------
 
@@ -27,7 +27,7 @@ export default function Page() {
   const queryParams = new URLSearchParams(location.search);
   const token = queryParams.get('token');
 
-  const [tokenVerify, { loading, data, error }] = useMutation(RESET_TOKEN_VERIFY);
+  const [tokenVerify, { loading, data, error }] = useMutation(ADMIN_RESET_TOKEN_VERIFY);
 
   useEffect(() => {
     if (token) {
@@ -56,7 +56,7 @@ export default function Page() {
       </Helmet>
 
       {isOpen ? (
-        <SplitUpdatePasswordView token={data?.resetTokenVerify.token!} />
+        <SplitUpdatePasswordView token={data?.adminResetTokenVerify.token!} />
       ) : (
         <LoadingButton loading size="large" loadingIndicator={<CircularProgress />} />
       )}
