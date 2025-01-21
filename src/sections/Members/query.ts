@@ -35,6 +35,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         point
         sponsorId
         status
+        promoCode
         groupName
         emailVerified
         totalIntroducers
@@ -59,6 +60,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           fullName
           email
           point
+          promoCode
           primaryAddress
           secondaryAddress
           mobile
