@@ -107,6 +107,7 @@ export default function MemberGeneral({ currentMember }: Props) {
               secondaryAddress: newMember.secondaryAddress,
               sponsorId: memberId ?? currentMember.sponsorId,
               assetId: newMember.assetId,
+              promoCode: newMember.promoCode,
               city: newMember.city,
               state,
               country,
@@ -237,6 +238,7 @@ export default function MemberGeneral({ currentMember }: Props) {
               <Field.Text name="city" label="City" />
               <Field.Text name="zipCode" label="ZIP Code" />
               <Field.Text name="assetId" label="Coin ID" />
+              <Field.Text name="promoCode" label="PromoCode" />
               <Field.Select name="preferredContact" label="Preferred Contact">
                 {CONTACT.map((option) => (
                   <MenuItem key={option.label} value={option.value}>

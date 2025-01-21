@@ -212,6 +212,7 @@ export default function MemberCreateForm() {
               <Field.Text name="city" label="City" />
               <Field.Text name="zipCode" label="ZIP Code" />
               <Field.Text name="assetId" label="Coin ID" />
+              <Field.Text name="promoCode" label="PromoCode" />
               <Field.Select name="preferredContact" label="Preferred Contact">
                 {CONTACT.map((option) => (
                   <MenuItem key={option.label} value={option.value}>

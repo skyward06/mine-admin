@@ -19,6 +19,7 @@ export const Schema = zod.object({
   teamStrategy: zod.string({ required_error: 'Team Strategy is required' }),
   teamReport: zod.string({ required_error: 'Team Report is required' }),
   assetId: zod.string({ required_error: 'Coin ID is required' }),
+  promoCode: zod.string().optional().nullable(),
   preferredContact: zod.string().optional().nullable(),
   preferredContactDetail: zod.string().optional().nullable(),
   syncWithSendy: zod.boolean().default(true),
