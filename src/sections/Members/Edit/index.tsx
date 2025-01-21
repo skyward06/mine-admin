@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { useLazyQuery } from '@apollo/client';
-import { Navigate, useParams } from 'react-router-dom';
 import { useState, useEffect, useCallback } from 'react';
+import { Navigate, useParams, useNavigate } from 'react-router-dom';
 
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
@@ -50,8 +50,8 @@ export default function MemberEditView() {
   const [isLoading, setIsLoading] = useState(true);
 
   const tabs = useTabs('history');
-
   const params = useParams();
+  const navigate = useNavigate();
 
   const [fetchMemberQuery, { loading, data, called }] = useLazyQuery(FETCH_MEMBERS_QUERY);
 
@@ -60,6 +60,11 @@ export default function MemberEditView() {
   const fetchMember = useCallback(() => {
     fetchMemberQuery({ variables: { filter: { id: memberId } } });
   }, [fetchMemberQuery, memberId]);
+
+  const handleTabChange = (event: any, newValue: any) => {
+    tabs.onChange(event, newValue);
+    navigate(`${paths.dashboard.members.root}/${memberId}`, { replace: true });
+  };
 
   useEffect(() => {
     fetchMember();
@@ -93,7 +98,7 @@ export default function MemberEditView() {
           }}
         />
 
-        <Tabs value={tabs.value} onChange={tabs.onChange} sx={{ mb: { xs: 2, md: 3 } }}>
+        <Tabs value={tabs.value} onChange={handleTabChange} sx={{ mb: { xs: 2, md: 3 } }}>
           {TABS.map((tab) => (
             <Tab key={tab.value} label={tab.label} icon={tab.icon} value={tab.value} />
           ))}
