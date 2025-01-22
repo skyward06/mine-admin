@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 
 import { useAgQuery as useQueryString } from 'src/routes/hooks';
 
+import { fCurrency } from 'src/utils/formatNumber';
 import { customizeFullName } from 'src/utils/helper';
 import { parseFilterModel } from 'src/utils/parseFilter';
 
@@ -54,17 +55,30 @@ export default function Revenue() {
           customizeFullName(data?.fullName!),
       },
       {
-        field: 'amount',
-        headerName: 'Amount',
+        field: 'commission',
+        headerName: 'Commission ($)',
         width: 200,
         filter: 'agNumberColumnFilter',
         resizable: true,
         editable: false,
         cellClass: 'ag-number-cell ag-cell-center',
+        cellRenderer: ({ data }: CustomCellRendererProps<MemberInOutRevenue>) =>
+          fCurrency(data?.commission),
+      },
+      {
+        field: 'amount',
+        headerName: 'Sponsored ($)',
+        width: 200,
+        filter: 'agNumberColumnFilter',
+        resizable: true,
+        editable: false,
+        cellClass: 'ag-number-cell ag-cell-center',
+        cellRenderer: ({ data }: CustomCellRendererProps<MemberInOutRevenue>) =>
+          fCurrency(data?.amount),
       },
       {
         field: 'percent',
-        headerName: 'Percent',
+        headerName: '%',
         width: 200,
         filter: 'agNumberColumnFilter',
         resizable: true,
@@ -79,15 +93,6 @@ export default function Revenue() {
             {data?.percent}
           </Typography>
         ),
-      },
-      {
-        field: 'commission',
-        headerName: 'Commission',
-        width: 200,
-        filter: 'agNumberColumnFilter',
-        resizable: true,
-        editable: false,
-        cellClass: 'ag-number-cell ag-cell-center',
       },
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
