@@ -3,6 +3,7 @@ import { useMutation, useLazyQuery } from '@apollo/client';
 
 import {
   FETCH_WEEKLY_REPORT,
+  FETCH_REVENUES_QUERY,
   GENERATE_WEEKLY_REPORT,
   FETCH_ONEPOINT_AWAY_MEMBERS_QUERY,
 } from './query';
@@ -28,6 +29,30 @@ export function useFetchOnepointAwayMembers() {
     rowCount,
     members: data?.onepointAwayMembers.members ?? [],
     fetchMembers,
+  };
+}
+
+export function useFetchRevenues() {
+  const [fetchRevenues, { loading, data, called }] = useLazyQuery(FETCH_REVENUES_QUERY);
+
+  const rowCountRef = useRef(data?.memberInOutRevenues.total ?? 0);
+
+  const rowCount = useMemo(() => {
+    const newTotal = data?.memberInOutRevenues.total ?? undefined;
+
+    if (newTotal !== undefined) {
+      rowCountRef.current = newTotal;
+    }
+
+    return rowCountRef.current;
+  }, [data]);
+
+  return {
+    called,
+    loading,
+    rowCount,
+    revenues: data?.memberInOutRevenues.inOuts ?? [],
+    fetchRevenues,
   };
 }
 
