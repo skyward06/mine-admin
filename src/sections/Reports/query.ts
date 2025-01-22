@@ -20,6 +20,22 @@ export const FETCH_ONEPOINT_AWAY_MEMBERS_QUERY = gql(/* GraphQL */ `
   }
 `);
 
+export const FETCH_REVENUES_QUERY = gql(/* GraphQL */ `
+  query MemberInOutRevenues($sort: String, $page: String, $filter: JSONObject) {
+    memberInOutRevenues(sort: $sort, page: $page, filter: $filter) {
+      inOuts {
+        id
+        amount
+        percent
+        username
+        fullName
+        commission
+      }
+      total
+    }
+  }
+`);
+
 export const FETCH_WEEKLY_REPORT = gql(/* GraphQL */ `
   query WeeklyReports($sort: String, $page: String, $filter: JSONObject) {
     weeklyReports(sort: $sort, page: $page, filter: $filter) {

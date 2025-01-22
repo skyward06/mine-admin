@@ -69,6 +69,7 @@ const documents = {
     "\n  mutation UpdateProof($data: UpdateProofByIDInput!) {\n    updateProof(data: $data) {\n      id\n    }\n  }\n": types.UpdateProofDocument,
     "\n  mutation RemoveProof($data: IDInput!) {\n    removeProof(data: $data) {\n      message\n      result\n    }\n  }\n": types.RemoveProofDocument,
     "\n  query FetchOnepointAwayMembers($page: String, $sort: String) {\n    onepointAwayMembers(page: $page, sort: $sort) {\n      members {\n        id\n        username\n        fullName\n        email\n        assetId\n        mobile\n        totalIntroducers\n        createdAt\n        updatedAt\n        deletedAt\n      }\n      total\n    }\n  }\n": types.FetchOnepointAwayMembersDocument,
+    "\n  query MemberInOutRevenues($sort: String, $page: String, $filter: JSONObject) {\n    memberInOutRevenues(sort: $sort, page: $page, filter: $filter) {\n      inOuts {\n        id\n        amount\n        percent\n        username\n        fullName\n        commission\n      }\n      total\n    }\n  }\n": types.MemberInOutRevenuesDocument,
     "\n  query WeeklyReports($sort: String, $page: String, $filter: JSONObject) {\n    weeklyReports(sort: $sort, page: $page, filter: $filter) {\n      weeklyReports {\n        id\n        fileId\n        createdAt\n        weekStartDate\n        file {\n          id\n          url\n          size\n          mimeType\n          originalName\n        }\n      }\n      total\n    }\n  }\n": types.WeeklyReportsDocument,
     "\n  mutation GenerateWeeklyReport($data: GenerateWeeklyReportInput!) {\n    generateWeeklyReport(data: $data) {\n      message\n      result\n    }\n  }\n": types.GenerateWeeklyReportDocument,
     "\n  mutation AdminResetPasswordRequest($data: EmailInput!) {\n    adminResetPasswordRequest(data: $data) {\n      message\n      result\n    }\n  }\n": types.AdminResetPasswordRequestDocument,
@@ -349,6 +350,10 @@ export function gql(source: "\n  mutation RemoveProof($data: IDInput!) {\n    re
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  query FetchOnepointAwayMembers($page: String, $sort: String) {\n    onepointAwayMembers(page: $page, sort: $sort) {\n      members {\n        id\n        username\n        fullName\n        email\n        assetId\n        mobile\n        totalIntroducers\n        createdAt\n        updatedAt\n        deletedAt\n      }\n      total\n    }\n  }\n"): (typeof documents)["\n  query FetchOnepointAwayMembers($page: String, $sort: String) {\n    onepointAwayMembers(page: $page, sort: $sort) {\n      members {\n        id\n        username\n        fullName\n        email\n        assetId\n        mobile\n        totalIntroducers\n        createdAt\n        updatedAt\n        deletedAt\n      }\n      total\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  query MemberInOutRevenues($sort: String, $page: String, $filter: JSONObject) {\n    memberInOutRevenues(sort: $sort, page: $page, filter: $filter) {\n      inOuts {\n        id\n        amount\n        percent\n        username\n        fullName\n        commission\n      }\n      total\n    }\n  }\n"): (typeof documents)["\n  query MemberInOutRevenues($sort: String, $page: String, $filter: JSONObject) {\n    memberInOutRevenues(sort: $sort, page: $page, filter: $filter) {\n      inOuts {\n        id\n        amount\n        percent\n        username\n        fullName\n        commission\n      }\n      total\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
