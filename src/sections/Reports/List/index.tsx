@@ -15,8 +15,12 @@ import Revenue from './Revenue';
 import OnepointMemberListView from './OnePointAway';
 
 const TABS = [
-  { value: 'revenue', label: 'Revenue', icon: <Iconify icon="bi:diagram-3" /> },
-  { value: 'onePointAway', label: 'One Point Away', icon: <Iconify icon="bi:currency-exchange" /> },
+  { value: 'revenue', label: 'Revenue', icon: <Iconify icon="mdi:non-profit" /> },
+  {
+    value: 'onePointAway',
+    label: 'One Point Away',
+    icon: <Iconify icon="f7:hand-point-right-fill" />,
+  },
 ];
 
 // ----------------------------------------------------------------------

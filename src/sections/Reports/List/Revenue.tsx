@@ -84,15 +84,20 @@ export default function Revenue() {
         resizable: true,
         editable: false,
         cellClass: 'ag-number-cell ag-cell-center',
-        cellRenderer: ({ data }: CustomCellRendererProps<MemberInOutRevenue>) => (
-          <Typography
-            variant="body2"
-            sx={{ mt: 0.6 }}
-            color={data?.percent! > 100 ? 'red' : 'default'}
-          >
-            {data?.percent}
-          </Typography>
-        ),
+        cellRenderer: ({ data }: CustomCellRendererProps<MemberInOutRevenue>) =>
+          data?.percent ? (
+            <Typography
+              variant="body2"
+              sx={{ mt: 0.6 }}
+              color={data?.percent! > 100 ? 'red' : 'default'}
+            >
+              {data?.percent}
+            </Typography>
+          ) : (
+            <Typography fontStyle="italic" variant="body2" color="error" sx={{ mt: 0.6 }}>
+              ###
+            </Typography>
+          ),
       },
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
