@@ -15,6 +15,7 @@ import { useRouter } from 'src/routes/hooks';
 import { useBoolean } from 'src/hooks/useBoolean';
 
 import { formatID } from 'src/utils/helper';
+import { fCurrency } from 'src/utils/formatNumber';
 import { formatDate } from 'src/utils/format-time';
 
 import { toast } from 'src/components/SnackBar';
@@ -273,7 +274,7 @@ export const Personal = () => {
               </Typography>
             </Stack>
             <Stack width={1}>
-              <Typography variant="body2">$ {((member?.balance ?? 0) / 100).toFixed(2)}</Typography>
+              <Typography variant="body2">{fCurrency(member.balance)}</Typography>
             </Stack>
           </Stack>
 
