@@ -385,6 +385,8 @@ export const FETCH_BALANCES = gql(/* GraphQL */ `
         note
         amountInCents
         memberId
+        extra1
+        extra2
       }
       total
     }

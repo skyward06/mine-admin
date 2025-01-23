@@ -3,11 +3,14 @@ import type { CustomCellRendererProps } from '@ag-grid-community/react';
 import type { ColDef, IDateFilterParams, ITextFilterParams } from '@ag-grid-community/core';
 
 import { useMemo } from 'react';
+import { Link } from 'react-router-dom';
 
 import Card from '@mui/material/Card';
 
+import { paths } from 'src/routes/paths';
 import { useParams, useAgQuery } from 'src/routes/hooks';
 
+import { formatID } from 'src/utils/helper';
 import { formatDate } from 'src/utils/format-time';
 
 import { AgGrid } from 'src/components/AgGrid';
@@ -74,6 +77,23 @@ export default function BalanceList() {
         resizable: true,
         editable: false,
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
+      },
+      {
+        field: 'extra2',
+        headerName: 'Reference',
+        width: 150,
+        filter: 'agTextColumnFilter',
+        resizable: true,
+        editable: false,
+        filterParams: { buttons: ['reset'] } as ITextFilterParams,
+        cellRenderer: ({ data }: CustomCellRendererProps<BalanceTableDataType>) =>
+          data?.extra1 === 'Sale' ? (
+            <Link to={paths.dashboard.sales.edit(formatID(data.extra2?.split('-')[1]!, 'S'))}>
+              {data?.extra2}
+            </Link>
+          ) : (
+            data?.extra2
+          ),
       },
     ],
     []
