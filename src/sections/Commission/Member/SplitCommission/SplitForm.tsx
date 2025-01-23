@@ -31,6 +31,7 @@ export default function SplitForm({ open, row }: Props) {
         {
           way: 'Bogo',
           money: 0,
+          note: '',
         },
       ],
       autoCreate: false,

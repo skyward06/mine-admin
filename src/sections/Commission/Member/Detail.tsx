@@ -43,7 +43,7 @@ interface Props {
 }
 
 export default function Detail({ open, row }: Props) {
-  const { id, status, member, proof, shortNote } = row;
+  const { id, status, member, proof, shortNote, splitWay } = row;
 
   const defaultValues = useMemo(
     () =>
@@ -199,6 +199,19 @@ export default function Detail({ open, row }: Props) {
           ) : (
             files?.map((file: any) => <FileRecentItem key={file.id} file={file} />)
           )}
+
+          <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
+
+          <Typography variant="subtitle1">Split Way</Typography>
+          <Typography variant="body2">
+            {splitWay?.split('||').map((item) => (
+              <Stack direction="row" spacing={2}>
+                <Typography>{item.split('|')[1]}</Typography>
+                <Typography>{item.split('|')[0]}</Typography>
+                <Typography>{item.split('|')[2]}</Typography>
+              </Stack>
+            ))}
+          </Typography>
 
           <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
 

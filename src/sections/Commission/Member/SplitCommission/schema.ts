@@ -11,7 +11,7 @@ export const Schema = zod.object({
         money: zod.number().refine((value) => value % 1000 === 0, {
           message: 'Money must be a multiple of 1000',
         }),
-        note: zod.string().optional().nullable(),
+        note: zod.string(),
       })
     )
     .optional()

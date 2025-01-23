@@ -23,6 +23,7 @@ export default function MultiForm() {
     append({
       way: 'Bogo',
       money: 0,
+      note: '',
     });
   };
 
