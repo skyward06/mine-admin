@@ -28,6 +28,7 @@ import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
 import Detail from './Detail';
 import PlacementTreeView from './Placement';
+import SplitCommission from './SplitCommission';
 import { useUpdateCommission } from '../useApollo';
 
 // ----------------------------------------------------------------------
@@ -42,6 +43,7 @@ type Props = {
 export default function CommissionTableRow({ row, selected, onSelectRow }: Props) {
   const placementOpen = useBoolean();
   const detailOpen = useBoolean();
+  const open = useBoolean();
 
   const router = useRouter();
 
@@ -185,17 +187,18 @@ export default function CommissionTableRow({ row, selected, onSelectRow }: Props
           <MenuItem
             sx={{ color: 'success.main' }}
             disabled={status === COMMISSION_TYPE.PAID.label}
-            onClick={async () => {
-              const { data } = await updateCommission({
-                variables: { data: { id, status: commission_type.Paid } },
-              });
+            // onClick={async () => {
+            //   const { data } = await updateCommission({
+            //     variables: { data: { id, status: commission_type.Paid } },
+            //   });
 
-              if (data) {
-                toast.message('Successfully Paid!');
-              } else {
-                toast.message('Something went wrong!');
-              }
-            }}
+            //   if (data) {
+            //     toast.message('Successfully Paid!');
+            //   } else {
+            //     toast.message('Something went wrong!');
+            //   }
+            // }}
+            onClick={open.onTrue}
           >
             <Iconify icon="ic:round-paid" />
             Pay
@@ -222,6 +225,8 @@ export default function CommissionTableRow({ row, selected, onSelectRow }: Props
           </MenuItem>
         </MenuList>
       </CustomPopover>
+
+      <SplitCommission open={open} row={row} />
     </>
   );
 }

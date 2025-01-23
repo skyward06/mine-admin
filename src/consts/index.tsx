@@ -112,6 +112,11 @@ export const NOTIFICATION_LEVEL = {
   TEAMLEADER: 'Team Leader',
 };
 
+export const COMMISSION_WAY = [
+  { label: 'BOGO', value: 'Bogo' },
+  { label: 'CASH', value: 'Cash' },
+];
+
 export enum State {
   Approved = 'Approved',
   Draft = 'Draft',
