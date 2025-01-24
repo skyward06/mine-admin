@@ -1,14 +1,18 @@
 import { gql } from 'src/__generated__/gql';
 
 export const FETCH_MEMBER_STATS_QUERY = gql(/* GraphQL */ `
-  query FetchMemberStats($pendingFilter: JSONObject, $inactiveFilter: JSONObject) {
-    all: members {
+  query FetchMemberStats(
+    $approveFilter: JSONObject
+    $pendingFilter: JSONObject
+    $graveyardFilter: JSONObject
+  ) {
+    APPROVED: members(filter: $approveFilter) {
       total
     }
-    pending: members(filter: $pendingFilter) {
+    PENDING: members(filter: $pendingFilter) {
       total
     }
-    inactive: members(filter: $inactiveFilter) {
+    GRAVEYARD: members(filter: $graveyardFilter) {
       total
     }
   }
@@ -394,6 +398,15 @@ export const FETCH_BALANCES = gql(/* GraphQL */ `
         extra2
       }
       total
+    }
+  }
+`);
+
+export const MOVE_TO_GRAVEYARD = gql(/* GraphQL */ `
+  mutation MoveToGraveyard($data: IDInput!) {
+    moveToGraveyard(data: $data) {
+      message
+      result
     }
   }
 `);
