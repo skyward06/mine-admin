@@ -10,6 +10,7 @@ import {
   UPDATE_MEMBER,
   APPROVE_MEMBER,
   FETCH_BALANCES,
+  MOVE_TO_GRAVEYARD,
   SEND_WELCOME_EMAIL,
   FETCH_MEMBERS_QUERY,
   REMOVE_MEMBER_QUERY,
@@ -130,6 +131,15 @@ export function useSendWelcomeEmail() {
   const [sendWelcomeEmail, { loading, data, error }] = useMutation(SEND_WELCOME_EMAIL);
 
   return { loading, data, error, sendWelcomeEmail };
+}
+
+export function useMoveToGraveyard() {
+  const [moveToGraveyard, { loading, data, error }] = useMutation(MOVE_TO_GRAVEYARD, {
+    awaitRefetchQueries: true,
+    refetchQueries: ['FetchMembers', 'FetchMemberStats'],
+  });
+
+  return { loading, data, error, moveToGraveyard };
 }
 
 export function useFetchBalances() {
