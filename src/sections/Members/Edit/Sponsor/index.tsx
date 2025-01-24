@@ -38,7 +38,7 @@ const TABLE_HEAD = [
 
 const defaultFilter: IMemberTableFilters = {
   search: '',
-  status: 'all',
+  allowState: 'APPROVED',
 };
 
 export default function PlacementListViewWithReactFlowProvider({ currentMember }: Props) {

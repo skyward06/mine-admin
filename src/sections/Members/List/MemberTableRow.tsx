@@ -28,7 +28,7 @@ import { Iconify } from 'src/components/Iconify';
 import { ConfirmDialog } from 'src/components/Dialog';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
-import { useApproveMember, useUpdatePassword } from '../useApollo';
+import { useApproveMember, useUpdatePassword, useMoveToGraveyard } from '../useApollo';
 
 // ----------------------------------------------------------------------
 
@@ -65,7 +65,7 @@ export default function MemberTableRow({
     fullName,
     totalIntroducers,
     emailVerified,
-    status,
+    allowState,
     createdAt,
     primaryAddress,
     secondaryAddress,
@@ -75,8 +75,9 @@ export default function MemberTableRow({
     sales,
   } = row;
 
-  const { loading, updatePassword } = useUpdatePassword();
   const { approveMember } = useApproveMember();
+  const { moveToGraveyard } = useMoveToGraveyard();
+  const { loading, updatePassword } = useUpdatePassword();
 
   const resetContent = (
     <Paper sx={{ py: 2 }}>
@@ -184,7 +185,7 @@ export default function MemberTableRow({
                 Email Unverified
               </Label>
             )}
-            {status ? (
+            {allowState === 'APPROVED' ? (
               <Label variant="soft" color="success">
                 Approved
               </Label>
@@ -222,22 +223,39 @@ export default function MemberTableRow({
               slotProps={{ arrow: { placement: 'right-top' } }}
             >
               <MenuList>
-                {!status && (
-                  <MenuItem
-                    onClick={async () => {
-                      try {
-                        await approveMember({ variables: { data: { id } } });
+                {allowState === 'PENDING' && (
+                  <>
+                    <MenuItem
+                      onClick={async () => {
+                        try {
+                          await approveMember({ variables: { data: { id } } });
 
-                        toast.success('Successfully approved');
-                      } catch (error) {
-                        console.log('error => ', error);
-                        toast.error('Something went wrong!');
-                      }
-                    }}
-                  >
-                    <Iconify icon="fa6-solid:circle-check" color="green" />
-                    Approve
-                  </MenuItem>
+                          toast.success('Successfully approved');
+                        } catch (error) {
+                          console.log('error => ', error);
+                          toast.error('Something went wrong!');
+                        }
+                      }}
+                    >
+                      <Iconify icon="fa6-solid:circle-check" color="green" />
+                      Approve
+                    </MenuItem>
+                    <MenuItem
+                      onClick={async () => {
+                        try {
+                          await moveToGraveyard({ variables: { data: { id } } });
+
+                          toast.success('Successfully moved');
+                        } catch (error) {
+                          console.log('error => ', error);
+                          toast.error('Something went wrong!');
+                        }
+                      }}
+                    >
+                      <Iconify icon="mdi:graveyard" color="Tomato" />
+                      Move to Graveyard
+                    </MenuItem>
+                  </>
                 )}
                 <MenuItem
                   onClick={() => {

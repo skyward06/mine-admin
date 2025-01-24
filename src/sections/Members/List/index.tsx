@@ -43,14 +43,14 @@ import MemberTableRow from './MemberTableRow';
 import MemberTableFiltersResult from './MemberTableFiltersResult';
 import { useRemoveMember, useFetchMembers, useFetchMembersStats } from '../useApollo';
 
-import type { MemberRole, IMemberPrismaFilter, IMemberTableFilters } from './types';
+import type { AllowState, IMemberPrismaFilter, IMemberTableFilters } from './types';
 
 // ----------------------------------------------------------------------
 
-const STATUS_OPTIONS: { value: MemberRole; label: string; color: LabelColor }[] = [
-  { value: 'all', label: 'All', color: 'info' },
-  { value: 'pending', label: 'Pending', color: 'success' },
-  { value: 'inactive', label: 'Inactive', color: 'error' },
+const STATUS_OPTIONS: { value: AllowState; label: string; color: LabelColor }[] = [
+  { value: 'APPROVED', label: 'Approved', color: 'info' },
+  { value: 'PENDING', label: 'Pending', color: 'success' },
+  { value: 'GRAVEYARD', label: 'Graveyard', color: 'error' },
 ];
 
 const TABLE_HEAD = [
@@ -68,7 +68,7 @@ const TABLE_HEAD = [
 
 const defaultFilter: IMemberTableFilters = {
   search: '',
-  status: 'all',
+  allowState: 'APPROVED',
 };
 
 export default function MemberListView() {
@@ -106,12 +106,12 @@ export default function MemberListView() {
       ];
     }
 
-    if (filter.status === 'pending') {
-      filterObj.status = false;
-    } else if (filter.status === 'inactive') {
-      filterObj.deletedAt = { not: null };
+    if (filter.allowState === 'PENDING') {
+      filterObj.allowState = 'PENDING';
+    } else if (filter.allowState === 'GRAVEYARD') {
+      filterObj.allowState = 'GRAVEYARD';
     } else {
-      filterObj.status = true;
+      filterObj.allowState = 'APPROVED';
     }
 
     if (sponsorId) {
@@ -148,8 +148,9 @@ export default function MemberListView() {
 
     fetchMemberStats({
       variables: {
-        pendingFilter: { status: false },
-        inactiveFilter: { deletedAt: { not: null } },
+        approveFilter: { allowState: 'APPROVED' },
+        pendingFilter: { allowState: 'PENDING' },
+        graveyardFilter: { allowState: 'GRAVEYARD' },
       },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -161,10 +162,10 @@ export default function MemberListView() {
 
   const token = localStorage.getItem(CONFIG.storageTokenKey) ?? '';
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: MemberRole) => {
+  const handleTabChange = (event: React.SyntheticEvent, newValue: AllowState) => {
     setQuery({
       ...query,
-      filter: { ...filter, status: newValue },
+      filter: { ...filter, allowState: newValue },
       page: { page: 1, pageSize: query.page?.pageSize ?? 10 },
     });
   };
@@ -198,7 +199,7 @@ export default function MemberListView() {
 
       <Card>
         <Tabs
-          value={filter.status}
+          value={filter.allowState}
           onChange={handleTabChange}
           sx={{
             px: 2.5,
@@ -213,7 +214,7 @@ export default function MemberListView() {
               label={tab.label}
               icon={
                 <Label
-                  variant={(tab.value === filter.status && 'filled') || 'soft'}
+                  variant={(tab.value === filter.allowState && 'filled') || 'soft'}
                   color={tab.color}
                 >
                   {statsData ? statsData[tab.value].total! : 0}
