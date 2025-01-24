@@ -55,6 +55,7 @@ export const FETCH_MEMBERSTATISTICS_QUERY = gql(/* GraphQL */ `
           assetId
           status
           groupName
+          allowState
           emailVerified
           totalIntroducers
           primaryAddress

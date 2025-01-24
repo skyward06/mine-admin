@@ -54,6 +54,7 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
           username
           fullName
           groupName
+          allowState
           syncWithSendy
           emailVerified
           primaryAddress
@@ -87,6 +88,7 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
           username
           fullName
           groupName
+          allowState
           syncWithSendy
           emailVerified
           primaryAddress

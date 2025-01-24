@@ -25,6 +25,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         fullName
         email
         country
+        allowState
         primaryAddress
         secondaryAddress
         assetId
@@ -61,6 +62,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           email
           point
           promoCode
+          allowState
           primaryAddress
           secondaryAddress
           mobile
@@ -97,6 +99,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           username
           fullName
           groupName
+          allowState
           emailVerified
           syncWithSendy
           primaryAddress
@@ -127,6 +130,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           username
           fullName
           groupName
+          allowState
           emailVerified
           syncWithSendy
           primaryAddress
@@ -234,6 +238,7 @@ export const FETCH_PLACEMENT_MEMBERS_QUERY = gql(/* GraphQL */ `
         groupName
         status
         teamReport
+        allowState
         cmnCalculatedWeeks
         placementParentId
         placementPosition
