@@ -185,13 +185,19 @@ export default function MemberTableRow({
                 Email Unverified
               </Label>
             )}
-            {allowState === 'APPROVED' ? (
+            {allowState === 'APPROVED' && (
               <Label variant="soft" color="success">
                 Approved
               </Label>
-            ) : (
+            )}
+            {allowState === 'PENDING' && (
               <Label variant="soft" color="warning">
                 Pending
+              </Label>
+            )}
+            {allowState === 'GRAVEYARD' && (
+              <Label variant="soft" color="error">
+                Graveyard
               </Label>
             )}
           </Stack>
