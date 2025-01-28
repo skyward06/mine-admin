@@ -65,6 +65,10 @@ const documents = {
     "\n  mutation UpdatePackage($data: UpdatePackageInput!) {\n    updatePackage(data: $data) {\n      id\n    }\n  }\n": types.UpdatePackageDocument,
     "\n  mutation RemovePackage($data: IDInput!) {\n    removePackage(data: $data) {\n      result\n    }\n  }\n": types.RemovePackageDocument,
     "\n  mutation UpdatePasswordAdmin($data: UpdateAdminPasswordInput!) {\n    updatePasswordAdmin(data: $data) {\n      message\n      result\n    }\n  }\n": types.UpdatePasswordAdminDocument,
+    "\n  query Promos($sort: String, $page: String, $filter: JSONObject) {\n    promos(sort: $sort, page: $page, filter: $filter) {\n      promos {\n        createdAt\n        updatedAt\n        deletedAt\n        id\n        code\n        description\n        status\n        startDate\n        endDate\n      }\n      total\n    }\n  }\n": types.PromosDocument,
+    "\n  mutation CreatePromo($data: CreatePromoInput!) {\n    createPromo(data: $data) {\n      id\n    }\n  }\n": types.CreatePromoDocument,
+    "\n  mutation UpdatePromo($data: UpdatePromoInput!) {\n    updatePromo(data: $data) {\n      id\n    }\n  }\n": types.UpdatePromoDocument,
+    "\n  mutation RemovePromo($data: IDInput!) {\n    removePromo(data: $data) {\n      message\n      result\n    }\n  }\n": types.RemovePromoDocument,
     "\n  query Proofs($sort: String, $page: String, $filter: JSONObject) {\n    proofs(sort: $sort, page: $page, filter: $filter) {\n      proofs {\n        createdAt\n        updatedAt\n        deletedAt\n        id\n        refId\n        type\n        amount\n        orderedAt\n        mineLocation\n        note\n        files {\n          createdAt\n          updatedAt\n          deletedAt\n          id\n          url\n          originalName\n          mimeType\n          size\n        }\n        reflinks {\n          linkType\n          link\n        }\n      }\n      total\n    }\n  }\n": types.ProofsDocument,
     "\n  mutation CreateProof($data: CreateProofInput!) {\n    createProof(data: $data) {\n      id\n    }\n  }\n": types.CreateProofDocument,
     "\n  mutation UpdateProof($data: UpdateProofByIDInput!) {\n    updateProof(data: $data) {\n      id\n    }\n  }\n": types.UpdateProofDocument,
@@ -335,6 +339,22 @@ export function gql(source: "\n  mutation RemovePackage($data: IDInput!) {\n    
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  mutation UpdatePasswordAdmin($data: UpdateAdminPasswordInput!) {\n    updatePasswordAdmin(data: $data) {\n      message\n      result\n    }\n  }\n"): (typeof documents)["\n  mutation UpdatePasswordAdmin($data: UpdateAdminPasswordInput!) {\n    updatePasswordAdmin(data: $data) {\n      message\n      result\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  query Promos($sort: String, $page: String, $filter: JSONObject) {\n    promos(sort: $sort, page: $page, filter: $filter) {\n      promos {\n        createdAt\n        updatedAt\n        deletedAt\n        id\n        code\n        description\n        status\n        startDate\n        endDate\n      }\n      total\n    }\n  }\n"): (typeof documents)["\n  query Promos($sort: String, $page: String, $filter: JSONObject) {\n    promos(sort: $sort, page: $page, filter: $filter) {\n      promos {\n        createdAt\n        updatedAt\n        deletedAt\n        id\n        code\n        description\n        status\n        startDate\n        endDate\n      }\n      total\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation CreatePromo($data: CreatePromoInput!) {\n    createPromo(data: $data) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation CreatePromo($data: CreatePromoInput!) {\n    createPromo(data: $data) {\n      id\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation UpdatePromo($data: UpdatePromoInput!) {\n    updatePromo(data: $data) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation UpdatePromo($data: UpdatePromoInput!) {\n    updatePromo(data: $data) {\n      id\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation RemovePromo($data: IDInput!) {\n    removePromo(data: $data) {\n      message\n      result\n    }\n  }\n"): (typeof documents)["\n  mutation RemovePromo($data: IDInput!) {\n    removePromo(data: $data) {\n      message\n      result\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
