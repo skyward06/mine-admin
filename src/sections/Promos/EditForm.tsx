@@ -15,7 +15,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { today, formatDate, customizeDate } from 'src/utils/format-time';
+import { today, formatDate } from 'src/utils/format-time';
 
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
@@ -85,8 +85,8 @@ export default function EditForm({ current }: Props) {
           variables: {
             data: {
               ...newData,
-              startDate: customizeDate(startDate),
-              endDate: customizeDate(endDate),
+              startDate: formatDate(startDate, 'YYYY-MM-DD'),
+              endDate: formatDate(endDate, 'YYYY-MM-DD'),
               status,
               id: current.id,
             },
@@ -97,8 +97,8 @@ export default function EditForm({ current }: Props) {
           variables: {
             data: {
               ...newData,
-              startDate: customizeDate(startDate),
-              endDate: customizeDate(endDate),
+              startDate: formatDate(startDate, 'YYYY-MM-DD'),
+              endDate: formatDate(endDate, 'YYYY-MM-DD'),
               status,
             },
           },

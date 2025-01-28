@@ -305,8 +305,8 @@ export type CreatePrepaidCommissionInput = {
 export type CreatePromoInput = {
   code: Scalars['String']['input'];
   description: Scalars['String']['input'];
-  endDate: Scalars['DateTimeISO']['input'];
-  startDate: Scalars['DateTimeISO']['input'];
+  endDate: Scalars['Date']['input'];
+  startDate: Scalars['Date']['input'];
   status?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
@@ -2141,9 +2141,9 @@ export type UpdatePrepaidCommissionInput = {
 export type UpdatePromoInput = {
   code?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
-  endDate?: InputMaybe<Scalars['DateTimeISO']['input']>;
+  endDate?: InputMaybe<Scalars['Date']['input']>;
   id: Scalars['ID']['input'];
-  startDate?: InputMaybe<Scalars['DateTimeISO']['input']>;
+  startDate?: InputMaybe<Scalars['Date']['input']>;
   status?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
