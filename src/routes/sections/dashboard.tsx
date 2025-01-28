@@ -65,6 +65,12 @@ const ProofEditPage = lazy(() => import('src/pages/Proof/Edit'));
 // ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
+const PromosListPage = lazy(() => import('src/pages/Promos/List'));
+const PromoCreatePage = lazy(() => import('src/pages/Promos/Create'));
+const PromoEditPage = lazy(() => import('src/pages/Promos/Edit'));
+// ----------------------------------------------------------------------
+
+// ----------------------------------------------------------------------
 const GroupSettingsListPage = lazy(() => import('src/pages/GroupSettings/List'));
 const GroupSettingsCreatePage = lazy(() => import('src/pages/GroupSettings/Create'));
 const GroupSettingsEditPage = lazy(() => import('src/pages/GroupSettings/Edit'));
@@ -167,6 +173,14 @@ export const dashboardRoutes = [
           { index: true, element: <ProofListPage /> },
           { path: 'new', element: <ProofCreatePage /> },
           { path: ':id', element: <ProofEditPage /> },
+        ],
+      },
+      {
+        path: 'promos',
+        children: [
+          { index: true, element: <PromosListPage /> },
+          { path: 'new', element: <PromoCreatePage /> },
+          { path: ':id', element: <PromoEditPage /> },
         ],
       },
       {
