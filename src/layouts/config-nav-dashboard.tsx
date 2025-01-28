@@ -42,6 +42,7 @@ const ICONS = {
   package: icon('ic_package'),
   payment: icon('ic_payment'),
   prepaid: icon('ic_prepaid'),
+  promo: icon('ic_promo'),
   proof: icon('ic_proof'),
   reward: icon('ic_reward'),
   report: icon('ic_report'),
@@ -102,7 +103,7 @@ export const navData = [
     subheader: 'Services',
     items: [
       { title: 'Resource', path: paths.dashboard.resource.root, icon: ICONS.folder },
-      { title: 'Promos', path: paths.dashboard.promos.root, icon: ICONS.folder },
+      { title: 'Promos', path: paths.dashboard.promos.root, icon: ICONS.promo },
       { title: 'Reward', path: paths.dashboard.reward.root, icon: ICONS.reward },
       { title: 'Sponsor', path: paths.dashboard.sponsor.root, icon: ICONS.sponsor },
       {
