@@ -140,7 +140,16 @@ export const Personal = () => {
               </Typography>
             </Stack>
             <Stack width={1}>
-              <Typography variant="body2">{member?.sponsor?.fullName}</Typography>
+              <Typography
+                variant="body2"
+                sx={{ color: '#00c869', cursor: 'pointer' }}
+                onClick={() => {
+                  router.push(paths.dashboard.members.edit(member?.sponsor?.id ?? ''));
+                  router.refresh();
+                }}
+              >
+                {member?.sponsor?.fullName}
+              </Typography>
             </Stack>
           </Stack>
 
@@ -274,7 +283,9 @@ export const Personal = () => {
               </Typography>
             </Stack>
             <Stack width={1}>
-              <Typography variant="body2">{fCurrency(member?.balance ?? 0)}</Typography>
+              <Typography variant="body2">
+                {fCurrency((member?.balance || 0) / 100 ?? 0)}
+              </Typography>
             </Stack>
           </Stack>
 
