@@ -283,9 +283,7 @@ export const Personal = () => {
               </Typography>
             </Stack>
             <Stack width={1}>
-              <Typography variant="body2">
-                {fCurrency((member?.balance || 0) / 100 ?? 0)}
-              </Typography>
+              <Typography variant="body2">{fCurrency((member?.balance || 0) / 100)}</Typography>
             </Stack>
           </Stack>
 
