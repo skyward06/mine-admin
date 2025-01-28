@@ -2,7 +2,7 @@ import states from 'states-us';
 import countries from 'country-list';
 import isEqual from 'lodash/isEqual';
 import { useForm } from 'react-hook-form';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ApolloError, useMutation } from '@apollo/client';
 
@@ -19,11 +19,13 @@ import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
 import { CONTACT } from 'src/consts';
-import { TeamReport, type Member, TeamStrategy } from 'src/__generated__/graphql';
+import { TeamReport, type Promo, type Member, TeamStrategy } from 'src/__generated__/graphql';
 
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
 import SearchMiner from 'src/components/SearchMiner';
+
+import { useFetchPromos } from 'src/sections/Promos/useApollo';
 
 import TXCWallets from './txcWallets';
 import OtherWallets from './otherWallets';
@@ -53,6 +55,7 @@ export default function MemberGeneral({ currentMember }: Props) {
   const [lastName, setLastName] = useState<string>(last);
 
   const [submit, { loading }] = useMutation(UPDATE_MEMBER);
+  const { promos, fetchPromos } = useFetchPromos();
 
   const defaultValues = useMemo(() => {
     const { data } = Schema.safeParse({ ...currentMember, txcWallets, otherWallets });
@@ -66,6 +69,11 @@ export default function MemberGeneral({ currentMember }: Props) {
   });
 
   const { setError, handleSubmit } = methods;
+
+  useEffect(() => {
+    fetchPromos({ variables: { filter: { status: true } } });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onSubmit = handleSubmit(async (newMember) => {
     try {
@@ -238,7 +246,13 @@ export default function MemberGeneral({ currentMember }: Props) {
               <Field.Text name="city" label="City" />
               <Field.Text name="zipCode" label="ZIP Code" />
               <Field.Text name="assetId" label="Coin ID" />
-              <Field.Text name="promoCode" label="PromoCode" />
+              <Field.Select name="promoCode" label="PromoCode">
+                {promos.map((option: Promo) => (
+                  <MenuItem key={option.id} value={option.code}>
+                    {option.code}
+                  </MenuItem>
+                ))}
+              </Field.Select>
               <Field.Select name="preferredContact" label="Preferred Contact">
                 {CONTACT.map((option) => (
                   <MenuItem key={option.label} value={option.value}>
