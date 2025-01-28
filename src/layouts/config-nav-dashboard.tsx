@@ -113,11 +113,6 @@ export const navData = [
       },
       { title: 'Calculator', path: paths.calculator.root, icon: ICONS.calculator },
       { title: 'Report', path: paths.dashboard.report.root, icon: ICONS.report },
-      {
-        title: 'Weekly Report',
-        path: paths.dashboard.weeklyReports.root,
-        icon: ICONS.weeklyReport,
-      },
     ],
   },
 ];
