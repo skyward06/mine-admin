@@ -98,61 +98,20 @@ export default function WeeklyReports() {
   );
 
   return (
-    <DashboardContent>
-      <Breadcrumbs
-        heading="Weekly Report"
-        links={[
-          { name: 'Weekly Report', href: paths.dashboard.weeklyReports.root },
-          { name: 'List' },
-        ]}
-        sx={{
-          mb: { xs: 1, md: 2 },
-        }}
-        action={
-          <Box
-            display="grid"
-            columnGap={2}
-            sx={{ pr: 2, gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: '45% 55%' } }}
-          >
-            <LoadingButton
-              variant="contained"
-              startIcon={<Iconify icon="fluent-mdl2:generate" />}
-              loading={!all && generateLoading}
-              color="primary"
-              onClick={handleGenerate}
-              sx={{ mb: 1 }}
-            >
-              Generate
-            </LoadingButton>
-            <LoadingButton
-              variant="contained"
-              startIcon={<Iconify icon="streamline:ai-generate-variation-spark" />}
-              loading={all && generateLoading}
-              color="primary"
-              onClick={handleReGenerate}
-              sx={{ mb: 1 }}
-            >
-              ReGenerate
-            </LoadingButton>
-          </Box>
-        }
+    <Card
+      sx={{
+        flexGrow: 1,
+        display: 'flex',
+        overflow: 'hidden',
+      }}
+    >
+      <AgGrid<WeeklyReport>
+        gridKey="weekly-report-list"
+        loading={loading}
+        rowData={reports}
+        columnDefs={colDefs}
+        totalRowCount={rowCount}
       />
-
-      <Card
-        sx={{
-          flexGrow: 1,
-          display: 'flex',
-          overflow: 'hidden',
-        }}
-      >
-        <AgGrid<WeeklyReport>
-          gridKey="weekly-report-list"
-          loading={loading}
-          rowData={reports}
-          columnDefs={colDefs}
-          totalRowCount={rowCount}
-        />
-      </Card>
-    </DashboardContent>
+    </Card>
   );
 }

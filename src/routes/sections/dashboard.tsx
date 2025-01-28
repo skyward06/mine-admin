@@ -90,10 +90,6 @@ const ReportListPage = lazy(() => import('src/pages/Report/List'));
 // ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
-const WeeklyReportListPage = lazy(() => import('src/pages/WeeklyReport'));
-// ----------------------------------------------------------------------
-
-// ----------------------------------------------------------------------
 const NotificationListPage = lazy(() => import('src/pages/Notification/List'));
 // ----------------------------------------------------------------------
 
@@ -217,10 +213,6 @@ export const dashboardRoutes = [
       {
         path: 'reports',
         children: [{ index: true, element: <ReportListPage /> }],
-      },
-      {
-        path: 'weekly-reports',
-        children: [{ index: true, element: <WeeklyReportListPage /> }],
       },
       {
         path: 'users',

@@ -15,6 +15,7 @@ import { Iconify } from 'src/components/Iconify';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 
 import Revenue from './Revenue';
+import WeeklyReports from './weekly';
 import OnepointMemberListView from './OnePointAway';
 
 const TABS = [
@@ -24,6 +25,7 @@ const TABS = [
     label: 'One Point Away',
     icon: <Iconify icon="f7:hand-point-right-fill" />,
   },
+  { value: 'weekly', label: 'Weekly', icon: <Iconify icon="mdi:non-profit" /> },
 ];
 
 // ----------------------------------------------------------------------
@@ -100,6 +102,8 @@ export default function ReportView() {
         {tabs.value === 'revenue' && <Revenue />}
 
         {tabs.value === 'onePointAway' && <OnepointMemberListView />}
+
+        {tabs.value === 'weekly' && <WeeklyReports />}
       </DashboardContent>
     </>
   );
