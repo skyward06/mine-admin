@@ -102,6 +102,7 @@ export const navData = [
     subheader: 'Services',
     items: [
       { title: 'Resource', path: paths.dashboard.resource.root, icon: ICONS.folder },
+      { title: 'Promos', path: paths.dashboard.promos.root, icon: ICONS.folder },
       { title: 'Reward', path: paths.dashboard.reward.root, icon: ICONS.reward },
       { title: 'Sponsor', path: paths.dashboard.sponsor.root, icon: ICONS.sponsor },
       {

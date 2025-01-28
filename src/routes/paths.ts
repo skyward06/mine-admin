@@ -20,6 +20,7 @@ const ROOTS = {
   PAYMENT: '/payment',
   USERS: '/users',
   REPORTS: '/reports',
+  PROMOS: '/promos',
   WEEKLYREPORTS: '/weekly-reports',
   NOTIFICATIONS: '/notifications',
   GROUP_SETTINGS: '/group-settings',
@@ -49,9 +50,6 @@ export const paths = {
       edit: (id: string) => `${ROOTS.USERS}/${id}`,
       new: `${ROOTS.USERS}/new`,
     },
-    history: {
-      root: ROOTS.DASHBOARD,
-    },
     members: {
       root: ROOTS.MEMBERS,
       edit: (id: string) => `${ROOTS.MEMBERS}/${id}`,
@@ -67,8 +65,6 @@ export const paths = {
       edit: (id: string) => `${ROOTS.PRODUCTS}/${id}`,
       new: `${ROOTS.PRODUCTS}/new`,
     },
-    sponsor: { root: ROOTS.SPONSOR },
-    placement: { root: ROOTS.PLACEMENT },
     prepaidCommission: {
       root: ROOTS.PREPAID_COMMISSION,
       edit: (id: string) => `${ROOTS.PREPAID_COMMISSION}/${id}`,
@@ -100,19 +96,19 @@ export const paths = {
       detail: (id: string) => `${ROOTS.REWARD}/${id}`,
       view: (id: string) => `${ROOTS.REWARD}/statistics/${id}`,
     },
+    promos: {
+      root: ROOTS.PROMOS,
+      new: `${ROOTS.PROMOS}/new`,
+      edit: (id: string) => `${ROOTS.PROMOS}/${id}`,
+    },
+    report: { root: ROOTS.REPORTS },
+    sponsor: { root: ROOTS.SPONSOR },
+    history: { root: ROOTS.DASHBOARD },
+    placement: { root: ROOTS.PLACEMENT },
+    calculator: { root: ROOTS.CALCULATOR },
+    weeklyReports: { root: ROOTS.WEEKLYREPORTS },
+    notifications: { root: ROOTS.NOTIFICATIONS },
     resource: { root: ROOTS.RESOURCE, view: (slug: string) => `${ROOTS.RESOURCE}/${slug}` },
-    report: {
-      root: ROOTS.REPORTS,
-    },
-    weeklyReports: {
-      root: ROOTS.WEEKLYREPORTS,
-    },
-    notifications: {
-      root: ROOTS.NOTIFICATIONS,
-    },
-    calculator: {
-      root: ROOTS.CALCULATOR,
-    },
   },
   notFound: '/404',
 };
