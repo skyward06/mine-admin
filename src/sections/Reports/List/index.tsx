@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 
+import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -11,12 +12,14 @@ import { useTabs } from 'src/hooks/use-tabs';
 import { CONFIG } from 'src/config';
 import { DashboardContent } from 'src/layouts/dashboard';
 
+import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 
 import Revenue from './Revenue';
-import WeeklyReports from './weekly';
+import WeeklyReports from './Weekly';
 import OnepointMemberListView from './OnePointAway';
+import { useGenerateWeeklyReports } from '../useApollo';
 
 const TABS = [
   { value: 'revenue', label: 'Revenue', icon: <Iconify icon="mdi:non-profit" /> },
@@ -25,13 +28,17 @@ const TABS = [
     label: 'One Point Away',
     icon: <Iconify icon="f7:hand-point-right-fill" />,
   },
-  { value: 'weekly', label: 'Weekly', icon: <Iconify icon="mdi:non-profit" /> },
+  { value: 'weekly', label: 'Weekly', icon: <Iconify icon="tabler:calendar-week-filled" /> },
 ];
 
 // ----------------------------------------------------------------------
 export default function ReportView() {
   const tabs = useTabs('revenue');
+
+  const [all, setAll] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+
+  const { loading: generateLoading, generateWeeklyReport } = useGenerateWeeklyReports();
 
   const handleTabChange = (event: any, newValue: any) => {
     tabs.onChange(event, newValue);
@@ -67,6 +74,32 @@ export default function ReportView() {
     setLoading(false);
   };
 
+  const handleGenerate = async () => {
+    try {
+      setAll(false);
+      const { data } = await generateWeeklyReport({ variables: { data: { all: false } } });
+
+      if (data) {
+        toast.success('Successfully generated!');
+      }
+    } catch (error) {
+      console.log('error => ', error);
+    }
+  };
+
+  const handleReGenerate = async () => {
+    try {
+      setAll(true);
+      const { data } = await generateWeeklyReport({ variables: { data: { all: true } } });
+
+      if (data) {
+        toast.success('Successfully generated!');
+      }
+    } catch (error) {
+      console.log('error => ', error);
+    }
+  };
+
   return (
     <>
       <Helmet>
@@ -80,16 +113,48 @@ export default function ReportView() {
             mb: { xs: 2, md: 3 },
           }}
           action={
-            <LoadingButton
-              variant="contained"
-              startIcon={<Iconify icon="uil:export" />}
-              loading={loading}
-              color="primary"
-              onClick={handleExport}
-              sx={{ mb: 1 }}
-            >
-              Export
-            </LoadingButton>
+            <>
+              {tabs.value === 'revenue' && (
+                <LoadingButton
+                  variant="contained"
+                  startIcon={<Iconify icon="uil:export" />}
+                  loading={loading}
+                  color="primary"
+                  onClick={handleExport}
+                  sx={{ mb: 1 }}
+                >
+                  Export
+                </LoadingButton>
+              )}
+              {tabs.value === 'weekly' && (
+                <Box
+                  display="grid"
+                  columnGap={2}
+                  sx={{ pr: 2, gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: '45% 55%' } }}
+                >
+                  <LoadingButton
+                    variant="contained"
+                    startIcon={<Iconify icon="fluent-mdl2:generate" />}
+                    loading={!all && generateLoading}
+                    color="primary"
+                    onClick={handleGenerate}
+                    sx={{ mb: 1 }}
+                  >
+                    Generate
+                  </LoadingButton>
+                  <LoadingButton
+                    variant="contained"
+                    startIcon={<Iconify icon="streamline:ai-generate-variation-spark" />}
+                    loading={all && generateLoading}
+                    color="primary"
+                    onClick={handleReGenerate}
+                    sx={{ mb: 1 }}
+                  >
+                    ReGenerate
+                  </LoadingButton>
+                </Box>
+              )}
+            </>
           }
         />
 

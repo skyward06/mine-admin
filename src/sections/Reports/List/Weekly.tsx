@@ -2,68 +2,31 @@ import type { ColDef } from '@ag-grid-community/core';
 import type { CustomCellRendererProps } from '@ag-grid-community/react';
 
 import dayjs from 'dayjs';
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useEffect } from 'react';
 
-import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
-import LoadingButton from '@mui/lab/LoadingButton';
 
-import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 import { useAgQuery as useQueryString } from 'src/routes/hooks';
 
 import { formatWeekNumber } from 'src/utils/format-time';
 import { parseFilterModel } from 'src/utils/parseFilter';
 
-import { DashboardContent } from 'src/layouts/dashboard';
-
 import { AgGrid } from 'src/components/AgGrid';
-import { toast } from 'src/components/SnackBar';
-import { Iconify } from 'src/components/Iconify';
-import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import { FileThumbnail } from 'src/components/FileThumbnail';
 
-import { useFetchWeeklyReports, useGenerateWeeklyReports } from '../useApollo';
+import { useFetchWeeklyReports } from '../useApollo';
 
 import type { WeeklyReport } from '../type';
 
 export default function WeeklyReports() {
-  const [all, setAll] = useState<boolean>(false);
-
   const [{ page = '1,50', sort = 'weekStartDate', filter }] = useQueryString();
 
   const graphQueryFilter = useMemo(() => parseFilterModel({}, filter), [filter]);
 
-  const { loading: generateLoading, generateWeeklyReport } = useGenerateWeeklyReports();
   const { loading, rowCount, weeklyReports: reports, fetchWeeklyReports } = useFetchWeeklyReports();
-
-  const handleGenerate = async () => {
-    try {
-      setAll(false);
-      const { data } = await generateWeeklyReport({ variables: { data: { all: false } } });
-
-      if (data) {
-        toast.success('Successfully generated!');
-      }
-    } catch (error) {
-      console.log('error => ', error);
-    }
-  };
-
-  const handleReGenerate = async () => {
-    try {
-      setAll(true);
-      const { data } = await generateWeeklyReport({ variables: { data: { all: true } } });
-
-      if (data) {
-        toast.success('Successfully generated!');
-      }
-    } catch (error) {
-      console.log('error => ', error);
-    }
-  };
 
   useEffect(() => {
     fetchWeeklyReports({ variables: { filter: graphQueryFilter, page, sort } });
