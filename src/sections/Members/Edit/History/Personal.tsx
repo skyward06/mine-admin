@@ -4,29 +4,38 @@ import { useParams } from 'react-router-dom';
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
+import Dialog from '@mui/material/Dialog';
 import Divider from '@mui/material/Divider';
+import MenuList from '@mui/material/MenuList';
+import MenuItem from '@mui/material/MenuItem';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
-import { formatID } from 'src/utils/helper';
 import { fCurrency } from 'src/utils/formatNumber';
 import { formatDate } from 'src/utils/format-time';
+import { formatID, customizeFullName } from 'src/utils/helper';
 
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
+import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
 import { useFetchMembers, useSendWelcomeEmail } from '../../useApollo';
 
 export const Personal = () => {
+  const copy = useBoolean();
+  const sign = useBoolean();
+
   const params = useParams();
   const router = useRouter();
-  const copy = useBoolean();
+  const popover = usePopover();
 
   const [children, setChildren] = useState<any>();
 
@@ -89,297 +98,388 @@ export const Personal = () => {
   }, [id]);
 
   return (
-    <Grid xl={12}>
-      <Card sx={{ mt: 2, p: 3 }}>
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          sx={{ pb: 2 }}
-          columnGap={2}
-          alignItems="center"
-        >
-          <Typography variant="subtitle1">{member?.fullName}</Typography>
-          <Stack direction="row">
-            <Typography variant="body2" sx={{ pt: 0.9 }}>
-              {formatID(member?.ID ?? '')}
-            </Typography>
-            <IconButton
-              color="success"
-              onClick={() => {
-                const searchParams = new URLSearchParams({ memberId: id ?? '' }).toString();
-                router.push(`${paths.dashboard.placement.root}?${searchParams}`);
-              }}
-            >
-              <Iconify icon="solar:eye-bold" />
-            </IconButton>
-            <IconButton color="success" onClick={copyAddress}>
-              <Iconify icon={copy.value ? 'ci:check' : 'bxs:copy'} />
-            </IconButton>
-            <IconButton color="success" onClick={sendEmail}>
-              <Iconify icon={loading ? 'line-md:loading-loop' : 'mingcute:send-plane-fill'} />
-            </IconButton>
-          </Stack>
-        </Stack>
-
-        <Stack>
-          <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
-            <Stack width={0.5}>
-              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                Username:
+    <>
+      <Grid xl={12}>
+        <Card sx={{ mt: 2, p: 3 }}>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            sx={{ pb: 2 }}
+            columnGap={2}
+            alignItems="center"
+          >
+            <Typography variant="subtitle1">{member?.fullName}</Typography>
+            <Stack direction="row">
+              <Typography variant="body2" sx={{ pt: 0.9 }}>
+                {formatID(member?.ID ?? '')}
               </Typography>
-            </Stack>
-            <Stack width={1}>
-              <Typography variant="body2">{member?.username}</Typography>
+
+              <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
+                <Iconify icon="eva:more-horizontal-fill" />
+              </IconButton>
             </Stack>
           </Stack>
 
-          <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
-            <Stack width={0.5}>
-              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                Sponsor:
-              </Typography>
+          <Stack>
+            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+              <Stack width={0.5}>
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                  Username:
+                </Typography>
+              </Stack>
+              <Stack width={1}>
+                <Typography variant="body2">{member?.username}</Typography>
+              </Stack>
             </Stack>
-            <Stack width={1}>
-              <Typography
-                variant="body2"
-                sx={{ color: '#00c869', cursor: 'pointer' }}
-                onClick={() => {
-                  router.push(paths.dashboard.members.edit(member?.sponsor?.id ?? ''));
-                  router.refresh();
-                }}
-              >
-                {member?.sponsor?.fullName}
-              </Typography>
-            </Stack>
-          </Stack>
 
-          <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
-            <Stack width={0.5}>
-              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                Email:
-              </Typography>
+            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+              <Stack width={0.5}>
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                  Sponsor:
+                </Typography>
+              </Stack>
+              <Stack width={1}>
+                <Typography
+                  variant="body2"
+                  sx={{ color: '#00c869', cursor: 'pointer' }}
+                  onClick={() => {
+                    router.push(paths.dashboard.members.edit(member?.sponsor?.id ?? ''));
+                    router.refresh();
+                  }}
+                >
+                  {member?.sponsor?.fullName}
+                </Typography>
+              </Stack>
             </Stack>
-            <Stack width={1}>
-              <Typography variant="body2">{member?.email}</Typography>
-            </Stack>
-          </Stack>
 
-          <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
-            <Stack width={0.5}>
-              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                Mobile:
-              </Typography>
+            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+              <Stack width={0.5}>
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                  Email:
+                </Typography>
+              </Stack>
+              <Stack width={1}>
+                <Typography variant="body2">{member?.email}</Typography>
+              </Stack>
             </Stack>
-            <Stack width={1}>
-              <Typography variant="body2">{member?.mobile}</Typography>
-            </Stack>
-          </Stack>
 
-          <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
-            <Stack width={0.5}>
-              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                Address:
-              </Typography>
+            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+              <Stack width={0.5}>
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                  Mobile:
+                </Typography>
+              </Stack>
+              <Stack width={1}>
+                <Typography variant="body2">{member?.mobile}</Typography>
+              </Stack>
             </Stack>
-            <Stack width={1}>
-              <Typography variant="body2">{member?.primaryAddress}</Typography>
-            </Stack>
-          </Stack>
 
-          <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
-            <Stack width={0.5}>
-              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                Address 2:
-              </Typography>
+            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+              <Stack width={0.5}>
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                  Address:
+                </Typography>
+              </Stack>
+              <Stack width={1}>
+                <Typography variant="body2">{member?.primaryAddress}</Typography>
+              </Stack>
             </Stack>
-            <Stack width={1}>
-              <Typography variant="body2">{member?.secondaryAddress}</Typography>
-            </Stack>
-          </Stack>
 
-          <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
-            <Stack width={0.5}>
-              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                City:
-              </Typography>
+            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+              <Stack width={0.5}>
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                  Address 2:
+                </Typography>
+              </Stack>
+              <Stack width={1}>
+                <Typography variant="body2">{member?.secondaryAddress}</Typography>
+              </Stack>
             </Stack>
-            <Stack width={1}>
-              <Typography variant="body2">{member?.city}</Typography>
-            </Stack>
-          </Stack>
 
-          <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
-            <Stack width={0.5}>
-              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                ZIP Code:
-              </Typography>
+            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+              <Stack width={0.5}>
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                  City:
+                </Typography>
+              </Stack>
+              <Stack width={1}>
+                <Typography variant="body2">{member?.city}</Typography>
+              </Stack>
             </Stack>
-            <Stack width={1}>
-              <Typography variant="body2">{member?.zipCode}</Typography>
-            </Stack>
-          </Stack>
 
-          <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
-            <Stack width={0.5}>
-              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                Country:
-              </Typography>
+            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+              <Stack width={0.5}>
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                  ZIP Code:
+                </Typography>
+              </Stack>
+              <Stack width={1}>
+                <Typography variant="body2">{member?.zipCode}</Typography>
+              </Stack>
             </Stack>
-            <Stack width={1}>
-              <Typography variant="body2">{member?.country}</Typography>
-            </Stack>
-          </Stack>
 
-          <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
-            <Stack width={0.5}>
-              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                State:
-              </Typography>
+            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+              <Stack width={0.5}>
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                  Country:
+                </Typography>
+              </Stack>
+              <Stack width={1}>
+                <Typography variant="body2">{member?.country}</Typography>
+              </Stack>
             </Stack>
-            <Stack width={1}>
-              <Typography variant="body2">{member?.state}</Typography>
-            </Stack>
-          </Stack>
 
-          <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
-            <Stack width={0.5}>
-              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                Asset ID:
-              </Typography>
+            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+              <Stack width={0.5}>
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                  State:
+                </Typography>
+              </Stack>
+              <Stack width={1}>
+                <Typography variant="body2">{member?.state}</Typography>
+              </Stack>
             </Stack>
-            <Stack width={1}>
-              <Typography variant="body2">{member?.assetId}</Typography>
-            </Stack>
-          </Stack>
 
-          <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
-            <Stack width={0.5}>
-              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                PromoCode:
-              </Typography>
+            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+              <Stack width={0.5}>
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                  Asset ID:
+                </Typography>
+              </Stack>
+              <Stack width={1}>
+                <Typography variant="body2">{member?.assetId}</Typography>
+              </Stack>
             </Stack>
-            <Stack width={1}>
-              <Typography variant="body2">{member?.promoCode}</Typography>
-            </Stack>
-          </Stack>
 
-          <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
-            <Stack width={0.5}>
-              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                Joined At:
-              </Typography>
+            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+              <Stack width={0.5}>
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                  PromoCode:
+                </Typography>
+              </Stack>
+              <Stack width={1}>
+                <Typography variant="body2">{member?.promoCode}</Typography>
+              </Stack>
             </Stack>
-            <Stack width={1}>
-              <Typography variant="body2">
-                {member?.createdAt ? formatDate(member.createdAt) : ''}
-              </Typography>
-            </Stack>
-          </Stack>
 
-          <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
-            <Stack width={0.5}>
-              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                Balance:
-              </Typography>
+            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+              <Stack width={0.5}>
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                  Joined At:
+                </Typography>
+              </Stack>
+              <Stack width={1}>
+                <Typography variant="body2">
+                  {member?.createdAt ? formatDate(member.createdAt) : ''}
+                </Typography>
+              </Stack>
             </Stack>
-            <Stack width={1}>
-              <Typography variant="body2">{fCurrency((member?.balance || 0) / 100)}</Typography>
+
+            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+              <Stack width={0.5}>
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                  Balance:
+                </Typography>
+              </Stack>
+              <Stack width={1}>
+                <Typography variant="body2">{fCurrency((member?.balance || 0) / 100)}</Typography>
+              </Stack>
+            </Stack>
+
+            <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
+
+            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+              <Stack width={0.5}>
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                  Group:
+                </Typography>
+              </Stack>
+              <Stack width={1}>
+                <Typography variant="body2">{member?.groupName}</Typography>
+              </Stack>
+            </Stack>
+
+            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+              <Stack width={0.5}>
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                  Team Strategy:
+                </Typography>
+              </Stack>
+              <Stack width={1}>
+                <Typography variant="body2">{member?.teamStrategy}</Typography>
+              </Stack>
+            </Stack>
+
+            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+              <Stack width={0.5}>
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                  Starting Points:
+                </Typography>
+              </Stack>
+              <Stack width={1}>
+                <Typography variant="body2">{`L${member?.commission?.begL ?? 0}, R${member?.commission?.begR ?? 0}`}</Typography>
+              </Stack>
+            </Stack>
+
+            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+              <Stack width={0.5}>
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                  New Points:
+                </Typography>
+              </Stack>
+              <Stack width={1}>
+                <Typography variant="body2">{`L${member?.commission?.newL ?? 0}, R${member?.commission?.newR ?? 0}`}</Typography>
+              </Stack>
+            </Stack>
+
+            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+              <Stack width={0.5}>
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                  Placement Parent:
+                </Typography>
+              </Stack>
+              <Stack width={1}>
+                <Typography variant="body2">{member?.placementParent?.fullName}</Typography>
+              </Stack>
+            </Stack>
+
+            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+              <Stack width={0.5}>
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                  Miner Left:
+                </Typography>
+              </Stack>
+              <Stack width={1}>
+                <Typography variant="body2">{children?.LEFT}</Typography>
+              </Stack>
+            </Stack>
+
+            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+              <Stack width={0.5}>
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                  Miner Right:
+                </Typography>
+              </Stack>
+              <Stack width={1}>
+                <Typography variant="body2">{children?.RIGHT}</Typography>
+              </Stack>
             </Stack>
           </Stack>
 
           <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
 
-          <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
-            <Stack width={0.5}>
-              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                Group:
-              </Typography>
-            </Stack>
-            <Stack width={1}>
-              <Typography variant="body2">{member?.groupName}</Typography>
-            </Stack>
+          <Stack sx={{ mt: 2 }}>
+            {member?.memberWallets?.map((item) => (
+              <Stack sx={{ pb: 1 }}>
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                  {item?.payout?.method}
+                </Typography>
+                <Typography variant="body2">{item?.address}</Typography>
+              </Stack>
+            ))}
           </Stack>
+        </Card>
+      </Grid>
 
-          <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
-            <Stack width={0.5}>
-              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                Team Strategy:
-              </Typography>
-            </Stack>
-            <Stack width={1}>
-              <Typography variant="body2">{member?.teamStrategy}</Typography>
-            </Stack>
-          </Stack>
+      <CustomPopover
+        open={popover.open}
+        anchorEl={popover.anchorEl}
+        onClose={popover.onClose}
+        slotProps={{ arrow: { placement: 'right-top' } }}
+      >
+        <MenuList>
+          <MenuItem
+            onClick={() => {
+              const searchParams = new URLSearchParams({ memberId: id ?? '' }).toString();
+              router.push(`${paths.dashboard.placement.root}?${searchParams}`);
+            }}
+          >
+            <Iconify icon="solar:eye-bold" color="#00cca4" />
+            Placement
+          </MenuItem>
+          <MenuItem onClick={copyAddress}>
+            <Iconify icon={copy.value ? 'ci:check' : 'bxs:copy'} color="#00cca4" />
+            Copy Address
+          </MenuItem>
+          <MenuItem onClick={sendEmail}>
+            <Iconify
+              icon={loading ? 'line-md:loading-loop' : 'mingcute:send-plane-fill'}
+              color="#00cca4"
+            />
+            Welcom Email
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              sign.onTrue();
+              popover.onClose();
 
-          <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
-            <Stack width={0.5}>
-              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                Starting Points:
-              </Typography>
-            </Stack>
-            <Stack width={1}>
-              <Typography variant="body2">{`L${member?.commission?.begL ?? 0}, R${member?.commission?.begR ?? 0}`}</Typography>
-            </Stack>
-          </Stack>
+              if (!member?.signupFormRequest) {
+                toast.warning('He has been added by the admin');
+              }
+            }}
+          >
+            <Iconify icon="heroicons:user-solid" color="#00cca4" />
+            Sign Up Info
+          </MenuItem>
+        </MenuList>
+      </CustomPopover>
 
-          <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
-            <Stack width={0.5}>
-              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                New Points:
-              </Typography>
-            </Stack>
-            <Stack width={1}>
-              <Typography variant="body2">{`L${member?.commission?.newL ?? 0}, R${member?.commission?.newR ?? 0}`}</Typography>
-            </Stack>
-          </Stack>
+      {member?.signupFormRequest && (
+        <Dialog open={sign.value} onClose={sign.onFalse} fullWidth maxWidth="md">
+          <DialogTitle>{customizeFullName(member?.fullName)}</DialogTitle>
 
-          <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
-            <Stack width={0.5}>
-              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                Placement Parent:
-              </Typography>
-            </Stack>
-            <Stack width={1}>
-              <Typography variant="body2">{member?.placementParent?.fullName}</Typography>
-            </Stack>
-          </Stack>
+          <Divider flexItem sx={{ borderStyle: 'dashed', mb: 2 }} />
 
-          <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
-            <Stack width={0.5}>
-              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                Miner Left:
-              </Typography>
-            </Stack>
-            <Stack width={1}>
-              <Typography variant="body2">{children?.LEFT}</Typography>
-            </Stack>
-          </Stack>
-
-          <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
-            <Stack width={0.5}>
-              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                Miner Right:
-              </Typography>
-            </Stack>
-            <Stack width={1}>
-              <Typography variant="body2">{children?.RIGHT}</Typography>
-            </Stack>
-          </Stack>
-        </Stack>
-
-        <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
-
-        <Stack sx={{ mt: 2 }}>
-          {member?.memberWallets?.map((item) => (
-            <Stack sx={{ pb: 1 }}>
-              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                {item?.payout?.method}
-              </Typography>
-              <Typography variant="body2">{item?.address}</Typography>
-            </Stack>
-          ))}
-        </Stack>
-      </Card>
-    </Grid>
+          <DialogContent sx={{ pb: 4 }}>
+            <Grid container spacing={1}>
+              <Grid md={2}>
+                <Typography fontWeight={700}>Email:</Typography>{' '}
+              </Grid>
+              <Grid md={10}>{member?.signupFormRequest.email}</Grid>
+              <Grid md={6} container>
+                <Grid md={12} container>
+                  <Grid md={4}>
+                    <Typography fontWeight={700}>Username:</Typography>{' '}
+                  </Grid>
+                  <Grid md={8}>{member?.signupFormRequest.username}</Grid>
+                </Grid>
+                <Grid md={12} container>
+                  <Grid md={4}>
+                    <Typography fontWeight={700}>Full Name:</Typography>{' '}
+                  </Grid>
+                  <Grid md={8}>{member?.signupFormRequest.fullName}</Grid>
+                </Grid>
+                <Grid md={12} container>
+                  <Grid md={4}>
+                    <Typography fontWeight={700}>Mobile Number:</Typography>{' '}
+                  </Grid>
+                  <Grid md={8}>{member?.signupFormRequest.mobile}</Grid>
+                </Grid>
+              </Grid>
+              <Grid md={6} container>
+                <Grid md={12} container>
+                  <Grid md={4}>
+                    <Typography fontWeight={700}>Sponsor:</Typography>{' '}
+                  </Grid>
+                  <Grid md={8}>{member?.signupFormRequest?.sponsorId}</Grid>
+                </Grid>
+                <Grid md={12} container>
+                  <Grid md={4}>
+                    <Typography fontWeight={700}>Package: </Typography>
+                  </Grid>
+                  <Grid md={8}>{member?.signupFormRequest?.package}</Grid>
+                </Grid>
+                <Grid md={12} container>
+                  <Grid md={4}>
+                    <Typography fontWeight={700}>Payment Method: </Typography>
+                  </Grid>
+                  <Grid md={8}>{member?.signupFormRequest.paymentMethod}</Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </DialogContent>
+        </Dialog>
+      )}
+    </>
   );
 };

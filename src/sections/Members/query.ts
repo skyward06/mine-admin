@@ -51,6 +51,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         teamStrategy
         teamReport
         placementPosition
+        signupFormRequest
         commission {
           begL
           begR
