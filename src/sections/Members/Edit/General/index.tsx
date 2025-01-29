@@ -249,7 +249,7 @@ export default function MemberGeneral({ currentMember }: Props) {
               <Field.Select name="promoCode" label="PromoCode">
                 {promos.map((option: Promo) => (
                   <MenuItem key={option.id} value={option.code}>
-                    {option.code}
+                    {option.description}
                   </MenuItem>
                 ))}
               </Field.Select>
