@@ -432,31 +432,19 @@ export const Personal = () => {
 
           <DialogContent sx={{ pb: 4 }}>
             <Grid container spacing={1}>
-              <Grid md={2}>
-                <Typography fontWeight={700}>Email:</Typography>{' '}
-              </Grid>
-              <Grid md={10}>{member?.signupFormRequest.email}</Grid>
               <Grid md={6} container>
+                <Grid md={12} container>
+                  <Grid md={4}>
+                    <Typography fontWeight={700}>Email:</Typography>{' '}
+                  </Grid>
+                  <Grid md={8}>{member?.signupFormRequest.email}</Grid>
+                </Grid>
                 <Grid md={12} container>
                   <Grid md={4}>
                     <Typography fontWeight={700}>Username:</Typography>{' '}
                   </Grid>
                   <Grid md={8}>{member?.signupFormRequest.username}</Grid>
                 </Grid>
-                <Grid md={12} container>
-                  <Grid md={4}>
-                    <Typography fontWeight={700}>Full Name:</Typography>{' '}
-                  </Grid>
-                  <Grid md={8}>{member?.signupFormRequest.fullName}</Grid>
-                </Grid>
-                <Grid md={12} container>
-                  <Grid md={4}>
-                    <Typography fontWeight={700}>Mobile Number:</Typography>{' '}
-                  </Grid>
-                  <Grid md={8}>{member?.signupFormRequest.mobile}</Grid>
-                </Grid>
-              </Grid>
-              <Grid md={6} container>
                 <Grid md={12} container>
                   <Grid md={4}>
                     <Typography fontWeight={700}>Sponsor:</Typography>{' '}
@@ -468,6 +456,26 @@ export const Personal = () => {
                     <Typography fontWeight={700}>Package: </Typography>
                   </Grid>
                   <Grid md={8}>{member?.signupFormRequest?.package}</Grid>
+                </Grid>
+              </Grid>
+              <Grid md={6} container>
+                <Grid md={12} container>
+                  <Grid md={4}>
+                    <Typography fontWeight={700}>Mobile:</Typography>{' '}
+                  </Grid>
+                  <Grid md={8}>{member?.signupFormRequest.mobile}</Grid>
+                </Grid>
+                <Grid md={12} container>
+                  <Grid md={4}>
+                    <Typography fontWeight={700}>Full Name:</Typography>{' '}
+                  </Grid>
+                  <Grid md={8}>{member?.signupFormRequest.fullName}</Grid>
+                </Grid>
+                <Grid md={12} container>
+                  <Grid md={4}>
+                    <Typography fontWeight={700}>Promo:</Typography>{' '}
+                  </Grid>
+                  <Grid md={8}>{member?.signupFormRequest.promoCode}</Grid>
                 </Grid>
                 <Grid md={12} container>
                   <Grid md={4}>
