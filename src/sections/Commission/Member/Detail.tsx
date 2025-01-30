@@ -25,7 +25,6 @@ import { CONFIG } from 'src/config';
 import { PREPAID_TYPE, EXPLORER_PATH, COMMISSION_TYPE } from 'src/consts';
 
 import { Form } from 'src/components/Form';
-import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 import { ScrollBar } from 'src/components/ScrollBar';
 import { EmptyContent } from 'src/components/EmptyContent';
@@ -44,7 +43,7 @@ interface Props {
 }
 
 export default function Detail({ open, row }: Props) {
-  const { id, status, member, proof, shortNote, commission } = row;
+  const { id, status, member, proof, shortNote } = row;
 
   const defaultValues = useMemo(
     () =>
@@ -72,10 +71,7 @@ export default function Detail({ open, row }: Props) {
   const noteEdit = useBoolean();
   const fileEdit = useBoolean();
   const linkEdit = useBoolean();
-  const commissionEdit = useBoolean();
 
-  const [bogo, setBogo] = useState<number>(0);
-  const [cash, setCash] = useState<number>(0);
   const [note, setNote] = useState<any>();
   const [files, setFiles] = useState<any>();
 
@@ -86,19 +82,6 @@ export default function Detail({ open, row }: Props) {
 
     if (noteEdit.value) {
       await updateCommission({ variables: { data: { id, note } } });
-    }
-  };
-
-  const saveCommission = async () => {
-    commissionEdit.onToggle();
-
-    if (commissionEdit.value) {
-      if (commission !== bogo + cash) {
-        toast.error('The sum of Bogo and Cash must equal the total amount');
-        return;
-      }
-
-      await updateCommission({ variables: { data: { id, bogo, cash } } });
     }
   };
 
@@ -136,11 +119,6 @@ export default function Detail({ open, row }: Props) {
     setNote(proof?.note);
     setFiles(proof?.files);
   }, [proof?.note, proof?.files]);
-
-  useEffect(() => {
-    setBogo(row.bogo);
-    setCash(row.cash);
-  }, [row]);
 
   return (
     <Drawer
@@ -191,41 +169,6 @@ export default function Detail({ open, row }: Props) {
             <TextField size="small" value={note} onChange={(e) => setNote(e.target.value)} />
           ) : (
             <Typography variant="body2">{note}</Typography>
-          )}
-
-          <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
-
-          <Stack direction="row" justifyContent="space-between">
-            <Typography variant="subtitle1">Commission - {commission}</Typography>
-            <IconButton onClick={saveCommission}>
-              <Iconify
-                icon={commissionEdit.value ? 'mage:check-circle-fill' : 'solar:pen-2-bold'}
-              />
-            </IconButton>
-          </Stack>
-
-          {commissionEdit.value ? (
-            <Stack direction="row" spacing={1}>
-              <TextField
-                label="Bogo"
-                type="number"
-                size="small"
-                value={bogo}
-                onChange={(e) => setBogo(Number(e.target.value))}
-              />
-              <TextField
-                label="Cash"
-                type="number"
-                size="small"
-                value={cash}
-                onChange={(e) => setCash(Number(e.target.value))}
-              />
-            </Stack>
-          ) : (
-            <Stack direction="row" spacing={3}>
-              <Typography>Bogo: {bogo}</Typography>
-              <Typography>Cash: {cash}</Typography>
-            </Stack>
           )}
 
           <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
