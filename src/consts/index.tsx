@@ -117,6 +117,8 @@ export const COMMISSION_WAY = [
   { label: 'CASH', value: 'Cash' },
 ];
 
+export const BALANCE_TYPE = ['Payment', 'Commission'];
+
 export enum State {
   Approved = 'Approved',
   Draft = 'Draft',
