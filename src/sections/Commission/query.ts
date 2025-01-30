@@ -21,7 +21,6 @@ export const FETCH_COMMISSION_QUERY = gql(/* GraphQL */ `
         commission
         status
         shortNote
-        splitWay
         proof {
           createdAt
           updatedAt
