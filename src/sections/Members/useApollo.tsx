@@ -1,15 +1,10 @@
 import { useRef, useMemo } from 'react';
-import { useQuery, useMutation, useLazyQuery } from '@apollo/client';
-
-import { useAgQuery as useQueryString } from 'src/routes/hooks';
-
-import { parseFilterModel } from 'src/utils/parseFilter';
+import { useMutation, useLazyQuery } from '@apollo/client';
 
 import { CALCULATE_COMMISSION_PREVIEW } from '../Commission/query';
 import {
   UPDATE_MEMBER,
   APPROVE_MEMBER,
-  FETCH_BALANCES,
   MOVE_TO_GRAVEYARD,
   SEND_WELCOME_EMAIL,
   FETCH_MEMBERS_QUERY,
@@ -140,33 +135,4 @@ export function useMoveToGraveyard() {
   });
 
   return { loading, data, error, moveToGraveyard };
-}
-
-export function useFetchBalances() {
-  const [{ page = '1,50', sort = 'date', filter }] = useQueryString();
-
-  const graphQueryFilter = useMemo(() => parseFilterModel({}, filter), [filter]);
-
-  const { loading, data, called } = useQuery(FETCH_BALANCES, {
-    variables: { filter: graphQueryFilter, page, sort },
-  });
-
-  const rowCountRef = useRef(data?.balances.total ?? 0);
-
-  const rowCount = useMemo(() => {
-    const newTotal = data?.balances.total ?? undefined;
-
-    if (newTotal !== undefined) {
-      rowCountRef.current = newTotal;
-    }
-
-    return rowCountRef.current;
-  }, [data]);
-
-  return {
-    called,
-    loading,
-    rowCount,
-    balances: data?.balances.balances ?? [],
-  };
 }

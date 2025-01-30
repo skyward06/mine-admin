@@ -382,27 +382,6 @@ export const SEND_WELCOME_EMAIL = gql(/* GraphQL */ `
   }
 `);
 
-export const FETCH_BALANCES = gql(/* GraphQL */ `
-  query Balances($sort: String, $page: String, $filter: JSONObject) {
-    balances(sort: $sort, page: $page, filter: $filter) {
-      balances {
-        createdAt
-        updatedAt
-        deletedAt
-        id
-        date
-        type
-        note
-        amountInCents
-        memberId
-        extra1
-        extra2
-      }
-      total
-    }
-  }
-`);
-
 export const MOVE_TO_GRAVEYARD = gql(/* GraphQL */ `
   mutation MoveToGraveyard($data: IDInput!) {
     moveToGraveyard(data: $data) {
