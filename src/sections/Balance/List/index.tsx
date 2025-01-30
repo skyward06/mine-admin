@@ -6,28 +6,26 @@ import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
 import Card from '@mui/material/Card';
+import Button from '@mui/material/Button';
 
 import { paths } from 'src/routes/paths';
-import { useParams, useAgQuery } from 'src/routes/hooks';
+import { useRouter } from 'src/routes/hooks';
 
 import { formatID } from 'src/utils/helper';
 import { formatDate } from 'src/utils/format-time';
 
+import { DashboardContent } from 'src/layouts/dashboard';
+
 import { AgGrid } from 'src/components/AgGrid';
+import { Breadcrumbs } from 'src/components/Breadcrumbs';
 
 import { useFetchBalances } from 'src/sections/Balance/List/useApollo';
 
-type BalanceTableDataType = Omit<Balance, 'member' | 'memberId'>;
+type BalanceTableDataType = Omit<Balance, 'memberId'>;
 
 export default function BalanceList() {
-  const params = useParams();
-  const [query, { setFilter }] = useAgQuery();
-
-  if (!query.filter) {
-    setFilter({ memberId: params.id });
-  }
-
   const { loading, rowCount, balances } = useFetchBalances();
+  const router = useRouter();
 
   const colDefs = useMemo<ColDef<BalanceTableDataType>[]>(
     () => [
@@ -46,6 +44,15 @@ export default function BalanceList() {
         initialSort: 'desc',
         cellRenderer: ({ data }: CustomCellRendererProps<BalanceTableDataType>) =>
           formatDate(data?.date),
+      },
+      {
+        field: 'member.username',
+        headerName: 'Miner',
+        width: 200,
+        filter: 'agTextColumnFilter',
+        resizable: true,
+        editable: false,
+        filterParams: { buttons: ['reset'] } as ITextFilterParams,
       },
       {
         field: 'type',
@@ -100,20 +107,35 @@ export default function BalanceList() {
   );
 
   return (
-    <Card
-      sx={{
-        flexGrow: 1,
-        display: 'flex',
-        overflow: 'hidden',
-      }}
-    >
-      <AgGrid<BalanceTableDataType>
-        gridKey="miner-balance-list"
-        loading={loading}
-        rowData={balances}
-        columnDefs={colDefs}
-        totalRowCount={rowCount}
+    <DashboardContent>
+      <Breadcrumbs
+        heading="Balance"
+        links={[{ name: 'Balance', href: paths.dashboard.balance.root }, { name: 'All' }]}
+        action={
+          <Button variant="contained" onClick={() => router.push(paths.dashboard.balance.new)}>
+            Pay Miner
+          </Button>
+        }
+        sx={{
+          mb: { xs: 1, md: 2 },
+        }}
       />
-    </Card>
+
+      <Card
+        sx={{
+          flexGrow: 1,
+          display: 'flex',
+          overflow: 'hidden',
+        }}
+      >
+        <AgGrid<BalanceTableDataType>
+          gridKey="balance-list"
+          loading={loading}
+          rowData={balances}
+          columnDefs={colDefs}
+          totalRowCount={rowCount}
+        />
+      </Card>
+    </DashboardContent>
   );
 }

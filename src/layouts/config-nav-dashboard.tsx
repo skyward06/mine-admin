@@ -75,6 +75,7 @@ export const navData = [
       { title: 'Sale', path: paths.dashboard.sales.root, icon: ICONS.sale },
       { title: 'Placement', path: paths.dashboard.placement.root, icon: ICONS.diagram },
       { title: 'Commission', path: paths.dashboard.commission.root, icon: ICONS.bonus },
+      { title: 'Balance', path: paths.dashboard.balance.root, icon: ICONS.prepaid },
       { title: 'Proof', path: paths.dashboard.proof.root, icon: ICONS.proof },
       {
         title: 'Group Settings',
@@ -106,11 +107,6 @@ export const navData = [
       { title: 'Promos', path: paths.dashboard.promos.root, icon: ICONS.promo },
       { title: 'Reward', path: paths.dashboard.reward.root, icon: ICONS.reward },
       { title: 'Sponsor', path: paths.dashboard.sponsor.root, icon: ICONS.sponsor },
-      {
-        title: 'Prepayment',
-        path: paths.dashboard.prepaidCommission.root,
-        icon: ICONS.prepaid,
-      },
       { title: 'Calculator', path: paths.calculator.root, icon: ICONS.calculator },
       { title: 'Report', path: paths.dashboard.report.root, icon: ICONS.report },
     ],

@@ -13,6 +13,7 @@ const ROOTS = {
   PLACEMENT: '/placement',
   PROOF: '/proof',
   PREPAID_COMMISSION: '/prepaid-commission',
+  BALANCE: '/balance',
   COMMISSION: '/commission',
   CALCULATOR: '/calculator',
   REWARD: '/reward',
@@ -69,6 +70,10 @@ export const paths = {
       root: ROOTS.PREPAID_COMMISSION,
       edit: (id: string) => `${ROOTS.PREPAID_COMMISSION}/${id}`,
       new: `${ROOTS.PREPAID_COMMISSION}/new`,
+    },
+    balance: {
+      root: ROOTS.BALANCE,
+      new: `${ROOTS.BALANCE}/new`,
     },
     commission: {
       root: ROOTS.COMMISSION,
