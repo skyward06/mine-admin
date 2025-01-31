@@ -14,6 +14,7 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 
 import Item from './item';
+import HowTo from './HowTo';
 
 export default function Resource() {
   const [data, setData] = useState<any[]>([]);
@@ -25,8 +26,9 @@ export default function Resource() {
   }`;
 
   const TABS = data.map((item) => ({ value: item.title, label: item.title }));
+  const initial = [{ value: 'howTo', label: 'How To' }];
 
-  const tabs = useTabs('Zoom Calls');
+  const tabs = useTabs('howTo');
 
   useEffect(() => {
     client
@@ -52,12 +54,12 @@ export default function Resource() {
         />
 
         <Tabs value={tabs.value} onChange={tabs.onChange} sx={{ mb: { xs: 2, md: 3 } }}>
-          {TABS.map((tab) => (
+          {[...initial, ...TABS].map((tab) => (
             <Tab key={tab.value} label={tab.label} value={tab.value} />
           ))}
         </Tabs>
 
-        <Item title={tabs.value} />
+        {tabs.value === 'howTo' ? <HowTo /> : <Item title={tabs.value} />}
       </DashboardContent>
     </>
   );
