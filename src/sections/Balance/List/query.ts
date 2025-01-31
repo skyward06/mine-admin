@@ -38,6 +38,20 @@ export const FETCH_BALANCES = gql(/* GraphQL */ `
   }
 `);
 
+export const FETCH_BALANCES_BY_MEMBER = gql(/* GraphQL */ `
+  query BalancesByMember($sort: String, $page: String, $filter: JSONObject) {
+    balancesByMember(sort: $sort, page: $page, filter: $filter) {
+      balances {
+        id
+        username
+        fullName
+        balance
+      }
+      total
+    }
+  }
+`);
+
 export const CREATE_BALANCE = gql(/* GraphQL */ `
   mutation AddBalance($data: AddBalanceInput!) {
     addBalance(data: $data) {

@@ -10,8 +10,6 @@ export const FETCH_COMMISSION_QUERY = gql(/* GraphQL */ `
         weekStartDate
         begL
         begR
-        bogo
-        cash
         newL
         newR
         maxL

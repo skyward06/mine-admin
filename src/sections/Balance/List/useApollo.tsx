@@ -5,7 +5,7 @@ import { useAgQuery as useQueryString } from 'src/routes/hooks';
 
 import { parseFilterModel } from 'src/utils/parseFilter';
 
-import { CREATE_BALANCE, FETCH_BALANCES } from './query';
+import { CREATE_BALANCE, FETCH_BALANCES, FETCH_BALANCES_BY_MEMBER } from './query';
 
 export function useFetchBalances() {
   const [{ page = '1,50', sort = 'date,createdAt', filter }] = useQueryString();
@@ -33,6 +33,35 @@ export function useFetchBalances() {
     loading,
     rowCount,
     balances: data?.balances.balances ?? [],
+  };
+}
+
+export function useFetchBalancesByMember() {
+  const [{ page = '1,50', sort = 'balance', filter }] = useQueryString();
+
+  const graphQueryFilter = useMemo(() => parseFilterModel({}, filter), [filter]);
+
+  const { loading, data, called } = useQuery(FETCH_BALANCES_BY_MEMBER, {
+    variables: { filter: graphQueryFilter, page, sort },
+  });
+
+  const rowCountRef = useRef(data?.balancesByMember.total ?? 0);
+
+  const rowCount = useMemo(() => {
+    const newTotal = data?.balancesByMember.total ?? undefined;
+
+    if (newTotal !== undefined) {
+      rowCountRef.current = newTotal;
+    }
+
+    return rowCountRef.current;
+  }, [data]);
+
+  return {
+    called,
+    loading,
+    rowCount,
+    balances: data?.balancesByMember.balances ?? [],
   };
 }
 
