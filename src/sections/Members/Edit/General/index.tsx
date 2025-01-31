@@ -2,9 +2,9 @@ import states from 'states-us';
 import countries from 'country-list';
 import isEqual from 'lodash/isEqual';
 import { useForm } from 'react-hook-form';
-import { useMemo, useState, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ApolloError, useMutation } from '@apollo/client';
+import { useRef, useMemo, useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -29,9 +29,9 @@ import { useFetchPromos } from 'src/sections/Promos/useApollo';
 
 import TXCWallets from './txcWallets';
 import OtherWallets from './otherWallets';
-import { UPDATE_MEMBER } from '../../query';
 import { Schema, type SchemaType } from './schema';
 import { getWallets, hasDuplicates } from './helper';
+import { UPDATE_MEMBER, APPROVE_MEMBER } from '../../query';
 
 // ----------------------------------------------------------------------
 
@@ -55,7 +55,10 @@ export default function MemberGeneral({ currentMember }: Props) {
   const [lastName, setLastName] = useState<string>(last);
 
   const [submit, { loading }] = useMutation(UPDATE_MEMBER);
+  const [approve] = useMutation(APPROVE_MEMBER);
   const { promos, fetchPromos } = useFetchPromos();
+
+  const ref = useRef<boolean>(false);
 
   const defaultValues = useMemo(() => {
     const { data } = Schema.safeParse({ ...currentMember, txcWallets, otherWallets });
@@ -134,6 +137,16 @@ export default function MemberGeneral({ currentMember }: Props) {
             },
           },
         });
+
+        if (ref.current) {
+          await approve({
+            variables: {
+              data: {
+                id: currentMember.id,
+              },
+            },
+          });
+        }
 
         toast.success('Update success!');
 
@@ -285,10 +298,28 @@ export default function MemberGeneral({ currentMember }: Props) {
         </Grid>
       </Grid>
 
-      <Stack alignItems="flex-start" sx={{ mt: 2 }}>
-        <LoadingButton type="submit" variant="contained" loading={loading}>
+      <Stack alignItems="flex-start" flexDirection="row" spacing={2} sx={{ mt: 2 }}>
+        <LoadingButton
+          type="submit"
+          variant="contained"
+          loading={loading && !ref.current}
+          disabled={loading && ref.current}
+        >
           Save Changes
         </LoadingButton>
+        {!currentMember.status && currentMember.allowState === 'PENDING' && (
+          <LoadingButton
+            variant="contained"
+            loading={loading && ref.current}
+            onClick={async () => {
+              ref.current = true;
+              await onSubmit();
+            }}
+            disabled={loading && !ref.current}
+          >
+            Save and Approve
+          </LoadingButton>
+        )}
       </Stack>
     </Form>
   );
