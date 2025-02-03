@@ -28,7 +28,12 @@ import { Iconify } from 'src/components/Iconify';
 import { ConfirmDialog } from 'src/components/Dialog';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
-import { useApproveMember, useUpdatePassword, useMoveToGraveyard } from '../useApollo';
+import {
+  useApproveMember,
+  useUpdatePassword,
+  useMoveToGraveyard,
+  useVerifyMemberEmail,
+} from '../useApollo';
 
 // ----------------------------------------------------------------------
 
@@ -75,6 +80,7 @@ export default function MemberTableRow({
     sales,
   } = row;
 
+  const { verifyMemberEmail } = useVerifyMemberEmail();
   const { approveMember } = useApproveMember();
   const { moveToGraveyard } = useMoveToGraveyard();
   const { loading, updatePassword } = useUpdatePassword();
@@ -130,6 +136,19 @@ export default function MemberTableRow({
     }
   };
 
+  const handleVerifyEmail = async () => {
+    try {
+      const { data } = await verifyMemberEmail({ variables: { data: { id } } });
+
+      if (data) {
+        toast.success('Successfully verified!');
+        popover.onClose();
+      }
+    } catch (error) {
+      console.error('Error: ', error);
+    }
+  };
+
   return (
     <>
       <TableRow hover selected={selected}>
@@ -180,11 +199,6 @@ export default function MemberTableRow({
 
         <TableCell sx={{ whiteSpace: 'nowrap' }}>
           <Stack direction="row" columnGap={1}>
-            {!emailVerified && (
-              <Label variant="soft" color="error">
-                Email Unverified
-              </Label>
-            )}
             {allowState === 'APPROVED' && (
               <Label variant="soft" color="success">
                 Approved
@@ -198,6 +212,11 @@ export default function MemberTableRow({
             {allowState === 'GRAVEYARD' && (
               <Label variant="soft" color="error">
                 Graveyard
+              </Label>
+            )}
+            {!emailVerified && (
+              <Label variant="soft" color="error">
+                Email Unverified
               </Label>
             )}
           </Stack>
@@ -295,6 +314,10 @@ export default function MemberTableRow({
                 <MenuItem onClick={copyAddress}>
                   <Iconify icon={copy.value ? 'ci:check' : 'bxs:copy'} color="green" />
                   Copy Address
+                </MenuItem>
+                <MenuItem onClick={handleVerifyEmail}>
+                  <Iconify icon="mdi:email-verified" color="green" />
+                  Verify Email
                 </MenuItem>
               </MenuList>
             </CustomPopover>

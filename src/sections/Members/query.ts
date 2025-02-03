@@ -390,3 +390,12 @@ export const MOVE_TO_GRAVEYARD = gql(/* GraphQL */ `
     }
   }
 `);
+
+export const VERIFY_MEMBER_EMAIL = gql(/* GraphQL */ `
+  mutation VerifyMemberEmail($data: IDInput!) {
+    verifyMemberEmail(data: $data) {
+      message
+      result
+    }
+  }
+`);

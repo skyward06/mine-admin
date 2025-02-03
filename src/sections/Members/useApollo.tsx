@@ -8,6 +8,7 @@ import {
   MOVE_TO_GRAVEYARD,
   SEND_WELCOME_EMAIL,
   FETCH_MEMBERS_QUERY,
+  VERIFY_MEMBER_EMAIL,
   REMOVE_MEMBER_QUERY,
   UPDATE_PASSWORD_QUERY,
   REMOVE_MEMBER_PLACEMENT,
@@ -135,4 +136,12 @@ export function useMoveToGraveyard() {
   });
 
   return { loading, data, error, moveToGraveyard };
+}
+
+export function useVerifyMemberEmail() {
+  const [verifyMemberEmail, { loading, data, error }] = useMutation(VERIFY_MEMBER_EMAIL, {
+    refetchQueries: ['FetchMembers', 'FetchMemberStats'],
+  });
+
+  return { loading, data, error, verifyMemberEmail };
 }

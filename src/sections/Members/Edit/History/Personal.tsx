@@ -27,7 +27,7 @@ import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
-import { useFetchMembers, useSendWelcomeEmail } from '../../useApollo';
+import { useFetchMembers, useSendWelcomeEmail, useVerifyMemberEmail } from '../../useApollo';
 
 export const Personal = () => {
   const copy = useBoolean();
@@ -42,6 +42,7 @@ export const Personal = () => {
   const { id } = params;
 
   const { members, fetchMembers } = useFetchMembers();
+  const { verifyMemberEmail } = useVerifyMemberEmail();
   const { loading, sendWelcomeEmail } = useSendWelcomeEmail();
 
   const member = members[0];
@@ -83,6 +84,19 @@ export const Personal = () => {
     }
   };
 
+  const handleVerifyEmail = async () => {
+    try {
+      const { data } = await verifyMemberEmail({ variables: { data: { id: member.id } } });
+
+      if (data) {
+        toast.success('Successfully verified!');
+        popover.onClose();
+      }
+    } catch (error) {
+      console.error('Error: ', error);
+    }
+  };
+
   useEffect(() => {
     setChildren(
       member?.placementChildren?.reduce(
@@ -108,7 +122,12 @@ export const Personal = () => {
             columnGap={2}
             alignItems="center"
           >
-            <Typography variant="subtitle1">{member?.fullName}</Typography>
+            <Stack direction="row" spacing={1}>
+              <Typography variant="subtitle1">{member?.fullName}</Typography>
+              {member?.emailVerified && (
+                <Iconify icon="pajamas:partner-verified" color="green" sx={{ mt: 0.1 }} />
+              )}
+            </Stack>
             <Stack direction="row">
               <Typography variant="body2" sx={{ pt: 0.9 }}>
                 {formatID(member?.ID ?? '')}
@@ -420,6 +439,10 @@ export const Personal = () => {
           >
             <Iconify icon="heroicons:user-solid" color="#00cca4" />
             Sign Up Info
+          </MenuItem>
+          <MenuItem onClick={handleVerifyEmail}>
+            <Iconify icon="mdi:email-verified" color="#00cca4" />
+            Verify Email
           </MenuItem>
         </MenuList>
       </CustomPopover>
