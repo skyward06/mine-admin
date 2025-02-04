@@ -162,7 +162,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           packageId
           isMetal
           paymentMethod
-          freeShareSponsor
+          sponsorCnt
           proof {
             createdAt
             updatedAt

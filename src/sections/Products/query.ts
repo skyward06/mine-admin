@@ -25,7 +25,7 @@ export const FETCH_PACKAGES_QUERY = gql(/* GraphQL */ `
           orderedAt
           packageId
           paymentMethod
-          freeShareSponsor
+          sponsorCnt
           proof {
             createdAt
             updatedAt
