@@ -472,7 +472,7 @@ export const Personal = () => {
                   <Grid md={4}>
                     <Typography fontWeight={700}>Sponsor:</Typography>{' '}
                   </Grid>
-                  <Grid md={8}>{member?.signupFormRequest?.sponsorId}</Grid>
+                  <Grid md={8}>{member?.signupFormRequest?.sponsorUserId}</Grid>
                 </Grid>
                 <Grid md={12} container>
                   <Grid md={4}>
