@@ -61,7 +61,7 @@ export default function SaleListView() {
         cellRenderer: ({ data }: CustomCellRendererProps<Sale>) => (
           <Stack direction="row" columnGap={1} sx={{ alignItems: 'center' }}>
             {formatID(data?.ID ?? '', 'S')}
-            {!!data!.freeShareSponsor && (
+            {data!.sponsorCnt > 0 && (
               <Label variant="soft" color="success">
                 Free
               </Label>
