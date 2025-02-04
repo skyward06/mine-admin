@@ -40,6 +40,8 @@ export const parseType = (proofType: ProofType): string => {
       return 'Promotion';
     case ProofType.Sale:
       return 'Sale';
+    case ProofType.Transactionprocessing:
+      return 'Transaction Processing';
     default:
       return proofType;
   }
