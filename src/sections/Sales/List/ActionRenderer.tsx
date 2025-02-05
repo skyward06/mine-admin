@@ -40,6 +40,7 @@ export const ActionRender = memo(
       packageId: '',
       paymentMethod: '',
       status: true,
+      isMetal: false,
       freeShareSale: false,
       orderedAt: new Date(),
     };

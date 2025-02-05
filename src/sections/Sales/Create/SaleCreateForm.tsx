@@ -184,7 +184,10 @@ export default function SaleCreateForm() {
               <Field.Text name="note" label="Note" />
 
               {isShow.value && (
-                <SearchMiner setMemberId={setToMemberId} label="Peer to Peer Miner" />
+                <>
+                  <SearchMiner setMemberId={setToMemberId} label="Peer to Peer Miner" />
+                  <Field.Switch name="isMetal" label="Metal Peer Payment" sx={{ mt: { md: 1 } }} />
+                </>
               )}
             </Box>
 

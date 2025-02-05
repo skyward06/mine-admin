@@ -16,6 +16,7 @@ export type Sale = {
   package?: Package | null;
   statisticsSales?: Array<StatisticsSale> | null;
   status: boolean;
+  isMetal: boolean;
   freeShareSale: boolean;
   orderedAt: any;
   createdAt?: any | null;
