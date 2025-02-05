@@ -17,7 +17,6 @@ import { Iconify } from 'src/components/Iconify';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 
 import Revenue from './Revenue';
-import BalanceList from './Balance';
 import WeeklyReports from './Weekly';
 import OnepointMemberListView from './OnePointAway';
 import { useGenerateWeeklyReports } from '../useApollo';
@@ -30,7 +29,6 @@ const TABS = [
     icon: <Iconify icon="f7:hand-point-right-fill" />,
   },
   { value: 'weekly', label: 'Weekly', icon: <Iconify icon="tabler:calendar-week-filled" /> },
-  { value: 'balance', label: 'Balance', icon: <Iconify icon="bx:transfer" /> },
 ];
 
 // ----------------------------------------------------------------------
@@ -171,8 +169,6 @@ export default function ReportView() {
         {tabs.value === 'onePointAway' && <OnepointMemberListView />}
 
         {tabs.value === 'weekly' && <WeeklyReports />}
-
-        {tabs.value === 'balance' && <BalanceList />}
       </DashboardContent>
     </>
   );

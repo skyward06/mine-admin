@@ -92,6 +92,7 @@ export const navData = [
   {
     subheader: 'Addition',
     items: [
+      { title: 'Promos', path: paths.dashboard.promos.root, icon: ICONS.promo },
       { title: 'Product', path: paths.dashboard.products.root, icon: ICONS.package },
       { title: 'Payment Method', path: paths.dashboard.payment.root, icon: ICONS.payment },
     ],
@@ -103,12 +104,11 @@ export const navData = [
   {
     subheader: 'Services',
     items: [
+      { title: 'Report', path: paths.dashboard.report.root, icon: ICONS.report },
       { title: 'Resource', path: paths.dashboard.resource.root, icon: ICONS.folder },
-      { title: 'Promos', path: paths.dashboard.promos.root, icon: ICONS.promo },
       { title: 'Reward', path: paths.dashboard.reward.root, icon: ICONS.reward },
       { title: 'Sponsor', path: paths.dashboard.sponsor.root, icon: ICONS.sponsor },
       { title: 'Calculator', path: paths.calculator.root, icon: ICONS.calculator },
-      { title: 'Report', path: paths.dashboard.report.root, icon: ICONS.report },
     ],
   },
 ];

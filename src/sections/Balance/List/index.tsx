@@ -1,141 +1,71 @@
-import type { Balance } from 'src/__generated__/graphql';
-import type { CustomCellRendererProps } from '@ag-grid-community/react';
-import type { ColDef, IDateFilterParams, ITextFilterParams } from '@ag-grid-community/core';
+import { Helmet } from 'react-helmet-async';
 
-import { useMemo } from 'react';
-import { Link } from 'react-router-dom';
-
-import Card from '@mui/material/Card';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
 import Button from '@mui/material/Button';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { formatID } from 'src/utils/helper';
-import { formatDate } from 'src/utils/format-time';
+import { useTabs } from 'src/hooks/use-tabs';
 
+import { CONFIG } from 'src/config';
 import { DashboardContent } from 'src/layouts/dashboard';
 
-import { AgGrid } from 'src/components/AgGrid';
+import { Iconify } from 'src/components/Iconify';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 
-import { useFetchBalances } from 'src/sections/Balance/List/useApollo';
+import BalanceList from './Balance';
+import Transactions from './Transactions';
 
-type BalanceTableDataType = Omit<Balance, 'memberId'>;
+const TABS = [
+  {
+    value: 'transactions',
+    label: 'Transactions',
+    icon: <Iconify icon="tabler:transaction-dollar" />,
+  },
+  { value: 'balance', label: 'Balance', icon: <Iconify icon="bx:transfer" /> },
+];
 
-export default function BalanceList() {
-  const { loading, rowCount, balances } = useFetchBalances();
+// ----------------------------------------------------------------------
+export default function BalanceView() {
+  const tabs = useTabs('transactions');
+
   const router = useRouter();
 
-  const colDefs = useMemo<ColDef<BalanceTableDataType>[]>(
-    () => [
-      {
-        field: 'date',
-        headerName: 'Date',
-        width: 160,
-        filter: 'agDateColumnFilter',
-        filterParams: {
-          buttons: ['reset'],
-          defaultOption: 'greaterThan',
-          filterOptions: ['greaterThan', 'lessThan', 'equals', 'notEqual'],
-        } as IDateFilterParams,
-        resizable: true,
-        editable: false,
-        initialSort: 'desc',
-        cellRenderer: ({ data }: CustomCellRendererProps<BalanceTableDataType>) =>
-          formatDate(data?.date),
-      },
-      {
-        field: 'member.username',
-        headerName: 'Miner',
-        width: 200,
-        filter: 'agTextColumnFilter',
-        resizable: true,
-        editable: false,
-        filterParams: { buttons: ['reset'] } as ITextFilterParams,
-      },
-      {
-        field: 'type',
-        headerName: 'Type',
-        width: 200,
-        filter: 'agTextColumnFilter',
-        resizable: true,
-        editable: false,
-        filterParams: { buttons: ['reset'] } as ITextFilterParams,
-      },
-      {
-        field: 'amountInCents',
-        headerName: 'Amount ($)',
-        width: 150,
-        filter: 'agNumberColumnFilter',
-        resizable: true,
-        editable: false,
-        cellClass: 'ag-number-cell ',
-        cellRenderer: ({ data }: CustomCellRendererProps<BalanceTableDataType>) =>
-          data && data.amountInCents > 0
-            ? `+${(data.amountInCents / 100).toFixed(2)}`
-            : ((data?.amountInCents ?? 0) / 100).toFixed(2),
-      },
-      {
-        field: 'note',
-        headerName: 'Note',
-        flex: 1,
-        filter: 'agTextColumnFilter',
-        resizable: true,
-        editable: false,
-        filterParams: { buttons: ['reset'] } as ITextFilterParams,
-      },
-      {
-        field: 'extra2',
-        headerName: 'Reference',
-        width: 150,
-        filter: 'agTextColumnFilter',
-        resizable: true,
-        editable: false,
-        filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellRenderer: ({ data }: CustomCellRendererProps<BalanceTableDataType>) =>
-          data?.extra1 === 'Sale' ? (
-            <Link to={paths.dashboard.sales.edit(formatID(data.extra2?.split('-')[1]!, 'S'))}>
-              {data?.extra2}
-            </Link>
-          ) : (
-            data?.extra2
-          ),
-      },
-    ],
-    []
-  );
+  const handleTabChange = (event: any, newValue: any) => {
+    tabs.onChange(event, newValue);
+  };
 
   return (
-    <DashboardContent>
-      <Breadcrumbs
-        heading="Balance"
-        links={[{ name: 'Balance', href: paths.dashboard.balance.root }, { name: 'All' }]}
-        action={
-          <Button variant="contained" onClick={() => router.push(paths.dashboard.balance.new)}>
-            Pay Miner
-          </Button>
-        }
-        sx={{
-          mb: { xs: 1, md: 2 },
-        }}
-      />
-
-      <Card
-        sx={{
-          flexGrow: 1,
-          display: 'flex',
-          overflow: 'hidden',
-        }}
-      >
-        <AgGrid<BalanceTableDataType>
-          gridKey="balance-list"
-          loading={loading}
-          rowData={balances}
-          columnDefs={colDefs}
-          totalRowCount={rowCount}
+    <>
+      <Helmet>
+        <title>{`${CONFIG.site.name}: Balance`}</title>
+      </Helmet>
+      <DashboardContent>
+        <Breadcrumbs
+          heading="Balance"
+          links={[{ name: 'Balance' }, { name: 'List' }]}
+          sx={{
+            mb: { xs: 2, md: 3 },
+          }}
+          action={
+            <Button variant="contained" onClick={() => router.push(paths.dashboard.balance.new)}>
+              Pay Miner
+            </Button>
+          }
         />
-      </Card>
-    </DashboardContent>
+
+        <Tabs value={tabs.value} onChange={handleTabChange} sx={{ mb: { xs: 2, md: 3 } }}>
+          {TABS.map((tab) => (
+            <Tab key={tab.value} label={tab.label} icon={tab.icon} value={tab.value} />
+          ))}
+        </Tabs>
+
+        {tabs.value === 'balance' && <BalanceList />}
+
+        {tabs.value === 'transactions' && <Transactions />}
+      </DashboardContent>
+    </>
   );
 }
