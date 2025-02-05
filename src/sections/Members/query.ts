@@ -160,6 +160,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           ID
           memberId
           packageId
+          isMetal
           paymentMethod
           freeShareSale
           proof {

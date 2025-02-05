@@ -21,6 +21,7 @@ export const FETCH_PACKAGES_QUERY = gql(/* GraphQL */ `
           ID
           status
           memberId
+          isMetal
           orderedAt
           packageId
           paymentMethod
