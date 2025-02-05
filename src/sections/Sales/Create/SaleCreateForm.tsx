@@ -53,6 +53,7 @@ export default function SaleCreateForm() {
       note: '',
       memberId: '',
       status: 1,
+      isMetal: false,
     }),
     []
   );
