@@ -26,7 +26,7 @@ interface Props {
 }
 
 export default function Detail({ open, row }: Props) {
-  const { member, freeShareSale, package: product, status, proof, updatedAt } = row;
+  const { member, freeShareSale, package: product, status, proof, isMetal, updatedAt } = row;
 
   return (
     <Drawer
@@ -107,6 +107,13 @@ export default function Detail({ open, row }: Props) {
               Free Share:
             </Typography>
             <Typography variant="body2">{freeShareSale ? 'Yes' : 'No'}</Typography>
+          </Stack>
+
+          <Stack direction="row" columnGap={2}>
+            <Typography variant="body2" color="text.disabled">
+              Metal Peer Payment:
+            </Typography>
+            <Typography variant="body2">{isMetal ? 'Yes' : 'No'}</Typography>
           </Stack>
 
           <Stack direction="row" columnGap={2}>
