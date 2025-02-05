@@ -68,6 +68,7 @@ export default function PlacementListViewWithReactFlowProvider({ currentMember }
     }
 
     filterObj.sponsorId = currentMember.id;
+    filterObj.allowState = 'APPROVED';
 
     return filterObj;
     // eslint-disable-next-line react-hooks/exhaustive-deps
