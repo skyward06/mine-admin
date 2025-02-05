@@ -4,16 +4,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
 import LoadingButton from '@mui/lab/LoadingButton';
-import Autocomplete from '@mui/material/Autocomplete';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
 import { today, customizeDate } from 'src/utils/format-time';
-
-import { BALANCE_TYPE } from 'src/consts';
 
 import { Form, Field } from 'src/components/Form';
 import SearchMiner from 'src/components/SearchMiner';
@@ -22,7 +18,6 @@ import { Schema, type SchemaType } from './schema';
 import { useCreateBalance } from '../List/useApollo';
 
 export default function EditForm() {
-  const [type, setType] = useState<string>('');
   const [toMemberId, setToMemberId] = useState<string>();
 
   const router = useRouter();
@@ -49,7 +44,7 @@ export default function EditForm() {
             amountInCents: -newData.amountInCents * 100,
             date: customizeDate(newData.date),
             memberId: toMemberId ?? '',
-            type,
+            type: 'CASH',
           },
         },
       });
@@ -74,7 +69,7 @@ export default function EditForm() {
         }}
       >
         <Field.Text type="number" name="amountInCents" label="Amount" />
-        <Autocomplete
+        {/* <Autocomplete
           freeSolo
           fullWidth
           options={BALANCE_TYPE}
@@ -89,7 +84,7 @@ export default function EditForm() {
           )}
           onChange={(_, value: any) => setType(value)}
           onInputChange={(_, value: any) => setType(value)}
-        />
+        /> */}
         <SearchMiner setMemberId={setToMemberId} label="Miner" />
         <Field.DatePicker name="date" label="Date" format="YYYY-MM-DD" />
         <Field.Text name="note" label="Note" />
