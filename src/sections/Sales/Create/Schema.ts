@@ -7,7 +7,7 @@ export const Schema = zod.object({
   paymentMethod: zod.string({ required_error: 'Payment Method is required' }),
   status: zod.number({ required_error: 'Status is required' }).default(1),
   note: zod.string().optional().nullable(),
-  isMetal: zod.boolean().default(true),
+  isMetal: zod.boolean().default(false),
   reflinks: zod
     .array(
       zod.object({
