@@ -1,11 +1,14 @@
 import axios from 'axios';
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 import { Helmet } from 'react-helmet-async';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import LoadingButton from '@mui/lab/LoadingButton';
+
+import { paths } from 'src/routes/paths';
 
 import { useTabs } from 'src/hooks/use-tabs';
 
@@ -36,6 +39,7 @@ const TABS = [
 // ----------------------------------------------------------------------
 export default function ReportView() {
   const tabs = useTabs('revenue');
+  const navigate = useNavigate();
 
   const [all, setAll] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -44,6 +48,7 @@ export default function ReportView() {
 
   const handleTabChange = (event: any, newValue: any) => {
     tabs.onChange(event, newValue);
+    navigate(`${paths.dashboard.report.root}`, { replace: true });
   };
 
   const handleExport = async () => {
