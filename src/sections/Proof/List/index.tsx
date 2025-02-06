@@ -51,7 +51,7 @@ export default function ProofListView() {
         width: 200,
         filter: 'agMultiColumnFilter',
         filterParams: {
-          values: Object.values(ProofType).filter((value) => value !== ProofType.Prepay),
+          values: Object.values(ProofType),
           valueFormatter: (params: any) => parseType(params.value),
           defaultToNothingSelected: true,
         } as ISetFilterParams<Proof>,

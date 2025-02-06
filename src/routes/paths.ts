@@ -12,7 +12,6 @@ const ROOTS = {
   SPONSOR: '/sponsor',
   PLACEMENT: '/placement',
   PROOF: '/proof',
-  PREPAID_COMMISSION: '/prepaid-commission',
   BALANCE: '/balance',
   COMMISSION: '/commission',
   CALCULATOR: '/calculator',
@@ -65,11 +64,6 @@ export const paths = {
       root: ROOTS.PRODUCTS,
       edit: (id: string) => `${ROOTS.PRODUCTS}/${id}`,
       new: `${ROOTS.PRODUCTS}/new`,
-    },
-    prepaidCommission: {
-      root: ROOTS.PREPAID_COMMISSION,
-      edit: (id: string) => `${ROOTS.PREPAID_COMMISSION}/${id}`,
-      new: `${ROOTS.PREPAID_COMMISSION}/new`,
     },
     balance: {
       root: ROOTS.BALANCE,

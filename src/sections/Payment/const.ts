@@ -1,6 +1,6 @@
 import type { ProofType } from 'src/__generated__/graphql';
 
-export type PROOF_KEY_VALUE_TYPE = Exclude<ProofType, ProofType.Prepay>;
+export type PROOF_KEY_VALUE_TYPE = ProofType;
 
 export const PROOF_VALUES: Record<PROOF_KEY_VALUE_TYPE, string> = {
   SALE: 'SALE',

@@ -11,7 +11,6 @@ export const Schema = zod.object({
   orderedAt: zod.string({ required_error: 'Ordered At is required' }),
   type: zod.enum([
     ProofType.Sale,
-    ProofType.Prepay,
     ProofType.Profit,
     ProofType.Overhead,
     ProofType.Promotion,
@@ -26,6 +25,7 @@ export const Schema = zod.object({
     ProofType.Developersprotocol,
     ProofType.Administrationsalary,
     ProofType.Marketingtxcpromotion,
+    ProofType.Transactionprocessing,
     ProofType.Developersintegrations,
     ProofType.Minefacilityrentmortage,
     ProofType.Marketingminetxcpromotion,

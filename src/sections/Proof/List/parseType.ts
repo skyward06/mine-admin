@@ -32,8 +32,6 @@ export const parseType = (proofType: ProofType): string => {
       return 'Mine New Equipment';
     case ProofType.Overhead:
       return 'Overhead';
-    case ProofType.Prepay:
-      return 'Prepay';
     case ProofType.Profit:
       return 'Profit';
     case ProofType.Promotion:

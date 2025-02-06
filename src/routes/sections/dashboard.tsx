@@ -83,12 +83,6 @@ const PaymentEditPage = lazy(() => import('src/pages/Payment/Edit'));
 // ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
-const PrepaidCommissionPage = lazy(() => import('src/pages/PrepaidCommission/List'));
-const PrepaidCommissionCreatePage = lazy(() => import('src/pages/PrepaidCommission/Create'));
-const PrepaidCommissionEditPage = lazy(() => import('src/pages/PrepaidCommission/Edit'));
-// ----------------------------------------------------------------------
-
-// ----------------------------------------------------------------------
 const BalancePage = lazy(() => import('src/pages/Balance/List'));
 const BalanceCreatePage = lazy(() => import('src/pages/Balance/Create'));
 // ----------------------------------------------------------------------
@@ -203,14 +197,6 @@ export const dashboardRoutes = [
           { index: true, element: <PaymentListPage /> },
           { path: 'new', element: <PaymentCreatePage /> },
           { path: ':id', element: <PaymentEditPage /> },
-        ],
-      },
-      {
-        path: 'prepaid-commission',
-        children: [
-          { index: true, element: <PrepaidCommissionPage /> },
-          { path: 'new', element: <PrepaidCommissionCreatePage /> },
-          { path: ':id', element: <PrepaidCommissionEditPage /> },
         ],
       },
       {

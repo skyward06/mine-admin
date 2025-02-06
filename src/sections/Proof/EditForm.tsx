@@ -21,8 +21,8 @@ import { ProofType } from 'src/__generated__/graphql';
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
 
+import LinkForm from './LinkForm';
 import { Schema, type SchemaType } from './schema';
-import LinkForm from '../PrepaidCommission/LinkForm';
 import { useCreateProof, useUpdateProof } from './useApollo';
 import { FileManagerNewFolderDialog } from '../Sales/Upload';
 import { FileRecentItem } from '../Sales/Edit/FileRecentItem';
