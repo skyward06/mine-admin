@@ -29,6 +29,22 @@ export default function MetalListView() {
       {
         field: 'member.username',
         headerName: 'Name',
+        width: 300,
+        filter: 'agTextColumnFilter',
+        resizable: true,
+        editable: false,
+        filterParams: { buttons: ['reset'] } as ITextFilterParams,
+        cellRenderer: ({ data }: CustomCellRendererProps<Sale>) => (
+          <CustomName
+            id={data?.memberId ?? ''}
+            username={data?.member?.username ?? ''}
+            email={data?.member?.email ?? ''}
+          />
+        ),
+      },
+      {
+        field: 'toMember.username',
+        headerName: 'Peer',
         flex: 1,
         filter: 'agTextColumnFilter',
         resizable: true,
