@@ -30,6 +30,7 @@ export const FETCH_REVENUES_QUERY = gql(/* GraphQL */ `
         username
         fullName
         commission
+        cashCommissionPotential
       }
       total
     }
