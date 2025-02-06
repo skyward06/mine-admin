@@ -67,7 +67,7 @@ export default function Revenue() {
       },
       {
         field: 'cashCommissionPotential',
-        headerName: 'Cash Potential (cent)',
+        headerName: 'Cash Potential',
         width: 200,
         filter: 'agNumberColumnFilter',
         resizable: true,
