@@ -66,6 +66,17 @@ export default function Revenue() {
           fCurrency(data?.commission),
       },
       {
+        field: 'cashCommissionPotential',
+        headerName: 'Cash Potential (cent)',
+        width: 200,
+        filter: 'agNumberColumnFilter',
+        resizable: true,
+        editable: false,
+        cellClass: 'ag-number-cell ag-cell-center',
+        cellRenderer: ({ data }: CustomCellRendererProps<MemberInOutRevenue>) =>
+          fCurrency((data?.cashCommissionPotential ?? 0) / 100),
+      },
+      {
         field: 'amount',
         headerName: 'Sponsored ($)',
         width: 200,

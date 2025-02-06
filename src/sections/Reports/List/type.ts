@@ -6,4 +6,5 @@ export type MemberInOutRevenue = {
   username: string;
   fullName: string;
   commission: number;
+  cashCommissionPotential: number;
 };

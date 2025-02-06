@@ -1,5 +1,3 @@
-import type { Member } from 'src/__generated__/graphql';
-
 import { useParams } from 'react-router-dom';
 import { useQuery as useGraphQuery } from '@apollo/client';
 
@@ -12,11 +10,7 @@ import { fNumber } from 'src/utils/formatNumber';
 
 import { FETCH_MEMBER_HISTORY } from '../../query';
 
-interface Props {
-  currentMember: Member;
-}
-
-export const OverView = ({ currentMember }: Props) => {
+export const OverView = () => {
   const { id } = useParams();
 
   const { data } = useGraphQuery(FETCH_MEMBER_HISTORY, {
@@ -39,9 +33,9 @@ export const OverView = ({ currentMember }: Props) => {
         </Stack>
 
         <Stack width={0.6}>
-          {currentMember.point}
+          {fNumber((data?.memberOverview.cashCommissionPotential ?? 0) / 100)}
           <Box component="span" sx={{ color: 'text.secondary', typography: 'body2' }}>
-            Total Point
+            Cash Potentital
           </Box>
         </Stack>
 
