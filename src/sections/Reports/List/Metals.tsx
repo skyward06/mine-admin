@@ -52,9 +52,9 @@ export default function MetalListView() {
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
         cellRenderer: ({ data }: CustomCellRendererProps<Sale>) => (
           <CustomName
-            id={data?.memberId ?? ''}
-            username={data?.member?.username ?? ''}
-            email={data?.member?.email ?? ''}
+            id={data?.toMember?.id ?? ''}
+            username={data?.toMember?.username ?? ''}
+            email={data?.toMember?.email ?? ''}
           />
         ),
       },
