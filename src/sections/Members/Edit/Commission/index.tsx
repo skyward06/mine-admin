@@ -41,7 +41,6 @@ const STATUS_OPTIONS: { value: CommissionRole; label: string; color: LabelColor 
   { value: 'pending', label: 'Pending', color: 'info' },
   { value: 'approved', label: 'Approved', color: 'warning' },
   { value: 'declined', label: 'Declined', color: 'error' },
-  { value: 'paid', label: 'Paid', color: 'success' },
 ];
 
 const TABLE_HEAD = [
@@ -91,8 +90,6 @@ export default function Commission({ currentMember }: Props) {
       filterObj.status = COMMISSION_TYPE.PENDING.label;
     } else if (filter.status === 'approved') {
       filterObj.status = COMMISSION_TYPE.APPROVED.label;
-    } else if (filter.status === 'paid') {
-      filterObj.status = COMMISSION_TYPE.PAID.label;
     } else if (filter.status === 'declined') {
       filterObj.status = COMMISSION_TYPE.DECLINED.label;
     }
@@ -126,11 +123,6 @@ export default function Commission({ currentMember }: Props) {
         },
         pendingFilter: {
           status: COMMISSION_TYPE.PENDING.label,
-          memberId: currentMember.id,
-          commission: { gt: 0 },
-        },
-        paidFilter: {
-          status: COMMISSION_TYPE.PAID.label,
           memberId: currentMember.id,
           commission: { gt: 0 },
         },

@@ -1,6 +1,6 @@
 // ----------------------------------------------------------------------
 
-export type CommissionRole = 'pending' | 'approved' | 'paid' | 'declined';
+export type CommissionRole = 'pending' | 'approved' | 'declined';
 
 export type ICommissionTableFilters = {
   search: string;

@@ -66,7 +66,7 @@ export default function AllSelected({ status, table, popover }: Props) {
         <MenuList>
           <MenuItem
             sx={{ color: 'secondary.main' }}
-            disabled={status === 'approved' || status === 'paid'}
+            disabled={status === 'approved'}
             onClick={async () => {
               await updateCommissionStatus({
                 variables: { data: { ids: table.selected, status: ConfirmationStatus.Approved } },
@@ -87,30 +87,8 @@ export default function AllSelected({ status, table, popover }: Props) {
             Approve
           </MenuItem>
           <MenuItem
-            sx={{ color: 'success.main' }}
-            disabled={status === 'paid'}
-            onClick={async () => {
-              await updateCommissionStatus({
-                variables: { data: { ids: table.selected, status: ConfirmationStatus.Paid } },
-              });
-
-              if (data) {
-                toast.message('Successfully Paid!');
-              } else {
-                toast.message('Something went wrong!');
-              }
-
-              all.onFalse();
-              popover.onClose();
-              table.setSelected([]);
-            }}
-          >
-            <Iconify icon="ic:round-paid" />
-            Pay
-          </MenuItem>
-          <MenuItem
             sx={{ color: 'error.main' }}
-            disabled={status === 'declined' || status === 'paid'}
+            disabled={status === 'declined'}
             onClick={async () => {
               await updateCommissionStatus({
                 variables: { data: { ids: table.selected, status: ConfirmationStatus.Declined } },

@@ -184,25 +184,6 @@ export default function CommissionTableRow({ row, selected, onSelectRow }: Props
             Approve
           </MenuItem>
           <MenuItem
-            sx={{ color: 'success.main' }}
-            disabled={status === COMMISSION_TYPE.PAID.label}
-            onClick={async () => {
-              const { data } = await updateCommission({
-                variables: { data: { id, status: commission_type.Paid } },
-              });
-
-              if (data) {
-                toast.message('Successfully Paid!');
-              } else {
-                toast.message('Something went wrong!');
-              }
-            }}
-            // onClick={open.onTrue}
-          >
-            <Iconify icon="ic:round-paid" />
-            Pay
-          </MenuItem>
-          <MenuItem
             sx={{ color: 'error.main' }}
             disabled={
               status === COMMISSION_TYPE.DECLINED.label || status === COMMISSION_TYPE.PAID.label
