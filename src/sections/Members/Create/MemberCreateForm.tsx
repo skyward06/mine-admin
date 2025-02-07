@@ -128,7 +128,7 @@ export default function MemberCreateForm() {
           });
 
           reset();
-          toast.success('Create success!');
+          toast.success('Miner created sccuessfully!');
           router.push(paths.dashboard.members.root);
         } else {
           toast.warning('Sum of percent muse be 100%');

@@ -86,7 +86,7 @@ export default function SaleCreateForm() {
       });
 
       reset();
-      toast.success('Create success!');
+      toast.success('Sale created successfully!');
       router.push(paths.dashboard.sales.root);
     } catch (err) {
       if (err instanceof ApolloError) {

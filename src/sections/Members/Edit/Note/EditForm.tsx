@@ -34,7 +34,7 @@ export default function EditForm({ open, memberId, current }: Props) {
   const defaultValues = useMemo(
     () =>
       current
-        ? (NewNoteSchema.safeParse(current).data ?? ({} as NewNoteSchemaType))
+        ? NewNoteSchema.safeParse(current).data ?? ({} as NewNoteSchemaType)
         : { description: '' },
     [current]
   );
@@ -60,7 +60,7 @@ export default function EditForm({ open, memberId, current }: Props) {
       }
 
       reset();
-      toast.success('Create success!');
+      toast.success('Miner updated successfully!');
       open.onFalse();
     } catch (err) {
       if (err instanceof ApolloError) {

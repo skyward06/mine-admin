@@ -75,7 +75,7 @@ export default function UserCreateForm() {
         },
       });
       reset();
-      toast.success('Create success!');
+      toast.success('Admin created sccuessfully!');
       router.push(paths.dashboard.user.root);
     } catch (err) {
       if (err instanceof ApolloError) {
