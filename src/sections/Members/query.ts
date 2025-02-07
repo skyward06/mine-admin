@@ -272,15 +272,12 @@ export const FETCH_PLACEMENT_MEMBERS_QUERY = gql(/* GraphQL */ `
 `);
 
 export const CREATE_MEMBER = gql(/* GraphQL */ `
-  mutation CreateMember($data: CreateMemberInput!) {
+  mutation createMember($data: CreateMemberInput!) {
     createMember(data: $data) {
-      username
-      fullName
-      email
-      mobile
-      primaryAddress
-      secondaryAddress
-      assetId
+      id
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);
@@ -343,15 +340,21 @@ export const UPDATE_PASSWORD_QUERY = gql(/* GraphQL */ `
   mutation UpdatePasswordMemberById($data: UpdateMemberPasswordInputById!) {
     updatePasswordMemberById(data: $data) {
       id
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);
 
 export const REMOVE_MEMBER_QUERY = gql(/* GraphQL */ `
-  mutation RemoveMember($data: IDInput!) {
+  mutation removeMember($data: IDInput!) {
     removeMember(data: $data) {
       message
       result
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);
@@ -369,7 +372,6 @@ export const APPROVE_MEMBER = gql(/* GraphQL */ `
   mutation Mutation($data: IDInput!) {
     approveMember(data: $data) {
       message
-      result
       result
     }
   }
