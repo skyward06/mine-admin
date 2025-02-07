@@ -26,7 +26,7 @@ interface Props {
 }
 
 export default function Detail({ open, row }: Props) {
-  const { member, freeShareSale, package: product, status, proof, isMetal, updatedAt } = row;
+  const { member, sponsorCnt, package: product, status, proof, isMetal, updatedAt } = row;
 
   return (
     <Drawer

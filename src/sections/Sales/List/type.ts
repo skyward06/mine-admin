@@ -17,7 +17,7 @@ export type Sale = {
   statisticsSales?: Array<StatisticsSale> | null;
   status: boolean;
   isMetal: boolean;
-  freeShareSale: boolean;
+  sponsorCnt: number;
   orderedAt: any;
   createdAt?: any | null;
   updatedAt?: any | null;

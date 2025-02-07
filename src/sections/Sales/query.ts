@@ -9,7 +9,7 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
         memberId
         packageId
         isMetal
-        freeShareSale
+        sponsorCnt
         createdAt
         updatedAt
         proof {

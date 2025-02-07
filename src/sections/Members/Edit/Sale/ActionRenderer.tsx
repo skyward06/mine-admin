@@ -24,7 +24,7 @@ export const ActionRender = memo(
       paymentMethod: '',
       status: true,
       isMetal: false,
-      freeShareSale: false,
+      sponsorCnt: 0,
       orderedAt: new Date(),
     };
 
