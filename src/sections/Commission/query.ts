@@ -83,7 +83,6 @@ export const FETCH_COMMISSION_STATS_QUERY = gql(/* GraphQL */ `
     $allFilter: JSONObject
     $pendingFilter: JSONObject
     $declinedFilter: JSONObject
-    $paidFilter: JSONObject
     $approvedFilter: JSONObject
   ) {
     all: weeklyCommissions(filter: $allFilter) {
@@ -93,9 +92,6 @@ export const FETCH_COMMISSION_STATS_QUERY = gql(/* GraphQL */ `
       total
     }
     declined: weeklyCommissions(filter: $declinedFilter) {
-      total
-    }
-    paid: weeklyCommissions(filter: $paidFilter) {
       total
     }
     approved: weeklyCommissions(filter: $approvedFilter) {
