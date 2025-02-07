@@ -70,25 +70,34 @@ export const FETCH_PACKAGES_STATS_QUERY = gql(/* GraphQL */ `
 `);
 
 export const CREATE_PACKAGE = gql(/* GraphQL */ `
-  mutation CreatePackage($data: CreatePackageInput!) {
+  mutation createPackage($data: CreatePackageInput!) {
     createPackage(data: $data) {
       id
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);
 
 export const UPDATE_PACKAGE = gql(/* GraphQL */ `
-  mutation UpdatePackage($data: UpdatePackageInput!) {
+  mutation updatePackage($data: UpdatePackageInput!) {
     updatePackage(data: $data) {
       id
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);
 
 export const REMOVE_PACKAGE = gql(/* GraphQL */ `
-  mutation RemovePackage($data: IDInput!) {
+  mutation removePackage($data: IDInput!) {
     removePackage(data: $data) {
       result
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);

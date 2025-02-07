@@ -19,16 +19,19 @@ export const FETCH_NOTIFICATION_QUERY = gql(/* GraphQL */ `
 `);
 
 export const SET_READ_NOTIFICATIONS = gql(/* GraphQL */ `
-  mutation SetReadNotification($data: IDInput!) {
+  mutation setReadNotification($data: IDInput!) {
     setReadNotification(data: $data) {
       message
       result
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);
 
 export const READ_ALL_NOTIFICATIONS = gql(/* GraphQL */ `
-  mutation SetReadAllNotifications {
+  mutation setReadAllNotifications {
     setReadAllNotifications {
       count
     }

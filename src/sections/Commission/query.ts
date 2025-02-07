@@ -116,35 +116,47 @@ export const FETCH_COMMISSION_BY_WEEK = gql(/* GraphQL */ `
 `);
 
 export const UPDATE_COMMISSION = gql(/* GraphQL */ `
-  mutation UpdateCommission($data: WeeklyCommissionUpdateInput!) {
+  mutation updateCommission($data: WeeklyCommissionUpdateInput!) {
     updateCommission(data: $data) {
       ID
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);
 
 export const UPDATE_COMMISSION_STATUS = gql(/* GraphQL */ `
-  mutation UpdateCommissionsStatus($data: WeeklyCommissionsStatusUpdateInput!) {
+  mutation updateCommissionsStatus($data: WeeklyCommissionsStatusUpdateInput!) {
     updateCommissionsStatus(data: $data) {
       message
       result
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);
 
 export const CALCULATE_COMMISSION_PREVIEW = gql(/* GraphQL */ `
-  mutation CalculatePreview {
+  mutation calculatePreview {
     calculatePreview {
       message
       result
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);
 
 export const UPDATE_COMMISSION_NOTE = gql(/* GraphQL */ `
-  mutation UpdateCommissionShortNote($data: WeeklyCommissionNoteInput!) {
+  mutation updateCommissionShortNote($data: WeeklyCommissionNoteInput!) {
     updateCommissionShortNote(data: $data) {
       ID
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);

@@ -33,25 +33,34 @@ export const FETCH_GROUP_SETTINGS = gql(/* GraphQL */ `
 `);
 
 export const CREATE_GROUP_SETTINGS = gql(/* GraphQL */ `
-  mutation CreateGroupSetting($data: CreateGroupSettingInput!) {
+  mutation createGroupSetting($data: CreateGroupSettingInput!) {
     createGroupSetting(data: $data) {
       id
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);
 
 export const UPDATE_GROUP_SETTINGS = gql(/* GraphQL */ `
-  mutation UpdateGroupSetting($data: UpdateGroupSettingInput!) {
+  mutation updateGroupSetting($data: UpdateGroupSettingInput!) {
     updateGroupSetting(data: $data) {
       id
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);
 
 export const REMOVE_GROUP_SETTINGS = gql(/* GraphQL */ `
-  mutation RemoveGroupSetting($data: IDInput!) {
+  mutation removeGroupSetting($data: IDInput!) {
     removeGroupSetting(data: $data) {
       id
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);

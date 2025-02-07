@@ -22,12 +22,12 @@ import { Form, Field } from 'src/components/Form';
 // ----------------------------------------------------------------------
 
 const CREATE_USER = gql(/* GraphQL */ `
-  mutation CreateAdmin($data: CreateAdminInput!) {
+  mutation createAdmin($data: CreateAdminInput!) {
     createAdmin(data: $data) {
       id
-      username
-      email
-      createdAt
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);

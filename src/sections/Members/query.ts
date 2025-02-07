@@ -283,13 +283,12 @@ export const CREATE_MEMBER = gql(/* GraphQL */ `
 `);
 
 export const UPDATE_MEMBER = gql(/* GraphQL */ `
-  mutation UpdateMember($data: UpdateMemberInput!) {
+  mutation updateMember($data: UpdateMemberInput!) {
     updateMember(data: $data) {
       id
-      mobile
-      primaryAddress
-      secondaryAddress
-      assetId
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);
@@ -337,7 +336,7 @@ export const FETCH_PAYOUTS_QUERY = gql(/* GraphQL */ `
 `);
 
 export const UPDATE_PASSWORD_QUERY = gql(/* GraphQL */ `
-  mutation UpdatePasswordMemberById($data: UpdateMemberPasswordInputById!) {
+  mutation updatePasswordMemberById($data: UpdateMemberPasswordInputById!) {
     updatePasswordMemberById(data: $data) {
       id
       frontAction {
@@ -360,46 +359,61 @@ export const REMOVE_MEMBER_QUERY = gql(/* GraphQL */ `
 `);
 
 export const REMOVE_MEMBER_PLACEMENT = gql(/* GraphQL */ `
-  mutation RemoveCompleteMemberPlacement($data: IDInput!) {
+  mutation removeCompleteMemberPlacement($data: IDInput!) {
     removeCompleteMemberPlacement(data: $data) {
       message
       result
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);
 
 export const APPROVE_MEMBER = gql(/* GraphQL */ `
-  mutation Mutation($data: IDInput!) {
+  mutation approveMember($data: IDInput!) {
     approveMember(data: $data) {
       message
       result
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);
 
 export const SEND_WELCOME_EMAIL = gql(/* GraphQL */ `
-  mutation SendWelcomeEmail($data: EmailInput!) {
+  mutation sendWelcomeEmail($data: EmailInput!) {
     sendWelcomeEmail(data: $data) {
       message
       result
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);
 
 export const MOVE_TO_GRAVEYARD = gql(/* GraphQL */ `
-  mutation MoveToGraveyard($data: IDInput!) {
+  mutation moveToGraveyard($data: IDInput!) {
     moveToGraveyard(data: $data) {
       message
       result
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);
 
 export const VERIFY_MEMBER_EMAIL = gql(/* GraphQL */ `
-  mutation VerifyMemberEmail($data: IDInput!) {
+  mutation verifyMemberEmail($data: IDInput!) {
     verifyMemberEmail(data: $data) {
       message
       result
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);

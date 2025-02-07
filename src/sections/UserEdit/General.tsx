@@ -35,12 +35,12 @@ type Props = {
 // ----------------------------------------------------------------------
 
 const UPDATE_USER = gql(/* GraphQL */ `
-  mutation UpdateAdmin($data: UpdateAdminInput!) {
+  mutation updateAdmin($data: UpdateAdminInput!) {
     updateAdmin(data: $data) {
       id
-      username
-      email
-      createdAt
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);

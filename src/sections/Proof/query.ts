@@ -35,26 +35,35 @@ export const FETCH_PROOF_QUERY = gql(/* GraphQL */ `
 `);
 
 export const CREATE_PROOF = gql(/* GraphQL */ `
-  mutation CreateProof($data: CreateProofInput!) {
+  mutation createProof($data: CreateProofInput!) {
     createProof(data: $data) {
       id
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);
 
 export const UPDATE_PROOF = gql(/* GraphQL */ `
-  mutation UpdateProof($data: UpdateProofByIDInput!) {
+  mutation updateProof($data: UpdateProofByIDInput!) {
     updateProof(data: $data) {
       id
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);
 
 export const REMOVE_PROOF = gql(/* GraphQL */ `
-  mutation RemoveProof($data: IDInput!) {
+  mutation removeProof($data: IDInput!) {
     removeProof(data: $data) {
       message
       result
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);

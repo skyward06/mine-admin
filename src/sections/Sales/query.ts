@@ -166,30 +166,34 @@ export const FETCH_SALES_STATS_QUERY = gql(/* GraphQL */ `
 `);
 
 export const CREATE_SALE = gql(/* GraphQL */ `
-  mutation CreateSale($data: CreateSaleInput!) {
+  mutation createSale($data: CreateSaleInput!) {
     createSale(data: $data) {
-      status
-      memberId
-      orderedAt
-      packageId
-      paymentMethod
+      id
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);
 
 export const UPDATE_SALE = gql(/* GraphQL */ `
-  mutation UpdateSale($data: UpdateSaleInput!) {
+  mutation updateSale($data: UpdateSaleInput!) {
     updateSale(data: $data) {
       id
-      status
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);
 
 export const REMOVE_SALE = gql(/* GraphQL */ `
-  mutation RemoveSale($data: IDInput!) {
+  mutation removeSale($data: IDInput!) {
     removeSale(data: $data) {
       result
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);

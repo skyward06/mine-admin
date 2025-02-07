@@ -22,26 +22,35 @@ export const FETCH_PAYMENT_QUERY = gql(/* GraphQL */ `
 `);
 
 export const CREATE_PAYMENT = gql(/* GraphQL */ `
-  mutation CreatePaymentMethod($data: CreatePaymentMethodInput!) {
+  mutation createPaymentMethod($data: CreatePaymentMethodInput!) {
     createPaymentMethod(data: $data) {
       id
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);
 
 export const UPDATE_PAYMENT = gql(/* GraphQL */ `
-  mutation UpdatePaymentMethod($data: UpdatePaymentMethodInput!) {
+  mutation updatePaymentMethod($data: UpdatePaymentMethodInput!) {
     updatePaymentMethod(data: $data) {
       id
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);
 
 export const REMOVE_PAYMENT = gql(/* GraphQL */ `
-  mutation RemovePaymentMethod($data: IDInput!) {
+  mutation removePaymentMethod($data: IDInput!) {
     removePaymentMethod(data: $data) {
       message
       result
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);

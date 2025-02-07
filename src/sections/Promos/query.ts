@@ -20,26 +20,35 @@ export const FETCH_PROMOS_QUERY = gql(/* GraphQL */ `
 `);
 
 export const CREATE_PROMO = gql(/* GraphQL */ `
-  mutation CreatePromo($data: CreatePromoInput!) {
+  mutation createPromo($data: CreatePromoInput!) {
     createPromo(data: $data) {
       id
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);
 
 export const UDPATE_PROMO = gql(/* GraphQL */ `
-  mutation UpdatePromo($data: UpdatePromoInput!) {
+  mutation updatePromo($data: UpdatePromoInput!) {
     updatePromo(data: $data) {
       id
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);
 
 export const REMOVE_PROMO = gql(/* GraphQL */ `
-  mutation RemovePromo($data: IDInput!) {
+  mutation removePromo($data: IDInput!) {
     removePromo(data: $data) {
       message
       result
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);

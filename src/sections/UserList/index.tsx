@@ -105,7 +105,7 @@ const FETCH_USERS_QUERY = gql(/* GraphQL */ `
 `);
 
 const REMOVE_USERS = gql(/* GraphQL */ `
-  mutation RemoveUsers($data: IDsInput!) {
+  mutation removeUsers($data: IDsInput!) {
     removeAdmins(data: $data) {
       count
     }

@@ -53,9 +53,12 @@ export const FETCH_BALANCES_BY_MEMBER = gql(/* GraphQL */ `
 `);
 
 export const CREATE_BALANCE = gql(/* GraphQL */ `
-  mutation AddBalance($data: AddBalanceInput!) {
+  mutation addBalance($data: AddBalanceInput!) {
     addBalance(data: $data) {
       id
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);

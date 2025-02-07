@@ -59,10 +59,13 @@ export const FETCH_WEEKLY_REPORT = gql(/* GraphQL */ `
 `);
 
 export const GENERATE_WEEKLY_REPORT = gql(/* GraphQL */ `
-  mutation GenerateWeeklyReport($data: GenerateWeeklyReportInput!) {
+  mutation generateWeeklyReport($data: GenerateWeeklyReportInput!) {
     generateWeeklyReport(data: $data) {
       message
       result
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);

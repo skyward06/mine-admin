@@ -59,34 +59,37 @@ export const FETCH_NOTES_QUERY = gql(/* GraphQL */ `
 `);
 
 export const CREATE_NOTE = gql(/* GraphQL */ `
-  mutation CreateAdminNote($data: CreateAdminNotesInput!) {
+  mutation createAdminNote($data: CreateAdminNotesInput!) {
     createAdminNote(data: $data) {
-      adminId
       id
-      description
-      memberId
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);
 
 export const UPDATE_NOTE = gql(/* GraphQL */ `
-  mutation UpdateAdminNote($data: UpdateAdminNotesInput!) {
+  mutation updateAdminNote($data: UpdateAdminNotesInput!) {
     updateAdminNote(data: $data) {
       admin {
         id
-        username
-        email
-        avatar
+        frontAction {
+          ...FrontActionFields
+        }
       }
     }
   }
 `);
 
 export const REMOVE_NOTE = gql(/* GraphQL */ `
-  mutation RemoveAdminNote($data: IDInput!) {
+  mutation removeAdminNote($data: IDInput!) {
     removeAdminNote(data: $data) {
       message
       result
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);

@@ -118,24 +118,30 @@ export const FETCH_MEMBERSTATISTICS_QUERY = gql(/* GraphQL */ `
 `);
 
 export const CONFIRM_STATISTICS = gql(/* GraphQL */ `
-  mutation ConfirmStatistics($data: ConfirmStatistics!) {
+  mutation confirmStatistics($data: ConfirmStatistics!) {
     confirmStatistics(data: $data) {
       id
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);
 
 export const CREATE_STATISTICS = gql(/* GraphQL */ `
-  mutation CreateStatistics($data: CreateStatisticsInput!) {
+  mutation createStatistics($data: CreateStatisticsInput!) {
     createStatistics(data: $data) {
       id
       newBlocks
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);
 
 export const CREATE_MANY_MEMBER_STATISTICS = gql(/* GraphQL */ `
-  mutation CreateManyMemberStatistics($data: CreateManyMemberStatisticsInput!) {
+  mutation createManyMemberStatistics($data: CreateManyMemberStatisticsInput!) {
     createManyMemberStatistics(data: $data) {
       count
     }
@@ -143,16 +149,19 @@ export const CREATE_MANY_MEMBER_STATISTICS = gql(/* GraphQL */ `
 `);
 
 export const UPDATE_STATISTICS = gql(/* GraphQL */ `
-  mutation UpdateStatistics($data: UpdateStatisticsInput!) {
+  mutation updateStatistics($data: UpdateStatisticsInput!) {
     updateStatistics(data: $data) {
       status
       txcShared
+      frontAction {
+        ...FrontActionFields
+      }
     }
   }
 `);
 
 export const REMOVE_MEMBER_STATISTICS = gql(/* GraphQL */ `
-  mutation RemoveMemberStatisticsByStaitisId($data: IDInput!) {
+  mutation removeMemberStatisticsByStaitisId($data: IDInput!) {
     removeMemberStatisticsByStaitisId(data: $data) {
       count
     }
@@ -160,7 +169,7 @@ export const REMOVE_MEMBER_STATISTICS = gql(/* GraphQL */ `
 `);
 
 export const REMOVE_STATISTICS = gql(/* GraphQL */ `
-  mutation RemoveManyStatistics($data: IDsInput!) {
+  mutation removeManyStatistics($data: IDsInput!) {
     removeManyStatistics(data: $data) {
       count
     }
