@@ -1,7 +1,6 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { FrontAction } from 'src/__generated__/graphql';
 
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { createSlice } from '@reduxjs/toolkit';
 
 interface FrontActionState {
@@ -16,7 +15,7 @@ const frontActionSlice = createSlice({
   name: 'frontAction',
   initialState,
   reducers: {
-    setFrontActions: (state, action: PayloadAction<FrontAction[]>) => {
+    setFrontActions: (state: FrontActionState, action: PayloadAction<FrontAction[]>) => {
       state.data = action.payload;
     },
     popFirstAction: (state) => {

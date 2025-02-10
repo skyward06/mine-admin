@@ -1,8 +1,5 @@
 import 'src/global.css';
 
-// ----------------------------------------------------------------------
-
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { Provider } from 'react-redux';
 
 import { Router } from 'src/routes/sections';

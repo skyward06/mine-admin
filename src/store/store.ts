@@ -1,5 +1,3 @@
-// src/app/store.ts
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { configureStore } from '@reduxjs/toolkit';
 
 import frontActionReducer from './slices/frontAction.slice';
