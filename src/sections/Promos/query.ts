@@ -23,7 +23,7 @@ export const CREATE_PROMO = gql(/* GraphQL */ `
   mutation createPromo($data: CreatePromoInput!) {
     createPromo(data: $data) {
       id
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }
@@ -34,7 +34,7 @@ export const UDPATE_PROMO = gql(/* GraphQL */ `
   mutation updatePromo($data: UpdatePromoInput!) {
     updatePromo(data: $data) {
       id
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }
@@ -46,7 +46,7 @@ export const REMOVE_PROMO = gql(/* GraphQL */ `
     removePromo(data: $data) {
       message
       result
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }

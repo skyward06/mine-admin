@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { createClient } from 'graphql-ws';
-import { useSelector } from 'react-redux';
 import { setContext } from '@apollo/client/link/context';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
@@ -21,10 +20,7 @@ import { CONFIG } from 'src/config';
 import store from './store/store';
 import FreeShare from './sections/FreeShare';
 import { fragment } from './utils/fragement';
-import { useBoolean } from './hooks/useBoolean';
-import { setFrontAction } from './store/slices/frontAction.slice';
-
-import type { RootState } from './store/store';
+import { setFrontActions } from './store/slices/frontAction.slice';
 
 const httpLink = createHttpLink({
   uri: CONFIG.SERVER_URL,
@@ -70,8 +66,8 @@ const mutationMiddlewareLink = new ApolloLink((operation: Operation, forward: Ne
     if (isMutation) {
       const { data } = response;
       Object.values(data as Record<string, any>).forEach((res) => {
-        if (res.frontAction) {
-          store.dispatch(setFrontAction(res?.frontAction));
+        if (res.frontActions) {
+          store.dispatch(setFrontActions(res?.frontActions));
         }
       });
     }
@@ -98,22 +94,10 @@ const client = new ApolloClient({
   connectToDevTools: true,
 });
 
-const ApolloAppProvider = ({ children }: { children: React.ReactNode }) => {
-  const open = useBoolean();
-  const frontAction = useSelector((state: RootState) => state.frontAction.data);
-
-  useEffect(() => {
-    if (frontAction) {
-      open.onTrue();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [frontAction]);
-
-  return (
-    <ApolloProvider client={client}>
-      {children}
-      <FreeShare open={open} frontAction={frontAction} />
-    </ApolloProvider>
-  );
-};
+const ApolloAppProvider = ({ children }: { children: React.ReactNode }) => (
+  <ApolloProvider client={client}>
+    {children}
+    <FreeShare />
+  </ApolloProvider>
+);
 export default ApolloAppProvider;

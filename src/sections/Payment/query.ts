@@ -25,7 +25,7 @@ export const CREATE_PAYMENT = gql(/* GraphQL */ `
   mutation createPaymentMethod($data: CreatePaymentMethodInput!) {
     createPaymentMethod(data: $data) {
       id
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }
@@ -36,7 +36,7 @@ export const UPDATE_PAYMENT = gql(/* GraphQL */ `
   mutation updatePaymentMethod($data: UpdatePaymentMethodInput!) {
     updatePaymentMethod(data: $data) {
       id
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }
@@ -48,7 +48,7 @@ export const REMOVE_PAYMENT = gql(/* GraphQL */ `
     removePaymentMethod(data: $data) {
       message
       result
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }

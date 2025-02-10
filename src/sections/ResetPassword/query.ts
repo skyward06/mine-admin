@@ -5,7 +5,7 @@ export const ADMIN_RESET_PASSWORD_REQUEST = gql(/* GraphQL */ `
     adminResetPasswordRequest(data: $data) {
       message
       result
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }
@@ -17,7 +17,7 @@ export const ADMIN_RESET_PASSWORD_TOKEN = gql(/* GraphQL */ `
     adminResetPasswordByToken(data: $data) {
       message
       result
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }

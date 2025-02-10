@@ -119,7 +119,7 @@ export const UPDATE_COMMISSION = gql(/* GraphQL */ `
   mutation updateCommission($data: WeeklyCommissionUpdateInput!) {
     updateCommission(data: $data) {
       ID
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }
@@ -131,7 +131,7 @@ export const UPDATE_COMMISSION_STATUS = gql(/* GraphQL */ `
     updateCommissionsStatus(data: $data) {
       message
       result
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }
@@ -143,7 +143,7 @@ export const CALCULATE_COMMISSION_PREVIEW = gql(/* GraphQL */ `
     calculatePreview {
       message
       result
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }
@@ -154,7 +154,7 @@ export const UPDATE_COMMISSION_NOTE = gql(/* GraphQL */ `
   mutation updateCommissionShortNote($data: WeeklyCommissionNoteInput!) {
     updateCommissionShortNote(data: $data) {
       ID
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }

@@ -7,7 +7,7 @@ import frontActionReducer from './slices/frontAction.slice';
 // Configure the store
 const store = configureStore({
   reducer: {
-    frontAction: frontActionReducer,
+    frontActions: frontActionReducer,
   },
 });
 

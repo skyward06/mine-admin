@@ -1,15 +1,20 @@
-import type { UseBooleanReturn } from 'src/hooks/useBoolean';
+import type { RootState } from 'src/store/store';
+
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 
+import { useBoolean } from 'src/hooks/useBoolean';
+
 import { customizeFullName } from 'src/utils/helper';
 import { today, customizeDate } from 'src/utils/format-time';
 
+import { popFirstAction } from 'src/store/slices/frontAction.slice';
 import {
   FrontActionEnum,
-  type FrontAction,
   type FrontActionCreate12FreeBonusSale,
   type FrontActionUpdate12FreeBonusSale,
   type FrontActionRemove12FreeBonusSale,
@@ -20,15 +25,29 @@ import { ConfirmDialog } from 'src/components/Dialog';
 
 import { useCreateSale, useRemoveSale, useUpdateSale } from '../Sales/useApollo';
 
-interface Props {
-  open: UseBooleanReturn;
-  frontAction?: FrontAction;
-}
-
-export default function FreeShare({ open, frontAction }: Props) {
+export default function FreeShare() {
   const { loading: createLoading, createSale } = useCreateSale();
   const { loading: updateLoading, updateSale } = useUpdateSale();
   const { loading: removeLoading, removeSale } = useRemoveSale();
+  const open = useBoolean();
+
+  const frontActions = useSelector((state: RootState) => state.frontActions.data);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (frontActions?.length) {
+      open.onTrue();
+    } else {
+      open.onFalse();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [frontActions]);
+
+  if (!frontActions?.length) {
+    return null;
+  }
+
+  const frontAction = frontActions[0];
 
   const createExtra = frontAction?.extra as FrontActionCreate12FreeBonusSale;
   const updateExtra = frontAction?.extra as FrontActionUpdate12FreeBonusSale;
@@ -51,7 +70,7 @@ export default function FreeShare({ open, frontAction }: Props) {
     if (data) {
       toast.success('Created successfully!');
 
-      open.onFalse();
+      dispatch(popFirstAction());
     }
   };
 
@@ -69,7 +88,7 @@ export default function FreeShare({ open, frontAction }: Props) {
     if (data) {
       toast.success('Updated successfully!');
 
-      open.onFalse();
+      dispatch(popFirstAction());
     }
   };
 
@@ -85,7 +104,7 @@ export default function FreeShare({ open, frontAction }: Props) {
     if (data) {
       toast.success('Removed successfully!');
 
-      open.onFalse();
+      dispatch(popFirstAction());
     }
   };
 
@@ -129,8 +148,11 @@ export default function FreeShare({ open, frontAction }: Props) {
 
   return (
     <ConfirmDialog
-      open={open.value}
-      onClose={open.onFalse}
+      open
+      onClose={() => {
+        open.onFalse();
+        dispatch(popFirstAction());
+      }}
       title="1-2-Free Share"
       content={content}
       action={

@@ -36,7 +36,7 @@ export const CREATE_GROUP_SETTINGS = gql(/* GraphQL */ `
   mutation createGroupSetting($data: CreateGroupSettingInput!) {
     createGroupSetting(data: $data) {
       id
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }
@@ -47,7 +47,7 @@ export const UPDATE_GROUP_SETTINGS = gql(/* GraphQL */ `
   mutation updateGroupSetting($data: UpdateGroupSettingInput!) {
     updateGroupSetting(data: $data) {
       id
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }
@@ -58,7 +58,7 @@ export const REMOVE_GROUP_SETTINGS = gql(/* GraphQL */ `
   mutation removeGroupSetting($data: IDInput!) {
     removeGroupSetting(data: $data) {
       id
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }

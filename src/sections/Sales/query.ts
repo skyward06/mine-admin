@@ -169,7 +169,7 @@ export const CREATE_SALE = gql(/* GraphQL */ `
   mutation createSale($data: CreateSaleInput!) {
     createSale(data: $data) {
       id
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }
@@ -180,7 +180,7 @@ export const UPDATE_SALE = gql(/* GraphQL */ `
   mutation updateSale($data: UpdateSaleInput!) {
     updateSale(data: $data) {
       id
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }
@@ -191,7 +191,7 @@ export const REMOVE_SALE = gql(/* GraphQL */ `
   mutation removeSale($data: IDInput!) {
     removeSale(data: $data) {
       result
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }

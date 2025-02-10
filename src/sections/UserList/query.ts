@@ -4,7 +4,7 @@ export const UPDATE_PASSWORD_BY_ADMIN = gql(/* GraphQL */ `
   mutation updatePasswordAdminById($data: UpdateAdminPasswordByIdInput!) {
     updatePasswordAdminById(data: $data) {
       id
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }

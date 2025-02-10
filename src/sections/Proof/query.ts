@@ -38,7 +38,7 @@ export const CREATE_PROOF = gql(/* GraphQL */ `
   mutation createProof($data: CreateProofInput!) {
     createProof(data: $data) {
       id
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }
@@ -49,7 +49,7 @@ export const UPDATE_PROOF = gql(/* GraphQL */ `
   mutation updateProof($data: UpdateProofByIDInput!) {
     updateProof(data: $data) {
       id
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }
@@ -61,7 +61,7 @@ export const REMOVE_PROOF = gql(/* GraphQL */ `
     removeProof(data: $data) {
       message
       result
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }

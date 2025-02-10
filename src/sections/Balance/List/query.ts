@@ -56,7 +56,7 @@ export const CREATE_BALANCE = gql(/* GraphQL */ `
   mutation addBalance($data: AddBalanceInput!) {
     addBalance(data: $data) {
       id
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }

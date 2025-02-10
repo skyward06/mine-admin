@@ -23,7 +23,7 @@ export const SET_READ_NOTIFICATIONS = gql(/* GraphQL */ `
     setReadNotification(data: $data) {
       message
       result
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }

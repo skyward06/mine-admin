@@ -62,7 +62,7 @@ export const CREATE_NOTE = gql(/* GraphQL */ `
   mutation createAdminNote($data: CreateAdminNotesInput!) {
     createAdminNote(data: $data) {
       id
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }
@@ -74,7 +74,7 @@ export const UPDATE_NOTE = gql(/* GraphQL */ `
     updateAdminNote(data: $data) {
       admin {
         id
-        frontAction {
+        frontActions {
           ...FrontActionFields
         }
       }
@@ -87,7 +87,7 @@ export const REMOVE_NOTE = gql(/* GraphQL */ `
     removeAdminNote(data: $data) {
       message
       result
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }

@@ -275,7 +275,7 @@ export const CREATE_MEMBER = gql(/* GraphQL */ `
   mutation createMember($data: CreateMemberInput!) {
     createMember(data: $data) {
       id
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }
@@ -286,7 +286,7 @@ export const UPDATE_MEMBER = gql(/* GraphQL */ `
   mutation updateMember($data: UpdateMemberInput!) {
     updateMember(data: $data) {
       id
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }
@@ -339,7 +339,7 @@ export const UPDATE_PASSWORD_QUERY = gql(/* GraphQL */ `
   mutation updatePasswordMemberById($data: UpdateMemberPasswordInputById!) {
     updatePasswordMemberById(data: $data) {
       id
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }
@@ -351,7 +351,7 @@ export const REMOVE_MEMBER_QUERY = gql(/* GraphQL */ `
     removeMember(data: $data) {
       message
       result
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }
@@ -363,7 +363,7 @@ export const REMOVE_MEMBER_PLACEMENT = gql(/* GraphQL */ `
     removeCompleteMemberPlacement(data: $data) {
       message
       result
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }
@@ -375,7 +375,7 @@ export const APPROVE_MEMBER = gql(/* GraphQL */ `
     approveMember(data: $data) {
       message
       result
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }
@@ -387,7 +387,7 @@ export const SEND_WELCOME_EMAIL = gql(/* GraphQL */ `
     sendWelcomeEmail(data: $data) {
       message
       result
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }
@@ -399,7 +399,7 @@ export const MOVE_TO_GRAVEYARD = gql(/* GraphQL */ `
     moveToGraveyard(data: $data) {
       message
       result
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }
@@ -411,7 +411,7 @@ export const VERIFY_MEMBER_EMAIL = gql(/* GraphQL */ `
     verifyMemberEmail(data: $data) {
       message
       result
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }

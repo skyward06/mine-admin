@@ -121,7 +121,7 @@ export const CONFIRM_STATISTICS = gql(/* GraphQL */ `
   mutation confirmStatistics($data: ConfirmStatistics!) {
     confirmStatistics(data: $data) {
       id
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }
@@ -133,7 +133,7 @@ export const CREATE_STATISTICS = gql(/* GraphQL */ `
     createStatistics(data: $data) {
       id
       newBlocks
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }
@@ -153,7 +153,7 @@ export const UPDATE_STATISTICS = gql(/* GraphQL */ `
     updateStatistics(data: $data) {
       status
       txcShared
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }

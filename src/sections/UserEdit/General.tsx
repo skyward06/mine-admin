@@ -38,7 +38,7 @@ const UPDATE_USER = gql(/* GraphQL */ `
   mutation updateAdmin($data: UpdateAdminInput!) {
     updateAdmin(data: $data) {
       id
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }

@@ -5,7 +5,7 @@ export const UPDATE_ADMIN_PASSWORD = gql(/* GraphQL */ `
     updatePasswordAdmin(data: $data) {
       message
       result
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }

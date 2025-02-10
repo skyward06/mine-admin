@@ -25,7 +25,7 @@ const CREATE_USER = gql(/* GraphQL */ `
   mutation createAdmin($data: CreateAdminInput!) {
     createAdmin(data: $data) {
       id
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }

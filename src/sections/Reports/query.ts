@@ -63,7 +63,7 @@ export const GENERATE_WEEKLY_REPORT = gql(/* GraphQL */ `
     generateWeeklyReport(data: $data) {
       message
       result
-      frontAction {
+      frontActions {
         ...FrontActionFields
       }
     }
