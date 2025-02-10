@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { createClient } from 'graphql-ws';
+import { useSelector } from 'react-redux';
 import { setContext } from '@apollo/client/link/context';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
@@ -17,9 +18,13 @@ import {
 
 import { CONFIG } from 'src/config';
 
+import store from './store/store';
 import FreeShare from './sections/FreeShare';
 import { fragment } from './utils/fragement';
 import { useBoolean } from './hooks/useBoolean';
+import { setFrontAction } from './store/slices/frontAction.slice';
+
+import type { RootState } from './store/store';
 
 const httpLink = createHttpLink({
   uri: CONFIG.SERVER_URL,
@@ -56,62 +61,53 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
+const mutationMiddlewareLink = new ApolloLink((operation: Operation, forward: NextLink) => {
+  const definition = getMainDefinition(operation.query);
+  const isMutation =
+    definition.kind === 'OperationDefinition' && definition.operation === 'mutation';
+
+  return forward(operation).map((response: FetchResult) => {
+    if (isMutation) {
+      const { data } = response;
+      Object.values(data as Record<string, any>).forEach((res) => {
+        if (res.frontAction) {
+          store.dispatch(setFrontAction(res?.frontAction));
+        }
+      });
+    }
+
+    return response;
+  }); // Continue the request
+});
+
+const client = new ApolloClient({
+  link: ApolloLink.from([
+    authLink, // Authorization
+    mutationMiddlewareLink, // Middleware executes before every mutation
+    splitLink, // HTTP & WebSocket handling
+  ]),
+  cache: new InMemoryCache(fragment),
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'network-only',
+    },
+    query: {
+      fetchPolicy: 'network-only',
+    },
+  },
+  connectToDevTools: true,
+});
+
 const ApolloAppProvider = ({ children }: { children: React.ReactNode }) => {
   const open = useBoolean();
-  const [frontAction, setFrontAction] = useState<any>(null);
+  const frontAction = useSelector((state: RootState) => state.frontAction.data);
 
-  const handleOpen = (message: any) => {
-    setFrontAction(message);
-    open.onTrue();
-  };
-
-  const handleMutationResponse = (responseData: Record<string, any>) => {
-    Object.values(responseData).forEach((mutationResult) => {
-      if (!mutationResult) return;
-
-      if (typeof mutationResult === 'object') {
-        if (mutationResult.frontAction) {
-          handleOpen(mutationResult.frontAction);
-        }
-      } else {
-        console.log('Unhandled Response Type:', mutationResult);
-      }
-    });
-  };
-
-  const mutationMiddlewareLink = new ApolloLink((operation: Operation, forward: NextLink) => {
-    const isMutation = operation.query.definitions.some(
-      (def) => def.kind === 'OperationDefinition' && def.operation === 'mutation'
-    );
-
-    return forward(operation).map((response: FetchResult) => {
-      if (isMutation) {
-        console.log('Type => ', operation);
-        console.log('Mutation Response: ', response.data);
-        handleMutationResponse(response?.data ?? {});
-      }
-
-      return response;
-    }); // Continue the request
-  });
-
-  const client = new ApolloClient({
-    link: ApolloLink.from([
-      authLink, // Authorization
-      mutationMiddlewareLink, // Middleware executes before every mutation
-      splitLink, // HTTP & WebSocket handling
-    ]),
-    cache: new InMemoryCache(fragment),
-    defaultOptions: {
-      watchQuery: {
-        fetchPolicy: 'network-only',
-      },
-      query: {
-        fetchPolicy: 'network-only',
-      },
-    },
-    connectToDevTools: true,
-  });
+  useEffect(() => {
+    if (frontAction) {
+      open.onTrue();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [frontAction]);
 
   return (
     <ApolloProvider client={client}>
