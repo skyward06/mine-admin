@@ -153,8 +153,6 @@ export default function UserListView() {
 
   const { data: statsData } = useGraphQuery(FETCH_USER_STATS_QUERY, {
     variables: {
-      adminFilter: { isAdmin: true },
-      apFilter: { isAdmin: false },
       inactiveFilter: { deletedAt: { not: null } },
     },
   });
