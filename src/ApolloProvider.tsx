@@ -65,11 +65,13 @@ const mutationMiddlewareLink = new ApolloLink((operation: Operation, forward: Ne
   return forward(operation).map((response: FetchResult) => {
     if (isMutation) {
       const { data } = response;
-      Object.values(data as Record<string, any>).forEach((res) => {
-        if (res.frontActions) {
-          store.dispatch(setFrontActions(res?.frontActions));
-        }
-      });
+      if (data) {
+        Object.values(data as Record<string, any>).forEach((res) => {
+          if (res.frontActions) {
+            store.dispatch(setFrontActions(res?.frontActions));
+          }
+        });
+      }
     }
 
     return response;
