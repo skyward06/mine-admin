@@ -113,7 +113,7 @@ export default function FreeShare() {
       <Typography sx={{ mb: 2 }}>{frontAction?.message}</Typography>
       {frontAction?.action === FrontActionEnum.Create12Freebonussale && (
         <Stack direction="row" spacing={2}>
-          <Stack>
+          <Stack width={0.3}>
             <Typography fontWeight={700} variant="body2">
               Full Name:
             </Typography>
@@ -121,7 +121,7 @@ export default function FreeShare() {
               Package:
             </Typography>
           </Stack>
-          <Stack>
+          <Stack width={1}>
             <Typography variant="body2">{customizeFullName(createExtra.fullName)}</Typography>
             <Typography variant="body2">{createExtra.packageName}</Typography>
           </Stack>
@@ -129,7 +129,7 @@ export default function FreeShare() {
       )}
       {frontAction?.action === FrontActionEnum.Update12Freebonussale && (
         <Stack direction="row" spacing={2}>
-          <Stack>
+          <Stack width={0.4}>
             <Typography fontWeight={700} variant="body2">
               Old Package Name:
             </Typography>
@@ -137,7 +137,7 @@ export default function FreeShare() {
               New Package Name:
             </Typography>
           </Stack>
-          <Stack>
+          <Stack width={1}>
             <Typography variant="body2">{updateExtra.oldPackageName}</Typography>
             <Typography variant="body2">{updateExtra.newPackageName}</Typography>
           </Stack>
