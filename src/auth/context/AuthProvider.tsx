@@ -24,6 +24,7 @@ const FETCH_ME_QUERY = gql(/* GraphQL */ `
       id
       email
       avatar
+      roleId
       username
       fullName
       OTPEnabled

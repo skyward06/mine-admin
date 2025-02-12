@@ -81,6 +81,7 @@ export default function UserCreateForm() {
           data: {
             ...data,
             avatar,
+            roleId: '',
             password: '',
           },
         },

@@ -1,3 +1,4 @@
+import type { Admin } from 'src/__generated__/graphql';
 import type { LabelColor } from 'src/components/Label';
 import type { SortOrder } from 'src/routes/hooks/useQuery';
 
@@ -94,6 +95,7 @@ const FETCH_USERS_QUERY = gql(/* GraphQL */ `
         id
         email
         avatar
+        roleId
         username
         fullName
         createdAt
@@ -251,7 +253,7 @@ export default function UserListView() {
             onSelectAllRows={(checked) =>
               table.onSelectAllRows(
                 checked,
-                tableData!.admins!.map((row) => row!.id)
+                tableData!.admins!.map((row: Admin) => row!.id)
               )
             }
             action={
