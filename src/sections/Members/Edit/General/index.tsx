@@ -46,7 +46,7 @@ export default function MemberGeneral({ currentMember }: Props) {
 
   const [txcWallets, otherWallets] = getWallets(memberWallets);
 
-  const [, first, last]: any = fullName.match(/^(\S+)\s+(.*)/);
+  const [, first, last]: any = fullName.trim().match(/^(\S+)\s+(.*)/);
 
   const [state, setState] = useState<string>();
   const [country, setCountry] = useState<string>();
