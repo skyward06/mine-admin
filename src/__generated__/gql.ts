@@ -50,6 +50,7 @@ const documents = {
     "\n  mutation moveToGraveyard($data: IDInput!) {\n    moveToGraveyard(data: $data) {\n      message\n      result\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.MoveToGraveyardDocument,
     "\n  mutation MoveToPending($data: IDInput!) {\n    moveToPending(data: $data) {\n      result\n      message\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.MoveToPendingDocument,
     "\n  mutation verifyMemberEmail($data: IDInput!) {\n    verifyMemberEmail(data: $data) {\n      message\n      result\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.VerifyMemberEmailDocument,
+    "\n  mutation DuplicateMember($data: IDInput!) {\n    duplicateMember(data: $data) {\n      id\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.DuplicateMemberDocument,
     "\n  query Notifications($sort: String, $page: String, $filter: JSONObject) {\n    notifications(sort: $sort, page: $page, filter: $filter) {\n      notifications {\n        id\n        read\n        level\n        message\n        createdAt\n        updatedAt\n        readMembers\n        totalMembers\n      }\n      total\n    }\n  }\n": types.NotificationsDocument,
     "\n  mutation setReadNotification($data: IDInput!) {\n    setReadNotification(data: $data) {\n      message\n      result\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.SetReadNotificationDocument,
     "\n  mutation setReadAllNotifications {\n    setReadAllNotifications {\n      count\n    }\n  }\n": types.SetReadAllNotificationsDocument,
@@ -279,6 +280,10 @@ export function gql(source: "\n  mutation MoveToPending($data: IDInput!) {\n    
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  mutation verifyMemberEmail($data: IDInput!) {\n    verifyMemberEmail(data: $data) {\n      message\n      result\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation verifyMemberEmail($data: IDInput!) {\n    verifyMemberEmail(data: $data) {\n      message\n      result\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation DuplicateMember($data: IDInput!) {\n    duplicateMember(data: $data) {\n      id\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation DuplicateMember($data: IDInput!) {\n    duplicateMember(data: $data) {\n      id\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

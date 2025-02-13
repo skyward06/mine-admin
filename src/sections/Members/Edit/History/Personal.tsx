@@ -27,7 +27,12 @@ import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
-import { useFetchMembers, useSendWelcomeEmail, useVerifyMemberEmail } from '../../useApollo';
+import {
+  useFetchMembers,
+  useDuplicateMember,
+  useSendWelcomeEmail,
+  useVerifyMemberEmail,
+} from '../../useApollo';
 
 export const Personal = () => {
   const copy = useBoolean();
@@ -41,6 +46,7 @@ export const Personal = () => {
 
   const { id } = params;
 
+  const { duplicateMember } = useDuplicateMember();
   const { members, fetchMembers } = useFetchMembers();
   const { verifyMemberEmail } = useVerifyMemberEmail();
   const { loading, sendWelcomeEmail } = useSendWelcomeEmail();
@@ -94,6 +100,19 @@ export const Personal = () => {
       }
     } catch (error) {
       console.error('Error: ', error);
+    }
+  };
+
+  const handleDuplicateMember = async () => {
+    try {
+      const { data } = await duplicateMember({ variables: { data: { id: member.id } } });
+
+      if (data) {
+        toast.success('Successfully duplicated!');
+        popover.onClose();
+      }
+    } catch (error) {
+      console.log('Error: ', error);
     }
   };
 
@@ -443,6 +462,10 @@ export const Personal = () => {
           <MenuItem onClick={handleVerifyEmail}>
             <Iconify icon="mdi:email-verified" color="#00cca4" />
             Verify Email
+          </MenuItem>
+          <MenuItem onClick={handleDuplicateMember}>
+            <Iconify icon="heroicons-solid:document-duplicate" color="#00cca4" />
+            Duplicate
           </MenuItem>
         </MenuList>
       </CustomPopover>

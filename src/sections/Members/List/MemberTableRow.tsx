@@ -33,6 +33,7 @@ import {
   useMoveToPending,
   useUpdatePassword,
   useMoveToGraveyard,
+  useDuplicateMember,
   useVerifyMemberEmail,
 } from '../useApollo';
 
@@ -81,10 +82,11 @@ export default function MemberTableRow({
     sales,
   } = row;
 
-  const { verifyMemberEmail } = useVerifyMemberEmail();
   const { approveMember } = useApproveMember();
   const { moveToPending } = useMoveToPending();
+  const { duplicateMember } = useDuplicateMember();
   const { moveToGraveyard } = useMoveToGraveyard();
+  const { verifyMemberEmail } = useVerifyMemberEmail();
   const { loading, updatePassword } = useUpdatePassword();
 
   const resetContent = (
@@ -148,6 +150,19 @@ export default function MemberTableRow({
       }
     } catch (error) {
       console.error('Error: ', error);
+    }
+  };
+
+  const handleDuplicateMember = async () => {
+    try {
+      const { data } = await duplicateMember({ variables: { data: { id } } });
+
+      if (data) {
+        toast.success('Successfully duplicated!');
+        popover.onClose();
+      }
+    } catch (error) {
+      console.log('Error: ', error);
     }
   };
 
@@ -337,6 +352,10 @@ export default function MemberTableRow({
                 <MenuItem onClick={handleVerifyEmail}>
                   <Iconify icon="mdi:email-verified" color="green" />
                   Verify Email
+                </MenuItem>
+                <MenuItem onClick={handleDuplicateMember}>
+                  <Iconify icon="heroicons-solid:document-duplicate" color="green" />
+                  Duplicate
                 </MenuItem>
               </MenuList>
             </CustomPopover>

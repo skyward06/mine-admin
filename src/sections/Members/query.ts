@@ -429,3 +429,14 @@ export const VERIFY_MEMBER_EMAIL = gql(/* GraphQL */ `
     }
   }
 `);
+
+export const DUPLICATE_MEMBER = gql(/* GraphQL */ `
+  mutation DuplicateMember($data: IDInput!) {
+    duplicateMember(data: $data) {
+      id
+      frontActions {
+        ...FrontActionFields
+      }
+    }
+  }
+`);

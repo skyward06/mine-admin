@@ -6,6 +6,7 @@ import {
   UPDATE_MEMBER,
   APPROVE_MEMBER,
   MOVE_TO_PENDING,
+  DUPLICATE_MEMBER,
   MOVE_TO_GRAVEYARD,
   SEND_WELCOME_EMAIL,
   FETCH_MEMBERS_QUERY,
@@ -150,8 +151,18 @@ export function useMoveToPending() {
 
 export function useVerifyMemberEmail() {
   const [verifyMemberEmail, { loading, data, error }] = useMutation(VERIFY_MEMBER_EMAIL, {
+    awaitRefetchQueries: true,
     refetchQueries: ['FetchMembers', 'FetchMemberStats'],
   });
 
   return { loading, data, error, verifyMemberEmail };
+}
+
+export function useDuplicateMember() {
+  const [duplicateMember, { loading, data, error }] = useMutation(DUPLICATE_MEMBER, {
+    awaitRefetchQueries: true,
+    refetchQueries: ['FetchMembers', 'FetchMemberStats'],
+  });
+
+  return { loading, data, error, duplicateMember };
 }
