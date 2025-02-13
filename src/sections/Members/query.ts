@@ -406,6 +406,18 @@ export const MOVE_TO_GRAVEYARD = gql(/* GraphQL */ `
   }
 `);
 
+export const MOVE_TO_PENDING = gql(/* GraphQL */ `
+  mutation MoveToPending($data: IDInput!) {
+    moveToPending(data: $data) {
+      result
+      message
+      frontActions {
+        ...FrontActionFields
+      }
+    }
+  }
+`);
+
 export const VERIFY_MEMBER_EMAIL = gql(/* GraphQL */ `
   mutation verifyMemberEmail($data: IDInput!) {
     verifyMemberEmail(data: $data) {

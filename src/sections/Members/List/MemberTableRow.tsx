@@ -30,6 +30,7 @@ import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
 import {
   useApproveMember,
+  useMoveToPending,
   useUpdatePassword,
   useMoveToGraveyard,
   useVerifyMemberEmail,
@@ -82,6 +83,7 @@ export default function MemberTableRow({
 
   const { verifyMemberEmail } = useVerifyMemberEmail();
   const { approveMember } = useApproveMember();
+  const { moveToPending } = useMoveToPending();
   const { moveToGraveyard } = useMoveToGraveyard();
   const { loading, updatePassword } = useUpdatePassword();
 
@@ -281,6 +283,23 @@ export default function MemberTableRow({
                       Move to Graveyard
                     </MenuItem>
                   </>
+                )}
+                {allowState === 'GRAVEYARD' && (
+                  <MenuItem
+                    onClick={async () => {
+                      try {
+                        await moveToPending({ variables: { data: { id } } });
+
+                        toast.success('Successfully moved');
+                      } catch (error) {
+                        console.log('error => ', error);
+                        toast.error('Something went wrong!');
+                      }
+                    }}
+                  >
+                    <Iconify icon="mdi:account-pending" color="#B76E00" />
+                    Move to Pending
+                  </MenuItem>
                 )}
                 <MenuItem
                   onClick={() => {

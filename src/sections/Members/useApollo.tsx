@@ -5,6 +5,7 @@ import { CALCULATE_COMMISSION_PREVIEW } from '../Commission/query';
 import {
   UPDATE_MEMBER,
   APPROVE_MEMBER,
+  MOVE_TO_PENDING,
   MOVE_TO_GRAVEYARD,
   SEND_WELCOME_EMAIL,
   FETCH_MEMBERS_QUERY,
@@ -136,6 +137,15 @@ export function useMoveToGraveyard() {
   });
 
   return { loading, data, error, moveToGraveyard };
+}
+
+export function useMoveToPending() {
+  const [moveToPending, { loading, data, error }] = useMutation(MOVE_TO_PENDING, {
+    awaitRefetchQueries: true,
+    refetchQueries: ['FetchMembers', 'FetchMemberStats'],
+  });
+
+  return { loading, data, error, moveToPending };
 }
 
 export function useVerifyMemberEmail() {
