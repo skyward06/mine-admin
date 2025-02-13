@@ -129,7 +129,7 @@ export default function FreeShare() {
       )}
       {frontAction?.action === FrontActionEnum.Update12Freebonussale && (
         <Stack direction="row" spacing={2}>
-          <Stack width={0.4}>
+          <Stack width={0.6}>
             <Typography fontWeight={700} variant="body2">
               Old Package Name:
             </Typography>
@@ -145,6 +145,8 @@ export default function FreeShare() {
       )}
     </>
   );
+
+  console.log('frontAction => ', frontAction);
 
   return (
     <ConfirmDialog

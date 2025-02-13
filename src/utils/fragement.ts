@@ -21,6 +21,7 @@ export const fragment = {
           id
           oldPackageId
           newPackageId
+          oldPackageName
           newPackageName
           status
         }
