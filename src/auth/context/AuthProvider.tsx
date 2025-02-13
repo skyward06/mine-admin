@@ -25,6 +25,17 @@ const FETCH_ME_QUERY = gql(/* GraphQL */ `
       email
       avatar
       roleId
+      role {
+        id
+        name
+        sale
+        proof
+        member
+        balance
+        additions
+        commission
+        description
+      }
       username
       fullName
       OTPEnabled

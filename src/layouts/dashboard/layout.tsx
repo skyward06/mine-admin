@@ -9,10 +9,13 @@ import { iconButtonClasses } from '@mui/material/IconButton';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
+import { RoleEnum } from 'src/__generated__/graphql';
 import { varAlpha, stylesMode } from 'src/theme/styles';
 
 import { bulletColor } from 'src/components/nav-section';
 import { useSettingsContext } from 'src/components/settings';
+
+import { useAuthContext } from 'src/auth/hooks';
 
 import { Main } from './main';
 import { NavMobile } from './nav-mobile';
@@ -41,12 +44,29 @@ export function DashboardLayout({ sx, children, data }: DashboardLayoutProps) {
   const mobileNavOpen = useBoolean();
 
   const settings = useSettingsContext();
+  const { user } = useAuthContext();
 
   const navColorVars = useNavColorVars(theme, settings);
 
+  console.log('role => ', user?.role?.sale);
+
+  const temp = dashboardNavData.map((group) => ({
+    subheader: group.subheader,
+    items: group.items.filter(
+      (item) =>
+        !(item.title === 'Miner' && user?.role?.member === RoleEnum.None) &&
+        !(item.title === 'Sale' && user?.role?.sale === RoleEnum.None) &&
+        !(item.title === 'Proof' && user?.role?.proof === RoleEnum.None) &&
+        !(item.title === 'Balance' && user?.role?.balance === RoleEnum.None)
+    ),
+  }));
+
+  console.log('dashboard => ', dashboardNavData);
+  console.log('temp => ', temp);
+
   const layoutQuery: Breakpoint = 'lg';
 
-  const navData = data?.nav ?? dashboardNavData;
+  const navData = data?.nav ?? temp;
 
   const isNavMini = settings.navLayout === 'mini';
 
