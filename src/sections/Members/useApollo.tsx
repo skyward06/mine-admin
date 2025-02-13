@@ -3,6 +3,7 @@ import { useMutation, useLazyQuery } from '@apollo/client';
 
 import { CALCULATE_COMMISSION_PREVIEW } from '../Commission/query';
 import {
+  MOVE_TO_PAID,
   UPDATE_MEMBER,
   APPROVE_MEMBER,
   MOVE_TO_PENDING,
@@ -138,6 +139,15 @@ export function useMoveToGraveyard() {
   });
 
   return { loading, data, error, moveToGraveyard };
+}
+
+export function useMoveToPaid() {
+  const [moveToPaid, { loading, data, error }] = useMutation(MOVE_TO_PAID, {
+    awaitRefetchQueries: true,
+    refetchQueries: ['FetchMembers', 'FetchMemberStats'],
+  });
+
+  return { loading, data, error, moveToPaid };
 }
 
 export function useMoveToPending() {

@@ -5,6 +5,7 @@ export const FETCH_MEMBER_STATS_QUERY = gql(/* GraphQL */ `
     $approveFilter: JSONObject
     $pendingFilter: JSONObject
     $graveyardFilter: JSONObject
+    $paidFilter: JSONObject
   ) {
     APPROVED: members(filter: $approveFilter) {
       total
@@ -13,6 +14,9 @@ export const FETCH_MEMBER_STATS_QUERY = gql(/* GraphQL */ `
       total
     }
     GRAVEYARD: members(filter: $graveyardFilter) {
+      total
+    }
+    PAID: members(filter: $paidFilter) {
       total
     }
   }
@@ -402,6 +406,18 @@ export const MOVE_TO_GRAVEYARD = gql(/* GraphQL */ `
       frontActions {
         ...FrontActionFields
       }
+    }
+  }
+`);
+
+export const MOVE_TO_PAID = gql(/* GraphQL */ `
+  mutation MoveToPaid($data: IDInput!) {
+    moveToPaid(data: $data) {
+      frontActions {
+        ...FrontActionFields
+      }
+      message
+      result
     }
   }
 `);

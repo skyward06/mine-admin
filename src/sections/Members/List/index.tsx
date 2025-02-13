@@ -50,6 +50,7 @@ import type { AllowState, IMemberPrismaFilter, IMemberTableFilters } from './typ
 const STATUS_OPTIONS: { value: AllowState; label: string; color: LabelColor }[] = [
   { value: 'APPROVED', label: 'Approved', color: 'info' },
   { value: 'PENDING', label: 'Pending', color: 'success' },
+  { value: 'PAID', label: 'Paid', color: 'secondary' },
   { value: 'GRAVEYARD', label: 'Graveyard', color: 'error' },
 ];
 
@@ -110,8 +111,10 @@ export default function MemberListView() {
       filterObj.allowState = 'PENDING';
     } else if (filter.allowState === 'GRAVEYARD') {
       filterObj.allowState = 'GRAVEYARD';
-    } else {
+    } else if (filter.allowState === 'APPROVED') {
       filterObj.allowState = 'APPROVED';
+    } else if (filter.allowState === 'PAID') {
+      filterObj.allowState = 'PAID';
     }
 
     if (sponsorId) {
@@ -151,6 +154,7 @@ export default function MemberListView() {
         approveFilter: { allowState: 'APPROVED' },
         pendingFilter: { allowState: 'PENDING' },
         graveyardFilter: { allowState: 'GRAVEYARD' },
+        paidFilter: { allowState: 'PAID' },
       },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps

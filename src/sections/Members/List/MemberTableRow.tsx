@@ -29,6 +29,7 @@ import { ConfirmDialog } from 'src/components/Dialog';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
 import {
+  useMoveToPaid,
   useApproveMember,
   useMoveToPending,
   useUpdatePassword,
@@ -86,6 +87,7 @@ export default function MemberTableRow({
   const { moveToPending } = useMoveToPending();
   const { duplicateMember } = useDuplicateMember();
   const { moveToGraveyard } = useMoveToGraveyard();
+  const { moveToPaid } = useMoveToPaid();
   const { verifyMemberEmail } = useVerifyMemberEmail();
   const { loading, updatePassword } = useUpdatePassword();
 
@@ -226,6 +228,11 @@ export default function MemberTableRow({
                 Pending
               </Label>
             )}
+            {allowState === 'PAID' && (
+              <Label variant="soft" color="secondary">
+                Paid
+              </Label>
+            )}
             {allowState === 'GRAVEYARD' && (
               <Label variant="soft" color="error">
                 Graveyard
@@ -297,6 +304,21 @@ export default function MemberTableRow({
                       <Iconify icon="mdi:graveyard" color="Tomato" />
                       Move to Graveyard
                     </MenuItem>
+                    <MenuItem
+                      onClick={async () => {
+                        try {
+                          await moveToPaid({ variables: { data: { id } } });
+
+                          toast.success('Successfully moved');
+                        } catch (error) {
+                          console.log('error => ', error);
+                          toast.error('Something went wrong!');
+                        }
+                      }}
+                    >
+                      <Iconify icon="ic:baseline-paid" color="green" />
+                      Move to Paid
+                    </MenuItem>
                   </>
                 )}
                 {allowState === 'GRAVEYARD' && (
@@ -314,6 +336,23 @@ export default function MemberTableRow({
                   >
                     <Iconify icon="mdi:account-pending" color="#B76E00" />
                     Move to Pending
+                  </MenuItem>
+                )}
+                {allowState === 'PAID' && (
+                  <MenuItem
+                    onClick={async () => {
+                      try {
+                        await approveMember({ variables: { data: { id } } });
+
+                        toast.success('Successfully approved');
+                      } catch (error) {
+                        console.log('error => ', error);
+                        toast.error('Something went wrong!');
+                      }
+                    }}
+                  >
+                    <Iconify icon="fa6-solid:circle-check" color="green" />
+                    Approve
                   </MenuItem>
                 )}
                 <MenuItem
