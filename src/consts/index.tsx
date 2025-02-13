@@ -130,3 +130,19 @@ export enum State {
   Printed = 'Printed',
   Voided = 'Voided',
 }
+
+export const ROLES = [
+  { label: 'Editor', value: 'EDITOR' },
+  { label: 'Owner', value: 'OWNER' },
+  { label: 'Viewer', value: 'VIEWER' },
+  { label: 'None', value: 'NONE' },
+];
+
+export const ROLE_TYPE = [
+  { name: 'sale', label: 'Sale' },
+  { name: 'proof', label: 'Proof' },
+  { name: 'member', label: 'Member' },
+  { name: 'balance', label: 'Balance' },
+  { name: 'additions', label: 'Additions' },
+  { name: 'commission', label: 'Commission' },
+];

@@ -2,19 +2,18 @@ import { Helmet } from 'react-helmet-async';
 
 import { CONFIG } from 'src/config';
 
-import BalanceCreate from 'src/sections/Balance/Create';
+import RoleList from 'src/sections/Role/List';
 
 // ----------------------------------------------------------------------
-const metadata = { title: `${CONFIG.site.name} / New Balance` };
 
 export default function Page() {
   return (
     <>
       <Helmet>
-        <title>{metadata.title}</title>
+        <title>{`${CONFIG.site.name} / Role`}</title>
       </Helmet>
 
-      <BalanceCreate />
+      <RoleList />
     </>
   );
 }

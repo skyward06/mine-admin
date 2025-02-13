@@ -46,6 +46,7 @@ const ICONS = {
   proof: icon('ic_proof'),
   reward: icon('ic_reward'),
   report: icon('ic_report'),
+  role: icon('ic_role'),
   sale: icon('ic_sale'),
   school: icon('ic_school'),
   tour: icon('ic_tour'),
@@ -83,6 +84,7 @@ export const navData = [
         icon: ICONS.groupSettings,
       },
       { title: 'Admin', path: paths.dashboard.user.root, icon: ICONS.admin },
+      { title: 'Roles', path: paths.dashboard.roles.root, icon: ICONS.role },
     ],
   },
 

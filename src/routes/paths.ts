@@ -7,6 +7,7 @@ const ROOTS = {
   DASHBOARD: '/dashboard',
   STATISTICS: '/statistics',
   SALES: '/sales',
+  ROLES: '/roles',
   MEMBERS: '/miners',
   PRODUCTS: '/products',
   SPONSOR: '/sponsor',
@@ -88,6 +89,11 @@ export const paths = {
       root: ROOTS.GROUP_SETTINGS,
       edit: (id: string) => `${ROOTS.GROUP_SETTINGS}/${id}`,
       new: `${ROOTS.GROUP_SETTINGS}/new`,
+    },
+    roles: {
+      root: ROOTS.ROLES,
+      edit: (id: string) => `${ROOTS.ROLES}/${id}`,
+      new: `${ROOTS.ROLES}/new`,
     },
     reward: {
       root: ROOTS.REWARD,

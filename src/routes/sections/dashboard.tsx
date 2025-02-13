@@ -89,6 +89,12 @@ const BalanceCreatePage = lazy(() => import('src/pages/Balance/Create'));
 // ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
+const RoleListPage = lazy(() => import('src/pages/Role/List'));
+const RoleCreatePage = lazy(() => import('src/pages/Role/Create'));
+const RoleEditPage = lazy(() => import('src/pages/Role/Edit'));
+// ----------------------------------------------------------------------
+
+// ----------------------------------------------------------------------
 const SponsorListPage = lazy(() => import('src/pages/Sponsor/List'));
 // ----------------------------------------------------------------------
 
@@ -145,6 +151,14 @@ export const dashboardRoutes = [
           { path: 'new', element: <SaleCreatePage /> },
           { path: ':id', element: <SaleEditPage /> },
           { path: 'log/:id', element: <SaleLogPage /> },
+        ],
+      },
+      {
+        path: 'roles',
+        children: [
+          { index: true, element: <RoleListPage /> },
+          { path: 'new', element: <RoleCreatePage /> },
+          { path: ':id', element: <RoleEditPage /> },
         ],
       },
       {
