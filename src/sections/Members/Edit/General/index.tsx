@@ -307,19 +307,20 @@ export default function MemberGeneral({ currentMember }: Props) {
         >
           Save Changes
         </LoadingButton>
-        {!currentMember.status && currentMember.allowState === 'PENDING' && (
-          <LoadingButton
-            variant="contained"
-            loading={loading && ref.current}
-            onClick={async () => {
-              ref.current = true;
-              await onSubmit();
-            }}
-            disabled={loading && !ref.current}
-          >
-            Save and Approve
-          </LoadingButton>
-        )}
+        {!currentMember.status &&
+          (currentMember.allowState === 'PENDING' || currentMember.allowState === 'PAID') && (
+            <LoadingButton
+              variant="contained"
+              loading={loading && ref.current}
+              onClick={async () => {
+                ref.current = true;
+                await onSubmit();
+              }}
+              disabled={loading && !ref.current}
+            >
+              Save and Approve
+            </LoadingButton>
+          )}
       </Stack>
     </Form>
   );
