@@ -44,12 +44,20 @@ import type { NodeProps } from './type';
 
 // ----------------------------------------------------------------------
 
+const labelColor: any = {
+  LEFT: 'info',
+  RIGHT: 'primary',
+  MANUAL: 'secondary',
+  BALANCE: 'success',
+};
+
 export function StandardNode({
   id,
   username,
   fullName,
   createdAt,
   commission,
+  teamStrategy: tStrategy,
   placementParentId,
   placementPosition,
   cmnCalculatedWeeks,
@@ -252,15 +260,9 @@ export function StandardNode({
           </Typography>
 
           <Stack>
-            {placementPosition !== 'NONE' && (
-              <Label
-                variant={placementPosition === 'LEFT' ? 'soft' : 'outlined'}
-                color="info"
-                sx={{ fontSize: 10, border: placementPosition === 'LEFT' ? 'none' : 1 }}
-              >
-                {placementPosition}
-              </Label>
-            )}
+            <Label variant="soft" color={labelColor[tStrategy]} sx={{ fontSize: 10 }}>
+              {tStrategy}
+            </Label>
           </Stack>
         </Stack>
 
