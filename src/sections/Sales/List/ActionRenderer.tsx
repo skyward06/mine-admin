@@ -1,5 +1,6 @@
 import type { CustomCellRendererProps } from '@ag-grid-community/react';
 
+import dayjs from 'dayjs';
 import { memo } from 'react';
 
 import MenuList from '@mui/material/MenuList';
@@ -14,6 +15,7 @@ import { useRouter } from 'src/routes/hooks';
 import { useBoolean } from 'src/hooks/useBoolean';
 
 import { formatID } from 'src/utils/helper';
+import { today } from 'src/utils/format-time';
 
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
@@ -32,6 +34,9 @@ export const ActionRender = memo(
     const confirm = useBoolean();
 
     const popover = usePopover();
+
+    const last = dayjs(today()).startOf('week').add(-1, 'day');
+    const disabled = dayjs(data?.orderedAt).isBefore(last);
 
     const defaultValue = {
       id: '',
@@ -65,6 +70,7 @@ export const ActionRender = memo(
                 popover.onClose();
                 router.push(`${paths.dashboard.sales.edit(formatID(data?.ID ?? '', 'S'))}`);
               }}
+              disabled={disabled}
             >
               <Iconify icon="solar:pen-2-bold" color="green" />
               Edit
@@ -83,6 +89,7 @@ export const ActionRender = memo(
                 popover.onClose();
                 confirm.onTrue();
               }}
+              disabled={disabled}
             >
               <Iconify icon="bxs:coffee-togo" color="red" />
               Delete
