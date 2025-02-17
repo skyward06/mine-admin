@@ -332,7 +332,7 @@ export const Personal = () => {
                 </Typography>
               </Stack>
               <Stack width={1}>
-                <Typography variant="body2">{member.commissionDefault}</Typography>
+                <Typography variant="body2">{member?.commissionDefault}</Typography>
               </Stack>
             </Stack>
 
