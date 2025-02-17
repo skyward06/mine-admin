@@ -28,6 +28,7 @@ export const FETCH_BALANCES = gql(/* GraphQL */ `
           primaryAddress
           totalIntroducers
           placementPosition
+          commissionDefault
           cmnCalculatedWeeks
         }
         extra1

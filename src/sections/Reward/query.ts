@@ -45,7 +45,7 @@ export const FETCH_MEMBERSTATISTICS_QUERY = gql(/* GraphQL */ `
           updatedAt
           deletedAt
           id
-
+          commissionDefault
           balance
           username
           fullName

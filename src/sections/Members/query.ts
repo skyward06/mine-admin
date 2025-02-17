@@ -36,6 +36,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         allowState
         primaryAddress
         secondaryAddress
+        commissionDefault
         assetId
         mobile
         city
@@ -64,100 +65,68 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         }
         sponsor {
           id
-          ID
+          email
+          point
+          mobile
+          status
           balance
           username
           fullName
-          email
-          point
-          promoCode
-          allowState
-          primaryAddress
-          secondaryAddress
-          mobile
-          assetId
           groupName
-          status
-          emailVerified
-          totalIntroducers
-          syncWithSendy
-          preferredContact
-          preferredContactDetail
-          cmnCalculatedWeeks
-          teamStrategy
+          allowState
           teamReport
+          teamStrategy
+          syncWithSendy
+          emailVerified
+          primaryAddress
+          totalIntroducers
           placementPosition
-          commission {
-            begL
-            begR
-            newL
-            newR
-          }
+          commissionDefault
+          cmnCalculatedWeeks
         }
         placementParentId
         placementPosition
         placementParent {
           id
-          ID
           email
           point
           mobile
           status
-          assetId
           balance
           username
           fullName
           groupName
           allowState
-          emailVerified
+          teamReport
+          teamStrategy
           syncWithSendy
+          emailVerified
           primaryAddress
           totalIntroducers
-          preferredContact
-          secondaryAddress
-          preferredContactDetail
-          cmnCalculatedWeeks
-          teamStrategy
-          teamReport
           placementPosition
-          commission {
-            begL
-            begR
-            newL
-            newR
-          }
+          commissionDefault
+          cmnCalculatedWeeks
         }
         placementChildren {
           id
-          ID
           email
           point
           mobile
           status
-          assetId
           balance
           username
           fullName
           groupName
           allowState
-          emailVerified
+          teamReport
+          teamStrategy
           syncWithSendy
+          emailVerified
           primaryAddress
-          secondaryAddress
-          preferredContact
           totalIntroducers
           placementPosition
-          preferredContactDetail
+          commissionDefault
           cmnCalculatedWeeks
-          teamStrategy
-          teamReport
-          placementPosition
-          commission {
-            begL
-            begR
-            newL
-            newR
-          }
         }
         sales {
           id

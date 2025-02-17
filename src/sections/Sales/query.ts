@@ -45,29 +45,30 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
           mobile
           status
           assetId
-          commission {
-            begL
-            begR
-            newL
-            newR
-          }
           balance
           username
           fullName
           groupName
+          createdAt
           allowState
+          teamReport
+          teamStrategy
           syncWithSendy
           emailVerified
           primaryAddress
           secondaryAddress
           totalIntroducers
           preferredContact
-          preferredContactDetail
-          cmnCalculatedWeeks
           placementPosition
-          teamStrategy
-          teamReport
-          createdAt
+          commissionDefault
+          cmnCalculatedWeeks
+          preferredContactDetail
+          commission {
+            begL
+            begR
+            newL
+            newR
+          }
         }
         toMember {
           id
@@ -77,31 +78,30 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
           mobile
           status
           assetId
-          commission {
-            begL
-            begR
-            newL
-            newR
-          }
-          balance
-          balance
           balance
           username
           fullName
           groupName
+          createdAt
           allowState
+          teamReport
+          teamStrategy
           syncWithSendy
           emailVerified
           primaryAddress
           secondaryAddress
           totalIntroducers
           preferredContact
-          preferredContactDetail
-          cmnCalculatedWeeks
           placementPosition
-          teamStrategy
-          teamReport
-          createdAt
+          commissionDefault
+          cmnCalculatedWeeks
+          preferredContactDetail
+          commission {
+            begL
+            begR
+            newL
+            newR
+          }
         }
         package {
           id
