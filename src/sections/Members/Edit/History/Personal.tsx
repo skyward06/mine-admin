@@ -159,6 +159,7 @@ export const Personal = () => {
           </Stack>
 
           <Stack>
+            {/* Basic info */}
             <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
               <Stack width={0.5}>
                 <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
@@ -324,8 +325,20 @@ export const Personal = () => {
               </Stack>
             </Stack>
 
+            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+              <Stack width={0.5}>
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                  Commission Default:
+                </Typography>
+              </Stack>
+              <Stack width={1}>
+                <Typography variant="body2">{member.commissionDefault}</Typography>
+              </Stack>
+            </Stack>
+
             <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
 
+            {/* Team info */}
             <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
               <Stack width={0.5}>
                 <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
@@ -406,6 +419,7 @@ export const Personal = () => {
 
           <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
 
+          {/* Wallet info */}
           <Stack sx={{ mt: 2 }}>
             {member?.memberWallets?.map((item) => (
               <Stack sx={{ pb: 1 }}>
