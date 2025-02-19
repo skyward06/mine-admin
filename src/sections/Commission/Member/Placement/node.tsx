@@ -1,5 +1,3 @@
-import type { NodeProps } from 'src/sections/Placement/List/type';
-
 import { useContext } from 'react';
 
 import Card from '@mui/material/Card';
@@ -17,6 +15,8 @@ import { Label } from 'src/components/Label';
 import { Iconify } from 'src/components/Iconify';
 
 import NodeContext from 'src/sections/Placement/List/nodeContext';
+
+import type { NodeProps } from '../../Week/Placement/type';
 
 export function StandardNode({
   id,

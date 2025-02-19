@@ -1,5 +1,9 @@
+import type { NodeProps } from '@xyflow/react';
+import type { TeamStrategy, PlacementMember } from 'src/__generated__/graphql';
+
 import { ApolloError } from '@apollo/client';
 import { useState, useContext } from 'react';
+import { Handle, Position } from '@xyflow/react';
 
 import Card from '@mui/material/Card';
 import Paper from '@mui/material/Paper';
@@ -27,7 +31,7 @@ import { useBoolean } from 'src/hooks/useBoolean';
 import { formatDate } from 'src/utils/format-time';
 import { customizeFullName } from 'src/utils/helper';
 
-import { type TeamStrategy, PlacementPosition } from 'src/__generated__/graphql';
+import { PlacementPosition } from 'src/__generated__/graphql';
 
 import { Label } from 'src/components/Label';
 import { toast } from 'src/components/SnackBar';
@@ -40,8 +44,6 @@ import { useUpdateMember, useRemoveMemberPlacement } from 'src/sections/Members/
 
 import NodeContext from './nodeContext';
 
-import type { NodeProps } from './type';
-
 // ----------------------------------------------------------------------
 
 const labelColor: any = {
@@ -52,16 +54,18 @@ const labelColor: any = {
 };
 
 export function StandardNode({
-  id,
-  username,
-  fullName,
-  createdAt,
-  commission,
-  teamStrategy: tStrategy,
-  placementParentId,
-  placementPosition,
-  cmnCalculatedWeeks,
-}: NodeProps) {
+  data: {
+    id,
+    placementParentId,
+    placementPosition,
+    username,
+    fullName,
+    commission,
+    createdAt,
+    teamStrategy: tStrategy,
+    cmnCalculatedWeeks,
+  },
+}: NodeProps & { data: PlacementMember }) {
   const status = useBoolean();
   const addModal = useBoolean();
   const editModal = useBoolean();
@@ -213,6 +217,8 @@ export function StandardNode({
 
   return (
     <>
+      <Handle type="target" position={Position.Top} isConnectable />
+      <Handle type="source" position={Position.Bottom} isConnectable />
       <Card
         sx={{
           p: 2,

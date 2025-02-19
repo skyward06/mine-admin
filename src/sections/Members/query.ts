@@ -258,6 +258,27 @@ export const FETCH_PLACEMENT_MEMBERS_QUERY = gql(/* GraphQL */ `
   }
 `);
 
+export const FETCH_PLACEMENT_MEMBERS_O_QUERY = gql(/* GraphQL */ `
+  query PlacementMembers {
+    placementMembers {
+      id
+      username
+      fullName
+      createdAt
+      commission {
+        begL
+        begR
+        newL
+        newR
+      }
+      placementPosition
+      placementParentId
+      cmnCalculatedWeeks
+      teamStrategy
+    }
+  }
+`);
+
 export const CREATE_MEMBER = gql(/* GraphQL */ `
   mutation createMember($data: CreateMemberInput!) {
     createMember(data: $data) {
