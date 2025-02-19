@@ -67,22 +67,23 @@ export default function MemberTableRow({
   const {
     id,
     ID,
-    username,
+    city,
+    sales,
+    state,
     email,
+    point,
     mobile,
     assetId,
-    point,
-    fullName,
-    totalIntroducers,
-    emailVerified,
-    allowState,
-    createdAt,
-    primaryAddress,
-    secondaryAddress,
-    city,
-    state,
     zipCode,
-    sales,
+    username,
+    fullName,
+    createdAt,
+    adminNotes,
+    allowState,
+    emailVerified,
+    primaryAddress,
+    totalIntroducers,
+    secondaryAddress,
   } = row;
 
   const { approveMember } = useApproveMember();
@@ -242,10 +243,14 @@ export default function MemberTableRow({
             )}
             {!emailVerified && (
               <Label variant="soft" color="error">
-                Email Unverified
+                Unverified
               </Label>
             )}
           </Stack>
+        </TableCell>
+
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>
+          {adminNotes?.length ? adminNotes[0]?.description : ''}
         </TableCell>
 
         <TableCell sx={{ whiteSpace: 'nowrap' }}>

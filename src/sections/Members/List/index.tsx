@@ -55,7 +55,7 @@ const STATUS_OPTIONS: { value: AllowState; label: string; color: LabelColor }[] 
 ];
 
 const TABLE_HEAD = [
-  { id: 'ID', label: 'ID', width: 140, sortable: true },
+  { id: 'ID', label: 'ID', width: 120, sortable: true },
   { id: 'username', label: 'Username', sortable: true },
   { id: 'fullName', label: 'Full Name', sortable: true },
   { id: 'mobile', label: 'Mobile', sortable: true },
@@ -63,8 +63,9 @@ const TABLE_HEAD = [
   { id: 'point', label: 'Point', sortable: true },
   { id: 'totalIntroducers', label: 'Sponsor', sortable: true },
   { id: 'emailVerified', label: 'Status', sortable: true },
+  { id: 'adminNotes', label: 'Admin Notes', sortable: true },
   { id: 'createdAt', label: 'Created At', sortable: true },
-  { id: 'action', label: 'Action', width: 100, align: 'center' },
+  { id: 'action', label: '', width: 60, align: 'center' },
 ];
 
 const defaultFilter: IMemberTableFilters = {
