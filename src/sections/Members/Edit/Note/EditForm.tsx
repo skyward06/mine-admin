@@ -8,6 +8,7 @@ import { ApolloError } from '@apollo/client';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 
@@ -24,18 +25,16 @@ interface Props {
   memberId: string;
   open: UseBooleanReturn;
   current?: AdminNotes;
+  close?: boolean;
 }
 
 const NewNoteSchema = zod.object({
   description: zod.string({ required_error: 'Content is required' }),
 });
 
-export default function EditForm({ open, memberId, current }: Props) {
+export default function EditForm({ open, memberId, current, close }: Props) {
   const defaultValues = useMemo(
-    () =>
-      current
-        ? NewNoteSchema.safeParse(current).data ?? ({} as NewNoteSchemaType)
-        : { description: '' },
+    () => (current ? NewNoteSchema.safeParse(current).data ?? ({} as NewNoteSchemaType) : {}),
     [current]
   );
 
@@ -90,7 +89,7 @@ export default function EditForm({ open, memberId, current }: Props) {
 
           <Field.Text name="description" label="Content" multiline minRows={3} />
 
-          <Stack alignItems="flex-start">
+          <Stack direction="row" spacing={2}>
             <LoadingButton
               type="submit"
               variant="contained"
@@ -98,6 +97,7 @@ export default function EditForm({ open, memberId, current }: Props) {
             >
               {current ? 'Edit' : 'Create'} Note
             </LoadingButton>
+            {close && <Button variant="outlined">Close</Button>}
           </Stack>
         </Stack>
       </Form>

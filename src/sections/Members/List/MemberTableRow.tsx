@@ -28,6 +28,7 @@ import { Iconify } from 'src/components/Iconify';
 import { ConfirmDialog } from 'src/components/Dialog';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
+import Detail from './Detail';
 import {
   useMoveToPaid,
   useApproveMember,
@@ -61,6 +62,7 @@ export default function MemberTableRow({
   const confirm = useBoolean();
   const password = useBoolean();
   const copy = useBoolean();
+  const open = useBoolean();
 
   const {
     id,
@@ -357,7 +359,7 @@ export default function MemberTableRow({
                 )}
                 <MenuItem
                   onClick={() => {
-                    router.push(`${paths.dashboard.members.edit(id)}`);
+                    open.onTrue();
                     popover.onClose();
                   }}
                 >
@@ -428,6 +430,8 @@ export default function MemberTableRow({
           </LoadingButton>
         }
       />
+
+      <Detail open={open} row={row} />
     </>
   );
 }
