@@ -132,7 +132,7 @@ export default function MemberGeneral({ currentMember }: Props) {
               preferredContact: newMember.preferredContact,
               preferredContactDetail: newMember.preferredContactDetail,
               zipCode: newMember.zipCode,
-              teamReport: newMember.teamReport as TeamReport,
+              teamReport: newMember.teamReport as TeamReport[],
               teamStrategy: newMember.teamStrategy as TeamStrategy,
               commissionDefault: newMember.commissionDefault as CommissionDefaultEnum,
               wallets: [...newMember.txcWallets, ...newMember.otherWallets].map(
@@ -288,13 +288,14 @@ export default function MemberGeneral({ currentMember }: Props) {
                   </MenuItem>
                 ))}
               </Field.Select>
-              <Field.Select name="teamReport" label="Team Report" defaultValue="NONE" required>
-                {Object.values(TeamReport).map((option) => (
-                  <MenuItem key={option} value={option}>
-                    {option}
-                  </MenuItem>
-                ))}
-              </Field.Select>
+              <Field.MultiSelect
+                name="teamReport"
+                label="Team Report"
+                options={Object.values(TeamReport).map((option) => ({
+                  label: option,
+                  value: option,
+                }))}
+              />
               <Field.Select
                 name="commissionDefault"
                 label="Commission Default"

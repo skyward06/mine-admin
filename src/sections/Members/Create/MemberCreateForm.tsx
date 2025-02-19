@@ -52,7 +52,7 @@ export default function MemberCreateForm() {
       state: '',
       city: '',
       teamStrategy: 'MANUAL',
-      teamReport: 'NONE',
+      teamReport: [''],
       syncWithSendy: true,
       zipCode: '',
       sponsorId: '',
@@ -123,7 +123,7 @@ export default function MemberCreateForm() {
                 sponsorId: memberId,
                 state,
                 country,
-                teamReport: teamReport as TeamReport,
+                teamReport: teamReport as TeamReport[],
                 teamStrategy: teamStrategy as TeamStrategy,
                 commissionDefault: commissionDefault as CommissionDefaultEnum,
                 wallets: [...txcWallets, ...otherWallets].map(({ percent, ...rest }) => ({
@@ -254,13 +254,15 @@ export default function MemberCreateForm() {
                   </MenuItem>
                 ))}
               </Field.Select>
-              <Field.Select name="teamReport" label="Team Report" defaultValue="NONE" required>
-                {Object.values(TeamReport).map((option) => (
-                  <MenuItem key={option} value={option}>
-                    {option}
-                  </MenuItem>
-                ))}
-              </Field.Select>
+              <Field.MultiSelect
+                name="teamReport"
+                label="Team Teport"
+                checkbox
+                options={Object.values(TeamReport).map((option) => ({
+                  label: option,
+                  value: option,
+                }))}
+              />
               <Field.Select
                 name="commissionDefault"
                 label="Commission Default"
