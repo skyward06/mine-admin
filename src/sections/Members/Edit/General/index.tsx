@@ -291,6 +291,7 @@ export default function MemberGeneral({ currentMember }: Props) {
               <Field.MultiSelect
                 name="teamReport"
                 label="Team Report"
+                checkbox
                 options={Object.values(TeamReport).map((option) => ({
                   label: option,
                   value: option,
