@@ -40,7 +40,7 @@ export default function Detail({ open, row }: Props) {
         <ScrollBar sx={{ borderRadius: 1 }}>
           <Stack direction="row" justifyContent="space-between" sx={{ p: 2 }}>
             <Stack direction="row" spacing={1}>
-              <Typography variant="h6">{formatID(row?.ID!, 'M')}</Typography>
+              <Typography variant="h6">{formatID(row?.ID ?? '', 'M')}</Typography>
               {row?.emailVerified && (
                 <Iconify icon="pajamas:partner-verified" color="green" sx={{ mt: 0.2 }} />
               )}
@@ -158,7 +158,9 @@ export default function Detail({ open, row }: Props) {
               ))}
             </Stack>
 
-            <Divider sx={{ borderStyle: 'dashed', borderColor: 'gray' }} />
+            {row?.memberWallets?.length && (
+              <Divider sx={{ borderStyle: 'dashed', borderColor: 'gray' }} />
+            )}
 
             <Stack direction="row" justifyContent="space-between" alignItems="center">
               <Typography variant="subtitle1" fontWeight={700}>
