@@ -297,6 +297,20 @@ export const FETCH_PLACEMENT_MEMBERS_WEEK = gql(/* GraphQL */ `
   }
 `);
 
+export const FETCH_INDIVIDUAL_MEMBERS_QUERY = gql(/* GraphQL */ `
+  query IndividualMembers {
+    individualMembers {
+      id
+      email
+      username
+      fullName
+      createdAt
+      sponsorUsername
+      sponsorFullname
+    }
+  }
+`);
+
 export const CREATE_MEMBER = gql(/* GraphQL */ `
   mutation createMember($data: CreateMemberInput!) {
     createMember(data: $data) {

@@ -18,6 +18,7 @@ import {
   FETCH_MEMBER_STATS_QUERY,
   FETCH_PLACEMENT_MEMBERS_WEEK,
   FETCH_PLACEMENT_MEMBERS_QUERY,
+  FETCH_INDIVIDUAL_MEMBERS_QUERY,
   FETCH_PLACEMENT_MEMBERS_O_QUERY,
 } from './query';
 
@@ -92,6 +93,19 @@ export function useFetchPlacementForWeek() {
     called,
     commissions: data?.placementMembersForWeek ?? [],
     fetchPlacementMembers,
+  };
+}
+
+export function useFetchIndividualMembers() {
+  const [fetchIndividualMembers, { loading, data, error }] = useLazyQuery(
+    FETCH_INDIVIDUAL_MEMBERS_QUERY
+  );
+
+  return {
+    loading,
+    members: data?.individualMembers ?? [],
+    error,
+    fetchIndividualMembers,
   };
 }
 

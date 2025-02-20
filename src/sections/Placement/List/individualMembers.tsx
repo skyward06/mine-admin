@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 import Table from '@mui/material/Table';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
@@ -13,12 +15,17 @@ import { formatDate, formatTime } from 'src/utils/format-time';
 import { TableNoData } from 'src/components/Table';
 import { ScrollBar } from 'src/components/ScrollBar';
 
-interface Props {
-  members: any[];
-}
+import { useFetchIndividualMembers } from 'src/sections/Members/useApollo';
 
-export default function IndividualMembers({ members }: Props) {
+export default function IndividualMembers() {
   const router = useRouter();
+
+  const { members, fetchIndividualMembers } = useFetchIndividualMembers();
+
+  useEffect(() => {
+    fetchIndividualMembers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const notFound = !members?.length;
 
@@ -43,6 +50,7 @@ export default function IndividualMembers({ members }: Props) {
                   alignItems: 'center',
                   cursor: 'pointer',
                   '&:hover': { bgcolor: (theme) => theme.vars.palette.action.hover },
+                  whiteSpace: 'nowrap',
                 }}
                 onClick={() => {
                   router.push(paths.dashboard.members.edit(row.id));
@@ -59,11 +67,11 @@ export default function IndividualMembers({ members }: Props) {
                 />
               </TableCell>
 
-              <TableCell>{row.fullName}</TableCell>
+              <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.fullName}</TableCell>
 
-              <TableCell>{row?.sponsor?.username}</TableCell>
+              <TableCell sx={{ whiteSpace: 'nowrap' }}>{row?.sponsor?.username}</TableCell>
 
-              <TableCell>
+              <TableCell sx={{ whiteSpace: 'nowrap' }}>
                 <ListItemText
                   primary={formatDate(row.createdAt)}
                   secondary={formatTime(row.createdAt)}

@@ -485,9 +485,7 @@ function PlacementListView() {
         slotProps={{ backdrop: { invisible: true } }}
         PaperProps={{ sx: { width: { xs: 1, sm: 700 }, p: 2 } }}
       >
-        <IndividualMembers
-          members={members?.filter((item: any) => item.sponsorId === null) ?? []}
-        />
+        <IndividualMembers />
       </Drawer>
     </DashboardContent>
   );
