@@ -20,11 +20,11 @@ import type { NodeProps } from './type';
 
 export function StandardNode({
   id,
-  placementPosition,
   username,
   fullName,
-  commissions,
   createdAt,
+  commissions,
+  placementPosition,
 }: NodeProps) {
   const router = useRouter();
 

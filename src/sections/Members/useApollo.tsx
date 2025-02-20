@@ -16,6 +16,7 @@ import {
   UPDATE_PASSWORD_QUERY,
   REMOVE_MEMBER_PLACEMENT,
   FETCH_MEMBER_STATS_QUERY,
+  FETCH_PLACEMENT_MEMBERS_WEEK,
   FETCH_PLACEMENT_MEMBERS_QUERY,
   FETCH_PLACEMENT_MEMBERS_O_QUERY,
 } from './query';
@@ -77,6 +78,19 @@ export function useFetchPlacementOMembers() {
     called,
     loading,
     members: data?.placementMembers ?? [],
+    fetchPlacementMembers,
+  };
+}
+
+export function useFetchPlacementForWeek() {
+  const [fetchPlacementMembers, { loading, data, called }] = useLazyQuery(
+    FETCH_PLACEMENT_MEMBERS_WEEK
+  );
+
+  return {
+    loading,
+    called,
+    commissions: data?.placementMembersForWeek ?? [],
     fetchPlacementMembers,
   };
 }
