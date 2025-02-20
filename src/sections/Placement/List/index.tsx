@@ -246,7 +246,7 @@ function PlacementListView() {
           id: `${member.placementParentId}:${member.id}`,
           source: member.placementParentId,
           target: member.id,
-          type: 'treeEdge',
+          type: 'default',
         })),
     [members]
   );
