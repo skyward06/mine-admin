@@ -1,4 +1,7 @@
+import type { PlacementMember } from 'src/__generated__/graphql';
+
 import { useContext } from 'react';
+import { Handle, Position, type NodeProps } from '@xyflow/react';
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -15,102 +18,99 @@ import { Iconify } from 'src/components/Iconify';
 
 import NodeContext from './nodeContext';
 
-import type { NodeProps } from './type';
-
 export function StandardNode({
-  id,
-  placementPosition,
-  username,
-  fullName,
-  commission,
-  createdAt,
-}: NodeProps) {
+  data: { id, placementPosition, username, fullName, commission, createdAt },
+}: NodeProps & { data: PlacementMember }) {
   const router = useRouter();
 
   const { visibleMap, expandTree, collapseTree } = useContext(NodeContext);
 
   return (
-    <Card
-      sx={{
-        p: 2,
-        minWidth: 200,
-        borderRadius: 1.5,
-        textAlign: 'left',
-        position: 'relative',
-        display: 'inline-flex',
-        flexDirection: 'column',
-      }}
-    >
-      <Typography
-        variant="subtitle2"
-        noWrap
+    <>
+      <Handle type="target" position={Position.Top} isConnectable />
+      <Handle type="source" position={Position.Bottom} isConnectable />
+      <Card
         sx={{
-          mb: 0.5,
-          cursor: 'pointer',
-          '&:hover': { color: (theme) => theme.vars.palette.Alert.errorIconColor },
-        }}
-        onClick={() => {
-          router.push(paths.dashboard.members.edit(id));
-          router.refresh();
+          p: 2,
+          minWidth: 200,
+          borderRadius: 1.5,
+          textAlign: 'left',
+          position: 'relative',
+          display: 'inline-flex',
+          flexDirection: 'column',
         }}
       >
-        {customizeFullName(fullName)}
-      </Typography>
-
-      <Stack
-        direction="row"
-        justifyContent="space-between"
-        sx={{ mb: 0.5, background: 'translation' }}
-      >
-        <Typography variant="caption" component="div" noWrap sx={{ color: 'text.secondary' }}>
-          {username}
-        </Typography>
-
-        <Stack>
-          {placementPosition !== 'NONE' && (
-            <Label
-              variant={placementPosition === 'LEFT' ? 'soft' : 'outlined'}
-              color="info"
-              sx={{ fontSize: 10, border: placementPosition === 'LEFT' ? 'none' : 1 }}
-            >
-              {placementPosition}
-            </Label>
-          )}
-        </Stack>
-      </Stack>
-
-      <Stack direction="row" justifyContent="space-between">
-        <Typography variant="caption" color="gray" component="div" noWrap sx={{ mt: 1 }}>
-          L {commission?.begL || 0}/{commission?.newL || 0}
-        </Typography>
-        <Typography variant="caption" color="gray" component="div" noWrap sx={{ mt: 1 }}>
-          {commission?.begR || 0}/{commission?.newR || 0} R
-        </Typography>
-      </Stack>
-
-      <Stack direction="row" justifyContent="space-between" sx={{ background: 'translation' }}>
         <Typography
-          variant="caption"
-          component="div"
+          variant="subtitle2"
           noWrap
-          sx={{ color: 'text.secondary', mt: 0.5 }}
+          sx={{
+            mb: 0.5,
+            cursor: 'pointer',
+            '&:hover': { color: (theme) => theme.vars.palette.Alert.errorIconColor },
+          }}
+          onClick={() => {
+            router.push(paths.dashboard.members.edit(id));
+            router.refresh();
+          }}
         >
-          {formatDate(createdAt)}
+          {customizeFullName(fullName)}
         </Typography>
 
-        <Stack>
-          {visibleMap[id] !== 3 && (
-            <Iconify
-              icon={`mdi:${visibleMap[id] === 1 ? 'plus' : 'minus'}-circle-outline`}
-              sx={{ mt: 0.15, cursor: 'pointer' }}
-              onClick={() => {
-                if (visibleMap[id] === 1) expandTree(id);
-                else if (visibleMap[id] === 2) collapseTree(id);
-              }}
-            />
-          )}
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          sx={{ mb: 0.5, background: 'translation' }}
+        >
+          <Typography variant="caption" component="div" noWrap sx={{ color: 'text.secondary' }}>
+            {username}
+          </Typography>
+
+          <Stack>
+            {placementPosition !== 'NONE' && (
+              <Label
+                variant={placementPosition === 'LEFT' ? 'soft' : 'outlined'}
+                color="info"
+                sx={{ fontSize: 10, border: placementPosition === 'LEFT' ? 'none' : 1 }}
+              >
+                {placementPosition}
+              </Label>
+            )}
+          </Stack>
         </Stack>
-      </Stack>
-    </Card>
+
+        <Stack direction="row" justifyContent="space-between">
+          <Typography variant="caption" color="gray" component="div" noWrap sx={{ mt: 1 }}>
+            L {commission?.begL || 0}/{commission?.newL || 0}
+          </Typography>
+          <Typography variant="caption" color="gray" component="div" noWrap sx={{ mt: 1 }}>
+            {commission?.begR || 0}/{commission?.newR || 0} R
+          </Typography>
+        </Stack>
+
+        <Stack direction="row" justifyContent="space-between" sx={{ background: 'translation' }}>
+          <Typography
+            variant="caption"
+            component="div"
+            noWrap
+            sx={{ color: 'text.secondary', mt: 0.5 }}
+          >
+            {formatDate(createdAt)}
+          </Typography>
+
+          <Stack>
+            {visibleMap[id] !== 3 && (
+              <Iconify
+                icon={`mdi:${visibleMap[id] === 1 ? 'plus' : 'minus'}-circle-outline`}
+                sx={{ mt: 0.15, cursor: 'pointer' }}
+                onClick={() => {
+                  if (visibleMap[id] === 1) expandTree(id);
+                  else if (visibleMap[id] === 2) collapseTree(id);
+                }}
+              />
+            )}
+          </Stack>
+        </Stack>
+      </Card>
+    </>
   );
 }
