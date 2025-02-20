@@ -20,11 +20,11 @@ import type { NodeProps } from '../../Week/Placement/type';
 
 export function StandardNode({
   id,
-  placementPosition,
   username,
   fullName,
-  commissions,
   createdAt,
+  commissions,
+  placementPosition,
 }: NodeProps) {
   const router = useRouter();
 
@@ -45,6 +45,7 @@ export function StandardNode({
         position: 'relative',
         display: 'inline-flex',
         flexDirection: 'column',
+        border: `3px solid ${commission[id]?.commission && 'red'}`,
       }}
     >
       <Stack direction="row" justifyContent="space-between" sx={{ background: 'translation' }}>
@@ -85,7 +86,7 @@ export function StandardNode({
       <Stack direction="row" justifyContent="space-between" columnGap={1}>
         <Stack>
           <Typography variant="caption" color="gray" component="div" noWrap sx={{ mt: 1 }}>
-            L {commission[id]?.maxL || 0}/{commission[id]?.pkgL || 0}
+            L {Math.min(commission[id]?.maxL || 0, 9)}/{commission[id]?.pkgL || 0}
           </Typography>
         </Stack>
         <Stack>
@@ -102,7 +103,7 @@ export function StandardNode({
         </Stack>
         <Stack>
           <Typography variant="caption" color="gray" component="div" noWrap sx={{ mt: 1 }}>
-            {commission[id]?.maxR || 0}/{commission[id]?.pkgR || 0} R
+            {Math.min(commission[id]?.maxR || 0, 9)}/{commission[id]?.pkgR || 0} R
           </Typography>
         </Stack>
       </Stack>

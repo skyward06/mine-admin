@@ -17,7 +17,7 @@ import Typography from '@mui/material/Typography';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
-import { formatWeekNumber } from 'src/utils/format-time';
+import { formatDate, formatWeekNumber } from 'src/utils/format-time';
 
 import {
   ROOT_ID,
@@ -32,12 +32,11 @@ import { LoadingScreen } from 'src/components/loading-screen';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
 import CustomEdge from 'src/sections/Placement/List/customEdge';
-import { useFetchMembers } from 'src/sections/Members/useApollo';
 import NodeContext from 'src/sections/Placement/List/nodeContext';
+import { useFetchPlacementForWeek } from 'src/sections/Members/useApollo';
 
 import { StandardNode } from './node';
 import SearchMiner from './searchMiner';
-import { useFetchCommissions } from '../../useApollo';
 
 interface Props {
   memberId: string | undefined;
@@ -202,25 +201,26 @@ function PlacementListView({ memberId, weekStartDate }: Props) {
   const popover = usePopover();
   const open = useBoolean();
 
-  const { fetchMembers, members, loading } = useFetchMembers();
-  const { fetchCommissions, weeklyCommissions } = useFetchCommissions();
+  const { fetchPlacementMembers, commissions, loading } = useFetchPlacementForWeek();
+
+  const members = commissions
+    ?.map((commission) => commission)
+    .sort((mb1, mb2) =>
+      (mb1.placementPosition as string)?.localeCompare(mb2.placementPosition as string)
+    );
 
   const [visibleMap, setVisibleMap] = useState<Record<string, number>>({});
 
   useEffect(() => {
-    fetchMembers({
-      variables: { filter: { status: true }, sort: '-placementPosition' },
-    });
-
-    fetchCommissions({
+    fetchPlacementMembers({
       variables: {
-        filter: {
-          weekStartDate,
+        data: {
+          weekStartDate: formatDate(weekStartDate, 'YYYY-MM-DD'),
         },
       },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [weekStartDate]);
 
   const nodes: Node[] = useMemo(() => {
     if (!members || members.length === 0) return [];
@@ -228,7 +228,7 @@ function PlacementListView({ memberId, weekStartDate }: Props) {
 
     const resultTree: any[] = [];
 
-    buildTree(placementTree, 0, 0, resultTree, weeklyCommissions, visibleMap);
+    buildTree(placementTree, 0, 0, resultTree, commissions, visibleMap);
 
     return resultTree;
     // eslint-disable-next-line react-hooks/exhaustive-deps
