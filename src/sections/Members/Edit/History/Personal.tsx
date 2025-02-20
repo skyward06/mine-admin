@@ -545,6 +545,13 @@ export const Personal = () => {
                 </Grid>
               </Grid>
             </Grid>
+
+            <Grid container sx={{ mt: 0.5 }}>
+              <Grid md={2}>
+                <Typography fontWeight={700}>Note: </Typography>
+              </Grid>
+              <Grid md={10}>{member?.signupFormRequest.note}</Grid>
+            </Grid>
           </DialogContent>
         </Dialog>
       )}
