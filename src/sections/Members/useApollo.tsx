@@ -9,6 +9,7 @@ import {
   MOVE_TO_PENDING,
   DUPLICATE_MEMBER,
   MOVE_TO_GRAVEYARD,
+  RESET_BONUS_CLOCK,
   SEND_WELCOME_EMAIL,
   FETCH_MEMBERS_QUERY,
   VERIFY_MEMBER_EMAIL,
@@ -217,4 +218,13 @@ export function useDuplicateMember() {
   });
 
   return { loading, data, error, duplicateMember };
+}
+
+export function useResetBonusClock() {
+  const [resetBonusClock, { loading, data, error }] = useMutation(RESET_BONUS_CLOCK, {
+    awaitRefetchQueries: true,
+    refetchQueries: ['FetchMembers', 'FetchMemberStats'],
+  });
+
+  return { loading, data, error, resetBonusClock };
 }

@@ -487,3 +487,12 @@ export const DUPLICATE_MEMBER = gql(/* GraphQL */ `
     }
   }
 `);
+
+export const RESET_BONUS_CLOCK = gql(/* GraphQL */ `
+  mutation ResetBonusClock($data: IDInput!) {
+    resetBonusClock(data: $data) {
+      message
+      result
+    }
+  }
+`);

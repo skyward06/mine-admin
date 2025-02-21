@@ -60,11 +60,10 @@ const TABLE_HEAD = [
   { id: 'fullName', label: 'Full Name', sortable: true },
   { id: 'mobile', label: 'Mobile', sortable: true },
   { id: 'assetId', label: 'AssetID', sortable: true },
-  { id: 'point', label: 'Point', sortable: true },
   { id: 'totalIntroducers', label: 'Sponsor', sortable: true },
   { id: 'emailVerified', label: 'Status', sortable: true },
-  { id: 'adminNotes', label: 'Admin Notes', sortable: true },
-  { id: 'createdAt', label: 'Created At', sortable: true },
+  { id: 'adminNotes', label: 'Admin Notes', width: 150, sortable: true },
+  { id: 'createdAt', label: 'Joined At', sortable: true },
   { id: 'action', label: '', width: 60, align: 'center' },
 ];
 

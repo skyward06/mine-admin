@@ -37,6 +37,7 @@ import {
   useUpdatePassword,
   useMoveToGraveyard,
   useDuplicateMember,
+  useResetBonusClock,
   useVerifyMemberEmail,
 } from '../useApollo';
 
@@ -72,7 +73,6 @@ export default function MemberTableRow({
     sales,
     state,
     email,
-    point,
     avatar,
     mobile,
     assetId,
@@ -88,11 +88,12 @@ export default function MemberTableRow({
     secondaryAddress,
   } = row;
 
+  const { moveToPaid } = useMoveToPaid();
   const { approveMember } = useApproveMember();
   const { moveToPending } = useMoveToPending();
   const { duplicateMember } = useDuplicateMember();
   const { moveToGraveyard } = useMoveToGraveyard();
-  const { moveToPaid } = useMoveToPaid();
+  const { resetBonusClock } = useResetBonusClock();
   const { verifyMemberEmail } = useVerifyMemberEmail();
   const { loading, updatePassword } = useUpdatePassword();
 
@@ -173,6 +174,19 @@ export default function MemberTableRow({
     }
   };
 
+  const handleResetBonus = async () => {
+    try {
+      const { data } = await resetBonusClock({ variables: { data: { id } } });
+
+      if (data) {
+        toast.success('Successfully reseted!');
+        popover.onClose();
+      }
+    } catch (error) {
+      console.log('error => ', error);
+    }
+  };
+
   return (
     <>
       <TableRow hover selected={selected}>
@@ -199,8 +213,6 @@ export default function MemberTableRow({
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{mobile}</TableCell>
 
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{assetId}</TableCell>
-
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{point}</TableCell>
 
         <TableCell
           sx={{
@@ -243,9 +255,7 @@ export default function MemberTableRow({
           </Stack>
         </TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>
-          {adminNotes?.length ? adminNotes[0]?.description : ''}
-        </TableCell>
+        <TableCell>{adminNotes?.length ? adminNotes[0]?.description : ''}</TableCell>
 
         <TableCell sx={{ whiteSpace: 'nowrap' }}>
           <ListItemText
@@ -396,6 +406,10 @@ export default function MemberTableRow({
                 <MenuItem onClick={handleDuplicateMember}>
                   <Iconify icon="heroicons-solid:document-duplicate" color="green" />
                   Duplicate
+                </MenuItem>
+                <MenuItem onClick={handleResetBonus}>
+                  <Iconify icon="typcn:arrow-back" color="green" />
+                  Reset Bonus
                 </MenuItem>
               </MenuList>
             </CustomPopover>
