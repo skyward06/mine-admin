@@ -20,9 +20,10 @@ const FETCH_USER = gql(/* GraphQL */ `
     admins(filter: $filter) {
       admins {
         id
+        email
         avatar
         username
-        email
+        fullName
         deletedAt
       }
     }

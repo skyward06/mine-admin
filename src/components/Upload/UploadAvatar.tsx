@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 
 import { varAlpha } from 'src/theme/styles';
 
@@ -15,7 +14,15 @@ import type { UploadProps } from './types';
 
 // ----------------------------------------------------------------------
 
-export function UploadAvatar({ sx, error, value, disabled, helperText, ...other }: UploadProps) {
+export function UploadAvatar({
+  sx,
+  error,
+  value,
+  disabled,
+  helperText,
+  current,
+  ...other
+}: UploadProps) {
   const { getRootProps, getInputProps, isDragActive, isDragReject, fileRejections } = useDropzone({
     multiple: false,
     disabled,
@@ -74,9 +81,11 @@ export function UploadAvatar({ sx, error, value, disabled, helperText, ...other 
         }),
       }}
     >
-      <Iconify icon="solar:camera-add-bold" width={32} />
-
-      <Typography variant="caption">{hasFile ? 'Update photo' : 'Upload photo'}</Typography>
+      {current && !hasFile ? (
+        <Image src={current} />
+      ) : (
+        <Iconify icon="solar:camera-add-bold" width={32} />
+      )}
     </Box>
   );
 

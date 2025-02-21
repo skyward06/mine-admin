@@ -1,10 +1,10 @@
 import type { Admin } from 'src/__generated__/graphql';
 
+import axios from 'axios';
 import { z as zod } from 'zod';
-import { useMemo } from 'react';
-import isEqual from 'lodash/isEqual';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMemo, useState, useCallback } from 'react';
 import { ApolloError, useMutation } from '@apollo/client';
 
 import Box from '@mui/material/Box';
@@ -18,12 +18,15 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { fData } from 'src/utils/formatNumber';
 import { fDateTime } from 'src/utils/format-time';
 
+import { CONFIG } from 'src/config';
 import { gql } from 'src/__generated__/gql';
 
 import { Label } from 'src/components/Label';
 import { toast } from 'src/components/SnackBar';
+import { Iconify } from 'src/components/Iconify';
 import { Form, Field } from 'src/components/Form';
 
 // ----------------------------------------------------------------------
@@ -50,6 +53,7 @@ export type UserGeneralSchemaType = zod.infer<typeof UserGeneralSchema>;
 
 const UserGeneralSchema = zod.object({
   username: zod.string({ required_error: 'Username is required' }),
+  fullName: zod.string({ required_error: 'Full Name is required' }),
   email: zod
     .string({ required_error: 'Email is required' })
     .email({ message: 'Invalid email address is provided' }),
@@ -58,6 +62,10 @@ const UserGeneralSchema = zod.object({
 
 export default function UserGeneral({ currentUser }: Props) {
   const router = useRouter();
+
+  const [fileLoading, setFileLoading] = useState<boolean>();
+  const [avatar, setAvatar] = useState<string>();
+  const [avatarUrl, setAvatarUrl] = useState<File | string | null>(null);
 
   const [submit, { loading }] = useMutation(UPDATE_USER);
 
@@ -75,17 +83,12 @@ export default function UserGeneral({ currentUser }: Props) {
 
   const onSubmit = handleSubmit(async (newUser) => {
     try {
-      if (isEqual(newUser, defaultValues)) {
-        toast.warning('No changes to save');
-        return;
-      }
-
       await submit({
         variables: {
           data: {
             ...newUser,
             id: currentUser.id,
-            avatar: currentUser.avatar,
+            avatar,
           },
         },
       });
@@ -103,6 +106,30 @@ export default function UserGeneral({ currentUser }: Props) {
       toast.error(err.message);
     }
   });
+
+  const handleDrop = useCallback(async (acceptedFiles: File[]) => {
+    const newFile = acceptedFiles[0];
+    setFileLoading(true);
+    setAvatarUrl(newFile);
+
+    const formData = new FormData();
+
+    acceptedFiles.forEach((file) => formData.append('avatar', file));
+
+    try {
+      const { data } = await axios.post(`${CONFIG.SITE_URL}/api/upload`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+
+      if (data) {
+        setAvatar(data.files[0].url);
+      }
+    } catch (error) {
+      console.error('Error uploading file:', error);
+    } finally {
+      setFileLoading(false);
+    }
+  }, []);
 
   return (
     <Form methods={methods} onSubmit={onSubmit}>
@@ -123,6 +150,17 @@ export default function UserGeneral({ currentUser }: Props) {
             <Box sx={{ mb: 5 }}>
               <Field.UploadAvatar
                 name="avatar"
+                value={avatarUrl}
+                current={currentUser.avatar}
+                validator={(fileData) => {
+                  if (fileData.size > 1000000) {
+                    return {
+                      code: 'file-too-large',
+                      message: `File is larger than ${fData(1000000)}`,
+                    };
+                  }
+                  return null;
+                }}
                 helperText={
                   <Typography
                     variant="caption"
@@ -134,10 +172,16 @@ export default function UserGeneral({ currentUser }: Props) {
                       color: 'text.disabled',
                     }}
                   >
-                    Select your favorite avatar
+                    Allowed *.jpeg, *.jpg, *.png, *.gif
+                    <br /> max size of {fData(3145728)}
                   </Typography>
                 }
+                onDrop={handleDrop}
               />
+            </Box>
+
+            <Box display="flex" justifyContent="center">
+              {fileLoading && <Iconify icon="line-md:uploading-loop" width={50} />}
             </Box>
           </Card>
         </Grid>
@@ -156,10 +200,11 @@ export default function UserGeneral({ currentUser }: Props) {
               display="grid"
               gridTemplateColumns={{
                 xs: 'repeat(1, 1fr)',
-                sm: 'repeat(2, 1fr)',
+                sm: 'repeat(3, 1fr)',
               }}
             >
               <Field.Text name="username" label="Username" />
+              <Field.Text name="fullName" label="Full Name" />
               <Field.Text name="email" label="Email Address" />
             </Box>
 

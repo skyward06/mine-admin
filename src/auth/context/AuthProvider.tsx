@@ -22,9 +22,10 @@ const FETCH_ME_QUERY = gql(/* GraphQL */ `
   query FetchMe {
     adminMe {
       id
+      email
       avatar
       username
-      email
+      fullName
     }
   }
 `);

@@ -1,7 +1,8 @@
+import axios from 'axios';
 import { z as zod } from 'zod';
-import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMemo, useState, useCallback } from 'react';
 import { ApolloError, useMutation } from '@apollo/client';
 
 import Box from '@mui/material/Box';
@@ -14,9 +15,13 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { fData } from 'src/utils/formatNumber';
+
+import { CONFIG } from 'src/config';
 import { gql } from 'src/__generated__/gql';
 
 import { toast } from 'src/components/SnackBar';
+import { Iconify } from 'src/components/Iconify';
 import { Form, Field } from 'src/components/Form';
 
 // ----------------------------------------------------------------------
@@ -36,7 +41,8 @@ const CREATE_USER = gql(/* GraphQL */ `
 export type NewUserSchemaType = zod.infer<typeof NewUserSchema>;
 
 const NewUserSchema = zod.object({
-  username: zod.string({ required_error: 'Name is required' }),
+  username: zod.string({ required_error: 'Username is required' }),
+  fullName: zod.string({ required_error: 'Full Name is required' }),
   email: zod
     .string({ required_error: 'Email is required' })
     .email({ message: 'Invalid email address is provided' }),
@@ -46,10 +52,14 @@ const NewUserSchema = zod.object({
 export default function UserCreateForm() {
   const router = useRouter();
 
+  const [fileLoading, setFileLoading] = useState<boolean>();
+  const [avatar, setAvatar] = useState<string>();
+  const [avatarUrl, setAvatarUrl] = useState<File | string | null>(null);
+
   const defaultValues = useMemo(
     () => ({
-      name: '',
       email: '',
+      username: '',
       avatar: null,
     }),
     []
@@ -64,12 +74,13 @@ export default function UserCreateForm() {
 
   const { reset, setError, handleSubmit } = methods;
 
-  const onSubmit = handleSubmit(async ({ avatar, ...data }) => {
+  const onSubmit = handleSubmit(async ({ ...data }) => {
     try {
       await submit({
         variables: {
           data: {
             ...data,
+            avatar,
             password: '',
           },
         },
@@ -89,6 +100,30 @@ export default function UserCreateForm() {
     }
   });
 
+  const handleDrop = useCallback(async (acceptedFiles: File[]) => {
+    const newFile = acceptedFiles[0];
+    setFileLoading(true);
+    setAvatarUrl(newFile);
+
+    const formData = new FormData();
+
+    acceptedFiles.forEach((file) => formData.append('avatar', file));
+
+    try {
+      const { data } = await axios.post(`${CONFIG.SITE_URL}/api/upload`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+
+      if (data) {
+        setAvatar(data.files[0].url);
+      }
+    } catch (error) {
+      console.error('Error uploading file:', error);
+    } finally {
+      setFileLoading(false);
+    }
+  }, []);
+
   return (
     <Form methods={methods} onSubmit={onSubmit}>
       <Grid container spacing={3}>
@@ -97,6 +132,16 @@ export default function UserCreateForm() {
             <Box sx={{ mb: 5 }}>
               <Field.UploadAvatar
                 name="avatar"
+                value={avatarUrl}
+                validator={(fileData) => {
+                  if (fileData.size > 1000000) {
+                    return {
+                      code: 'file-too-large',
+                      message: `File is larger than ${fData(1000000)}`,
+                    };
+                  }
+                  return null;
+                }}
                 helperText={
                   <Typography
                     variant="caption"
@@ -111,7 +156,12 @@ export default function UserCreateForm() {
                     Select your favorite avatar
                   </Typography>
                 }
+                onDrop={handleDrop}
               />
+            </Box>
+
+            <Box display="flex" justifyContent="center">
+              {fileLoading && <Iconify icon="line-md:uploading-loop" width={50} />}
             </Box>
           </Card>
         </Grid>
@@ -130,10 +180,11 @@ export default function UserCreateForm() {
               display="grid"
               gridTemplateColumns={{
                 xs: 'repeat(1, 1fr)',
-                sm: 'repeat(2, 1fr)',
+                sm: 'repeat(3, 1fr)',
               }}
             >
               <Field.Text name="username" label="Username" />
+              <Field.Text name="fullName" label="Full Name" />
               <Field.Text name="email" label="Email Address" />
             </Box>
 

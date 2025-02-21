@@ -92,9 +92,10 @@ const FETCH_USERS_QUERY = gql(/* GraphQL */ `
     admins(page: $page, filter: $filter, sort: $sort) {
       admins {
         id
+        email
         avatar
         username
-        email
+        fullName
         createdAt
         updatedAt
         deletedAt
@@ -105,7 +106,7 @@ const FETCH_USERS_QUERY = gql(/* GraphQL */ `
 `);
 
 const REMOVE_USERS = gql(/* GraphQL */ `
-  mutation removeUsers($data: IDsInput!) {
+  mutation RemoveAdmins($data: IDsInput!) {
     removeAdmins(data: $data) {
       count
     }
