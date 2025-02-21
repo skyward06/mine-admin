@@ -3,7 +3,6 @@ import type { Admin } from 'src/__generated__/graphql';
 import { useState } from 'react';
 
 import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
@@ -22,7 +21,7 @@ import { useBoolean } from 'src/hooks/useBoolean';
 import { formatDate, formatTime, formatDateTime } from 'src/utils/format-time';
 
 import { Label } from 'src/components/Label';
-import { Image } from 'src/components/Image';
+import UserItem from 'src/components/UserItem';
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 import { ConfirmDialog } from 'src/components/Dialog';
@@ -101,18 +100,7 @@ export default function UserTableRow({
             router.push(paths.dashboard.user.edit(id));
           }}
         >
-          <Stack direction="row" spacing={2}>
-            <Image src={avatar} width={40} height={40} borderRadius={50} />
-            <ListItemText
-              primary={username}
-              secondary={email}
-              primaryTypographyProps={{ typography: 'body2' }}
-              secondaryTypographyProps={{
-                component: 'span',
-                color: 'text.disabled',
-              }}
-            />
-          </Stack>
+          <UserItem user={{ username, email, avatar }} />
         </TableCell>
 
         <TableCell>
@@ -166,13 +154,7 @@ export default function UserTableRow({
             </IconButton>
           </Tooltip>
           <Tooltip title="Reset Password" placement="top" arrow>
-            <IconButton
-              color="default"
-              onClick={() => {
-                confirm.onTrue();
-                // router.push(paths.dashboard.user.edit(id));
-              }}
-            >
+            <IconButton color="default" onClick={confirm.onTrue}>
               <Iconify icon="basil:unlock-solid" />
             </IconButton>
           </Tooltip>

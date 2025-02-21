@@ -28,6 +28,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
       members {
         id
         ID
+        avatar
         balance
         username
         fullName

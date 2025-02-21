@@ -23,6 +23,7 @@ import { formatID } from 'src/utils/helper';
 import { formatDate, formatTime } from 'src/utils/format-time';
 
 import { Label } from 'src/components/Label';
+import UserItem from 'src/components/UserItem';
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 import { ConfirmDialog } from 'src/components/Dialog';
@@ -72,6 +73,7 @@ export default function MemberTableRow({
     state,
     email,
     point,
+    avatar,
     mobile,
     assetId,
     zipCode,
@@ -189,15 +191,7 @@ export default function MemberTableRow({
             router.push(paths.dashboard.members.edit(id));
           }}
         >
-          <ListItemText
-            primary={username}
-            secondary={email}
-            primaryTypographyProps={{ typography: 'body2' }}
-            secondaryTypographyProps={{
-              component: 'span',
-              color: 'text.disabled',
-            }}
-          />
+          <UserItem user={{ username, email, avatar }} />
         </TableCell>
 
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{fullName}</TableCell>

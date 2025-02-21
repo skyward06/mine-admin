@@ -109,14 +109,14 @@ export function UploadAvatar({
       <Box
         {...getRootProps()}
         sx={{
-          p: 1,
+          p: 0.5,
           m: 'auto',
           width: 144,
           height: 144,
           cursor: 'pointer',
           overflow: 'hidden',
           borderRadius: '50%',
-          border: (theme) => `1px dashed ${varAlpha(theme.vars.palette.grey['500Channel'], 0.2)}`,
+          border: (theme) => `1px dashed ${varAlpha(theme.vars.palette.grey['500Channel'], 0.8)}`,
           ...(isDragActive && { opacity: 0.72 }),
           ...(disabled && { opacity: 0.48, pointerEvents: 'none' }),
           ...(hasError && { borderColor: 'error.main' }),
