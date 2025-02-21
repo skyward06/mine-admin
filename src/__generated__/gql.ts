@@ -117,8 +117,8 @@ const documents = {
     "\n  query TotalMemberCounts($data: PeriodStatsArgs!) {\n    totalMemberCounts(data: $data) {\n      base\n      baseDate\n      minerCount\n    }\n  }\n": types.TotalMemberCountsDocument,
     "\n  query TxcShares($data: PeriodStatsArgs!) {\n    txcShares(data: $data) {\n      base\n      baseDate\n      txc\n    }\n  }\n": types.TxcSharesDocument,
     "\n  query LatestStatistics {\n    latestStatistics {\n      id\n      newBlocks\n      totalMembers\n      txcShared\n      issuedAt\n    }\n  }\n": types.LatestStatisticsDocument,
-    "\n  query TopEarners {\n    topEarners {\n      fullName\n      earned\n    }\n  }\n": types.TopEarnersDocument,
-    "\n  query TopRecruiters {\n    topRecruiters {\n      fullName\n      totalIntroducers\n    }\n  }\n": types.TopRecruitersDocument,
+    "\n  query TopEarners {\n    topEarners {\n      avatar\n      earned\n      fullName\n    }\n  }\n": types.TopEarnersDocument,
+    "\n  query TopRecruiters {\n    topRecruiters {\n      avatar\n      fullName\n      totalIntroducers\n    }\n  }\n": types.TopRecruitersDocument,
     "\n    fragment FrontActionFields on FrontAction {\n      action\n      message\n      extra {\n        ... on FrontActionCreate12FreeBonusSale {\n          username\n          fullName\n          memberId\n          packageId\n          sponsorCnt\n          packageName\n          paymentMethod\n          isWithinSponsorRollDuration\n        }\n        ... on FrontActionUpdate12FreeBonusSale {\n          id\n          oldPackageId\n          newPackageId\n          oldPackageName\n          newPackageName\n          status\n        }\n        ... on FrontActionRemove12FreeBonusSale {\n          id\n        }\n      }\n    }\n    fragment PayoutFields on Payout {\n      id\n      method\n      display\n      name\n      status\n      createdAt\n      updatedAt\n      deletedAt\n    }\n    fragment PackageFields on Package {\n      id\n      date\n      token\n      point\n      amount\n      status\n      freeShare\n      productName\n      enrollVisibility\n    }\n  ": types.FrontActionFieldsFragmentDoc,
 };
 
@@ -555,11 +555,11 @@ export function gql(source: "\n  query LatestStatistics {\n    latestStatistics 
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query TopEarners {\n    topEarners {\n      fullName\n      earned\n    }\n  }\n"): (typeof documents)["\n  query TopEarners {\n    topEarners {\n      fullName\n      earned\n    }\n  }\n"];
+export function gql(source: "\n  query TopEarners {\n    topEarners {\n      avatar\n      earned\n      fullName\n    }\n  }\n"): (typeof documents)["\n  query TopEarners {\n    topEarners {\n      avatar\n      earned\n      fullName\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query TopRecruiters {\n    topRecruiters {\n      fullName\n      totalIntroducers\n    }\n  }\n"): (typeof documents)["\n  query TopRecruiters {\n    topRecruiters {\n      fullName\n      totalIntroducers\n    }\n  }\n"];
+export function gql(source: "\n  query TopRecruiters {\n    topRecruiters {\n      avatar\n      fullName\n      totalIntroducers\n    }\n  }\n"): (typeof documents)["\n  query TopRecruiters {\n    topRecruiters {\n      avatar\n      fullName\n      totalIntroducers\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
