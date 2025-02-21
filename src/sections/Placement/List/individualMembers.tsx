@@ -69,7 +69,7 @@ export default function IndividualMembers() {
 
               <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.fullName}</TableCell>
 
-              <TableCell sx={{ whiteSpace: 'nowrap' }}>{row?.sponsor?.username}</TableCell>
+              <TableCell sx={{ whiteSpace: 'nowrap' }}>{row?.sponsorUsername}</TableCell>
 
               <TableCell sx={{ whiteSpace: 'nowrap' }}>
                 <ListItemText
