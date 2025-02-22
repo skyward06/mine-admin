@@ -1,9 +1,10 @@
+import axios from 'axios';
 import states from 'states-us';
 import countries from 'country-list';
 import { useForm } from 'react-hook-form';
-import { useMemo, useState, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ApolloError, useMutation } from '@apollo/client';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -17,6 +18,9 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { fData } from 'src/utils/formatNumber';
+
+import { CONFIG } from 'src/config';
 import { CONTACT } from 'src/consts';
 import {
   type Promo,
@@ -39,23 +43,27 @@ import { Schema, type SchemaType } from './schema';
 // ----------------------------------------------------------------------
 
 export default function MemberCreateForm() {
-  const [memberId, setMemberId] = useState<string>('');
   const [state, setState] = useState<string>();
   const [country, setCountry] = useState<string>();
+  const [avatar, setAvatar] = useState<string>('');
+  const [memberId, setMemberId] = useState<string>('');
+  const [avatarUrl, setAvatarUrl] = useState<File | string | null>(null);
 
   const router = useRouter();
 
   const defaultValues = useMemo(
     () => ({
-      primaryAddress: '',
-      secondaryAddress: '',
-      state: '',
       city: '',
-      teamStrategy: 'MANUAL',
-      teamReport: [''],
-      syncWithSendy: true,
+      state: '',
+      avatar: '',
       zipCode: '',
       sponsorId: '',
+      teamReport: [],
+      syncWithSendy: true,
+      primaryAddress: '',
+      secondaryAddress: '',
+      teamStrategy: 'MANUAL',
+      commissionDefault: 'MANUAL',
       txcWallets: [{ percent: 100 }],
     }),
     []
@@ -104,6 +112,8 @@ export default function MemberCreateForm() {
       try {
         const total = txcWallets.reduce((prev: number, save: any) => prev + save.percent, 0);
 
+        console.log('teamReport => ', teamReport);
+
         if (hasDuplicates([...txcWallets, ...otherWallets])) {
           toast.warning('Duplicated wallet address!');
           return;
@@ -122,6 +132,7 @@ export default function MemberCreateForm() {
                 fullName: `${firstName} ${lastName}`,
                 sponsorId: memberId,
                 state,
+                avatar,
                 country,
                 teamReport: teamReport as TeamReport[],
                 teamStrategy: teamStrategy as TeamStrategy,
@@ -169,6 +180,27 @@ export default function MemberCreateForm() {
     }
   );
 
+  const handleDrop = useCallback(async (acceptedFiles: File[]) => {
+    const newFile = acceptedFiles[0];
+    setAvatarUrl(newFile);
+
+    const formData = new FormData();
+
+    acceptedFiles.forEach((file) => formData.append('avatar', file));
+
+    try {
+      const { data } = await axios.post(`${CONFIG.SITE_URL}/api/upload`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+
+      if (data) {
+        setAvatar(data.files[0].url);
+      }
+    } catch (error) {
+      console.error('Error uploading file:', error);
+    }
+  }, []);
+
   return (
     <Form methods={methods} onSubmit={onSubmit}>
       <Grid container spacing={3}>
@@ -183,10 +215,27 @@ export default function MemberCreateForm() {
                 sm: 'repeat(2, 1fr)',
               }}
             >
+              <Field.UploadAvatar
+                name="avatar"
+                value={avatarUrl}
+                validator={(fileData) => {
+                  if (fileData.size > 1000000) {
+                    return {
+                      code: 'file-too-large',
+                      message: `File is larger than ${fData(1000000)}`,
+                    };
+                  }
+                  return null;
+                }}
+                sx={{ width: 120, height: 120 }}
+                onDrop={handleDrop}
+              />
+              <Stack spacing={3}>
+                <Field.Text name="firstName" label="First Name" required />
+                <Field.Text name="lastName" label="Last Name" required />
+              </Stack>
               <Field.Text name="username" label="Username" required />
               <Field.Text name="email" label="Email" required />
-              <Field.Text name="firstName" label="First Name" required />
-              <Field.Text name="lastName" label="Last Name" required />
               <Field.Phone name="mobile" label="Mobile" />
               <SearchMiner label="Sponsor" setMemberId={setMemberId} />
               <Field.Text name="primaryAddress" label="Address" />

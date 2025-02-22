@@ -1,10 +1,11 @@
+import axios from 'axios';
 import states from 'states-us';
 import countries from 'country-list';
 import isEqual from 'lodash/isEqual';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ApolloError, useMutation } from '@apollo/client';
-import { useRef, useMemo, useState, useEffect } from 'react';
+import { useRef, useMemo, useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -18,6 +19,9 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { fData } from 'src/utils/formatNumber';
+
+import { CONFIG } from 'src/config';
 import { CONTACT } from 'src/consts';
 import {
   TeamReport,
@@ -55,10 +59,12 @@ export default function MemberGeneral({ currentMember }: Props) {
   const [, first, last]: any = fullName.trim().match(/^(\S+)\s+(.*)/);
 
   const [state, setState] = useState<string>();
+  const [avatar, setAvatar] = useState<string>();
   const [country, setCountry] = useState<string>();
   const [memberId, setMemberId] = useState<string>('');
-  const [firstName, setFirstName] = useState<string>(first);
   const [lastName, setLastName] = useState<string>(last);
+  const [firstName, setFirstName] = useState<string>(first);
+  const [avatarUrl, setAvatarUrl] = useState<File | string | null>(null);
 
   const [submit, { loading }] = useMutation(UPDATE_MEMBER);
   const [approve] = useMutation(APPROVE_MEMBER);
@@ -116,6 +122,7 @@ export default function MemberGeneral({ currentMember }: Props) {
           variables: {
             data: {
               id: currentMember.id,
+              avatar: avatar ?? currentMember?.avatar,
               username: newMember.username,
               email: newMember.email,
               fullName: `${firstName} ${lastName}`,
@@ -191,6 +198,27 @@ export default function MemberGeneral({ currentMember }: Props) {
     }
   });
 
+  const handleDrop = useCallback(async (acceptedFiles: File[]) => {
+    const newFile = acceptedFiles[0];
+    setAvatarUrl(newFile);
+
+    const formData = new FormData();
+
+    acceptedFiles.forEach((file) => formData.append('avatar', file));
+
+    try {
+      const { data } = await axios.post(`${CONFIG.SITE_URL}/api/upload`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+
+      if (data) {
+        setAvatar(data.files[0].url);
+      }
+    } catch (error) {
+      console.error('Error uploading file:', error);
+    }
+  }, []);
+
   return (
     <Form methods={methods} onSubmit={onSubmit}>
       <Grid container spacing={3}>
@@ -205,22 +233,40 @@ export default function MemberGeneral({ currentMember }: Props) {
                 sm: 'repeat(2, 1fr)',
               }}
             >
+              <Field.UploadAvatar
+                name="avatar"
+                value={avatarUrl}
+                current={currentMember?.avatar ?? ''}
+                validator={(fileData) => {
+                  if (fileData.size > 1000000) {
+                    return {
+                      code: 'file-too-large',
+                      message: `File is larger than ${fData(1000000)}`,
+                    };
+                  }
+                  return null;
+                }}
+                sx={{ width: 120, height: 120 }}
+                onDrop={handleDrop}
+              />
+              <Stack spacing={3}>
+                <Field.Text
+                  name="firstName"
+                  label="First Name"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  required
+                />
+                <Field.Text
+                  name="lastName"
+                  label="Last Name"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  required
+                />
+              </Stack>
               <Field.Text name="username" label="Username" required />
               <Field.Text name="email" label="Email" defaultValue={currentMember.email} required />
-              <Field.Text
-                name="firstName"
-                label="First Name"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                required
-              />
-              <Field.Text
-                name="lastName"
-                label="Last Name"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                required
-              />
               <Field.Phone name="mobile" label="Mobile" />
               <SearchMiner
                 label="Sponsor"
