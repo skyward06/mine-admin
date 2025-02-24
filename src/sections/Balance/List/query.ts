@@ -22,6 +22,7 @@ export const FETCH_BALANCES = gql(/* GraphQL */ `
           groupName
           allowState
           teamReport
+          OTPEnabled
           teamStrategy
           syncWithSendy
           emailVerified

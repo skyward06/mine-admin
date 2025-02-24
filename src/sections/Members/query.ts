@@ -28,36 +28,37 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
       members {
         id
         ID
+        city
+        email
+        point
+        state
+        status
         avatar
+        mobile
+        assetId
         balance
+        country
+        zipCode
         username
         fullName
-        email
-        country
-        allowState
-        primaryAddress
-        secondaryAddress
-        commissionDefault
-        assetId
-        mobile
-        city
-        state
-        zipCode
-        point
         sponsorId
-        status
         promoCode
         groupName
-        emailVerified
-        totalIntroducers
-        syncWithSendy
-        preferredContact
-        preferredContactDetail
-        cmnCalculatedWeeks
-        teamStrategy
+        allowState
+        OTPEnabled
         teamReport
+        teamStrategy
+        emailVerified
+        syncWithSendy
+        primaryAddress
+        preferredContact
+        secondaryAddress
+        totalIntroducers
+        commissionDefault
         placementPosition
         signupFormRequest
+        cmnCalculatedWeeks
+        preferredContactDetail
         commission {
           begL
           begR
@@ -76,6 +77,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           groupName
           allowState
           teamReport
+          OTPEnabled
           teamStrategy
           syncWithSendy
           emailVerified
@@ -99,6 +101,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           groupName
           allowState
           teamReport
+          OTPEnabled
           teamStrategy
           syncWithSendy
           emailVerified
@@ -120,6 +123,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           groupName
           allowState
           teamReport
+          OTPEnabled
           teamStrategy
           syncWithSendy
           emailVerified
@@ -226,6 +230,7 @@ export const FETCH_PLACEMENT_MEMBERS_QUERY = gql(/* GraphQL */ `
         status
         allowState
         teamReport
+        OTPEnabled
         teamStrategy
         cmnCalculatedWeeks
         placementParentId
@@ -284,8 +289,8 @@ export const FETCH_PLACEMENT_MEMBERS_WEEK = gql(/* GraphQL */ `
       pkgR
       username
       fullName
-      commission
       createdAt
+      commission
       placementPosition
       placementParentId
     }

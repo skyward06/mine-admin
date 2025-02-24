@@ -47,6 +47,7 @@ export const FETCH_MEMBERSTATISTICS_QUERY = gql(/* GraphQL */ `
           id
           commissionDefault
           balance
+          OTPEnabled
           username
           fullName
           email

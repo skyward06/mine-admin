@@ -52,6 +52,7 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
           createdAt
           allowState
           teamReport
+          OTPEnabled
           teamStrategy
           syncWithSendy
           emailVerified
@@ -85,6 +86,7 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
           createdAt
           allowState
           teamReport
+          OTPEnabled
           teamStrategy
           syncWithSendy
           emailVerified
