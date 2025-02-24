@@ -99,6 +99,7 @@ const FETCH_USERS_QUERY = gql(/* GraphQL */ `
         createdAt
         updatedAt
         deletedAt
+        OTPEnabled
       }
       total
     }

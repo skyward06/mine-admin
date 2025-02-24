@@ -26,6 +26,7 @@ const FETCH_ME_QUERY = gql(/* GraphQL */ `
       avatar
       username
       fullName
+      OTPEnabled
     }
   }
 `);

@@ -25,6 +25,7 @@ const FETCH_USER = gql(/* GraphQL */ `
         username
         fullName
         deletedAt
+        OTPEnabled
       }
     }
   }

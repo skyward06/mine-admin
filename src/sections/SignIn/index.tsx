@@ -16,12 +16,15 @@ import { RouterLink } from 'src/routes/components';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
+import { CONFIG } from 'src/config';
+
 import { Iconify } from 'src/components/Iconify';
 import { Form, Field } from 'src/components/Form';
 
 import { useAuthContext } from 'src/auth/hooks';
 
 import { useApollo } from './useApollo';
+import VerifyModal from './verifyModal';
 
 // ----------------------------------------------------------------------
 
@@ -46,6 +49,7 @@ export function SignInView() {
 
   const [errorMsg, setErrorMsg] = useState('');
 
+  const open = useBoolean();
   const password = useBoolean();
 
   const methods = useForm<SignInSchemaType>({
@@ -60,8 +64,15 @@ export function SignInView() {
   const onSubmit = handleSubmit(async (data) => {
     try {
       const response = await submitLogin({ variables: { data } });
+
       const token = response.data?.adminLogin.accessToken ?? '';
-      signIn(token);
+
+      if (response.data?.adminLogin.status === 'success') {
+        signIn(token);
+      } else {
+        localStorage.setItem(CONFIG.storageTokenKey, token);
+        open.onTrue();
+      }
     } catch (error) {
       console.error(error);
       setErrorMsg(error instanceof Error ? error.message : error);
@@ -123,16 +134,15 @@ export function SignInView() {
   return (
     <>
       {renderHead}
-
       {!!errorMsg && (
         <Alert severity="error" sx={{ mb: 3 }}>
           {errorMsg}
         </Alert>
       )}
-
       <Form methods={methods} onSubmit={onSubmit}>
         {renderForm}
       </Form>
+      <VerifyModal open={open} signIn={signIn} />
     </>
   );
 }
