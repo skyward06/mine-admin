@@ -1,4 +1,4 @@
-import type { Sale } from 'src/__generated__/graphql';
+import type { BasicSale } from 'src/__generated__/graphql';
 
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
@@ -13,14 +13,15 @@ import { Label } from 'src/components/Label';
 
 type Props = {
   selected: boolean;
-  row: Sale;
+  // row: Sale;
+  row: BasicSale;
   onSelectRow: VoidFunction;
 };
 
 export default function SalesTableRow({ row, selected, onSelectRow }: Props) {
   const router = useRouter();
 
-  const { id, member, package: product, paymentMethod, status } = row;
+  const { id, productName, amount, token, assetId, username, paymentMethod, status } = row;
   return (
     <TableRow hover selected={selected}>
       <TableCell padding="checkbox">
@@ -37,18 +38,18 @@ export default function SalesTableRow({ row, selected, onSelectRow }: Props) {
           router.push(paths.dashboard.members.edit(id));
         }}
       >
-        {member?.username}
+        {username}
       </TableCell>
 
-      <TableCell sx={{ whiteSpace: 'nowrap' }}>{product?.productName}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{productName}</TableCell>
 
       <TableCell sx={{ whiteSpace: 'nowrap' }}>{paymentMethod}</TableCell>
 
-      <TableCell sx={{ whiteSpace: 'nowrap' }}>{product?.amount}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{amount}</TableCell>
 
-      <TableCell sx={{ whiteSpace: 'nowrap' }}>{product?.token}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{token}</TableCell>
 
-      <TableCell sx={{ whiteSpace: 'nowrap' }}>{member?.assetId}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{assetId}</TableCell>
 
       <TableCell sx={{ whiteSpace: 'nowrap' }}>
         {status ? (

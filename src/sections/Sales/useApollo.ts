@@ -9,6 +9,8 @@ import {
   CREATE_SALE,
   UPDATE_SALE,
   REMOVE_SALE,
+  FETCH_SALE_BY_Id,
+  FETCH_SALE_BY_ID,
   FETCH_SALES_QUERY,
   FETCH_SALES_STATS_QUERY,
 } from './query';
@@ -42,12 +44,18 @@ export function useFetchSales() {
   };
 }
 
-export function useFetchSale(ID: number) {
-  const { loading, data } = useQuery(FETCH_SALES_QUERY, {
-    variables: { filter: { ID } },
+export function useFetchSaleById() {
+  const [fetchSaleById, { loading, data, error }] = useLazyQuery(FETCH_SALE_BY_Id);
+
+  return { loading, sale: data?.saleById, error, fetchSaleById };
+}
+
+export function useFetchSaleByID(ID: number) {
+  const { loading, data, error } = useQuery(FETCH_SALE_BY_ID, {
+    variables: { data: { ID } },
   });
 
-  return { loading, sale: data?.sales.sales ?? [] };
+  return { loading, sale: data?.saleBySID, error };
 }
 
 export function useFetchSaleStats() {
@@ -59,7 +67,7 @@ export function useFetchSaleStats() {
 export function useCreateSale() {
   const [createSale, { loading }] = useMutation(CREATE_SALE, {
     awaitRefetchQueries: true,
-    refetchQueries: ['FetchSales'],
+    refetchQueries: ['Sales'],
   });
 
   return { loading, createSale };
@@ -68,7 +76,7 @@ export function useCreateSale() {
 export function useUpdateSale() {
   const [updateSale, { loading }] = useMutation(UPDATE_SALE, {
     awaitRefetchQueries: true,
-    refetchQueries: ['FetchSales'],
+    refetchQueries: ['Sales'],
   });
 
   return { loading, updateSale };
@@ -77,7 +85,7 @@ export function useUpdateSale() {
 export function useRemoveSale() {
   const [removeSale, { loading, error }] = useMutation(REMOVE_SALE, {
     awaitRefetchQueries: true,
-    refetchQueries: ['FetchSales'],
+    refetchQueries: ['Sales'],
   });
 
   return { loading, error, removeSale };

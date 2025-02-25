@@ -21,7 +21,6 @@ import { useBoolean } from 'src/hooks/useBoolean';
 import { formatDate } from 'src/utils/format-time';
 import { formatID, customizeFullName } from 'src/utils/helper';
 
-import { PEER } from 'src/consts';
 import { CONFIG } from 'src/config';
 import { DashboardContent } from 'src/layouts/dashboard';
 
@@ -40,7 +39,7 @@ import { BooleanFormatter } from 'src/components/AgGrid/Renderers/BooleanFormatt
 import { ActionRender } from './ActionRenderer';
 import { useRemoveSale, useFetchSales } from '../useApollo';
 
-import type { Sale } from './type';
+import type { BasicSale } from './type';
 
 export default function SaleListView() {
   const { loading, rowCount, sales } = useFetchSales();
@@ -48,7 +47,7 @@ export default function SaleListView() {
 
   const confirm = useBoolean();
 
-  const colDefs = useMemo<ColDef<Sale>[]>(
+  const colDefs = useMemo<ColDef<BasicSale>[]>(
     () => [
       {
         field: 'ID',
@@ -58,7 +57,7 @@ export default function SaleListView() {
         resizable: true,
         editable: false,
         initialSort: 'desc',
-        cellRenderer: ({ data }: CustomCellRendererProps<Sale>) => (
+        cellRenderer: ({ data }: CustomCellRendererProps<BasicSale>) => (
           <Stack direction="row" columnGap={1} sx={{ alignItems: 'center' }}>
             {formatID(data?.ID ?? '', 'S')}
             {data!.sponsorCnt > 0 && (
@@ -71,23 +70,23 @@ export default function SaleListView() {
         cellClass: 'ag-number-cell ag-cell-center',
       },
       {
-        field: 'member.username',
+        field: 'username',
         headerName: 'Name',
         width: 200,
         filter: 'agTextColumnFilter',
         resizable: true,
         editable: false,
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellRenderer: ({ data }: CustomCellRendererProps<Sale>) => (
+        cellRenderer: ({ data }: CustomCellRendererProps<BasicSale>) => (
           <CustomName
             id={data?.memberId ?? ''}
-            username={data?.member?.username ?? ''}
-            email={data?.member?.email ?? ''}
+            username={data?.username ?? ''}
+            email={data?.email ?? ''}
           />
         ),
       },
       {
-        field: 'member.assetId',
+        field: 'assetId',
         headerName: 'Asset ID',
         width: 110,
         filter: 'agTextColumnFilter',
@@ -97,7 +96,7 @@ export default function SaleListView() {
         cellClass: 'ag-cell-center',
       },
       {
-        field: 'package.productName',
+        field: 'productName',
         headerName: 'ProductName',
         flex: 1,
         filter: 'agTextColumnFilter',
@@ -109,24 +108,27 @@ export default function SaleListView() {
       {
         field: 'paymentMethod',
         headerName: 'Payment Method',
-        width: 180,
+        width: 160,
         filter: 'agTextColumnFilter',
         resizable: true,
         editable: false,
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
         cellClass: 'ag-cell-center',
-        cellRenderer: ({ data }: CustomCellRendererProps<Sale>) =>
-          data?.paymentMethod === PEER ? (
-            <Stack direction="row" justifyContent="space-between">
-              <Stack>{PEER}</Stack>
-              <Stack>{customizeFullName(data.toMember?.fullName ?? '')}</Stack>
-            </Stack>
-          ) : (
-            data?.paymentMethod
-          ),
       },
       {
-        field: 'package.amount',
+        field: 'toFullName',
+        headerName: 'P2P Member',
+        width: 130,
+        filter: 'agTextColumnFilter',
+        resizable: true,
+        editable: false,
+        filterParams: { buttons: ['reset'] } as ITextFilterParams,
+        cellClass: 'ag-cell-center',
+        cellRenderer: ({ data }: CustomCellRendererProps<BasicSale>) =>
+          customizeFullName(data?.toFullName ?? ''),
+      },
+      {
+        field: 'amount',
         headerName: 'Amount',
         width: 100,
         filter: 'agNumberColumnFilter',
@@ -135,16 +137,7 @@ export default function SaleListView() {
         cellClass: 'ag-number-cell ag-cell-center',
       },
       {
-        field: 'package.token',
-        headerName: 'Hash Power',
-        width: 130,
-        filter: 'agNumberColumnFilter',
-        resizable: true,
-        editable: false,
-        cellClass: 'ag-cell-center',
-      },
-      {
-        field: 'package.point',
+        field: 'point',
         headerName: 'Point',
         width: 90,
         filter: 'agNumberColumnFilter',
@@ -160,7 +153,7 @@ export default function SaleListView() {
         filterParams: {
           values: ['true', 'false'],
           valueFormatter: BooleanFormatter,
-        } as ISetFilterParams<Sale>,
+        } as ISetFilterParams<BasicSale>,
         cellRenderer: StatusRenderer,
       },
       {
@@ -175,7 +168,7 @@ export default function SaleListView() {
         } as IDateFilterParams,
         resizable: true,
         editable: false,
-        cellRenderer: ({ data }: CustomCellRendererProps<Sale>) => formatDate(data?.orderedAt),
+        cellRenderer: ({ data }: CustomCellRendererProps<BasicSale>) => formatDate(data?.orderedAt),
         cellClass: 'ag-cell-center',
       },
       {
@@ -225,7 +218,7 @@ export default function SaleListView() {
           overflow: 'hidden',
         }}
       >
-        <AgGrid<Sale>
+        <AgGrid<BasicSale>
           gridKey="sale-list"
           loading={loading}
           rowData={sales}

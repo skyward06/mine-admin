@@ -11,7 +11,7 @@ import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import { LoadingScreen } from 'src/components/loading-screen';
 
 import SaleGeneral from './General';
-import { useFetchSale } from '../useApollo';
+import { useFetchSaleByID } from '../useApollo';
 
 // ----------------------------------------------------------------------
 export default function SaleEditView() {
@@ -20,15 +20,13 @@ export default function SaleEditView() {
   const params = useParams();
 
   const { id } = params;
-  const { loading, sale } = useFetchSale(parseInt(id?.split('-')[1] ?? '', 10));
-
-  const current = sale?.[0] ?? {};
+  const { loading, sale } = useFetchSaleByID(parseInt(id?.split('-')[1] ?? '', 10));
 
   if (loading) {
     return <LoadingScreen />;
   }
 
-  if (!current) {
+  if (!sale) {
     return <Navigate to={paths.notFound} replace />;
   }
 
@@ -46,7 +44,7 @@ export default function SaleEditView() {
           }}
         />
 
-        <SaleGeneral currentSale={current} />
+        <SaleGeneral currentSale={sale} />
       </DashboardContent>
     </>
   );

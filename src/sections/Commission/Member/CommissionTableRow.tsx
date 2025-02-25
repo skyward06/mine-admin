@@ -165,9 +165,7 @@ export default function CommissionTableRow({ row, selected, onSelectRow }: Props
         <MenuList>
           <MenuItem
             sx={{ color: 'secondary.main' }}
-            disabled={
-              status === COMMISSION_TYPE.APPROVED.label || status === COMMISSION_TYPE.PAID.label
-            }
+            disabled={status !== COMMISSION_TYPE.PENDING.label}
             onClick={async () => {
               const { data } = await updateCommission({
                 variables: { data: { id, status: commission_type.Approved } },
@@ -185,9 +183,7 @@ export default function CommissionTableRow({ row, selected, onSelectRow }: Props
           </MenuItem>
           <MenuItem
             sx={{ color: 'error.main' }}
-            disabled={
-              status === COMMISSION_TYPE.DECLINED.label || status === COMMISSION_TYPE.PAID.label
-            }
+            disabled={status !== COMMISSION_TYPE.PENDING.label}
             onClick={async () => {
               const { data } = await updateCommission({
                 variables: { data: { id, status: commission_type.Declined } },
@@ -205,8 +201,6 @@ export default function CommissionTableRow({ row, selected, onSelectRow }: Props
           </MenuItem>
         </MenuList>
       </CustomPopover>
-
-      {/* <SplitCommission open={open} row={row} /> */}
     </>
   );
 }

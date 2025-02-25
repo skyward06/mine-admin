@@ -1,4 +1,4 @@
-import type { Sale } from 'src/sections/Sales/List/type';
+import type { BasicSale } from 'src/sections/Sales/List/type';
 import type { CustomCellRendererProps } from '@ag-grid-community/react';
 import type { ColDef, IDateFilterParams, ITextFilterParams } from '@ag-grid-community/core';
 
@@ -24,37 +24,37 @@ export default function MetalListView() {
 
   const { loading, rowCount, sales } = useFetchSales();
 
-  const colDefs = useMemo<ColDef<Sale>[]>(
+  const colDefs = useMemo<ColDef<BasicSale>[]>(
     () => [
       {
-        field: 'member.username',
+        field: 'username',
         headerName: 'Name',
         width: 300,
         filter: 'agTextColumnFilter',
         resizable: true,
         editable: false,
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellRenderer: ({ data }: CustomCellRendererProps<Sale>) => (
+        cellRenderer: ({ data }: CustomCellRendererProps<BasicSale>) => (
           <CustomName
             id={data?.memberId ?? ''}
-            username={data?.member?.username ?? ''}
-            email={data?.member?.email ?? ''}
+            username={data?.username ?? ''}
+            email={data?.email ?? ''}
           />
         ),
       },
       {
-        field: 'toMember.username',
+        field: 'toUsername',
         headerName: 'Peer',
         flex: 1,
         filter: 'agTextColumnFilter',
         resizable: true,
         editable: false,
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellRenderer: ({ data }: CustomCellRendererProps<Sale>) => (
+        cellRenderer: ({ data }: CustomCellRendererProps<BasicSale>) => (
           <CustomName
-            id={data?.toMember?.id ?? ''}
-            username={data?.toMember?.username ?? ''}
-            email={data?.toMember?.email ?? ''}
+            id={data?.toMemberId ?? ''}
+            username={data?.toUsername ?? ''}
+            email={data?.toEmail ?? ''}
           />
         ),
       },
@@ -70,11 +70,11 @@ export default function MetalListView() {
         } as IDateFilterParams,
         resizable: true,
         editable: false,
-        cellRenderer: ({ data }: CustomCellRendererProps<Sale>) => formatDate(data?.orderedAt),
+        cellRenderer: ({ data }: CustomCellRendererProps<BasicSale>) => formatDate(data?.orderedAt),
         cellClass: 'ag-cell-center',
       },
       {
-        field: 'package.amount',
+        field: 'amount',
         headerName: 'Amount',
         width: 300,
         filter: 'agNumberColumnFilter',
@@ -95,7 +95,7 @@ export default function MetalListView() {
         overflow: 'hidden',
       }}
     >
-      <AgGrid<Sale>
+      <AgGrid<BasicSale>
         gridKey="metal-sale-list"
         loading={loading}
         rowData={sales}

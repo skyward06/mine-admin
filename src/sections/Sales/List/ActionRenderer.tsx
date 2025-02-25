@@ -38,18 +38,6 @@ export const ActionRender = memo(
     const last = dayjs(today()).startOf('week').add(-1, 'day');
     const disabled = dayjs(data?.orderedAt).isBefore(last);
 
-    const defaultValue = {
-      id: '',
-      ID: 1,
-      memberId: '',
-      packageId: '',
-      paymentMethod: '',
-      status: true,
-      isMetal: false,
-      sponsorCnt: 0,
-      orderedAt: new Date(),
-    };
-
     const { loading, removeSale } = useRemoveSale();
 
     return (
@@ -97,7 +85,7 @@ export const ActionRender = memo(
           </MenuList>
         </CustomPopover>
 
-        <Detail open={open} row={data ?? defaultValue} />
+        <Detail open={open} id={data?.id!} />
 
         <ConfirmDialog
           open={confirm.value}

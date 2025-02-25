@@ -16,18 +16,6 @@ export const ActionRender = memo(
   ({ data }: CustomCellRendererProps<Sale>) => {
     const open = useBoolean();
 
-    const defaultValue = {
-      id: '',
-      ID: 1,
-      memberId: '',
-      packageId: '',
-      paymentMethod: '',
-      status: true,
-      isMetal: false,
-      sponsorCnt: 0,
-      orderedAt: new Date(),
-    };
-
     return (
       <>
         <Tooltip title="View" placement="top" arrow>
@@ -36,7 +24,7 @@ export const ActionRender = memo(
           </IconButton>
         </Tooltip>
 
-        <Detail open={open} row={data ?? defaultValue} />
+        <Detail open={open} id={data?.id!} />
       </>
     );
   },
