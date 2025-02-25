@@ -17,14 +17,15 @@ export const FETCH_GROUP_SETTINGS = gql(/* GraphQL */ `
         }
         sponsorBonusPackage {
           id
+          ID
           date
-          status
-          enrollVisibility
           token
           point
           amount
+          status
           freeShare
           productName
+          enrollVisibility
         }
       }
       total

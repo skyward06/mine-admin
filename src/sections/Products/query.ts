@@ -5,6 +5,7 @@ export const FETCH_PACKAGES_QUERY = gql(/* GraphQL */ `
     packages(sort: $sort, page: $page, filter: $filter) {
       packages {
         id
+        ID
         date
         point
         token
