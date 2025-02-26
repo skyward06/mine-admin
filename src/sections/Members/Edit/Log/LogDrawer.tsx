@@ -1,4 +1,4 @@
-import type { MemberLog } from 'src/__generated__/graphql';
+import type { EntityLog } from 'src/__generated__/graphql';
 import type { UseBooleanReturn } from 'src/hooks/useBoolean';
 
 import { isEmpty } from 'lodash';
@@ -18,7 +18,7 @@ import Empty from './Empty';
 import Difference from './Difference';
 
 interface Props {
-  log: MemberLog;
+  log: EntityLog;
   defaultStyles: any;
   open: UseBooleanReturn;
 }

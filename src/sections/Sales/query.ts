@@ -32,7 +32,7 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
 `);
 
 export const FETCH_SALE_BY_Id = gql(/* GraphQL */ `
-  query SaleById($data: IDInput!) {
+  query SaleById($data: IDInput!, $logsize: Float!) {
     saleById(data: $data) {
       id
       ID
@@ -63,6 +63,17 @@ export const FETCH_SALE_BY_Id = gql(/* GraphQL */ `
         freeShare
         productName
         enrollVisibility
+      }
+      logs(logsize: $logsize) {
+        id
+        who
+        role
+        when
+        after
+        action
+        before
+        entity
+        status
       }
       proof {
         id

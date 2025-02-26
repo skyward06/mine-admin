@@ -1,4 +1,4 @@
-import type { MemberLog } from 'src/__generated__/graphql';
+import type { EntityLog } from 'src/__generated__/graphql';
 
 import { useTheme } from '@mui/material/styles';
 import TableRow, { tableRowClasses } from '@mui/material/TableRow';
@@ -15,7 +15,7 @@ import { Iconify } from 'src/components/Iconify';
 import LogDrawer from './LogDrawer';
 
 interface Props {
-  row: MemberLog;
+  row: EntityLog;
 }
 
 export default function LogTableRow({ row }: Props) {
