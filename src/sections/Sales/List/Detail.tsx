@@ -30,9 +30,11 @@ export default function Detail({ open, id }: Props) {
   const { loading, sale, fetchSaleById } = useFetchSaleById();
 
   useEffect(() => {
-    fetchSaleById({ variables: { data: { id }, logsize: 1 } });
+    if (open.value && id) {
+      fetchSaleById({ variables: { data: { id }, logsize: 1 } });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+  }, [open.value, id]);
 
   return (
     <Drawer
