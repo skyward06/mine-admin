@@ -1,7 +1,6 @@
 import { useRef, useMemo } from 'react';
 import { useMutation, useLazyQuery } from '@apollo/client';
 
-import { CALCULATE_COMMISSION_PREVIEW } from '../Commission/query';
 import {
   MOVE_TO_PAID,
   UPDATE_MEMBER,
@@ -106,14 +105,6 @@ export function useApproveMember() {
   });
 
   return { loading, error, approveMember };
-}
-
-export function useRecalculateCurrentCommission() {
-  const [recalculateCurrentCommission, { loading, error }] = useMutation(
-    CALCULATE_COMMISSION_PREVIEW
-  );
-
-  return { loading, error, recalculateCurrentCommission };
 }
 
 export function useSendWelcomeEmail() {

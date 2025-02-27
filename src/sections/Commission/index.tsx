@@ -15,7 +15,6 @@ import { useBoolean } from 'src/hooks/useBoolean';
 
 import { CONFIG } from 'src/config';
 import { DashboardContent } from 'src/layouts/dashboard';
-import { SuccessResult } from 'src/__generated__/graphql';
 
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
@@ -24,7 +23,7 @@ import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import Week from './Week';
 import Member from './Member';
 import Preview from './Preview';
-import { useRecalculateCommissionPreview } from './useApollo';
+import { useCalculateCommission } from './useApollo';
 
 const TABS = [
   { value: 'week', label: 'Week', icon: <Iconify icon="stash:data-date-duotone" width={24} /> },
@@ -41,7 +40,7 @@ const TABS = [
 ];
 
 export default function CommissionListView() {
-  const { updateCommissionPreview } = useRecalculateCommissionPreview();
+  const { loading: calculationLoading, calculateCommission } = useCalculateCommission();
   const [query, { setQueryParams: setQuery }] = useQuery();
   const tabs = useTabs(query.tab ?? 'week');
   const [loading, setLoading] = useState<boolean>(false);
@@ -83,16 +82,15 @@ export default function CommissionListView() {
     tabs.onChange(event, value);
   };
 
-  const handleRecalculatePreview = async () => {
+  const handleCalculate = async () => {
     try {
-      const res = await updateCommissionPreview();
-      if (res.data?.calculatePreview.result === SuccessResult.Failed) {
-        toast.error(res.data.calculatePreview.message);
-      } else {
-        toast.success('Successfully recalculated current commission statuses!');
+      const { data } = await calculateCommission();
+
+      if (data) {
+        toast.success('Successfully calculated!');
       }
-    } catch (err) {
-      toast.error(err.message);
+    } catch (error) {
+      toast.error(error.message);
     }
   };
 
@@ -105,7 +103,7 @@ export default function CommissionListView() {
           <Box
             display="grid"
             columnGap={2}
-            sx={{ pr: 4, gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: '30% 30% 40%' } }}
+            sx={{ pr: 4, gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: '30% 36% 34%' } }}
           >
             <LoadingButton
               variant="contained"
@@ -125,15 +123,16 @@ export default function CommissionListView() {
             >
               Select Week
             </Button>
-            <Button
+            <LoadingButton
               variant="contained"
               color="primary"
               startIcon={<Iconify icon="fluent:preview-link-16-regular" />}
-              onClick={handleRecalculatePreview}
+              onClick={handleCalculate}
+              loading={calculationLoading}
               sx={{ mb: 1 }}
             >
-              Recalculation
-            </Button>
+              Calculate
+            </LoadingButton>
           </Box>
         }
         sx={{

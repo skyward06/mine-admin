@@ -24,7 +24,8 @@ const documents = {
     "\n  query CommissionsByWeek($sort: String, $page: String, $weekStartDate: DateTimeISO) {\n    commissionsByWeek(sort: $sort, page: $page, weekStartDate: $weekStartDate) {\n      commissions {\n        weekStartDate\n        totalSale\n        totalRevenue\n        totalMember\n        totalAmount\n      }\n      total\n    }\n  }\n": types.CommissionsByWeekDocument,
     "\n  mutation updateCommission($data: WeeklyCommissionUpdateInput!) {\n    updateCommission(data: $data) {\n      ID\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.UpdateCommissionDocument,
     "\n  mutation updateCommissionsStatus($data: WeeklyCommissionsStatusUpdateInput!) {\n    updateCommissionsStatus(data: $data) {\n      message\n      result\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.UpdateCommissionsStatusDocument,
-    "\n  mutation calculatePreview {\n    calculatePreview {\n      message\n      result\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.CalculatePreviewDocument,
+    "\n  mutation CalculateCommissions {\n    calculateCommissions {\n      message\n      result\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.CalculateCommissionsDocument,
+    "\n  mutation CalculatePreviewCommissions {\n    calculatePreviewCommissions {\n      message\n      result\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.CalculatePreviewCommissionsDocument,
     "\n  mutation updateCommissionShortNote($data: WeeklyCommissionNoteInput!) {\n    updateCommissionShortNote(data: $data) {\n      ID\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.UpdateCommissionShortNoteDocument,
     "\n  query GroupSettings($sort: String, $page: String, $filter: JSONObject) {\n    groupSettings(sort: $sort, page: $page, filter: $filter) {\n      groupSettings {\n        createdAt\n        id\n        name\n        limitDate\n        sponsorBonusPackageId\n        rollSponsorBonusPackageId\n        groupSettingCommissionBonuses {\n          lPoint\n          rPoint\n          commission\n        }\n        sponsorBonusPackage {\n          id\n          ID\n          date\n          token\n          point\n          amount\n          status\n          freeShare\n          productName\n          enrollVisibility\n        }\n      }\n      total\n    }\n  }\n": types.GroupSettingsDocument,
     "\n  mutation createGroupSetting($data: CreateGroupSettingInput!) {\n    createGroupSetting(data: $data) {\n      id\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.CreateGroupSettingDocument,
@@ -191,7 +192,11 @@ export function gql(source: "\n  mutation updateCommissionsStatus($data: WeeklyC
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  mutation calculatePreview {\n    calculatePreview {\n      message\n      result\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation calculatePreview {\n    calculatePreview {\n      message\n      result\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n"];
+export function gql(source: "\n  mutation CalculateCommissions {\n    calculateCommissions {\n      message\n      result\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation CalculateCommissions {\n    calculateCommissions {\n      message\n      result\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation CalculatePreviewCommissions {\n    calculatePreviewCommissions {\n      message\n      result\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation CalculatePreviewCommissions {\n    calculatePreviewCommissions {\n      message\n      result\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

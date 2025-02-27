@@ -138,9 +138,21 @@ export const UPDATE_COMMISSION_STATUS = gql(/* GraphQL */ `
   }
 `);
 
-export const CALCULATE_COMMISSION_PREVIEW = gql(/* GraphQL */ `
-  mutation calculatePreview {
-    calculatePreview {
+export const CALCULATE_COMMISSION = gql(/* GraphQL */ `
+  mutation CalculateCommissions {
+    calculateCommissions {
+      message
+      result
+      frontActions {
+        ...FrontActionFields
+      }
+    }
+  }
+`);
+
+export const CALCULATE_PREVIEW_COMMISSION = gql(/* GraphQL */ `
+  mutation CalculatePreviewCommissions {
+    calculatePreviewCommissions {
       message
       result
       frontActions {

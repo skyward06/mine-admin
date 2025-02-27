@@ -24,7 +24,7 @@ import { useSearchParams } from 'src/routes/hooks';
 import { useBoolean } from 'src/hooks/useBoolean';
 
 import { DashboardContent } from 'src/layouts/dashboard';
-import { SuccessResult, PlacementPosition } from 'src/__generated__/graphql';
+import { PlacementPosition } from 'src/__generated__/graphql';
 import {
   PLACEMENTTREE_NODE_WIDTH,
   PLACEMENTTREE_NODE_HEIGHT,
@@ -39,7 +39,7 @@ import ComponentBlock from 'src/components/Component-Block';
 import { LoadingScreen } from 'src/components/loading-screen';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
-import { useRecalculateCurrentCommission } from 'src/sections/Members/useApollo';
+import { useCalculatePreviewCommission } from 'src/sections/Commission/useApollo';
 
 import CustomEdge from './customEdge';
 import { StandardNode } from './node';
@@ -214,7 +214,8 @@ function PlacementListView() {
   const memberId = searchParams.get('memberId');
 
   const { fetchPlacementMembers, members, loading, called } = useFetchPlacementOMembers();
-  const { recalculateCurrentCommission } = useRecalculateCurrentCommission();
+  const { loading: calculationLoading, calculatePreviewCommission } =
+    useCalculatePreviewCommission();
 
   const [visibleMap, setVisibleMap] = useState<Record<string, number>>({});
   const exSetVisibleMap = useCallback((newVisibleMap: Record<string, number>) => {
@@ -450,18 +451,18 @@ function PlacementListView() {
     }, 100);
   }, [fetchPlacementMembers, exSetVisibleMap, fitView]);
 
-  const recaluclateCurrentCommissionHandler = useCallback(async () => {
+  const handleCalculateCommission = useCallback(async () => {
     try {
-      const res = await recalculateCurrentCommission();
-      if (res.data?.calculatePreview.result === SuccessResult.Failed) {
-        toast.error(res.data.calculatePreview.message);
-      } else {
-        toast.success('Successfully recalculated current commission statuses!');
+      const { data } = await calculatePreviewCommission();
+
+      if (data) {
+        toast.success('Successfully calculated!');
+        popover.onClose();
       }
     } catch (err) {
       toast.error(err.message);
     }
-  }, [recalculateCurrentCommission]);
+  }, [popover, calculatePreviewCommission]);
 
   return (
     <DashboardContent sx={{ overflowX: 'hidden' }}>
@@ -529,11 +530,10 @@ function PlacementListView() {
           </MenuItem>
           <MenuItem
             onClick={() => {
-              recaluclateCurrentCommissionHandler();
-              popover.onClose();
+              handleCalculateCommission();
             }}
           >
-            Calculate
+            Calculate {calculationLoading && <Iconify icon="line-md:loading-loop" />}
           </MenuItem>
           <MenuItem
             onClick={() => {
