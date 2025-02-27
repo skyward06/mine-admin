@@ -2108,7 +2108,6 @@ export type SignupFormInput = {
   preferredContact?: InputMaybe<Scalars['String']['input']>;
   preferredContactDetail?: InputMaybe<Scalars['String']['input']>;
   primaryAddress: Scalars['String']['input'];
-  promoCode?: InputMaybe<Scalars['String']['input']>;
   secondaryAddress?: InputMaybe<Scalars['String']['input']>;
   sponsorUserId?: InputMaybe<Scalars['ID']['input']>;
   state?: InputMaybe<Scalars['String']['input']>;
