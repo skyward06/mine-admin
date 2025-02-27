@@ -74,6 +74,14 @@ export const ActionRender = memo(
             </MenuItem>
             <MenuItem
               onClick={() => {
+                router.push(paths.dashboard.sales.log(data?.id!));
+              }}
+            >
+              <Iconify icon="ri:history-line" color="gray" />
+              Log
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
                 popover.onClose();
                 confirm.onTrue();
               }}

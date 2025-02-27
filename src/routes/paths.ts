@@ -58,6 +58,7 @@ export const paths = {
     sales: {
       root: ROOTS.SALES,
       edit: (id: string) => `${ROOTS.SALES}/${id}`,
+      log: (id: string) => `${ROOTS.SALES}/log/${id}`,
       new: `${ROOTS.SALES}/new`,
     },
     products: {
