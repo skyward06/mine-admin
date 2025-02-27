@@ -34,8 +34,8 @@ import ComponentBlock from 'src/components/Component-Block';
 import { LoadingScreen } from 'src/components/loading-screen';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
-import { useFetchPlacementMembers } from 'src/sections/Members/useApollo';
 import IndividualMembers from 'src/sections/Placement/List/individualMembers';
+import { useFetchPlacementMembers } from 'src/sections/Placement/List/useApollo';
 
 import { StandardNode } from './node';
 import CustomEdge from './customEdge';

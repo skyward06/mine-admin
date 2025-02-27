@@ -11,7 +11,6 @@ import Stack from '@mui/material/Stack';
 import Radio from '@mui/material/Radio';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
-import Checkbox from '@mui/material/Checkbox';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
@@ -40,9 +39,10 @@ import SearchMiner from 'src/components/SearchMiner';
 import { ConfirmDialog } from 'src/components/Dialog';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
-import { useUpdateMember, useRemoveMemberPlacement } from 'src/sections/Members/useApollo';
+import { useUpdateMember } from 'src/sections/Members/useApollo';
 
 import NodeContext from './nodeContext';
+import { useRemoveMemberFromPlacementTree } from './useApollo';
 
 // ----------------------------------------------------------------------
 
@@ -77,12 +77,11 @@ export function StandardNode({
 
   const [teamStrategy, setTeamStrategy] = useState<string>('');
   const [position, setPosition] = useState<PlacementPosition>(PlacementPosition.Left);
-  const [checked, setChecked] = useState<boolean>(false);
   const [memberId, setMemberId] = useState<string>('');
   const [strategy, setStrategy] = useState<'LEFT' | 'RIGHT'>();
 
   const { loading, updateMember } = useUpdateMember();
-  const { loading: removeLoading, removeMemberPlacement } = useRemoveMemberPlacement();
+  const { loading: removeLoading, removeMember } = useRemoveMemberFromPlacementTree();
 
   const onRemove = () => {
     popover.onClose();
@@ -163,21 +162,7 @@ export function StandardNode({
   );
 
   const removeContent = (
-    <Paper>
-      <FormControlLabel
-        key="checkbox"
-        label="Will you remove the sub-tree data?"
-        labelPlacement="end"
-        control={
-          <Checkbox
-            name="removeId"
-            onChange={(event) => {
-              setChecked(event.target.checked);
-            }}
-          />
-        }
-      />
-    </Paper>
+    <Typography>The subtree data will be removed. Are you sure you want to proceed?</Typography>
   );
 
   const confirmStrategy = async (curId: string, curPId: string, curPos: string, st: boolean) => {
@@ -417,20 +402,10 @@ export function StandardNode({
             color="success"
             loading={removeLoading}
             onClick={async () => {
-              if (checked) {
-                const { data } = await removeMemberPlacement({ variables: { data: { id } } });
-                if (data?.removeCompleteMemberPlacement.result === 'success') {
-                  toast.success('Successfully removed placement including sub-tree data!');
-                  removeModal.onFalse();
-                }
-              } else {
-                const { data } = await updateMember({
-                  variables: { data: { id, placementParentId: null } },
-                });
-                if (data?.updateMember.id && !loading) {
-                  toast.success('Successfully removed placement!');
-                  removeModal.onFalse();
-                }
+              const { data } = await removeMember({ variables: { data: { id } } });
+
+              if (data) {
+                toast.success('Removed placement successfully!');
               }
             }}
           >

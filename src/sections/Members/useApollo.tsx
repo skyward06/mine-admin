@@ -17,10 +17,7 @@ import {
   UPDATE_PASSWORD_QUERY,
   REMOVE_MEMBER_PLACEMENT,
   FETCH_MEMBER_STATS_QUERY,
-  FETCH_PLACEMENT_MEMBERS_WEEK,
-  FETCH_PLACEMENT_MEMBERS_QUERY,
   FETCH_INDIVIDUAL_MEMBERS_QUERY,
-  FETCH_PLACEMENT_MEMBERS_O_QUERY,
 } from './query';
 
 export function useFetchMembers() {
@@ -47,56 +44,6 @@ export function useFetchMembers() {
   };
 }
 
-export function useFetchPlacementMembers() {
-  const [fetchMembers, { loading, data, called }] = useLazyQuery(FETCH_PLACEMENT_MEMBERS_QUERY);
-
-  const rowCountRef = useRef(data?.members.total ?? 0);
-
-  const rowCount = useMemo(() => {
-    const newTotal = data?.members.total ?? undefined;
-
-    if (newTotal !== undefined) {
-      rowCountRef.current = newTotal;
-    }
-
-    return rowCountRef.current;
-  }, [data]);
-
-  return {
-    called,
-    loading,
-    rowCount,
-    members: data?.members.members ?? [],
-    fetchMembers,
-  };
-}
-
-export function useFetchPlacementOMembers() {
-  const [fetchPlacementMembers, { loading, data, called }] = useLazyQuery(
-    FETCH_PLACEMENT_MEMBERS_O_QUERY
-  );
-
-  return {
-    called,
-    loading,
-    members: data?.placementMembers ?? [],
-    fetchPlacementMembers,
-  };
-}
-
-export function useFetchPlacementForWeek() {
-  const [fetchPlacementMembers, { loading, data, called }] = useLazyQuery(
-    FETCH_PLACEMENT_MEMBERS_WEEK
-  );
-
-  return {
-    loading,
-    called,
-    commissions: data?.placementMembersForWeek ?? [],
-    fetchPlacementMembers,
-  };
-}
-
 export function useFetchIndividualMembers() {
   const [fetchIndividualMembers, { loading, data, error }] = useLazyQuery(
     FETCH_INDIVIDUAL_MEMBERS_QUERY
@@ -119,7 +66,7 @@ export function useFetchMembersStats() {
 export function useUpdateMember() {
   const [updateMember, { loading }] = useMutation(UPDATE_MEMBER, {
     awaitRefetchQueries: true,
-    refetchQueries: ['FetchPlacementMembers'],
+    refetchQueries: ['FetchPlacementMembers', 'PlacementMembers'],
   });
 
   return { loading, updateMember };

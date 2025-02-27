@@ -18,10 +18,11 @@ import { EmptyContent } from 'src/components/EmptyContent';
 import ComponentBlock from 'src/components/Component-Block';
 import { LoadingScreen } from 'src/components/loading-screen';
 
+import { useFetchPlacementOMembers } from 'src/sections/Placement/List/useApollo';
+
 import CustomEdge from './customEdge';
 import { StandardNode } from './node';
 import NodeContext from './nodeContext';
-import { useFetchPlacementOMembers } from '../../useApollo';
 
 const fitViewOptions: FitViewOptions = {
   padding: 0.2,

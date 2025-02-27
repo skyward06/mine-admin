@@ -34,7 +34,7 @@ import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
 import CustomEdge from 'src/sections/Placement/List/customEdge';
 import NodeContext from 'src/sections/Placement/List/nodeContext';
-import { useFetchPlacementForWeek } from 'src/sections/Members/useApollo';
+import { useFetchPlacementForWeek } from 'src/sections/Placement/List/useApollo';
 
 import { StandardNode } from './node';
 import SearchMiner from './searchMiner';

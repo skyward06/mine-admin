@@ -39,16 +39,14 @@ import ComponentBlock from 'src/components/Component-Block';
 import { LoadingScreen } from 'src/components/loading-screen';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
-import {
-  useFetchPlacementOMembers,
-  useRecalculateCurrentCommission,
-} from 'src/sections/Members/useApollo';
+import { useRecalculateCurrentCommission } from 'src/sections/Members/useApollo';
 
 import CustomEdge from './customEdge';
 import { StandardNode } from './node';
 import NodeContext from './nodeContext';
 import SearchMiner from './searchMiner';
 import IndividualMembers from './individualMembers';
+import { useFetchPlacementOMembers } from './useApollo';
 
 const fitViewOptions: FitViewOptions = {
   padding: 0.2,
