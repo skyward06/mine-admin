@@ -14,7 +14,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { today, customizeDate } from 'src/utils/format-time';
+import { today, formatDate, customizeDate } from 'src/utils/format-time';
 
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
@@ -33,7 +33,8 @@ export default function EditForm({ current }: Props) {
   const defaultValues = useMemo(
     () =>
       current
-        ? Schema.safeParse(current).data ?? ({} as SchemaType)
+        ? Schema.safeParse({ ...current, limitDate: formatDate(current.limitDate) }).data ??
+          ({} as SchemaType)
         : {
             name: '',
             sponsorBonusPackageId: null,
