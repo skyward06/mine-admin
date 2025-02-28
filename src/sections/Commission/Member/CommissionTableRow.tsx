@@ -127,6 +127,7 @@ export default function CommissionTableRow({ row, selected, onSelectRow }: Props
         <TableCell sx={{ whiteSpace: 'nowrap' }} align="left">
           {commission ?? 0}
         </TableCell>
+        <TableCell align="left">{member?.commissionDefault}</TableCell>
         <TableCell align="left">{proof?.note}</TableCell>
         <TableCell sx={{ whiteSpace: 'nowrap' }} align="center">
           <Tooltip title="Placement" placement="top" arrow>

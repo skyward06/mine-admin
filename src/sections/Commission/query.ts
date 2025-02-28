@@ -47,27 +47,25 @@ export const FETCH_COMMISSION_QUERY = gql(/* GraphQL */ `
           }
         }
         member {
-          createdAt
-          updatedAt
-          deletedAt
           id
+          city
+          email
+          point
+          state
+          mobile
+          status
+          assetId
+          zipCode
           username
           fullName
           sponsorId
-          email
-          mobile
-          assetId
+          emailVerified
           primaryAddress
           secondaryAddress
-          city
-          state
-          zipCode
+          totalIntroducers
           placementParentId
           placementPosition
-          point
-          emailVerified
-          status
-          totalIntroducers
+          commissionDefault
         }
         createdAt
         updatedAt
