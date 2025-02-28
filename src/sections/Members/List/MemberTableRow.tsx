@@ -350,21 +350,38 @@ export default function MemberTableRow({
                   </MenuItem>
                 )}
                 {allowState === 'PAID' && (
-                  <MenuItem
-                    onClick={async () => {
-                      try {
-                        await approveMember({ variables: { data: { id } } });
+                  <>
+                    <MenuItem
+                      onClick={async () => {
+                        try {
+                          await approveMember({ variables: { data: { id } } });
 
-                        toast.success('Successfully approved');
-                      } catch (error) {
-                        console.log('error => ', error);
-                        toast.error('Something went wrong!');
-                      }
-                    }}
-                  >
-                    <Iconify icon="fa6-solid:circle-check" color="green" />
-                    Approve
-                  </MenuItem>
+                          toast.success('Successfully approved');
+                        } catch (error) {
+                          console.log('error => ', error);
+                          toast.error('Something went wrong!');
+                        }
+                      }}
+                    >
+                      <Iconify icon="fa6-solid:circle-check" color="green" />
+                      Approve
+                    </MenuItem>
+                    <MenuItem
+                      onClick={async () => {
+                        try {
+                          await moveToPending({ variables: { data: { id } } });
+
+                          toast.success('Successfully moved');
+                        } catch (error) {
+                          console.log('error => ', error);
+                          toast.error('Something went wrong!');
+                        }
+                      }}
+                    >
+                      <Iconify icon="mdi:account-pending" color="#B76E00" />
+                      Move to Pending
+                    </MenuItem>
+                  </>
                 )}
                 <MenuItem
                   onClick={() => {
