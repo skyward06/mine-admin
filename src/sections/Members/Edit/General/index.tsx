@@ -193,8 +193,6 @@ export default function MemberGeneral({ currentMember }: Props) {
           }
         });
       }
-
-      toast.error(err.message);
     }
   });
 

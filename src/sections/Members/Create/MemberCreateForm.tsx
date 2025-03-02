@@ -174,8 +174,6 @@ export default function MemberCreateForm() {
         } else {
           toast.error(err.message);
         }
-
-        toast.error(err.message);
       }
     }
   );
