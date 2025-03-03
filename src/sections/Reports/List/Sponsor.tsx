@@ -35,9 +35,10 @@ const TABLE_HEAD = [
 
 interface Props {
   openWeek: UseBooleanReturn;
+  setWeek: Function;
 }
 
-export default function SponsorListView({ openWeek }: Props) {
+export default function SponsorListView({ setWeek, openWeek }: Props) {
   const table = useTable({ defaultDense: true });
 
   const [query, { setQueryParams: setQuery, setPage, setPageSize }] = useQuery();
@@ -102,6 +103,8 @@ export default function SponsorListView({ openWeek }: Props) {
       ...query,
       weekStartDate: customizeDate(`${dayjs(value).startOf('week')}`),
     });
+
+    setWeek(formatDate(weekStartDate, 'YYYY-MM-DD'));
 
     openWeek.onFalse();
   };

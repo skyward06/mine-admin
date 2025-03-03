@@ -1,4 +1,5 @@
 import axios from 'axios';
+import dayjs from 'dayjs';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Helmet } from 'react-helmet-async';
@@ -13,6 +14,8 @@ import { paths } from 'src/routes/paths';
 
 import { useTabs } from 'src/hooks/use-tabs';
 import { useBoolean } from 'src/hooks/useBoolean';
+
+import { formatDate } from 'src/utils/format-time';
 
 import { CONFIG } from 'src/config';
 import { DashboardContent } from 'src/layouts/dashboard';
@@ -46,6 +49,9 @@ export default function ReportView() {
   const navigate = useNavigate();
   const openWeek = useBoolean();
 
+  const [week, setWeek] = useState<string>(
+    formatDate(`${dayjs().startOf('week').add(-1, 'week')}`, 'YYYY-MM-DD')
+  );
   const [all, setAll] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -76,6 +82,36 @@ export default function ReportView() {
     const a = document.createElement('a');
     a.href = url;
     a.download = `revenue.xlsx`;
+
+    document.body.appendChild(a);
+    a.click();
+
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    setLoading(false);
+  };
+
+  const handleSponsorExport = async () => {
+    setLoading(true);
+
+    const token = localStorage.getItem(CONFIG.storageTokenKey);
+
+    const { data } = await axios.get(`${CONFIG.SITE_URL}/api/export-sponsors/byweek/${week}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      responseType: 'arraybuffer',
+    });
+
+    const blob = new Blob([data], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `sponsors-${week}.xlsx`;
 
     document.body.appendChild(a);
     a.click();
@@ -135,7 +171,7 @@ export default function ReportView() {
                   onClick={handleExport}
                   sx={{ mb: 1 }}
                 >
-                  Export
+                  Revenue Export
                 </LoadingButton>
               )}
               {tabs.value === 'weekly' && (
@@ -167,14 +203,30 @@ export default function ReportView() {
                 </Box>
               )}
               {tabs.value === 'sponsors' && (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={openWeek.onTrue}
-                  sx={{ mb: 1 }}
+                <Box
+                  display="grid"
+                  columnGap={2}
+                  sx={{ pr: 2, gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: '40% 60%' } }}
                 >
-                  Select Week
-                </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={openWeek.onTrue}
+                    sx={{ mb: 1 }}
+                  >
+                    Select Week
+                  </Button>
+                  <LoadingButton
+                    variant="contained"
+                    startIcon={<Iconify icon="uil:export" />}
+                    color="primary"
+                    loading={loading}
+                    onClick={handleSponsorExport}
+                    sx={{ mb: 1 }}
+                  >
+                    Sponsors Export
+                  </LoadingButton>
+                </Box>
               )}
             </>
           }
@@ -194,7 +246,7 @@ export default function ReportView() {
 
         {tabs.value === 'metals' && <MetalListView />}
 
-        {tabs.value === 'sponsors' && <SponsorListView openWeek={openWeek} />}
+        {tabs.value === 'sponsors' && <SponsorListView setWeek={setWeek} openWeek={openWeek} />}
       </DashboardContent>
     </>
   );
