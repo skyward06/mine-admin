@@ -6,11 +6,13 @@ import { Helmet } from 'react-helmet-async';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
+import Button from '@mui/material/Button';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 import { paths } from 'src/routes/paths';
 
 import { useTabs } from 'src/hooks/use-tabs';
+import { useBoolean } from 'src/hooks/useBoolean';
 
 import { CONFIG } from 'src/config';
 import { DashboardContent } from 'src/layouts/dashboard';
@@ -22,6 +24,7 @@ import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import Revenue from './Revenue';
 import MetalListView from './Metals';
 import WeeklyReports from './Weekly';
+import SponsorListView from './Sponsor';
 import OnepointMemberListView from './OnePointAway';
 import { useGenerateWeeklyReports } from '../useApollo';
 
@@ -34,12 +37,14 @@ const TABS = [
   },
   { value: 'weekly', label: 'Weekly', icon: <Iconify icon="tabler:calendar-week-filled" /> },
   { value: 'metals', label: 'Metals', icon: <Iconify icon="icon-park-outline:heavy-metal" /> },
+  { value: 'sponsors', label: 'Sponsors', icon: <Iconify icon="carbon:user-sponsor" /> },
 ];
 
 // ----------------------------------------------------------------------
 export default function ReportView() {
   const tabs = useTabs('revenue');
   const navigate = useNavigate();
+  const openWeek = useBoolean();
 
   const [all, setAll] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -161,6 +166,16 @@ export default function ReportView() {
                   </LoadingButton>
                 </Box>
               )}
+              {tabs.value === 'sponsors' && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={openWeek.onTrue}
+                  sx={{ mb: 1 }}
+                >
+                  Select Week
+                </Button>
+              )}
             </>
           }
         />
@@ -178,6 +193,8 @@ export default function ReportView() {
         {tabs.value === 'weekly' && <WeeklyReports />}
 
         {tabs.value === 'metals' && <MetalListView />}
+
+        {tabs.value === 'sponsors' && <SponsorListView openWeek={openWeek} />}
       </DashboardContent>
     </>
   );

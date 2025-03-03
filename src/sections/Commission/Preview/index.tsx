@@ -34,6 +34,7 @@ const TABLE_HEAD = [
   { id: 'endLR', label: 'EndLR', sortable: true },
   { id: 'pkgLR', label: 'Package', sortable: true },
   { id: 'commission', label: 'Commissions', sortable: true },
+  { id: 'member.default', label: 'Default', sortable: true },
   { id: 'note', label: 'Note', sortable: true },
   { id: 'action', label: 'Action', sortable: true, align: 'center' },
 ];

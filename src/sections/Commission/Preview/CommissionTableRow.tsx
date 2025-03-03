@@ -101,6 +101,7 @@ export default function CommissionTableRow({ row }: Props) {
           {status !== COMMISSION_TYPE.NONE.label ? `L${pkgL}, R${pkgR}` : 'None'}
         </TableCell>
         <TableCell align="left">{commission ?? 0}</TableCell>
+        <TableCell align="left">{member?.commissionDefault}</TableCell>
         <TableCell
           align="left"
           sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}

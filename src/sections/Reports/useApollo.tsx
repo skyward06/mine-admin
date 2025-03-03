@@ -4,6 +4,7 @@ import { useMutation, useLazyQuery } from '@apollo/client';
 import {
   FETCH_WEEKLY_REPORT,
   FETCH_REVENUES_QUERY,
+  FETCH_SPONSORS_QUERY,
   GENERATE_WEEKLY_REPORT,
   FETCH_ONEPOINT_AWAY_MEMBERS_QUERY,
 } from './query';
@@ -79,6 +80,24 @@ export function useFetchWeeklyReports() {
     weeklyReports: data?.weeklyReports.weeklyReports ?? [],
     fetchWeeklyReports,
   };
+}
+
+export function useFetchSponsors() {
+  const [fetchSponsors, { loading, data }] = useLazyQuery(FETCH_SPONSORS_QUERY);
+
+  const rowCountRef = useRef(data?.members.total ?? 0);
+
+  const rowCount = useMemo(() => {
+    const newTotal = data?.members.total ?? undefined;
+
+    if (newTotal !== undefined) {
+      rowCountRef.current = newTotal;
+    }
+
+    return rowCountRef.current;
+  }, [data]);
+
+  return { loading, rowCount, sponsors: data?.members.members ?? [], fetchSponsors };
 }
 
 export function useGenerateWeeklyReports() {

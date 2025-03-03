@@ -5,15 +5,15 @@ export const FETCH_ONEPOINT_AWAY_MEMBERS_QUERY = gql(/* GraphQL */ `
     onepointAwayMembers(page: $page, sort: $sort) {
       members {
         id
+        email
+        mobile
+        assetId
         username
         fullName
-        email
-        assetId
-        mobile
-        totalIntroducers
         createdAt
         updatedAt
         deletedAt
+        totalIntroducers
       }
       total
     }
@@ -52,6 +52,38 @@ export const FETCH_WEEKLY_REPORT = gql(/* GraphQL */ `
           mimeType
           originalName
         }
+      }
+      total
+    }
+  }
+`);
+
+export const FETCH_SPONSORS_QUERY = gql(/* GraphQL */ `
+  query Sponsors($sort: String, $page: String, $filter: JSONObject, $week: Date!) {
+    members(sort: $sort, page: $page, filter: $filter) {
+      members {
+        id
+        ID
+        email
+        point
+        mobile
+        status
+        balance
+        username
+        fullName
+        groupName
+        allowState
+        teamReport
+        OTPEnabled
+        teamStrategy
+        syncWithSendy
+        emailVerified
+        primaryAddress
+        weekIntroducers(week: $week)
+        totalIntroducers
+        placementPosition
+        commissionDefault
+        cmnCalculatedWeeks
       }
       total
     }
