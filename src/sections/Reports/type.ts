@@ -25,6 +25,7 @@ export type Sponsor = {
   ID?: number | null;
   email: string;
   point: number;
+  avatar: string;
   mobile: string;
   status: boolean;
   balance: number;

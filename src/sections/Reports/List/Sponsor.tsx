@@ -7,7 +7,7 @@ import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 
-import { useQuery } from 'src/routes/hooks';
+import { useQuery, type SortOrder } from 'src/routes/hooks';
 
 import { formatDate, customizeDate } from 'src/utils/format-time';
 
@@ -27,9 +27,9 @@ import SponsorTableRow from './SponsorTableRow';
 import { useFetchSponsors } from '../useApollo';
 
 const TABLE_HEAD = [
-  { id: 'ID', label: 'ID', width: 300, sortable: false },
-  { id: 'username', label: 'Username', sortable: false },
-  { id: 'fullName', label: 'FullName', width: 300, sortable: false },
+  { id: 'ID', label: 'ID', width: 300, sortable: true },
+  { id: 'username', label: 'Member', sortable: true },
+  { id: 'fullName', label: 'FullName', width: 300, sortable: true },
   { id: 'weekIntroducers', label: 'Introducers', width: 300, sortable: false },
 ];
 
@@ -118,30 +118,37 @@ export default function SponsorListView({ openWeek }: Props) {
               orderBy={sort && Object.keys(sort)[0]}
               headLabel={TABLE_HEAD}
               rowCount={loading ? 0 : sponsors!.length}
+              onSort={(id) => {
+                if (id !== 'introducers') {
+                  const isAsc = sort && sort[id] === 'asc';
+                  const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
+                  setQuery({ ...query, sort: newSort });
+                }
+              }}
             />
-          </Table>
-          {loading ? (
-            <>
-              <TableSkeleton height={26} />
-              <TableSkeleton height={26} />
-              <TableSkeleton height={26} />
-              <TableSkeleton height={26} />
-              <TableSkeleton height={26} />
-              <TableSkeleton height={26} />
-              <TableSkeleton height={26} />
-              <TableSkeleton height={26} />
-              <TableSkeleton height={26} />
-              <TableSkeleton height={26} />
-            </>
-          ) : (
-            <TableBody>
-              {sponsors!.map((row: any) => (
-                <SponsorTableRow key={row!.id} row={row!} />
-              ))}
+            {loading ? (
+              <>
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+                <TableSkeleton height={26} />
+              </>
+            ) : (
+              <TableBody>
+                {sponsors!.map((row: any) => (
+                  <SponsorTableRow key={row!.id} row={row!} />
+                ))}
 
-              <TableNoData notFound={notFound} />
-            </TableBody>
-          )}
+                <TableNoData notFound={notFound} />
+              </TableBody>
+            )}
+          </Table>
         </ScrollBar>
 
         <TablePaginationCustom

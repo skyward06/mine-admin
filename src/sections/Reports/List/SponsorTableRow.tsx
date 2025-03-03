@@ -7,6 +7,8 @@ import TableCell from '@mui/material/TableCell';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { formatID } from 'src/utils/helper';
+
 import UserItem from 'src/components/UserItem';
 
 import type { Sponsor } from '../type';
@@ -20,10 +22,11 @@ type Props = {
 
 export default function SponsorTableRow({ row }: Props) {
   const router = useRouter();
-  const { id, username, email, fullName, weekIntroducers } = row;
+  const { id, ID, username, email, fullName, weekIntroducers } = row;
 
   return (
     <TableRow hover>
+      <TableCell>{formatID(ID ?? '')}</TableCell>
       <TableCell
         sx={{
           alignItems: 'center',

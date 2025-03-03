@@ -66,6 +66,7 @@ export const FETCH_SPONSORS_QUERY = gql(/* GraphQL */ `
         ID
         email
         point
+        avatar
         mobile
         status
         balance
