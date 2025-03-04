@@ -19,11 +19,14 @@ import { useRouter } from 'src/routes/hooks';
 import { fData } from 'src/utils/formatNumber';
 
 import { CONFIG } from 'src/config';
+import { PERMISSIONS } from 'src/consts';
 import { gql } from 'src/__generated__/gql';
 
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 import { Form, Field } from 'src/components/Form';
+
+import { useAuthContext } from 'src/auth/hooks';
 
 import { useFetchRoles } from '../Role/useApollo';
 
@@ -46,7 +49,7 @@ export type NewUserSchemaType = zod.infer<typeof NewUserSchema>;
 const NewUserSchema = zod.object({
   username: zod.string({ required_error: 'Username is required' }),
   fullName: zod.string({ required_error: 'Full Name is required' }),
-  roleId: zod.string({ required_error: 'Role is required' }),
+  roleId: zod.string().optional(),
   email: zod
     .string({ required_error: 'Email is required' })
     .email({ message: 'Invalid email address is provided' }),
@@ -69,8 +72,9 @@ export default function UserCreateForm() {
     []
   );
 
-  const [submit, { loading }] = useMutation(CREATE_USER);
+  const { user } = useAuthContext();
   const { roles } = useFetchRoles();
+  const [submit, { loading }] = useMutation(CREATE_USER);
 
   const methods = useForm<NewUserSchemaType>({
     resolver: zodResolver(NewUserSchema),
@@ -191,13 +195,15 @@ export default function UserCreateForm() {
               <Field.Text name="username" label="Username" />
               <Field.Text name="fullName" label="Full Name" />
               <Field.Text name="email" label="Email Address" />
-              <Field.Select name="roleId" label="Role">
-                {roles.map((item) => (
-                  <MenuItem key={item?.id} value={item?.id}>
-                    {item?.name}
-                  </MenuItem>
-                ))}
-              </Field.Select>
+              {user?.role?.role === PERMISSIONS.ASSIGN_ROLE_PERMISSION.value && (
+                <Field.Select name="roleId" label="Role">
+                  {roles.map((item) => (
+                    <MenuItem key={item?.id} value={item?.id}>
+                      {item?.name}
+                    </MenuItem>
+                  ))}
+                </Field.Select>
+              )}
             </Box>
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>

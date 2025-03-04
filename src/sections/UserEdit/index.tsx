@@ -27,6 +27,14 @@ const FETCH_USER = gql(/* GraphQL */ `
         fullName
         deletedAt
         OTPEnabled
+        role {
+          id
+          name
+          role
+          sale
+          commission
+          description
+        }
       }
     }
   }

@@ -26,6 +26,7 @@ import { fData } from 'src/utils/formatNumber';
 import { fDateTime } from 'src/utils/format-time';
 
 import { CONFIG } from 'src/config';
+import { PERMISSIONS } from 'src/consts';
 import { gql } from 'src/__generated__/gql';
 
 import { Label } from 'src/components/Label';
@@ -209,6 +210,15 @@ export default function UserGeneral({ currentUser }: Props) {
               <Box display="flex" justifyContent="center">
                 {fileLoading && <Iconify icon="line-md:uploading-loop" width={50} />}
               </Box>
+
+              <Box display="flex" justifyContent="center">
+                <Label variant="soft" color="error" sx={{ p: 3 }}>
+                  <Iconify icon="arcticons:permissionchecker" width={35} strokeWidth={3} />
+                  <Typography variant="h5" fontWeight={700}>
+                    {currentUser?.role?.name}{' '}
+                  </Typography>
+                </Label>
+              </Box>
             </Card>
           </Grid>
 
@@ -232,13 +242,15 @@ export default function UserGeneral({ currentUser }: Props) {
                 <Field.Text name="username" label="Username" />
                 <Field.Text name="fullName" label="Full Name" />
                 <Field.Text name="email" label="Email Address" />
-                <Field.Select name="roleId" label="Role">
-                  {roles.map((item) => (
-                    <MenuItem key={item?.id} value={item?.id}>
-                      {item?.name}
-                    </MenuItem>
-                  ))}
-                </Field.Select>
+                {user?.role?.role === PERMISSIONS.ASSIGN_ROLE_PERMISSION.value && (
+                  <Field.Select name="roleId" label="Role">
+                    {roles.map((item) => (
+                      <MenuItem key={item?.id} value={item?.id}>
+                        {item?.name}
+                      </MenuItem>
+                    ))}
+                  </Field.Select>
+                )}
               </Box>
 
               <Stack direction="row" justifyContent="flex-end" spacing={2} sx={{ mt: 3 }}>

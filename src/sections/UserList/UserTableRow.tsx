@@ -104,7 +104,7 @@ export default function UserTableRow({
         </TableCell>
 
         <TableCell>
-          <Label variant="soft" color="success">
+          <Label variant="soft" color="error">
             {role?.name}
           </Label>
         </TableCell>

@@ -10,11 +10,14 @@ import Button from '@mui/material/Button';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { PERMISSIONS } from 'src/consts';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Label } from 'src/components/Label';
 import { AgGrid } from 'src/components/AgGrid';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
+
+import { useAuthContext } from 'src/auth/hooks';
 
 import { useFetchRoles } from '../useApollo';
 import { ActionRender } from './ActionRenderer';
@@ -23,6 +26,7 @@ import type { Role } from './type';
 
 export default function RoleList() {
   const { loading, rowCount, roles } = useFetchRoles();
+  const { user } = useAuthContext();
 
   type RoleTable = Omit<Role, 'frontActions'>;
 
@@ -160,9 +164,11 @@ export default function RoleList() {
           mb: { xs: 2, md: 3 },
         }}
         action={
-          <Button variant="contained" onClick={() => router.push(paths.dashboard.roles.new)}>
-            Create Role
-          </Button>
+          user?.role?.role === PERMISSIONS.EDITOR_PERMISSION.value ? (
+            <Button variant="contained" onClick={() => router.push(paths.dashboard.roles.new)}>
+              Create Role
+            </Button>
+          ) : null
         }
       />
       <Card
