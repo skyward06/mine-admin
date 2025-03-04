@@ -94,8 +94,9 @@ export default function Transactions() {
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
         cellRenderer: ({ data }: CustomCellRendererProps<BalanceTableDataType>) =>
           data?.extra1 === 'Sale' &&
-          user?.role?.sale !==
-            (PERMISSIONS.NONE_PERMISSION.value && PERMISSIONS.VIEWER_PERMISSION.value) ? (
+          [PERMISSIONS.EDITOR_PERMISSION.value, PERMISSIONS.PAST_EDIT_PERMISSION.value, 7].includes(
+            user?.role?.sale!
+          ) ? (
             <Link to={paths.dashboard.sales.edit(formatID(data.extra2?.split('-')[1]!, 'S'))}>
               {data?.extra2}
             </Link>
