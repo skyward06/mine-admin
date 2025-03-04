@@ -159,4 +159,5 @@ export const PERMISSIONS = {
     value: 4,
     hex: 0x4,
   },
+  ASSIGN_ROLE_PERMISSION: { label: 'Assign Role', value: 4, hex: 0x4 },
 };

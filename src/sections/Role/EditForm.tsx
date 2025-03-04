@@ -31,13 +31,14 @@ export default function EditForm({ current }: Props) {
   const [disabled, setDisabled] = useState({ role: false, sale: false, commission: false });
   const [checkValue, setCheckValue] = useState({
     role: {
-      roleNone: false,
+      roleNone: true,
       roleView: false,
       none1: false,
       roleEdit: false,
+      roleAssign: false,
     },
     sale: {
-      saleNone: false,
+      saleNone: true,
       saleView: false,
       none1: false,
       saleEdit: false,
@@ -45,12 +46,11 @@ export default function EditForm({ current }: Props) {
       salePast: false,
     },
     commission: {
-      commissionNone: false,
+      commissionNone: true,
       commissionView: false,
       none1: false,
       commissionEdit: false,
       calculation: false,
-      none2: false,
     },
   });
 
@@ -167,7 +167,8 @@ export default function EditForm({ current }: Props) {
           roleNone: role === 0,
           roleView: role === 1,
           none1: false,
-          roleEdit: role === 3,
+          roleEdit: role === 3 || role === 7,
+          roleAssign: role === 4 || role === 7,
         },
         sale: {
           saleNone: sale === 0,
@@ -175,15 +176,14 @@ export default function EditForm({ current }: Props) {
           none1: false,
           saleEdit: sale === 3 || sale === 7,
           none2: false,
-          salePast: sale === 5 || sale === 7, // 5 or 7
+          salePast: sale === 5 || sale === 7,
         },
         commission: {
           commissionNone: commission === 0,
           commissionView: commission === 1,
           none1: false,
           commissionEdit: commission === 3 || commission === 7,
-          none2: false,
-          calculation: commission === 4 || commission === 7, // 4 or 7
+          calculation: commission === 4 || commission === 7,
         },
       });
     }
@@ -205,7 +205,15 @@ export default function EditForm({ current }: Props) {
         <Field.Text name="description" label="Description" />
       </Box>
 
-      <Stack direction="row" justifyContent="space-around">
+      <Box
+        rowGap={4}
+        columnGap={4}
+        display="grid"
+        gridTemplateColumns={{
+          xs: 'repeat(1, 1fr)',
+          md: 'repeat(2, 1fr)',
+        }}
+      >
         <Stack>
           <Typography variant="h6">Role</Typography>
           <Divider sx={{ borderStyle: 'dashed' }} />
@@ -236,6 +244,16 @@ export default function EditForm({ current }: Props) {
               />
             }
             label={PERMISSIONS.EDITOR_PERMISSION.label}
+          />
+          <FormControlLabel
+            control={
+              <Switch
+                checked={checkValue.role.roleAssign}
+                onChange={(event) => handleSwitchChange('role', 'roleAssign', event.target.checked)}
+                disabled={disabled.role}
+              />
+            }
+            label={PERMISSIONS.ASSIGN_ROLE_PERMISSION.label}
           />
         </Stack>
 
@@ -333,7 +351,7 @@ export default function EditForm({ current }: Props) {
             label={PERMISSIONS.COMMISSOIN_CALCULATION_PERMISSION.label}
           />
         </Stack>
-      </Stack>
+      </Box>
 
       <Stack alignItems="flex-end" sx={{ mt: 3 }}>
         <LoadingButton
