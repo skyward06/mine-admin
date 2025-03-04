@@ -1,7 +1,7 @@
 import { useRef, useMemo } from 'react';
 import { useQuery, useMutation, useLazyQuery } from '@apollo/client';
 
-import { useParams, useAgQuery as useQueryString } from 'src/routes/hooks';
+import { useAgQuery as useQueryString } from 'src/routes/hooks';
 
 import { parseFilterModel } from 'src/utils/parseFilter';
 
@@ -14,13 +14,9 @@ import {
 } from './query';
 
 export function useFetchRoles() {
-  const params = useParams();
   const [{ page = '1,50', sort = 'createdAt', filter }] = useQueryString();
 
-  const graphQueryFilter = useMemo(
-    () => parseFilterModel({ id: params.id }, filter),
-    [params, filter]
-  );
+  const graphQueryFilter = useMemo(() => parseFilterModel({}, filter), [filter]);
 
   const { loading, data, called } = useQuery(FETCH_ROLES_QUERY, {
     variables: { filter: graphQueryFilter, page, sort },
@@ -49,7 +45,7 @@ export function useFetchRoles() {
 export function useFetchRoleById() {
   const [fetchRoleById, { loading, data, error }] = useLazyQuery(FETCH_ROLE_BY_ID);
 
-  return { loading, role: data?.roleById, error, fetchRoleById };
+  return { loading, role: data?.roleById ?? {}, error, fetchRoleById };
 }
 
 export function useCreateRole() {

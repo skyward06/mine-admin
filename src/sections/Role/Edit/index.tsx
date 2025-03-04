@@ -1,9 +1,11 @@
 import type { Role } from 'src/__generated__/graphql';
 
+import { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Navigate } from 'react-router-dom';
 
 import { paths } from 'src/routes/paths';
+import { useParams } from 'src/routes/hooks';
 
 import { CONFIG } from 'src/config';
 import { DashboardContent } from 'src/layouts/dashboard';
@@ -12,13 +14,19 @@ import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import { LoadingScreen } from 'src/components/loading-screen';
 
 import EditForm from '../EditForm';
-import { useFetchRoles } from '../useApollo';
+import { useFetchRoleById } from '../useApollo';
 
 // ----------------------------------------------------------------------
 export default function RoleEditView() {
-  const { loading, roles } = useFetchRoles();
+  const params = useParams();
+  const { loading, role, fetchRoleById } = useFetchRoleById();
 
-  const current = roles[0] as Omit<Role, 'frontAction'>;
+  useEffect(() => {
+    fetchRoleById({ variables: { data: { id: params.id ?? '' } } });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params]);
+
+  const current = role as Omit<Role, 'frontAction'>;
 
   if (loading) {
     return <LoadingScreen />;

@@ -8,6 +8,7 @@ import { ApolloError, useMutation } from '@apollo/client';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
+import MenuItem from '@mui/material/MenuItem';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -23,6 +24,8 @@ import { gql } from 'src/__generated__/gql';
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 import { Form, Field } from 'src/components/Form';
+
+import { useFetchRoles } from '../Role/useApollo';
 
 // ----------------------------------------------------------------------
 
@@ -43,6 +46,7 @@ export type NewUserSchemaType = zod.infer<typeof NewUserSchema>;
 const NewUserSchema = zod.object({
   username: zod.string({ required_error: 'Username is required' }),
   fullName: zod.string({ required_error: 'Full Name is required' }),
+  roleId: zod.string({ required_error: 'Role is required' }),
   email: zod
     .string({ required_error: 'Email is required' })
     .email({ message: 'Invalid email address is provided' }),
@@ -66,6 +70,7 @@ export default function UserCreateForm() {
   );
 
   const [submit, { loading }] = useMutation(CREATE_USER);
+  const { roles } = useFetchRoles();
 
   const methods = useForm<NewUserSchemaType>({
     resolver: zodResolver(NewUserSchema),
@@ -81,7 +86,6 @@ export default function UserCreateForm() {
           data: {
             ...data,
             avatar,
-            roleId: '',
             password: '',
           },
         },
@@ -187,6 +191,13 @@ export default function UserCreateForm() {
               <Field.Text name="username" label="Username" />
               <Field.Text name="fullName" label="Full Name" />
               <Field.Text name="email" label="Email Address" />
+              <Field.Select name="roleId" label="Role">
+                {roles.map((item) => (
+                  <MenuItem key={item?.id} value={item?.id}>
+                    {item?.name}
+                  </MenuItem>
+                ))}
+              </Field.Select>
             </Box>
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>

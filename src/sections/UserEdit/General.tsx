@@ -12,6 +12,7 @@ import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
+import MenuItem from '@mui/material/MenuItem';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -36,6 +37,7 @@ import { useAuthContext } from 'src/auth/hooks';
 
 import PasswordModal from './PasswordModal';
 import { useDisable2FA } from './useApollo';
+import { useFetchRoles } from '../Role/useApollo';
 
 // ----------------------------------------------------------------------
 
@@ -62,6 +64,7 @@ export type UserGeneralSchemaType = zod.infer<typeof UserGeneralSchema>;
 const UserGeneralSchema = zod.object({
   username: zod.string({ required_error: 'Username is required' }),
   fullName: zod.string({ required_error: 'Full Name is required' }),
+  roleId: zod.string({ required_error: 'Role is required' }),
   email: zod
     .string({ required_error: 'Email is required' })
     .email({ message: 'Invalid email address is provided' }),
@@ -72,12 +75,14 @@ export default function UserGeneral({ currentUser }: Props) {
   const open = useBoolean();
   const router = useRouter();
 
-  const { user } = useAuthContext();
+  console.log('currentUser => ', currentUser);
 
   const [fileLoading, setFileLoading] = useState<boolean>();
   const [avatar, setAvatar] = useState<string>();
   const [avatarUrl, setAvatarUrl] = useState<File | string | null>(null);
 
+  const { user } = useAuthContext();
+  const { roles } = useFetchRoles();
   const [submit, { loading }] = useMutation(UPDATE_USER);
   const { loading: disableLoading, disable2FA } = useDisable2FA();
 
@@ -227,6 +232,13 @@ export default function UserGeneral({ currentUser }: Props) {
                 <Field.Text name="username" label="Username" />
                 <Field.Text name="fullName" label="Full Name" />
                 <Field.Text name="email" label="Email Address" />
+                <Field.Select name="roleId" label="Role">
+                  {roles.map((item) => (
+                    <MenuItem key={item?.id} value={item?.id}>
+                      {item?.name}
+                    </MenuItem>
+                  ))}
+                </Field.Select>
               </Box>
 
               <Stack direction="row" justifyContent="flex-end" spacing={2} sx={{ mt: 3 }}>
