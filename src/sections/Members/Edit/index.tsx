@@ -11,11 +11,14 @@ import { paths } from 'src/routes/paths';
 import { useTabs } from 'src/hooks/use-tabs';
 
 import { CONFIG } from 'src/config';
+import { PERMISSIONS } from 'src/consts';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/Iconify';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import { LoadingScreen } from 'src/components/loading-screen';
+
+import { useAuthContext } from 'src/auth/hooks';
 
 import Log from './Log';
 import Sale from './Sale';
@@ -28,26 +31,43 @@ import Commission from './Commission';
 import MemberGeneral from './General';
 import { FETCH_MEMBERS_QUERY } from '../query';
 
-const TABS = [
-  {
-    value: 'history',
-    label: 'History',
-    icon: <Iconify icon="carbon:analytics" width={24} />,
-  },
-  { value: 'edit', label: 'Edit', icon: <Iconify icon="solar:pen-2-bold" width={24} /> },
-  { value: 'sale', label: 'Sale', icon: <Iconify icon="bi:currency-exchange" /> },
-  { value: 'sponsor', label: 'Sponsor', icon: <Iconify icon="bi:diagram-3" /> },
-  { value: 'placement', label: 'Placement', icon: <Iconify icon="clarity:flow-chart-line" /> },
-  { value: 'commission', label: 'Commission', icon: <Iconify icon="fluent:reward-32-regular" /> },
-  { value: 'balance', label: 'Balance', icon: <Iconify icon="bx:transfer" /> },
-  { value: 'log', label: 'Log', icon: <Iconify icon="ri:history-line" /> },
-  { value: 'note', label: 'Note', icon: <Iconify icon="mdi:event-note-outline" /> },
-];
-
 // ----------------------------------------------------------------------
 export default function MemberEditView() {
   // Loading state including first initial render
   const [isLoading, setIsLoading] = useState(true);
+
+  const { user } = useAuthContext();
+
+  const TABS = [
+    {
+      value: 'history',
+      label: 'History',
+      icon: <Iconify icon="carbon:analytics" width={24} />,
+    },
+    { value: 'edit', label: 'Edit', icon: <Iconify icon="solar:pen-2-bold" width={24} /> },
+    { value: 'sponsor', label: 'Sponsor', icon: <Iconify icon="bi:diagram-3" /> },
+    { value: 'placement', label: 'Placement', icon: <Iconify icon="clarity:flow-chart-line" /> },
+    { value: 'balance', label: 'Balance', icon: <Iconify icon="bx:transfer" /> },
+    { value: 'log', label: 'Log', icon: <Iconify icon="ri:history-line" /> },
+    { value: 'note', label: 'Note', icon: <Iconify icon="mdi:event-note-outline" /> },
+  ];
+
+  if (
+    user?.role?.sale !== (PERMISSIONS.VIEWER_PERMISSION.value && PERMISSIONS.NONE_PERMISSION.value)
+  ) {
+    TABS.push({ value: 'sale', label: 'Sale', icon: <Iconify icon="bi:currency-exchange" /> });
+  }
+
+  if (
+    user?.role?.commission !==
+    (PERMISSIONS.VIEWER_PERMISSION.value && PERMISSIONS.NONE_PERMISSION.value)
+  ) {
+    TABS.push({
+      value: 'commission',
+      label: 'Commission',
+      icon: <Iconify icon="fluent:reward-32-regular" />,
+    });
+  }
 
   const tabs = useTabs('history');
   const params = useParams();

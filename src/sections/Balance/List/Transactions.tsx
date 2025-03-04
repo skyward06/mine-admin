@@ -12,13 +12,18 @@ import { paths } from 'src/routes/paths';
 import { formatID } from 'src/utils/helper';
 import { formatDate } from 'src/utils/format-time';
 
+import { PERMISSIONS } from 'src/consts';
+
 import { AgGrid } from 'src/components/AgGrid';
 
 import { useFetchBalances } from 'src/sections/Balance/List/useApollo';
 
+import { useAuthContext } from 'src/auth/hooks';
+
 type BalanceTableDataType = Omit<Balance, 'memberId'>;
 
 export default function Transactions() {
+  const { user } = useAuthContext();
   const { loading, rowCount, balances } = useFetchBalances();
 
   const colDefs = useMemo<ColDef<BalanceTableDataType>[]>(
@@ -88,7 +93,9 @@ export default function Transactions() {
         editable: false,
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
         cellRenderer: ({ data }: CustomCellRendererProps<BalanceTableDataType>) =>
-          data?.extra1 === 'Sale' ? (
+          data?.extra1 === 'Sale' &&
+          user?.role?.sale !==
+            (PERMISSIONS.NONE_PERMISSION.value && PERMISSIONS.VIEWER_PERMISSION.value) ? (
             <Link to={paths.dashboard.sales.edit(formatID(data.extra2?.split('-')[1]!, 'S'))}>
               {data?.extra2}
             </Link>
@@ -97,7 +104,7 @@ export default function Transactions() {
           ),
       },
     ],
-    []
+    [user]
   );
 
   return (

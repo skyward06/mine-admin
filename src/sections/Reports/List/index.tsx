@@ -18,11 +18,14 @@ import { useBoolean } from 'src/hooks/useBoolean';
 import { formatDate } from 'src/utils/format-time';
 
 import { CONFIG } from 'src/config';
+import { PERMISSIONS } from 'src/consts';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
+
+import { useAuthContext } from 'src/auth/hooks';
 
 import Revenue from './Revenue';
 import MetalListView from './Metals';
@@ -31,23 +34,34 @@ import SponsorListView from './Sponsor';
 import OnepointMemberListView from './OnePointAway';
 import { useGenerateWeeklyReports } from '../useApollo';
 
-const TABS = [
-  { value: 'revenue', label: 'Revenue', icon: <Iconify icon="mdi:non-profit" /> },
-  {
-    value: 'onePointAway',
-    label: 'One Point Away',
-    icon: <Iconify icon="f7:hand-point-right-fill" />,
-  },
-  { value: 'weekly', label: 'Weekly', icon: <Iconify icon="tabler:calendar-week-filled" /> },
-  { value: 'metals', label: 'Metals', icon: <Iconify icon="icon-park-outline:heavy-metal" /> },
-  { value: 'sponsors', label: 'Sponsors', icon: <Iconify icon="carbon:user-sponsor" /> },
-];
-
 // ----------------------------------------------------------------------
 export default function ReportView() {
   const tabs = useTabs('revenue');
   const navigate = useNavigate();
   const openWeek = useBoolean();
+
+  const { user } = useAuthContext();
+
+  const TABS = [
+    { value: 'revenue', label: 'Revenue', icon: <Iconify icon="mdi:non-profit" /> },
+    {
+      value: 'onePointAway',
+      label: 'One Point Away',
+      icon: <Iconify icon="f7:hand-point-right-fill" />,
+    },
+    { value: 'weekly', label: 'Weekly', icon: <Iconify icon="tabler:calendar-week-filled" /> },
+    { value: 'sponsors', label: 'Sponsors', icon: <Iconify icon="carbon:user-sponsor" /> },
+  ];
+
+  if (
+    user?.role?.sale !== (PERMISSIONS.VIEWER_PERMISSION.value && PERMISSIONS.NONE_PERMISSION.value)
+  ) {
+    TABS.push({
+      value: 'metals',
+      label: 'Metals',
+      icon: <Iconify icon="icon-park-outline:heavy-metal" />,
+    });
+  }
 
   const [week, setWeek] = useState<string>(
     formatDate(`${dayjs().startOf('week').add(-1, 'week')}`, 'YYYY-MM-DD')

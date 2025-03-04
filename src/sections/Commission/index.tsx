@@ -43,12 +43,12 @@ const TABS = [
 ];
 
 export default function CommissionListView() {
-  const { loading: calculationLoading, calculateCommission } = useCalculateCommission();
   const [query, { setQueryParams: setQuery }] = useQuery();
   const tabs = useTabs(query.tab ?? 'week');
   const [loading, setLoading] = useState<boolean>(false);
 
   const { user } = useAuthContext();
+  const { loading: calculationLoading, calculateCommission } = useCalculateCommission();
 
   const openWeek = useBoolean();
 
@@ -113,8 +113,9 @@ export default function CommissionListView() {
               gridTemplateColumns: {
                 xs: 'repeat(1, 1fr)',
                 sm:
-                  user?.role?.commission !== PERMISSIONS.VIEWER_PERMISSION.value
-                    ? '30% 30% 40%'
+                  user?.role?.commission === PERMISSIONS.COMMISSOIN_CALCULATION_PERMISSION.value ||
+                  user?.role?.commission === 7
+                    ? '30% 35% 35%'
                     : '50% 50%',
               },
             }}
@@ -137,16 +138,19 @@ export default function CommissionListView() {
             >
               Select Week
             </Button>
-            <LoadingButton
-              variant="contained"
-              color="primary"
-              startIcon={<Iconify icon="fluent:preview-link-16-regular" />}
-              onClick={handleCalculate}
-              loading={calculationLoading}
-              sx={{ mb: 1 }}
-            >
-              Calculate
-            </LoadingButton>
+            {(user?.role?.commission === PERMISSIONS.COMMISSOIN_CALCULATION_PERMISSION.value ||
+              user?.role?.commission === 7) && (
+              <LoadingButton
+                variant="contained"
+                color="primary"
+                startIcon={<Iconify icon="fluent:preview-link-16-regular" />}
+                onClick={handleCalculate}
+                loading={calculationLoading}
+                sx={{ mb: 1 }}
+              >
+                Calculate
+              </LoadingButton>
+            )}
           </Box>
         }
         sx={{

@@ -9,6 +9,7 @@ import { iconButtonClasses } from '@mui/material/IconButton';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
+import { PERMISSIONS } from 'src/consts';
 import { varAlpha, stylesMode } from 'src/theme/styles';
 
 import { bulletColor } from 'src/components/nav-section';
@@ -54,7 +55,11 @@ export function DashboardLayout({ sx, children, data }: DashboardLayoutProps) {
       items: group.items.filter(
         (item) =>
           // !(item.title === 'Miner' && user?.role?.member === RoleEnum.None) &&
-          !(item.title === 'Sale' && user?.role?.sale === 0)
+          !(item.title === 'Sale' && user?.role?.sale === PERMISSIONS.NONE_PERMISSION.value) &&
+          !(
+            item.title === 'Commission' &&
+            user?.role?.commission === PERMISSIONS.NONE_PERMISSION.value
+          )
         // !(item.title === 'Proof' && user?.role?.proof === RoleEnum.None) &&
         // !(item.title === 'Balance' && user?.role?.balance === RoleEnum.None)
       ),

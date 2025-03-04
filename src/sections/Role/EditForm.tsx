@@ -78,20 +78,7 @@ export default function EditForm({ current }: Props) {
         .map((val, index) => (val ? index : -1))
         .filter((index) => index !== -1);
 
-      if ([0, 1].some((item) => roles.includes(item))) {
-        setDisabled((prev) => ({ ...prev, item: true }));
-      }
-
-      if ([0, 1].some((item) => sales.includes(item))) {
-        setDisabled((prev) => ({ ...prev, item: true }));
-      }
-
-      if ([0, 1].some((item) => commissions.includes(item))) {
-        setDisabled((prev) => ({ ...prev, item: true }));
-      }
-
       /* eslint-disable no-bitwise */
-
       const role = roles.reduce((acc, num) => acc | num, 0);
       const sale = sales.reduce((acc, num) => acc | num, 0);
       const commission = commissions.reduce((acc, num) => acc | num, 0);
@@ -122,6 +109,24 @@ export default function EditForm({ current }: Props) {
       [category]: { ...prev[category], [field]: value },
     }));
 
+    if (field.includes('None') && value) {
+      if (category === 'role') {
+        setCheckValue((prev) => ({ ...prev, role: { ...prev.role, roleView: false } }));
+      }
+      if (category === 'sale') {
+        setCheckValue((prev) => ({
+          ...prev,
+          sale: { ...prev.sale, saleView: false },
+        }));
+      }
+      if (category === 'commission') {
+        setCheckValue((prev) => ({
+          ...prev,
+          commission: { ...prev.commission, commissionView: false },
+        }));
+      }
+    }
+
     if ((field.includes('None') || field.includes('View')) && value) {
       if (category === 'role') {
         setCheckValue((prev) => ({ ...prev, role: { ...prev.role, roleEdit: false } }));
@@ -142,10 +147,14 @@ export default function EditForm({ current }: Props) {
   };
 
   useEffect(() => {
-    const updateDisabledState = (field: string, disable: boolean, enable: boolean) => {
+    const updateDisabledState = (
+      field: 'role' | 'sale' | 'commission',
+      none: boolean,
+      view: boolean
+    ) => {
       setDisabled((prev) => ({
         ...prev,
-        [field]: disable || enable,
+        [field]: none || view,
       }));
     };
 
@@ -231,6 +240,7 @@ export default function EditForm({ current }: Props) {
               <Switch
                 checked={checkValue.role.roleView}
                 onChange={(event) => handleSwitchChange('role', 'roleView', event.target.checked)}
+                disabled={(disabled.role && !checkValue.role.roleView) || checkValue.role.roleNone}
               />
             }
             label={PERMISSIONS.VIEWER_PERMISSION.label}
@@ -274,6 +284,7 @@ export default function EditForm({ current }: Props) {
               <Switch
                 checked={checkValue.sale.saleView}
                 onChange={(event) => handleSwitchChange('sale', 'saleView', event.target.checked)}
+                disabled={(disabled.sale && !checkValue.sale.saleView) || checkValue.sale.saleNone}
               />
             }
             label={PERMISSIONS.VIEWER_PERMISSION.label}
@@ -321,6 +332,10 @@ export default function EditForm({ current }: Props) {
                 checked={checkValue.commission.commissionView}
                 onChange={(event) =>
                   handleSwitchChange('commission', 'commissionView', event.target.checked)
+                }
+                disabled={
+                  (disabled.commission && !checkValue.commission.commissionView) ||
+                  checkValue.commission.commissionNone
                 }
               />
             }
