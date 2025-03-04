@@ -29,10 +29,7 @@ const FETCH_ME_QUERY = gql(/* GraphQL */ `
         id
         name
         sale
-        proof
-        member
-        balance
-        additions
+        role
         commission
         description
       }

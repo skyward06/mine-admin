@@ -7,11 +7,7 @@ export const FETCH_ROLES_QUERY = gql(/* GraphQL */ `
         id
         name
         sale
-        proof
-        member
-        balance
-        additions
-        createdAt
+        role
         commission
         description
         frontActions {
@@ -29,11 +25,7 @@ export const FETCH_ROLE_BY_ID = gql(/* GraphQL */ `
       id
       name
       sale
-      proof
-      member
-      balance
-      additions
-      createdAt
+      role
       commission
       description
       frontActions {
