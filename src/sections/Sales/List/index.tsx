@@ -197,10 +197,9 @@ export default function SaleListView() {
       <Breadcrumbs
         heading="Sale"
         links={[{ name: 'Sale', href: paths.dashboard.sales.root }, { name: 'List' }]}
-        // {...(user?.role?.sale !== RoleEnum.)}
         action={
           <Stack direction={{ xs: 'column', md: 'row' }} gap={1.5}>
-            {user?.role?.sale === PERMISSIONS.VIEWER_PERMISSION.value && (
+            {user?.role?.sale === PERMISSIONS.EDITOR_PERMISSION.value && (
               <Button
                 component={RouterLink}
                 href={paths.dashboard.sales.new}

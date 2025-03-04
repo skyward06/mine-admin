@@ -47,7 +47,7 @@ export default function UserTableRow({
   const password = useBoolean();
   const [newPassword, setNewPassword] = useState<any>();
 
-  const { id, username, email, avatar, createdAt, updatedAt, deletedAt } = row;
+  const { id, username, email, avatar, role, createdAt, updatedAt, deletedAt } = row;
 
   const { loading, updatePasswordByAdmin } = useUpdatePasswordByAdmin();
 
@@ -101,6 +101,12 @@ export default function UserTableRow({
           }}
         >
           <UserItem user={{ username, email, avatar }} />
+        </TableCell>
+
+        <TableCell>
+          <Label variant="soft" color="success">
+            {role?.name}
+          </Label>
         </TableCell>
 
         <TableCell>

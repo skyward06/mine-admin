@@ -54,6 +54,7 @@ const STATUS_OPTIONS: { value: UserRole; label: string; color: LabelColor }[] = 
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', sortable: true },
+  { id: 'role.name', label: 'Role', sortable: true },
   { id: 'createdAt', label: 'Created At', width: 200, sortable: true },
   { id: 'updatedAt', label: 'Updated At', width: 200, sortable: true },
   { id: 'deletedAt', label: 'Status', width: 95, sortable: true },
@@ -102,6 +103,14 @@ const FETCH_USERS_QUERY = gql(/* GraphQL */ `
         updatedAt
         deletedAt
         OTPEnabled
+        role {
+          id
+          name
+          role
+          sale
+          commission
+          description
+        }
       }
       total
     }
