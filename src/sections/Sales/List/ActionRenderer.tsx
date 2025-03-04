@@ -17,10 +17,14 @@ import { useBoolean } from 'src/hooks/useBoolean';
 import { formatID } from 'src/utils/helper';
 import { today } from 'src/utils/format-time';
 
+import { PERMISSIONS } from 'src/consts';
+
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 import { ConfirmDialog } from 'src/components/Dialog';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
+
+import { useAuthContext } from 'src/auth/hooks';
 
 import Detail from './Detail';
 import { useRemoveSale } from '../useApollo';
@@ -37,6 +41,7 @@ export const ActionRender = memo(
 
     const last = dayjs(today()).startOf('week').add(-1, 'day');
     const disabled = dayjs(data?.orderedAt).isBefore(last);
+    const { user } = useAuthContext();
 
     const { loading, removeSale } = useRemoveSale();
 
@@ -56,40 +61,35 @@ export const ActionRender = memo(
             <MenuItem
               onClick={() => {
                 popover.onClose();
-                router.push(`${paths.dashboard.sales.edit(formatID(data?.ID ?? '', 'S'))}`);
-              }}
-              disabled={disabled}
-            >
-              <Iconify icon="solar:pen-2-bold" color="green" />
-              Edit
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                popover.onClose();
                 open.onTrue();
               }}
             >
               <Iconify icon="solar:eye-bold" color="gray" />
               View
             </MenuItem>
-            <MenuItem
-              onClick={() => {
-                router.push(paths.dashboard.sales.log(data?.id!));
-              }}
-            >
-              <Iconify icon="ri:history-line" color="gray" />
-              Log
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                popover.onClose();
-                confirm.onTrue();
-              }}
-              disabled={disabled}
-            >
-              <Iconify icon="bxs:coffee-togo" color="red" />
-              Delete
-            </MenuItem>
+            {user?.role?.sale !== PERMISSIONS.VIEWER_PERMISSION.value && (
+              <>
+                <MenuItem
+                  onClick={() => {
+                    popover.onClose();
+                    router.push(`${paths.dashboard.sales.edit(formatID(data?.ID ?? '', 'S'))}`);
+                  }}
+                  disabled={disabled}
+                >
+                  <Iconify icon="solar:pen-2-bold" color="green" />
+                  Edit
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    popover.onClose();
+                    confirm.onTrue();
+                  }}
+                >
+                  <Iconify icon="bxs:coffee-togo" color="red" />
+                  Delete
+                </MenuItem>
+              </>
+            )}
           </MenuList>
         </CustomPopover>
 

@@ -14,11 +14,14 @@ import { useTabs } from 'src/hooks/use-tabs';
 import { useBoolean } from 'src/hooks/useBoolean';
 
 import { CONFIG } from 'src/config';
+import { PERMISSIONS } from 'src/consts';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
+
+import { useAuthContext } from 'src/auth/hooks';
 
 import Week from './Week';
 import Member from './Member';
@@ -44,6 +47,8 @@ export default function CommissionListView() {
   const [query, { setQueryParams: setQuery }] = useQuery();
   const tabs = useTabs(query.tab ?? 'week');
   const [loading, setLoading] = useState<boolean>(false);
+
+  const { user } = useAuthContext();
 
   const openWeek = useBoolean();
 
@@ -103,7 +108,16 @@ export default function CommissionListView() {
           <Box
             display="grid"
             columnGap={2}
-            sx={{ pr: 4, gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: '30% 36% 34%' } }}
+            sx={{
+              pr: 4,
+              gridTemplateColumns: {
+                xs: 'repeat(1, 1fr)',
+                sm:
+                  user?.role?.commission !== PERMISSIONS.VIEWER_PERMISSION.value
+                    ? '30% 30% 40%'
+                    : '50% 50%',
+              },
+            }}
           >
             <LoadingButton
               variant="contained"

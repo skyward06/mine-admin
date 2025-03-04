@@ -22,6 +22,7 @@ import { formatDate } from 'src/utils/format-time';
 import { formatID, customizeFullName } from 'src/utils/helper';
 
 import { CONFIG } from 'src/config';
+import { PERMISSIONS } from 'src/consts';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Label } from 'src/components/Label';
@@ -35,6 +36,8 @@ import { CustomName } from 'src/components/AgGrid/Renderers';
 import { LoadingScreen } from 'src/components/loading-screen';
 import { StatusRenderer } from 'src/components/AgGrid/Renderers/Status';
 import { BooleanFormatter } from 'src/components/AgGrid/Renderers/BooleanFormatter';
+
+import { useAuthContext } from 'src/auth/hooks';
 
 import { ActionRender } from './ActionRenderer';
 import { useRemoveSale, useFetchSales } from '../useApollo';
@@ -187,22 +190,26 @@ export default function SaleListView() {
   );
 
   const token = localStorage.getItem(CONFIG.storageTokenKey) ?? '';
+  const { user } = useAuthContext();
 
   return (
     <DashboardContent>
       <Breadcrumbs
         heading="Sale"
         links={[{ name: 'Sale', href: paths.dashboard.sales.root }, { name: 'List' }]}
+        // {...(user?.role?.sale !== RoleEnum.)}
         action={
           <Stack direction={{ xs: 'column', md: 'row' }} gap={1.5}>
-            <Button
-              component={RouterLink}
-              href={paths.dashboard.sales.new}
-              variant="contained"
-              startIcon={<Iconify icon="mingcute:add-line" />}
-            >
-              New Sale
-            </Button>
+            {user?.role?.sale !== PERMISSIONS.VIEWER_PERMISSION.value && (
+              <Button
+                component={RouterLink}
+                href={paths.dashboard.sales.new}
+                variant="contained"
+                startIcon={<Iconify icon="mingcute:add-line" />}
+              >
+                New Sale
+              </Button>
+            )}
             <ExportButton target="sales" token={token} variant="contained" />
           </Stack>
         }

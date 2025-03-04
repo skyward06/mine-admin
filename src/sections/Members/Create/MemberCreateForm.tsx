@@ -112,8 +112,6 @@ export default function MemberCreateForm() {
       try {
         const total = txcWallets.reduce((prev: number, save: any) => prev + save.percent, 0);
 
-        console.log('teamReport => ', teamReport);
-
         if (hasDuplicates([...txcWallets, ...otherWallets])) {
           toast.warning('Duplicated wallet address!');
           return;

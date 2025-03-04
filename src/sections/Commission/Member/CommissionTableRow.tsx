@@ -19,16 +19,17 @@ import { useBoolean } from 'src/hooks/useBoolean';
 import { formatID } from 'src/utils/helper';
 import { formatWeekNumber } from 'src/utils/format-time';
 
-import { COMMISSION_TYPE } from 'src/consts';
+import { PERMISSIONS, COMMISSION_TYPE } from 'src/consts';
 import { ConfirmationStatus, type WeeklyCommission } from 'src/__generated__/graphql';
 
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
+import { useAuthContext } from 'src/auth/hooks';
+
 import Detail from './Detail';
 import PlacementTreeView from './Placement';
-// import SplitCommission from './SplitCommission';
 import { useUpdateCommission } from '../useApollo';
 
 // ----------------------------------------------------------------------
@@ -47,6 +48,8 @@ export default function CommissionTableRow({ row, selected, onSelectRow }: Props
   const router = useRouter();
 
   const popover = usePopover();
+
+  const { user } = useAuthContext();
 
   const commission_type = ConfirmationStatus;
 
@@ -140,9 +143,11 @@ export default function CommissionTableRow({ row, selected, onSelectRow }: Props
               <Iconify icon="solar:eye-bold" />
             </IconButton>
           </Tooltip>
-          <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
-            <Iconify icon="nrk:more" />
-          </IconButton>
+          {user?.role?.commission !== PERMISSIONS.VIEWER_PERMISSION.value && (
+            <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
+              <Iconify icon="nrk:more" />
+            </IconButton>
+          )}
         </TableCell>
       </TableRow>
 

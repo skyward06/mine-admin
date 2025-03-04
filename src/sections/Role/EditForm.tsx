@@ -1,18 +1,21 @@
 import type { Role } from 'src/__generated__/graphql';
 
-import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
+import { useMemo, useState, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import MenuItem from '@mui/material/MenuItem';
+import Switch from '@mui/material/Switch';
+import Divider from '@mui/material/Divider';
+import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { ROLES, ROLE_TYPE } from 'src/consts';
+import { PERMISSIONS } from 'src/consts';
 
 import { Form, Field } from 'src/components/Form';
 
@@ -25,10 +28,34 @@ interface Props {
 
 export default function EditForm({ current }: Props) {
   const router = useRouter();
+  const [disabled, setDisabled] = useState({ role: false, sale: false, commission: false });
+  const [checkValue, setCheckValue] = useState({
+    role: {
+      roleNone: false,
+      roleView: false,
+      none1: false,
+      roleEdit: false,
+    },
+    sale: {
+      saleNone: false,
+      saleView: false,
+      none1: false,
+      saleEdit: false,
+      none2: false,
+      salePast: false,
+    },
+    commission: {
+      commissionNone: false,
+      commissionView: false,
+      none1: false,
+      commissionEdit: false,
+      calculation: false,
+      none2: false,
+    },
+  });
 
   const defaultValues = useMemo(
     () => (current ? Schema.safeParse(current)?.data ?? ({} as SchemaType) : {}),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [current]
   );
 
@@ -41,14 +68,40 @@ export default function EditForm({ current }: Props) {
 
   const onSubmit = handleSubmit(async (newData) => {
     try {
+      const roles = Object.values(checkValue.role)
+        .map((val, index) => (val ? index : -1))
+        .filter((index) => index !== -1);
+      const sales = Object.values(checkValue.sale)
+        .map((val, index) => (val ? index : -1))
+        .filter((index) => index !== -1);
+      const commissions = Object.values(checkValue.commission)
+        .map((val, index) => (val ? index : -1))
+        .filter((index) => index !== -1);
+
+      if ([0, 1].some((item) => roles.includes(item))) {
+        setDisabled((prev) => ({ ...prev, item: true }));
+      }
+
+      if ([0, 1].some((item) => sales.includes(item))) {
+        setDisabled((prev) => ({ ...prev, item: true }));
+      }
+
+      if ([0, 1].some((item) => commissions.includes(item))) {
+        setDisabled((prev) => ({ ...prev, item: true }));
+      }
+
+      /* eslint-disable no-bitwise */
+
+      const role = roles.reduce((acc, num) => acc | num, 0);
+      const sale = sales.reduce((acc, num) => acc | num, 0);
+      const commission = commissions.reduce((acc, num) => acc | num, 0);
+
       if (current) {
-        await updateRole({ variables: { data: { id: current.id, ...newData } } });
-      } else {
-        await createRole({
-          variables: {
-            data: newData,
-          },
+        await updateRole({
+          variables: { data: { id: current.id, ...newData, role, sale, commission } },
         });
+      } else {
+        await createRole({ variables: { data: { ...newData, role, sale, commission } } });
       }
 
       reset();
@@ -58,6 +111,84 @@ export default function EditForm({ current }: Props) {
     }
   });
 
+  // Function to handle the state change of Switch
+  const handleSwitchChange = (
+    category: 'role' | 'sale' | 'commission',
+    field: string,
+    value: boolean
+  ) => {
+    setCheckValue((prev) => ({
+      ...prev,
+      [category]: { ...prev[category], [field]: value },
+    }));
+
+    if ((field.includes('None') || field.includes('View')) && value) {
+      if (category === 'role') {
+        setCheckValue((prev) => ({ ...prev, role: { ...prev.role, roleEdit: false } }));
+      }
+      if (category === 'sale') {
+        setCheckValue((prev) => ({
+          ...prev,
+          sale: { ...prev.sale, saleEdit: false, salePast: false },
+        }));
+      }
+      if (category === 'commission') {
+        setCheckValue((prev) => ({
+          ...prev,
+          commission: { ...prev.commission, commissionEdit: false, calculation: false },
+        }));
+      }
+    }
+  };
+
+  useEffect(() => {
+    const updateDisabledState = (field: string, disable: boolean, enable: boolean) => {
+      setDisabled((prev) => ({
+        ...prev,
+        [field]: disable || enable,
+      }));
+    };
+
+    updateDisabledState('role', checkValue.role.roleNone, checkValue.role.roleView);
+    updateDisabledState('sale', checkValue.sale.saleNone, checkValue.sale.saleView);
+    updateDisabledState(
+      'commission',
+      checkValue.commission.commissionNone,
+      checkValue.commission.commissionView
+    );
+  }, [checkValue]);
+
+  useEffect(() => {
+    if (current) {
+      const { role, sale, commission } = current;
+
+      setCheckValue({
+        role: {
+          roleNone: role === 0,
+          roleView: role === 1,
+          none1: false,
+          roleEdit: role === 3,
+        },
+        sale: {
+          saleNone: sale === 0,
+          saleView: sale === 1,
+          none1: false,
+          saleEdit: sale === 3 || sale === 7,
+          none2: false,
+          salePast: sale === 5 || sale === 7, // 5 or 7
+        },
+        commission: {
+          commissionNone: commission === 0,
+          commissionView: commission === 1,
+          none1: false,
+          commissionEdit: commission === 3 || commission === 7,
+          none2: false,
+          calculation: commission === 4 || commission === 7, // 4 or 7
+        },
+      });
+    }
+  }, [current]);
+
   return (
     <Form methods={methods} onSubmit={onSubmit}>
       <Box
@@ -66,23 +197,143 @@ export default function EditForm({ current }: Props) {
         display="grid"
         gridTemplateColumns={{
           xs: 'repeat(1, 1fr)',
-          sm: 'repeat(2, 1fr)',
-          md: 'repeat(3, 1fr)',
+          md: '30% 70%',
         }}
+        sx={{ mb: 3 }}
       >
         <Field.Text name="name" label="Name" />
         <Field.Text name="description" label="Description" />
-
-        {ROLE_TYPE.map((role) => (
-          <Field.Select name={role.name} label={role.label}>
-            {ROLES.map((item) => (
-              <MenuItem key={item.value} value={item.value}>
-                {item.label}
-              </MenuItem>
-            ))}
-          </Field.Select>
-        ))}
       </Box>
+
+      <Stack direction="row" justifyContent="space-around">
+        <Stack>
+          <Typography variant="h6">Role</Typography>
+          <Divider sx={{ borderStyle: 'dashed' }} />
+          <FormControlLabel
+            control={
+              <Switch
+                checked={checkValue.role.roleNone}
+                onChange={(event) => handleSwitchChange('role', 'roleNone', event.target.checked)}
+              />
+            }
+            label={PERMISSIONS.NONE_PERMISSION.label}
+          />
+          <FormControlLabel
+            control={
+              <Switch
+                checked={checkValue.role.roleView}
+                onChange={(event) => handleSwitchChange('role', 'roleView', event.target.checked)}
+              />
+            }
+            label={PERMISSIONS.VIEWER_PERMISSION.label}
+          />
+          <FormControlLabel
+            control={
+              <Switch
+                checked={checkValue.role.roleEdit}
+                onChange={(event) => handleSwitchChange('role', 'roleEdit', event.target.checked)}
+                disabled={disabled.role}
+              />
+            }
+            label={PERMISSIONS.EDITOR_PERMISSION.label}
+          />
+        </Stack>
+
+        <Stack>
+          <Typography variant="h6">Sale</Typography>
+          <Divider sx={{ borderStyle: 'dashed' }} />
+          <FormControlLabel
+            control={
+              <Switch
+                checked={checkValue.sale.saleNone}
+                onChange={(event) => handleSwitchChange('sale', 'saleNone', event.target.checked)}
+              />
+            }
+            label={PERMISSIONS.NONE_PERMISSION.label}
+          />
+          <FormControlLabel
+            control={
+              <Switch
+                checked={checkValue.sale.saleView}
+                onChange={(event) => handleSwitchChange('sale', 'saleView', event.target.checked)}
+              />
+            }
+            label={PERMISSIONS.VIEWER_PERMISSION.label}
+          />
+          <FormControlLabel
+            control={
+              <Switch
+                checked={checkValue.sale.saleEdit}
+                onChange={(event) => handleSwitchChange('sale', 'saleEdit', event.target.checked)}
+                disabled={disabled.sale}
+              />
+            }
+            label={PERMISSIONS.EDITOR_PERMISSION.label}
+          />
+          <FormControlLabel
+            control={
+              <Switch
+                checked={checkValue.sale.salePast}
+                onChange={(event) => handleSwitchChange('sale', 'salePast', event.target.checked)}
+                disabled={disabled.sale}
+              />
+            }
+            label={PERMISSIONS.PAST_EDIT_PERMISSION.label}
+          />
+        </Stack>
+
+        <Stack>
+          <Typography variant="h6">Commission</Typography>
+          <Divider sx={{ borderStyle: 'dashed' }} />
+
+          <FormControlLabel
+            control={
+              <Switch
+                checked={checkValue.commission.commissionNone}
+                onChange={(event) =>
+                  handleSwitchChange('commission', 'commissionNone', event.target.checked)
+                }
+              />
+            }
+            label={PERMISSIONS.NONE_PERMISSION.label}
+          />
+          <FormControlLabel
+            control={
+              <Switch
+                checked={checkValue.commission.commissionView}
+                onChange={(event) =>
+                  handleSwitchChange('commission', 'commissionView', event.target.checked)
+                }
+              />
+            }
+            label={PERMISSIONS.VIEWER_PERMISSION.label}
+          />
+          <FormControlLabel
+            control={
+              <Switch
+                checked={checkValue.commission.commissionEdit}
+                onChange={(event) =>
+                  handleSwitchChange('commission', 'commissionEdit', event.target.checked)
+                }
+                disabled={disabled.commission}
+              />
+            }
+            label={PERMISSIONS.EDITOR_PERMISSION.label}
+          />
+          <FormControlLabel
+            control={
+              <Switch
+                checked={checkValue.commission.calculation}
+                onChange={(event) =>
+                  handleSwitchChange('commission', 'calculation', event.target.checked)
+                }
+                disabled={disabled.commission}
+              />
+            }
+            label={PERMISSIONS.COMMISSOIN_CALCULATION_PERMISSION.label}
+          />
+        </Stack>
+      </Stack>
 
       <Stack alignItems="flex-end" sx={{ mt: 3 }}>
         <LoadingButton

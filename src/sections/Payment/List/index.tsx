@@ -41,15 +41,9 @@ export default function PaymentListView() {
         field: 'visible',
         headerName: 'Visible',
         width: 300,
-        // filter: 'agBooleanColumnFilter',
         filter: false,
         resizable: true,
         editable: false,
-        // filterParams: {
-        //   values: [true, false],
-        //   defaultToNothingSelected: true,
-        //   valueFormatter: (params: any) => parseType(params.value),
-        // },
         cellRenderer: ({ data }: CustomCellRendererProps<PaymentMethod>) =>
           data?.visible && (
             <Label variant="soft" color="success">
@@ -75,8 +69,7 @@ export default function PaymentListView() {
       },
       {
         colId: 'action',
-        headerName: 'Action',
-        width: 150,
+        width: 50,
         resizable: false,
         editable: false,
         sortable: false,

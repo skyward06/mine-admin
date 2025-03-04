@@ -2,7 +2,8 @@ import type { CustomCellRendererProps } from '@ag-grid-community/react';
 
 import { memo } from 'react';
 
-import { Tooltip } from '@mui/material';
+import MenuList from '@mui/material/MenuList';
+import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -15,6 +16,7 @@ import { useBoolean } from 'src/hooks/useBoolean';
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 import { ConfirmDialog } from 'src/components/Dialog';
+import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
 import Detail from './Detail';
 import { useRemovePayment } from '../useApollo';
@@ -32,36 +34,40 @@ export const ActionRender = memo(
 
     const open = useBoolean();
     const confirm = useBoolean();
+    const popover = usePopover();
 
     const { loading, removePayment } = useRemovePayment();
 
     return (
       <>
-        <Tooltip title="Edit" placement="top" arrow>
-          <IconButton
-            color="primary"
-            onClick={() => {
-              router.push(`${paths.dashboard.payment.edit(data?.id ?? '')}`);
-            }}
-          >
-            <Iconify icon="solar:pen-2-bold" />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="View" placement="top" arrow>
-          <IconButton color="default" onClick={open.onTrue}>
-            <Iconify icon="solar:eye-bold" />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="Delete" placement="top" arrow>
-          <IconButton
-            color="error"
-            onClick={() => {
-              confirm.onTrue();
-            }}
-          >
-            <Iconify icon="bxs:coffee-togo" />
-          </IconButton>
-        </Tooltip>
+        <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
+          <Iconify icon="eva:more-horizontal-fill" />
+        </IconButton>
+        <CustomPopover
+          open={popover.open}
+          anchorEl={popover.anchorEl}
+          onClose={popover.onClose}
+          slotProps={{ arrow: { placement: 'right-top' } }}
+        >
+          <MenuList>
+            <MenuItem onClick={open.onTrue}>
+              <Iconify icon="solar:eye-bold" />
+              View
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                router.push(`${paths.dashboard.payment.edit(data?.id ?? '')}`);
+              }}
+            >
+              <Iconify icon="solar:pen-2-bold" />
+              Edit
+            </MenuItem>
+            <MenuItem onClick={confirm.onTrue}>
+              <Iconify icon="bxs:coffee-togo" />
+              Delete
+            </MenuItem>
+          </MenuList>
+        </CustomPopover>
 
         <ConfirmDialog
           open={confirm.value}

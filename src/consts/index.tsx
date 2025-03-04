@@ -132,17 +132,31 @@ export enum State {
 }
 
 export const ROLES = [
-  { label: 'Editor', value: 'EDITOR' },
+  { label: 'Editor', value: '2' },
+  { label: 'Past Editor', value: '4' },
   { label: 'Owner', value: 'OWNER' },
   { label: 'Viewer', value: 'VIEWER' },
   { label: 'None', value: 'NONE' },
 ];
 
 export const ROLE_TYPE = [
+  { name: 'role', label: 'Role' },
   { name: 'sale', label: 'Sale' },
-  { name: 'proof', label: 'Proof' },
-  { name: 'member', label: 'Member' },
-  { name: 'balance', label: 'Balance' },
-  { name: 'additions', label: 'Additions' },
   { name: 'commission', label: 'Commission' },
+  // { name: 'proof', label: 'Proof' },
+  // { name: 'member', label: 'Member' },
+  // { name: 'balance', label: 'Balance' },
+  // { name: 'additions', label: 'Additions' },
 ];
+
+export const PERMISSIONS = {
+  NONE_PERMISSION: { label: 'None', value: 0, hex: 0x0 },
+  EDITOR_PERMISSION: { label: 'Editor', value: 3, hex: 0x2 },
+  VIEWER_PERMISSION: { label: 'View Only', value: 1, hex: 0x1 },
+  PAST_EDIT_PERMISSION: { label: 'Past Editor', value: 5, hex: 0x4 },
+  COMMISSOIN_CALCULATION_PERMISSION: {
+    label: 'Commission Calculation',
+    value: 4,
+    hex: 0x4,
+  },
+};

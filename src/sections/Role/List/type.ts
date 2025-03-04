@@ -1,4 +1,4 @@
-import type { RoleEnum, FrontActionEnum, FrontActionExtra } from 'src/__generated__/graphql';
+import type { FrontActionEnum, FrontActionExtra } from 'src/__generated__/graphql';
 
 export type FrontAction = {
   __typename?: 'FrontAction';
@@ -11,15 +11,16 @@ export type Role = {
   __typename?: 'Role';
   id: string;
   name: string;
-  sale: RoleEnum;
-  proof: RoleEnum;
-  member: RoleEnum;
-  balance: RoleEnum;
-  additions: RoleEnum;
+  sale: number;
+  role: number;
+  // proof: RoleEnum;
+  // member: RoleEnum;
+  // balance: RoleEnum;
+  // additions: RoleEnum;
+  commission: number;
   description: string;
-  commission: RoleEnum;
-  frontActions?: Array<FrontAction> | null;
   createdAt?: any | null;
   updatedAt?: any | null;
   deletedAt?: any | null;
+  frontActions?: Array<FrontAction> | null;
 };
