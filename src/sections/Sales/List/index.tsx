@@ -200,7 +200,7 @@ export default function SaleListView() {
         // {...(user?.role?.sale !== RoleEnum.)}
         action={
           <Stack direction={{ xs: 'column', md: 'row' }} gap={1.5}>
-            {user?.role?.sale !== PERMISSIONS.VIEWER_PERMISSION.value && (
+            {user?.role?.sale === PERMISSIONS.VIEWER_PERMISSION.value && (
               <Button
                 component={RouterLink}
                 href={paths.dashboard.sales.new}
