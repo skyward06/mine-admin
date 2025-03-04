@@ -40,8 +40,15 @@ export const ActionRender = memo(
     const popover = usePopover();
 
     const last = dayjs(today()).startOf('week').add(-1, 'day');
-    const disabled = dayjs(data?.orderedAt).isBefore(last);
     const { user } = useAuthContext();
+
+    const disabled =
+      user?.role?.sale === 7
+        ? true
+        : user?.role?.sale === PERMISSIONS.PAST_EDIT_PERMISSION.value
+          ? dayjs(data?.orderedAt).isBefore(last)
+          : user?.role?.sale === PERMISSIONS.EDITOR_PERMISSION.value &&
+            !dayjs(data?.orderedAt).isBefore(last);
 
     const { loading, removeSale } = useRemoveSale();
 
@@ -67,14 +74,18 @@ export const ActionRender = memo(
               <Iconify icon="solar:eye-bold" color="gray" />
               View
             </MenuItem>
-            {user?.role?.sale !== PERMISSIONS.VIEWER_PERMISSION.value && (
+            {[
+              PERMISSIONS.EDITOR_PERMISSION.value,
+              PERMISSIONS.PAST_EDIT_PERMISSION.value,
+              7,
+            ].includes(user?.role?.sale!) && (
               <>
                 <MenuItem
                   onClick={() => {
                     popover.onClose();
                     router.push(`${paths.dashboard.sales.edit(formatID(data?.ID ?? '', 'S'))}`);
                   }}
-                  disabled={disabled}
+                  disabled={!disabled}
                 >
                   <Iconify icon="solar:pen-2-bold" color="green" />
                   Edit
