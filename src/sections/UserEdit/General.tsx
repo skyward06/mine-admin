@@ -242,7 +242,8 @@ export default function UserGeneral({ currentUser }: Props) {
                 <Field.Text name="username" label="Username" />
                 <Field.Text name="fullName" label="Full Name" />
                 <Field.Text name="email" label="Email Address" />
-                {user?.role?.role === PERMISSIONS.ASSIGN_ROLE_PERMISSION.value && (
+                {(user?.role?.role === PERMISSIONS.ASSIGN_ROLE_PERMISSION.value ||
+                  user?.role?.role === 7) && (
                   <Field.Select name="roleId" label="Role">
                     {roles.map((item) => (
                       <MenuItem key={item?.id} value={item?.id}>
