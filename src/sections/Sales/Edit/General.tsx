@@ -215,6 +215,8 @@ export default function SaleGeneral({ currentSale }: Props) {
 
               <Field.Text name="note" label="Note" />
 
+              <Field.Text name="vendor" label="Vendor" />
+
               {isShow.value && (
                 <>
                   <SearchMiner

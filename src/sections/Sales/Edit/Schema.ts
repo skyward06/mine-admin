@@ -9,6 +9,7 @@ export const Schema = zod.object({
   packageId: zod.string({ required_error: 'Package is required' }),
   note: zod.string().optional().nullable(),
   isMetal: zod.boolean().default(false),
+  vendor: zod.string().optional().nullable(),
   reflinks: zod
     .array(
       zod.object({
