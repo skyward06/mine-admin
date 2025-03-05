@@ -15,10 +15,12 @@ import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
+import { useAgQuery as useQueryString } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
 import { formatDate } from 'src/utils/format-time';
+import { parseFilterModel } from 'src/utils/parseFilter';
 import { formatID, customizeFullName } from 'src/utils/helper';
 
 import { CONFIG } from 'src/config';
@@ -47,6 +49,10 @@ import type { BasicSale } from './type';
 export default function SaleListView() {
   const { loading, rowCount, sales } = useFetchSales();
   const { loading: removeLoading, removeSale } = useRemoveSale();
+
+  const [{ sort = 'ID', filter }] = useQueryString();
+
+  const graphQueryFilter = useMemo(() => parseFilterModel({}, filter), [filter]);
 
   const confirm = useBoolean();
 
@@ -210,7 +216,12 @@ export default function SaleListView() {
                 New Sale
               </Button>
             )}
-            <ExportButton target="sales" token={token} variant="contained" />
+            <ExportButton
+              target="sales"
+              token={token}
+              variant="contained"
+              params={{ filter: graphQueryFilter, sort }}
+            />
           </Stack>
         }
         sx={{

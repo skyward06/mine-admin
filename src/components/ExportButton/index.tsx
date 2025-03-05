@@ -1,3 +1,5 @@
+import type { FilterModel } from '@ag-grid-community/core';
+
 import axios from 'axios';
 import { useState } from 'react';
 
@@ -12,10 +14,11 @@ import { Iconify } from 'src/components/Iconify';
 interface Props {
   target: string;
   token: string;
-  [key: string]: string;
+  params?: { filter: FilterModel; sort: string } | {};
+  [key: string]: unknown;
 }
 
-export default function ExportButton({ target, token, ...rest }: Props) {
+export default function ExportButton({ target, token, params, ...rest }: Props) {
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleExport = async () => {
@@ -25,6 +28,7 @@ export default function ExportButton({ target, token, ...rest }: Props) {
       headers: {
         Authorization: `Bearer ${token}`,
       },
+      params,
       responseType: 'arraybuffer',
     });
 
