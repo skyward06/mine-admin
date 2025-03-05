@@ -53,22 +53,24 @@ export default function ProofListView() {
         }
       />
 
-      {loading && <LoadingScreen />}
-
-      <Box
-        gap={3}
-        display="grid"
-        gridTemplateColumns={{
-          xs: 'repeat(1, 1fr)',
-          sm: 'repeat(2, 1fr)',
-          md: 'repeat(3, 1fr)',
-          lg: 'repeat(4, 1fr)',
-        }}
-      >
-        {groupSettings.map((group) => (
-          <GroupCard key={group.id} group={group} />
-        ))}
-      </Box>
+      {loading ? (
+        <LoadingScreen />
+      ) : (
+        <Box
+          gap={3}
+          display="grid"
+          gridTemplateColumns={{
+            xs: 'repeat(1, 1fr)',
+            sm: 'repeat(2, 1fr)',
+            md: 'repeat(3, 1fr)',
+            lg: 'repeat(4, 1fr)',
+          }}
+        >
+          {groupSettings.map((group) => (
+            <GroupCard key={group.id} group={group} />
+          ))}
+        </Box>
+      )}
     </DashboardContent>
   );
 }

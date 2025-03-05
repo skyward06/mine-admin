@@ -199,7 +199,8 @@ export default function SaleListView() {
         links={[{ name: 'Sale', href: paths.dashboard.sales.root }, { name: 'List' }]}
         action={
           <Stack direction={{ xs: 'column', md: 'row' }} gap={1.5}>
-            {user?.role?.sale === PERMISSIONS.EDITOR_PERMISSION.value && (
+            {(user?.role?.sale === PERMISSIONS.EDITOR_PERMISSION.value ||
+              user?.role?.sale === 7) && (
               <Button
                 component={RouterLink}
                 href={paths.dashboard.sales.new}
