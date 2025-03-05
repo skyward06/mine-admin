@@ -74,6 +74,14 @@ export const ActionRender = memo(
               <Iconify icon="solar:eye-bold" color="gray" />
               View
             </MenuItem>
+            <MenuItem
+              onClick={() => {
+                router.push(paths.dashboard.sales.log(data?.id!));
+              }}
+            >
+              <Iconify icon="ri:history-line" color="gray" />
+              Log
+            </MenuItem>
             {[
               PERMISSIONS.EDITOR_PERMISSION.value,
               PERMISSIONS.PAST_EDIT_PERMISSION.value,
