@@ -136,58 +136,47 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         sales {
           id
           ID
+          isMetal
           memberId
           packageId
-          isMetal
           paymentMethod
           sponsorCnt
           proof {
-            createdAt
-            updatedAt
-            deletedAt
             id
-            refId
             type
-            amount
             note
+            refId
+            amount
             orderedAt
             files {
-              createdAt
-              updatedAt
-              deletedAt
               id
               url
-              originalName
-              mimeType
               size
+              mimeType
+              originalName
             }
             reflinks {
-              linkType
               link
+              linkType
             }
           }
           status
           orderedAt
         }
         memberWallets {
-          createdAt
-          updatedAt
-          deletedAt
           id
-          memberId
-          payoutId
+          note
           address
           percent
-          note
+          memberId
+          payoutId
+          isDefault
           payout {
             id
+            name
             method
             status
-            name
             display
-            createdAt
-            updatedAt
-            deletedAt
           }
         }
         logs(logsize: $logsize) {

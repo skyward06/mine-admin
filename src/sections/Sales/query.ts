@@ -37,7 +37,6 @@ export const FETCH_SALE_BY_Id = gql(/* GraphQL */ `
       id
       ID
       status
-      vendor
       isMetal
       memberId
       orderedAt
@@ -176,7 +175,6 @@ export const FETCH_SALE_BY_ID = gql(/* GraphQL */ `
       id
       ID
       status
-      vendor
       isMetal
       memberId
       orderedAt

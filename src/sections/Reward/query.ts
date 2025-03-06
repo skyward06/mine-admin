@@ -41,34 +41,26 @@ export const FETCH_MEMBERSTATISTICS_QUERY = gql(/* GraphQL */ `
         percent
         issuedAt
         member {
-          createdAt
-          updatedAt
-          deletedAt
           id
-          commissionDefault
-          balance
-          OTPEnabled
-          username
-          fullName
           email
           point
           mobile
-          assetId
           status
+          balance
+          username
+          fullName
           groupName
           allowState
-          emailVerified
-          totalIntroducers
-          primaryAddress
-          secondaryAddress
-          totalIntroducers
-          syncWithSendy
-          preferredContact
-          preferredContactDetail
-          cmnCalculatedWeeks
-          placementPosition
-          teamStrategy
           teamReport
+          OTPEnabled
+          teamStrategy
+          syncWithSendy
+          emailVerified
+          primaryAddress
+          totalIntroducers
+          placementPosition
+          commissionDefault
+          cmnCalculatedWeeks
           commission {
             begL
             begR
@@ -76,23 +68,18 @@ export const FETCH_MEMBERSTATISTICS_QUERY = gql(/* GraphQL */ `
             newR
           }
           memberWallets {
-            createdAt
-            updatedAt
-            deletedAt
             id
+            percent
+            address
             memberId
             payoutId
-            address
-            percent
+            isDefault
             payout {
               id
+              name
               method
               status
-              name
               display
-              createdAt
-              updatedAt
-              deletedAt
             }
           }
         }

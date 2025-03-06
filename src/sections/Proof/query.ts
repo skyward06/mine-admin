@@ -4,29 +4,25 @@ export const FETCH_PROOF_QUERY = gql(/* GraphQL */ `
   query Proofs($sort: String, $page: String, $filter: JSONObject) {
     proofs(sort: $sort, page: $page, filter: $filter) {
       proofs {
-        createdAt
-        updatedAt
-        deletedAt
         id
-        refId
+        note
         type
+        refId
         amount
+        vendor
+        createdAt
         orderedAt
         mineLocation
-        note
         files {
-          createdAt
-          updatedAt
-          deletedAt
           id
           url
-          originalName
-          mimeType
           size
+          mimeType
+          originalName
         }
         reflinks {
-          linkType
           link
+          linkType
         }
       }
       total
