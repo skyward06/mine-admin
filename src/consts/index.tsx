@@ -87,6 +87,7 @@ export const PROOF_TYPE = {
   DEVELOPERSWEB: 'Developers Web',
   EXCHANGEFEE: 'Exchange Fee',
   INFRASTRUCTURE: 'Infrastructure',
+  LIQUIDITY: 'Liquidity',
   MARKETINGMINETXCPROMOTION: 'Marketing MineTXC Promotion',
   MARKETINGTXCPROMOTION: 'Marketing TXC Promotion',
   MINEELECTRICITY: 'Mine Electricity',
