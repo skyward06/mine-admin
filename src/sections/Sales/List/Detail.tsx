@@ -154,13 +154,6 @@ export default function Detail({ open, id }: Props) {
                   }}
                 />
               </Stack>
-
-              <Stack direction="row" columnGap={2}>
-                <Typography variant="body2" color="text.disabled">
-                  Vendor:
-                </Typography>
-                <Typography variant="body2">{sale?.vendor}</Typography>
-              </Stack>
             </>
           )}
 

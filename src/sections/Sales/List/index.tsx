@@ -34,7 +34,6 @@ import { Iconify } from 'src/components/Iconify';
 import { ConfirmDialog } from 'src/components/Dialog';
 import ExportButton from 'src/components/ExportButton';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
-import { CustomName } from 'src/components/AgGrid/Renderers';
 import { LoadingScreen } from 'src/components/loading-screen';
 import { StatusRenderer } from 'src/components/AgGrid/Renderers/Status';
 import { BooleanFormatter } from 'src/components/AgGrid/Renderers/BooleanFormatter';
@@ -61,7 +60,7 @@ export default function SaleListView() {
       {
         field: 'ID',
         headerName: 'ID',
-        width: 140,
+        width: 120,
         filter: 'agNumberColumnFilter',
         resizable: true,
         editable: false,
@@ -79,25 +78,19 @@ export default function SaleListView() {
         cellClass: 'ag-number-cell ag-cell-center',
       },
       {
-        field: 'username',
+        field: 'fullName',
         headerName: 'Name',
-        width: 200,
+        width: 180,
         filter: 'agTextColumnFilter',
         resizable: true,
         editable: false,
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellRenderer: ({ data }: CustomCellRendererProps<BasicSale>) => (
-          <CustomName
-            id={data?.memberId ?? ''}
-            username={data?.username ?? ''}
-            email={data?.email ?? ''}
-          />
-        ),
+        cellClass: 'ag-cell-center',
       },
       {
-        field: 'assetId',
-        headerName: 'Asset ID',
-        width: 110,
+        field: 'username',
+        headerName: 'Username',
+        width: 160,
         filter: 'agTextColumnFilter',
         resizable: true,
         editable: false,
