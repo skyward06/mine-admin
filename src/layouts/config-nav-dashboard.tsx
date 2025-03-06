@@ -50,6 +50,7 @@ const ICONS = {
   sale: icon('ic_sale'),
   school: icon('ic_school'),
   tour: icon('ic_tour'),
+  template: icon('ic_template'),
   user: icon('ic_user'),
   weeklyReport: icon('ic_weekly_report'),
 };
@@ -108,6 +109,7 @@ export const navData = [
     items: [
       { title: 'Report', path: paths.dashboard.report.root, icon: ICONS.report },
       { title: 'Resource', path: paths.dashboard.resource.root, icon: ICONS.folder },
+      { title: 'Template', path: paths.dashboard.template.root, icon: ICONS.template },
       { title: 'Reward', path: paths.dashboard.reward.root, icon: ICONS.reward },
       { title: 'Sponsor', path: paths.dashboard.sponsor.root, icon: ICONS.sponsor },
       { title: 'Calculator', path: paths.calculator.root, icon: ICONS.calculator },
