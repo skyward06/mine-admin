@@ -185,6 +185,7 @@ export default function EditForm({ current }: Props) {
               <Field.Text name="note" label="Note" />
               <Field.DatePicker name="orderedAt" label="Ordered At" format="YYYY-MM-DD" />
               <Field.Text name="refId" label="Reference ID" />
+              <Field.Text name="vendor" label="Vendor" />
             </Box>
 
             <Divider flexItem sx={{ borderStyle: 'dashed', my: 2 }} />

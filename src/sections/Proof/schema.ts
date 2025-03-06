@@ -13,6 +13,7 @@ export const Schema = zod.object({
     ProofType.Sale,
     ProofType.Profit,
     ProofType.Overhead,
+    ProofType.Liquidity,
     ProofType.Promotion,
     ProofType.Commission,
     ProofType.Exchangefee,
@@ -31,6 +32,7 @@ export const Schema = zod.object({
     ProofType.Marketingminetxcpromotion,
   ]),
   mineLocation: zod.string().optional().nullable(),
+  vendor: zod.string().optional().nullable(),
   reflinks: zod
     .array(
       zod.object({

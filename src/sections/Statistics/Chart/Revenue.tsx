@@ -27,9 +27,12 @@ export default function RevenueOverview() {
     theme.palette.primary.main,
     theme.palette.info.light,
     theme.palette.warning.main,
+    theme.palette.secondary.light,
   ];
 
   const { loading, revenue, fetchRevenue } = useFetchRevenue();
+
+  console.log('revenue => ', revenue);
 
   const chartOptions = useChart({
     chart: { sparkline: { enabled: true } },
