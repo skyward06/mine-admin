@@ -104,21 +104,10 @@ export default function CommissionTableRow({ row, selected, onSelectRow }: Props
           }}
           onClick={() => router.push(paths.dashboard.members.edit(member?.id ?? ''))}
         >
-          <ListItemText
-            primary={member?.username}
-            secondary={member?.email}
-            primaryTypographyProps={{ typography: 'body2' }}
-            secondaryTypographyProps={{
-              component: 'span',
-              color: 'text.disabled',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-            }}
-          />
+          {member?.fullName}
         </TableCell>
         <TableCell sx={{ whiteSpace: 'nowrap' }} align="left">
-          {member?.assetId}
+          {member?.username}
         </TableCell>
         <TableCell sx={{ whiteSpace: 'nowrap' }} align="left">{`L${begL}, R${begR}`}</TableCell>
         <TableCell sx={{ whiteSpace: 'nowrap' }} align="left">{`L${newL}, R${newR}`}</TableCell>
