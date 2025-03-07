@@ -70,6 +70,15 @@ export default function ProofListView() {
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
       },
       {
+        field: 'vendor',
+        headerName: 'Vendor',
+        width: 200,
+        filter: 'agTextColumnFilter',
+        resizable: true,
+        editable: false,
+        filterParams: { buttons: ['reset'] } as ITextFilterParams,
+      },
+      {
         colId: 'attached',
         headerName: 'Attached',
         width: 150,

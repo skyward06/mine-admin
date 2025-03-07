@@ -32,6 +32,7 @@ export type Proof = {
   note?: string | null;
   orderedAt: any;
   refId: string;
+  vendor?: string | null;
   reflinks?: Array<RefLink> | null;
   type: ProofType;
   updatedAt?: any | null;
