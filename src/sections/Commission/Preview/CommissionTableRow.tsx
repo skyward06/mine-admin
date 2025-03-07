@@ -8,9 +8,6 @@ import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import ListItemText from '@mui/material/ListItemText';
 
-import { paths } from 'src/routes/paths';
-import { useRouter } from 'src/routes/hooks';
-
 import { useBoolean } from 'src/hooks/useBoolean';
 
 import { formatWeekNumber } from 'src/utils/format-time';
@@ -33,8 +30,6 @@ type Props = {
 export default function CommissionTableRow({ row }: Props) {
   const noteOpen = useBoolean();
   const placementOpen = useBoolean();
-
-  const router = useRouter();
 
   const {
     begL,
@@ -68,30 +63,11 @@ export default function CommissionTableRow({ row }: Props) {
             }}
           />
         </TableCell>
-        <TableCell
-          sx={{
-            alignItems: 'center',
-            whiteSpace: 'nowrap',
-            cursor: 'pointer',
-            '&:hover': { bgcolor: (theme) => theme.vars.palette.action.hover },
-          }}
-          onClick={() => router.push(paths.dashboard.members.edit(member?.id ?? ''))}
-        >
-          <ListItemText
-            primary={member?.username}
-            secondary={member?.email}
-            primaryTypographyProps={{ typography: 'body2' }}
-            secondaryTypographyProps={{
-              component: 'span',
-              color: 'text.disabled',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-            }}
-          />
+        <TableCell sx={{ whiteSpace: 'nowrap' }} align="left">
+          {member?.fullName}
         </TableCell>
         <TableCell sx={{ whiteSpace: 'nowrap' }} align="left">
-          {member?.assetId}
+          {member?.username}
         </TableCell>
         <TableCell sx={{ whiteSpace: 'nowrap' }} align="left">{`L${begL}, R${begR}`}</TableCell>
         <TableCell sx={{ whiteSpace: 'nowrap' }} align="left">{`L${newL}, R${newR}`}</TableCell>
@@ -114,14 +90,6 @@ export default function CommissionTableRow({ row }: Props) {
               <Iconify icon="clarity:flow-chart-line" />
             </IconButton>
           </Tooltip>
-          {/* <Tooltip title="Prepay" placement="top" arrow>
-            <IconButton
-              color="default"
-              onClick={() => navigate(paths.dashboard.prepaidCommission.new, { state })}
-            >
-              <Iconify icon="f7:money-dollar-circle-fill" />
-            </IconButton>
-          </Tooltip> */}
           <Tooltip title="View" placement="top" arrow>
             <IconButton color="default" onClick={noteOpen.onTrue}>
               <Iconify icon="solar:eye-bold" />

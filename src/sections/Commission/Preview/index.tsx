@@ -26,8 +26,8 @@ import ProductTableFiltersResult from '../Member/CommissionTableFiltersResult';
 
 const TABLE_HEAD = [
   { id: 'weekStartDate', label: 'Week', sortable: true },
+  { id: 'member.fullName', label: 'Name', sortable: true },
   { id: 'member.username', label: 'Username', sortable: true },
-  { id: 'member.assetId', label: 'AssetId', sortable: true },
   { id: 'begLR', label: 'BegLR', sortable: false },
   { id: 'newLR', label: 'NewLR', sortable: false },
   { id: 'maxLR', label: 'MaxLR', sortable: false },
