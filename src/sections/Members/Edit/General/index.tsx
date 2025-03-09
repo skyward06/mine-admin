@@ -326,6 +326,7 @@ export default function MemberGeneral({ currentMember }: Props) {
               <Field.Text
                 name="assetId"
                 label="Coin ID"
+                InputLabelProps={{ shrink: true }}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
