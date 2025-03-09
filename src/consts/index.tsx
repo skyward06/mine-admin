@@ -6,6 +6,9 @@ export const STORAGE_TOKEN_KEY = 'token';
 // EXPLORER URL
 export const EXPLORER_PATH = 'https://explorer.texitcoin.org/tx/';
 
+// ASSET INFO URL
+export const ASSET_INFO_PATH = 'https://api.blockchainmint.com/api/v2/asset-info?public_key=';
+
 export const PLACEMENTTREE_NODE_WIDTH = 200;
 export const PLACEMENTTREE_NODE_HEIGHT = 135;
 export const PLACEMENTTREE_NODE_X_SPACE = 15;

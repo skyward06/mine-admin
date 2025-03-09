@@ -184,3 +184,24 @@ export const generateRandomString = (length: number = 8): string => {
 
   return result;
 };
+
+export const fetchXmlData = async (url: string) => {
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+      Accept: 'application/Xml',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  const xmlText = await response.text();
+
+  // Parse XMl using DOMParse
+  const parser = new DOMParser();
+  const xmlDoc = parser.parseFromString(xmlText, 'application/xml');
+
+  return xmlDoc;
+};

@@ -12,16 +12,19 @@ import Stack from '@mui/material/Stack';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Unstable_Grid2';
+import IconButton from '@mui/material/IconButton';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Autocomplete from '@mui/material/Autocomplete';
+import InputAdornment from '@mui/material/InputAdornment';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
 import { fData } from 'src/utils/formatNumber';
+import { fetchXmlData } from 'src/utils/helper';
 
 import { CONFIG } from 'src/config';
-import { CONTACT } from 'src/consts';
+import { CONTACT, ASSET_INFO_PATH } from 'src/consts';
 import {
   type Promo,
   TeamReport,
@@ -30,6 +33,7 @@ import {
 } from 'src/__generated__/graphql';
 
 import { toast } from 'src/components/SnackBar';
+import { Iconify } from 'src/components/Iconify';
 import { Form, Field } from 'src/components/Form';
 import SearchMiner from 'src/components/SearchMiner';
 
@@ -77,7 +81,7 @@ export default function MemberCreateForm() {
     defaultValues,
   });
 
-  const { reset, setError, handleSubmit } = methods;
+  const { watch, reset, setError, setValue, handleSubmit } = methods;
 
   const hasDuplicates = (arr: any[]) => {
     const seen = new Set();
@@ -197,6 +201,16 @@ export default function MemberCreateForm() {
     }
   }, []);
 
+  const getAssetId = async () => {
+    const wallets = watch('txcWallets');
+
+    wallets?.map(async (item: any) => {
+      const response = await fetchXmlData(`${ASSET_INFO_PATH}${item.address}`);
+
+      setValue('assetId', response.getElementsByTagName('assetId').item(0)?.textContent ?? '');
+    });
+  };
+
   return (
     <Form methods={methods} onSubmit={onSubmit}>
       <Grid container spacing={3}>
@@ -271,7 +285,20 @@ export default function MemberCreateForm() {
               />
               <Field.Text name="city" label="City" />
               <Field.Text name="zipCode" label="ZIP Code" />
-              <Field.Text name="assetId" label="Coin ID" />
+              <Field.Text
+                name="assetId"
+                label="Coin ID"
+                InputLabelProps={{ shrink: true }}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton onClick={getAssetId} edge="end">
+                        <Iconify icon="streamline:ai-generate-variation-spark-solid" />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
               <Field.Select name="promoCode" label="PromoCode">
                 {promos.map((option: Promo) => (
                   <MenuItem key={option.id} value={option.code}>
@@ -320,7 +347,7 @@ export default function MemberCreateForm() {
                   </MenuItem>
                 ))}
               </Field.Select>
-              <Field.Switch name="syncWithSendy" label="Subscribe to Sendy" sx={{ p: 0 }} />
+              <Field.Switch name="syncWithSendy" label="Subscribe to Sendy" sx={{ py: 1 }} />
             </Box>
           </Card>
         </Grid>
