@@ -10,9 +10,6 @@ export const FETCH_ROLES_QUERY = gql(/* GraphQL */ `
         role
         commission
         description
-        frontActions {
-          ...FrontActionFields
-        }
       }
       total
     }
@@ -28,9 +25,6 @@ export const FETCH_ROLE_BY_ID = gql(/* GraphQL */ `
       role
       commission
       description
-      frontActions {
-        ...FrontActionFields
-      }
     }
   }
 `);
