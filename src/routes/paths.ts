@@ -111,7 +111,11 @@ export const paths = {
     report: { root: ROOTS.REPORTS },
     sponsor: { root: ROOTS.SPONSOR },
     history: { root: ROOTS.DASHBOARD },
-    template: { root: ROOTS.TMEPLATE },
+    template: {
+      root: ROOTS.TMEPLATE,
+      new: `${ROOTS.TMEPLATE}/new`,
+      edit: (id: string) => `${ROOTS.TMEPLATE}/${id}`,
+    },
     placement: { root: ROOTS.PLACEMENT },
     calculator: { root: ROOTS.CALCULATOR },
     weeklyReports: { root: ROOTS.WEEKLYREPORTS },
