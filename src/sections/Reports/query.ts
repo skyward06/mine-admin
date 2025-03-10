@@ -102,3 +102,15 @@ export const GENERATE_WEEKLY_REPORT = gql(/* GraphQL */ `
     }
   }
 `);
+
+export const SEND_COMMUNICATION_TO_SPONSORS = gql(/* GraphQL */ `
+  mutation SendCommunicationToAllSponsors {
+    sendCommunicationToAllSponsors {
+      message
+      result
+      frontActions {
+        ...FrontActionFields
+      }
+    }
+  }
+`);

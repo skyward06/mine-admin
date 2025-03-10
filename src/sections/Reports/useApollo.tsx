@@ -6,6 +6,7 @@ import {
   FETCH_REVENUES_QUERY,
   FETCH_SPONSORS_QUERY,
   GENERATE_WEEKLY_REPORT,
+  SEND_COMMUNICATION_TO_SPONSORS,
   FETCH_ONEPOINT_AWAY_MEMBERS_QUERY,
 } from './query';
 
@@ -107,4 +108,12 @@ export function useGenerateWeeklyReports() {
   });
 
   return { loading, data, generateWeeklyReport };
+}
+
+export function useSendCommunicationToAllSponsors() {
+  const [sendCommunicationToAllSponsors, { loading, data, error }] = useMutation(
+    SEND_COMMUNICATION_TO_SPONSORS
+  );
+
+  return { loading, data, error, sendCommunicationToAllSponsors };
 }
