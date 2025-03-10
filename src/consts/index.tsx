@@ -157,3 +157,5 @@ export const PERMISSIONS = {
   },
   ASSIGN_ROLE_PERMISSION: { label: 'Assign Role', value: 4, hex: 0x4 },
 };
+
+export const VIEW_ROLE_ID = '82bf6179-48e3-4b5b-847d-a9f8741934aa';
