@@ -63,8 +63,8 @@ export default function MemberCreateForm() {
       zipCode: '',
       sponsorId: '',
       teamReport: [],
-      syncWithSendy: true,
       primaryAddress: '',
+      syncWithSendy: true,
       secondaryAddress: '',
       teamStrategy: 'MANUAL',
       commissionDefault: 'MANUAL',
@@ -125,6 +125,18 @@ export default function MemberCreateForm() {
           toast.error('Sponsor Name is required');
           return;
         }
+
+        if (txcWallets.filter((item) => item.isDefault).length > 1) {
+          toast.error('You must select only one default');
+        }
+
+        console.log(
+          'wallets => ',
+          [...txcWallets, ...otherWallets].map(({ percent, ...rest }) => ({
+            percent: percent * 100,
+            ...rest,
+          }))
+        );
 
         if (total === 100) {
           await submit({

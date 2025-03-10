@@ -24,27 +24,32 @@ interface Wallet {
   payoutId?: string;
   address?: string;
   percent?: number;
+  isDefault?: boolean;
 }
 
 export default function TXCWallets({ wallets }: Props) {
   const { control, setValue } = useFormContext();
   const { fields, append, remove } = useFieldArray({ control, name: 'txcWallets' });
 
+  console.log('wallets => ', wallets);
+
   const forms: Wallet[] = fields?.length
     ? fields
-    : wallets.map(({ id, payoutId, address, percent }) => ({
+    : wallets.map(({ id, payoutId, address, percent, isDefault }) => ({
         id,
         payoutId,
         address,
         percent,
+        isDefault,
       }));
 
   useEffect(() => {
-    wallets.forEach(({ payoutId, address, note, percent }, index) => {
+    wallets.forEach(({ payoutId, address, note, percent, isDefault }, index) => {
       setValue(`txcWallets[${index}].payoutId`, payoutId);
       setValue(`txcWallets[${index}].address`, address);
       setValue(`txcWallets[${index}].note`, note);
       setValue(`txcWallets[${index}].percent`, percent / 100);
+      setValue(`txcWallets[${index}].isDefault`, isDefault);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wallets]);
@@ -55,6 +60,7 @@ export default function TXCWallets({ wallets }: Props) {
       address: '',
       note: '',
       percent: 0,
+      isDefault: false,
     });
   };
 
@@ -81,6 +87,7 @@ export default function TXCWallets({ wallets }: Props) {
                 name={`txcWallets[${index}].payoutId`}
                 label="Payout"
                 defaultValue={item.payoutId}
+                size="small"
               >
                 {TXC_WALLET.map((option) => (
                   <MenuItem key={option?.id} value={option?.id}>
@@ -92,6 +99,7 @@ export default function TXCWallets({ wallets }: Props) {
               <Field.Text
                 name={`txcWallets[${index}].address`}
                 label="Address"
+                size="small"
                 defaultValue={item.address}
               />
 
@@ -99,12 +107,19 @@ export default function TXCWallets({ wallets }: Props) {
                 name={`txcWallets[${index}].percent`}
                 label="Percent"
                 type="number"
+                size="small"
                 defaultValue={item.percent}
               />
             </Box>
 
-            <Box display="grid" sx={{ gridTemplateColumns: { xs: '80% auto', sm: '90% auto' } }}>
-              <Field.Text name={`txcWallets[${index}].note`} label="Note" />
+            <Box
+              display="grid"
+              columnGap={2}
+              sx={{ gridTemplateColumns: { xs: '60% 15% auto', sm: '70% 15% auto' } }}
+            >
+              <Field.Text name={`txcWallets[${index}].note`} label="Note" size="small" />
+
+              <Field.Switch name={`txcWallets[${index}].isDefault`} label="Default" />
 
               <Button
                 color="error"

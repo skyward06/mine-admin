@@ -20,10 +20,11 @@ export default function TXCWallets() {
 
   const addWallet = () => {
     append({
-      payoutId: '',
-      address: '',
       note: '',
       percent: 0,
+      address: '',
+      payoutId: '',
+      isDefault: false,
     });
   };
 
@@ -62,13 +63,15 @@ export default function TXCWallets() {
               size="small"
             />
           </Box>
-          <Box display="grid" sx={{ gridTemplateColumns: '90% auto' }}>
+          <Box display="grid" sx={{ gridTemplateColumns: '70% 15% auto' }} columnGap={2}>
             <Field.Text name={`txcWallets[${index}].note`} label="Note" size="small" />
+
+            <Field.Switch name={`txcWallets[${index}].isDefault`} label="Default" />
 
             <Button
               size="small"
               color="error"
-              sx={{ mt: 1.5, width: 80 }}
+              sx={{ mt: 0.5, width: 80 }}
               startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
               onClick={() => handleRemove(index)}
             />

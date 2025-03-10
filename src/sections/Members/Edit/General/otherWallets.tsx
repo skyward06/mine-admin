@@ -80,6 +80,7 @@ export default function OtherWallets({ wallets }: Props) {
               <Field.Select
                 name={`otherWallets[${index}].payoutId`}
                 label="Payout"
+                size="small"
                 defaultValue={item.payoutId}
               >
                 {OTHER_WALLET.map((option) => (
@@ -92,11 +93,12 @@ export default function OtherWallets({ wallets }: Props) {
               <Field.Text
                 name={`otherWallets[${index}].address`}
                 label="Address"
+                size="small"
                 defaultValue={item.address}
               />
             </Box>
             <Box display="grid" sx={{ gridTemplateColumns: { xs: '80% auto', sm: '90% auto' } }}>
-              <Field.Text name={`otherWallets[${index}].note`} label="Note" />
+              <Field.Text name={`otherWallets[${index}].note`} label="Note" size="small" />
 
               <Button
                 color="error"

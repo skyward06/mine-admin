@@ -121,6 +121,10 @@ export default function MemberGeneral({ currentMember }: Props) {
         return;
       }
 
+      if (txcWallets.filter((item: any) => item.isDefault).length > 1) {
+        toast.error('You must select only one default');
+      }
+
       if (total === 100) {
         await submit({
           variables: {
