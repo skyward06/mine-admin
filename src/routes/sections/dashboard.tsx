@@ -110,6 +110,11 @@ const NotificationListPage = lazy(() => import('src/pages/Notification/List'));
 const CalculatorPage = lazy(() => import('src/pages/Calculator'));
 // ----------------------------------------------------------------------
 
+// ----------------------------------------------------------------------
+const TemplatePage = lazy(() => import('src/pages/Template/List'));
+const TemplateEditPage = lazy(() => import('src/pages/Template/Edit'));
+// ----------------------------------------------------------------------
+
 export const dashboardRoutes = [
   {
     path: '',
@@ -242,6 +247,13 @@ export const dashboardRoutes = [
       {
         path: 'reports',
         children: [{ index: true, element: <ReportListPage /> }],
+      },
+      {
+        path: 'template',
+        children: [
+          { index: true, element: <TemplatePage /> },
+          { path: ':id', element: <TemplateEditPage /> },
+        ],
       },
       {
         path: 'users',

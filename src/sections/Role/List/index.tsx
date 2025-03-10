@@ -28,11 +28,9 @@ export default function RoleList() {
   const { loading, rowCount, roles } = useFetchRoles();
   const { user } = useAuthContext();
 
-  type RoleTable = Omit<Role, 'frontActions'>;
-
   const router = useRouter();
 
-  const colDefs = useMemo<ColDef<RoleTable>[]>(
+  const colDefs = useMemo<ColDef<Role>[]>(
     () => [
       {
         field: 'name',
@@ -51,7 +49,7 @@ export default function RoleList() {
         resizable: true,
         editable: false,
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellRenderer: ({ data }: CustomCellRendererProps<RoleTable>) => (
+        cellRenderer: ({ data }: CustomCellRendererProps<Role>) => (
           <>
             {data?.role === 7 ? (
               <Stack direction="row" spacing={1} sx={{ mt: 0.5 }}>
@@ -81,7 +79,7 @@ export default function RoleList() {
         resizable: true,
         editable: false,
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellRenderer: ({ data }: CustomCellRendererProps<RoleTable>) => (
+        cellRenderer: ({ data }: CustomCellRendererProps<Role>) => (
           <>
             {data?.sale === 7 ? (
               <Stack direction="row" spacing={1} sx={{ mt: 0.5 }}>
@@ -111,7 +109,7 @@ export default function RoleList() {
         resizable: true,
         editable: false,
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellRenderer: ({ data }: CustomCellRendererProps<RoleTable>) => (
+        cellRenderer: ({ data }: CustomCellRendererProps<Role>) => (
           <>
             {data?.commission === 7 ? (
               <Stack direction="row" spacing={1} sx={{ mt: 0.5 }}>
@@ -178,7 +176,7 @@ export default function RoleList() {
           overflow: 'hidden',
         }}
       >
-        <AgGrid<RoleTable>
+        <AgGrid<Role>
           gridKey="role-list"
           loading={loading}
           rowData={roles}

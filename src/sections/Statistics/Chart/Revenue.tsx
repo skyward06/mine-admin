@@ -32,8 +32,6 @@ export default function RevenueOverview() {
 
   const { loading, revenue, fetchRevenue } = useFetchRevenue();
 
-  console.log('revenue => ', revenue);
-
   const chartOptions = useChart({
     chart: { sparkline: { enabled: true } },
     colors: chartColors,

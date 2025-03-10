@@ -76,8 +76,6 @@ export default function UserGeneral({ currentUser }: Props) {
   const open = useBoolean();
   const router = useRouter();
 
-  console.log('currentUser => ', currentUser);
-
   const [fileLoading, setFileLoading] = useState<boolean>();
   const [avatar, setAvatar] = useState<string>();
   const [avatarUrl, setAvatarUrl] = useState<File | string | null>(null);
