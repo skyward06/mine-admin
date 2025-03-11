@@ -68,7 +68,7 @@ export default function MemberCreateForm() {
       secondaryAddress: '',
       teamStrategy: 'MANUAL',
       commissionDefault: 'MANUAL',
-      txcWallets: [{ percent: 100 }],
+      txcWallets: [{ percent: 100, isDefault: true }],
     }),
     []
   );

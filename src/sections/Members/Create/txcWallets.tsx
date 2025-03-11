@@ -24,10 +24,10 @@ export default function TXCWallets() {
   const addWallet = () => {
     append({
       note: '',
-      percent: 0,
       address: '',
+      isDefault: !fields.length,
       payoutId: TXC_WALLET[1].id,
-      isDefault: false,
+      percent: fields.length ? 0 : 100,
     });
   };
 
@@ -43,11 +43,11 @@ export default function TXCWallets() {
 
       if (response) {
         append({
-          payoutId: TXC_WALLET[1].id,
-          address: response.getElementsByTagName('publicKey').item(0)?.textContent,
           note: '',
-          percent: 0,
-          isDefault: false,
+          isDefault: !fields.length,
+          payoutId: TXC_WALLET[1].id,
+          percent: fields.length ? 0 : 100,
+          address: response.getElementsByTagName('publicKey').item(0)?.textContent,
         });
       } else {
         toast.error("Can't find the address from this Coin ID");
