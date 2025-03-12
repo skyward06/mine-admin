@@ -19,7 +19,6 @@ export const FETCH_BALANCES = gql(/* GraphQL */ `
           balance
           username
           fullName
-          groupName
           allowState
           teamReport
           OTPEnabled

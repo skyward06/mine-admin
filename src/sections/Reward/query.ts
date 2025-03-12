@@ -5,16 +5,16 @@ export const FETCH_STATISTICS_QUERY = gql(/* GraphQL */ `
     statistics(sort: $sort, page: $page, filter: $filter) {
       statistics {
         id
-        transactionId
+        to
+        from
+        status
         issuedAt
+        txcShared
         newBlocks
         totalBlocks
-        totalHashPower
         totalMembers
-        txcShared
-        from
-        to
-        status
+        transactionId
+        totalHashPower
         statisticsSales {
           id
           saleId
@@ -30,16 +30,15 @@ export const FETCH_MEMBERSTATISTICS_QUERY = gql(/* GraphQL */ `
   query FetchMemberStatistics($sort: String, $page: String, $filter: JSONObject) {
     memberStatistics(sort: $sort, page: $page, filter: $filter) {
       memberStatistics {
-        createdAt
-        updatedAt
-        deletedAt
         id
+        percent
         memberId
-        statisticsId
+        issuedAt
         txcShared
         hashPower
-        percent
-        issuedAt
+        createdAt
+        updatedAt
+        statisticsId
         member {
           id
           email
@@ -49,7 +48,6 @@ export const FETCH_MEMBERSTATISTICS_QUERY = gql(/* GraphQL */ `
           balance
           username
           fullName
-          groupName
           allowState
           teamReport
           OTPEnabled

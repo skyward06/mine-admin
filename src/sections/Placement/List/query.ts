@@ -17,19 +17,18 @@ export const FETCH_PLACEMENT_MEMBERS_QUERY = gql(/* GraphQL */ `
     members(page: $page, filter: $filter, sort: $sort) {
       members {
         id
-        username
         email
-        fullName
-        sponsorId
-        groupName
         status
+        fullName
+        username
+        sponsorId
         allowState
         teamReport
         OTPEnabled
         teamStrategy
-        cmnCalculatedWeeks
         placementParentId
         placementPosition
+        cmnCalculatedWeeks
         placementParent {
           id
           balance

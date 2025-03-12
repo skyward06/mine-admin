@@ -43,7 +43,6 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         fullName
         sponsorId
         promoCode
-        groupName
         allowState
         OTPEnabled
         teamReport
@@ -59,6 +58,10 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         signupFormRequest
         cmnCalculatedWeeks
         preferredContactDetail
+        groupSetting {
+          name
+          commissionDefaults
+        }
         commission {
           begL
           begR
@@ -74,7 +77,6 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           balance
           username
           fullName
-          groupName
           allowState
           teamReport
           OTPEnabled
@@ -98,7 +100,6 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           balance
           username
           fullName
-          groupName
           allowState
           teamReport
           OTPEnabled
@@ -120,7 +121,6 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           balance
           username
           fullName
-          groupName
           allowState
           teamReport
           OTPEnabled

@@ -72,7 +72,6 @@ export const FETCH_SPONSORS_QUERY = gql(/* GraphQL */ `
         balance
         username
         fullName
-        groupName
         allowState
         teamReport
         OTPEnabled

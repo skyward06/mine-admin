@@ -105,7 +105,6 @@ export const FETCH_SALE_BY_Id = gql(/* GraphQL */ `
         balance
         username
         fullName
-        groupName
         createdAt
         allowState
         teamReport
@@ -139,7 +138,6 @@ export const FETCH_SALE_BY_Id = gql(/* GraphQL */ `
         balance
         username
         fullName
-        groupName
         createdAt
         allowState
         teamReport
@@ -232,7 +230,6 @@ export const FETCH_SALE_BY_ID = gql(/* GraphQL */ `
         balance
         username
         fullName
-        groupName
         createdAt
         allowState
         teamReport
@@ -266,7 +263,6 @@ export const FETCH_SALE_BY_ID = gql(/* GraphQL */ `
         balance
         username
         fullName
-        groupName
         createdAt
         allowState
         teamReport
