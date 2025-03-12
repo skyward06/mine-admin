@@ -1,5 +1,3 @@
-import type { GroupSetting } from 'src/__generated__/graphql';
-
 import { useForm } from 'react-hook-form';
 import { useMemo, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -15,6 +13,8 @@ import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
 import { today, formatDate, customizeDate } from 'src/utils/format-time';
+
+import { type GroupSetting, CommissionDefaultEnum } from 'src/__generated__/graphql';
 
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
@@ -33,10 +33,13 @@ export default function EditForm({ current }: Props) {
   const defaultValues = useMemo(
     () =>
       current
-        ? Schema.safeParse({ ...current, limitDate: formatDate(current.limitDate) }).data ??
-          ({} as SchemaType)
+        ? Schema.safeParse({
+            ...current,
+            limitDate: formatDate(current.limitDate),
+          }).data ?? { commissionDefaults: [] }
         : {
             name: '',
+            commissionDefaults: [],
             sponsorBonusPackageId: null,
             rollSponsorBonusPackageId: null,
             limitDate: `${today('YYYY-MM-DD')}`,
@@ -68,6 +71,7 @@ export default function EditForm({ current }: Props) {
                 rollSponsorBonusPackageId:
                   rollSponsorBonusPackageId === '' ? null : rollSponsorBonusPackageId,
                 limitDate: customizeDate(limitDate),
+                commissionDefaults: newData.commissionDefaults as CommissionDefaultEnum[],
               },
             },
           });
@@ -80,6 +84,7 @@ export default function EditForm({ current }: Props) {
                 rollSponsorBonusPackageId:
                   rollSponsorBonusPackageId === '' ? null : rollSponsorBonusPackageId,
                 limitDate: customizeDate(limitDate),
+                commissionDefaults: newData.commissionDefaults as CommissionDefaultEnum[],
               },
             },
           });
@@ -132,6 +137,16 @@ export default function EditForm({ current }: Props) {
               </MenuItem>
             ))}
           </Field.Select>
+
+          <Field.MultiSelect
+            name="commissionDefaults"
+            label="Commission Defaults"
+            checkbox
+            options={Object.values(CommissionDefaultEnum).map((option) => ({
+              label: option,
+              value: option,
+            }))}
+          />
         </Box>
 
         <Bonuses groupSettingCommissionBonuses={current?.groupSettingCommissionBonuses ?? []} />
