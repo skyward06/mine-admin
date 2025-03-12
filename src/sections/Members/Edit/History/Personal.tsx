@@ -531,12 +531,14 @@ export const Personal = () => {
                   </Grid>
                   <Grid md={8}>{member?.signupFormRequest.fullName}</Grid>
                 </Grid>
-                <Grid md={12} container>
-                  <Grid md={4}>
-                    <Typography fontWeight={700}>Promo:</Typography>{' '}
+                {member?.signupFormRequest.promoCode && (
+                  <Grid md={12} container>
+                    <Grid md={4}>
+                      <Typography fontWeight={700}>Promo:</Typography>{' '}
+                    </Grid>
+                    <Grid md={8}>{member?.signupFormRequest.promoCode}</Grid>
                   </Grid>
-                  <Grid md={8}>{member?.signupFormRequest.promoCode}</Grid>
-                </Grid>
+                )}
                 <Grid md={12} container>
                   <Grid md={4}>
                     <Typography fontWeight={700}>Payment Method: </Typography>
