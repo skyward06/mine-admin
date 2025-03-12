@@ -7,6 +7,7 @@ export const Schema = zod.object({
   limitDate: zod.string({ required_error: 'Limit Date is required' }),
   sponsorBonusPackageId: zod.string().optional().nullable(),
   rollSponsorBonusPackageId: zod.string().optional().nullable(),
+  commissionDefaults: zod.array(zod.string({ required_error: 'Commission Defaults is required' })),
   groupSettingCommissionBonuses: zod.array(
     zod.object({
       commission: zod.number(),
