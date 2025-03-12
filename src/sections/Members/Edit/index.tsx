@@ -126,7 +126,7 @@ export default function MemberEditView() {
 
         {tabs.value === 'edit' && <MemberGeneral currentMember={member} />}
 
-        {tabs.value === 'history' && <History />}
+        {tabs.value === 'history' && <History currentMember={member} />}
 
         {tabs.value === 'sale' && <Sale />}
 

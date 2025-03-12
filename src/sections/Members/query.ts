@@ -59,6 +59,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         cmnCalculatedWeeks
         preferredContactDetail
         groupSetting {
+          id
           name
           commissionDefaults
         }
@@ -245,10 +246,11 @@ export const UPDATE_MEMBER = gql(/* GraphQL */ `
 export const FETCH_MEMBER_HISTORY = gql(/* GraphQL */ `
   query MemberOverview($data: IDInput!) {
     memberOverview(data: $data) {
-      cashCommissionPotential
-      currentHashPower
-      totalTXCShared
       joinDate
+      cashAvailable
+      totalTXCShared
+      currentHashPower
+      cashCommissionPotential
     }
   }
 `);

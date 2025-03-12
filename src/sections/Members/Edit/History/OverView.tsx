@@ -1,3 +1,5 @@
+import type { Member } from 'src/__generated__/graphql';
+
 import { useParams } from 'react-router-dom';
 import { useQuery as useGraphQuery } from '@apollo/client';
 
@@ -8,9 +10,15 @@ import Divider from '@mui/material/Divider';
 
 import { fNumber } from 'src/utils/formatNumber';
 
+import { LAUNCH_GROUP } from 'src/consts';
+
 import { FETCH_MEMBER_HISTORY } from '../../query';
 
-export const OverView = () => {
+interface Props {
+  currentMember: Member;
+}
+
+export const OverView = ({ currentMember }: Props) => {
   const { id } = useParams();
 
   const { data } = useGraphQuery(FETCH_MEMBER_HISTORY, {
@@ -32,12 +40,21 @@ export const OverView = () => {
           </Box>
         </Stack>
 
-        <Stack width={0.6}>
-          {fNumber((data?.memberOverview.cashCommissionPotential ?? 0) / 100)}
-          <Box component="span" sx={{ color: 'text.secondary', typography: 'body2' }}>
-            Cash Potentital
-          </Box>
-        </Stack>
+        {currentMember?.groupSetting?.id === LAUNCH_GROUP ? (
+          <Stack width={0.6}>
+            {fNumber(data?.memberOverview.cashAvailable ?? 0)}
+            <Box component="span" sx={{ color: 'text.secondary', typography: 'body2' }}>
+              Cash Available
+            </Box>
+          </Stack>
+        ) : (
+          <Stack width={0.6}>
+            {fNumber((data?.memberOverview.cashCommissionPotential ?? 0) / 100)}
+            <Box component="span" sx={{ color: 'text.secondary', typography: 'body2' }}>
+              Cash Potentital
+            </Box>
+          </Stack>
+        )}
 
         <Stack width={1}>
           {fNumber((data?.memberOverview.totalTXCShared ?? 0) / 10 ** 8)}

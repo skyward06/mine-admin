@@ -25,6 +25,8 @@ export const NO_PRODUCT = '916170a2-6b73-450d-9c2a-6ee9cceab30a';
 
 export const ROOT_ID = 'affe34e8-891b-41c2-8405-d31df4dadb8c';
 
+export const LAUNCH_GROUP = 'c3bca349-972c-485b-bbd6-4241c58b815c';
+
 export const PEER = 'Peer';
 
 export const COMMISSION_TYPE = {
