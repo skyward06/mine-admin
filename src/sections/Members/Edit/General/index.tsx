@@ -378,7 +378,11 @@ export default function MemberGeneral({ currentMember }: Props) {
                 defaultValue="MANUAL"
                 required
               >
-                {Object.values(CommissionDefaultEnum).map((option) => (
+                {Object.values(
+                  currentMember.groupSetting?.commissionDefaults.length
+                    ? currentMember.groupSetting.commissionDefaults
+                    : CommissionDefaultEnum
+                ).map((option) => (
                   <MenuItem key={option} value={option}>
                     {option}
                   </MenuItem>

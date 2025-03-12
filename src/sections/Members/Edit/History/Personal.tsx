@@ -346,7 +346,7 @@ export const Personal = () => {
                 </Typography>
               </Stack>
               <Stack width={1}>
-                <Typography variant="body2">{member?.groupName}</Typography>
+                <Typography variant="body2">{member?.groupSetting?.name}</Typography>
               </Stack>
             </Stack>
 

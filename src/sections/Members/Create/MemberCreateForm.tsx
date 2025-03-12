@@ -340,7 +340,7 @@ export default function MemberCreateForm() {
               </Field.Select>
               <Field.MultiSelect
                 name="teamReport"
-                label="Team Teport"
+                label="Team Report"
                 checkbox
                 options={Object.values(TeamReport).map((option) => ({
                   label: option,

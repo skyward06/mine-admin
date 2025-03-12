@@ -106,7 +106,7 @@ export default function Detail({ open, row }: Props) {
 
             <Stack direction="row" spacing={2}>
               <Typography variant="subtitle1">Group:</Typography>
-              <Typography>{row?.groupName}</Typography>
+              <Typography>{row?.groupSetting?.name}</Typography>
             </Stack>
 
             <Stack direction="row" spacing={2}>
