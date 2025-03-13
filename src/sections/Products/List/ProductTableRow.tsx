@@ -10,6 +10,7 @@ import IconButton from '@mui/material/IconButton';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { formatID } from 'src/utils/helper';
 import { formatDate } from 'src/utils/format-time';
 
 import { NO_PRODUCT } from 'src/consts';
@@ -34,6 +35,7 @@ export default function ProductTableRow({ row, confirm, setSelected }: Props) {
 
   const {
     id,
+    ID,
     amount,
     date,
     productName,
@@ -50,6 +52,7 @@ export default function ProductTableRow({ row, confirm, setSelected }: Props) {
   return (
     <>
       <TableRow hover>
+        <TableCell>{formatID(ID, 'P')}</TableCell>
         <TableCell align="left">{formatDate(date)}</TableCell>
         <TableCell align="left">{amount}</TableCell>
         <TableCell align="left">{productName}</TableCell>
