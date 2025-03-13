@@ -7,6 +7,8 @@ import { Editor, Toolbar, HtmlButton, EditorProvider } from 'react-simple-wysiwy
 import Box from '@mui/material/Box';
 import LoadingButton from '@mui/lab/LoadingButton';
 
+import { useBoolean } from 'src/hooks/useBoolean';
+
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
 
@@ -21,6 +23,10 @@ interface Props {
 
 export default function Template({ current }: Props) {
   const [html, setHtml] = useState('Insert here...');
+  const [content, setContent] = useState('');
+
+  const source = useBoolean();
+  const htmlButton = document.querySelector('[aria-label="View HTML"]') as HTMLButtonElement;
 
   const defaultValues = useMemo(
     () =>
@@ -59,17 +65,33 @@ export default function Template({ current }: Props) {
   });
 
   useEffect(() => {
-    const template = handlebars.compile(current.body);
-    setHtml(template(current.sampleVars));
-
-    setTimeout(() => {
-      const htmlButton = document.querySelector('[aria-label="View HTML"]') as HTMLButtonElement;
-
-      if (htmlButton) {
-        htmlButton.click();
-      }
-    }, 10);
+    setHtml(current.body);
   }, [current]);
+
+  useEffect(() => {
+    if (htmlButton) {
+      htmlButton.click();
+    }
+
+    const handleHtmlButtonClick = () => {
+      source.onToggle();
+    };
+
+    if (htmlButton) {
+      htmlButton.addEventListener('click', handleHtmlButtonClick);
+    }
+
+    return () => {
+      if (htmlButton) {
+        htmlButton.removeEventListener('click', handleHtmlButtonClick);
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [htmlButton]);
+
+  useEffect(() => {
+    setContent(source.value ? handlebars.compile(html)(current?.sampleVars) : html);
+  }, [html, source, current]);
 
   return (
     <Form methods={methods} onSubmit={onSubmit}>
@@ -79,7 +101,11 @@ export default function Template({ current }: Props) {
       </Box>
 
       <EditorProvider>
-        <Editor value={html} onChange={onChange} style={{ height: '500px' }}>
+        <Editor
+          value={content}
+          onChange={onChange}
+          style={{ height: source.value ? '100%' : '500px' }}
+        >
           <Toolbar>
             <HtmlButton aria-label="View HTML" />
           </Toolbar>
