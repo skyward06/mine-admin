@@ -73,7 +73,7 @@ export default function LogTableRow({ row }: Props) {
         </TableCell>
       </TableRow>
 
-      <LogDrawer open={open} defaultStyles={defaultStyles} log={row} />
+      <LogDrawer open={open} log={row} />
     </>
   );
 }

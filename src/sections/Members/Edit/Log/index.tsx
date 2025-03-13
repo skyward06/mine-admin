@@ -1,5 +1,8 @@
 import type { Member } from 'src/__generated__/graphql';
 
+import { useEffect } from 'react';
+import { useParams } from 'react-router';
+
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import { useTheme } from '@mui/material/styles';
@@ -10,11 +13,7 @@ import { ScrollBar } from 'src/components/ScrollBar';
 import { TableNoData, TableSkeleton, TableHeadCustom } from 'src/components/Table';
 
 import LogTableRow from './LogTableRow';
-
-interface Props {
-  loading: Boolean;
-  currentMember: Member;
-}
+import { useFetchMembers } from '../../useApollo';
 
 const TABLE_HEAD = [
   { id: 'who', label: 'Actor', sortable: false },
@@ -24,11 +23,26 @@ const TABLE_HEAD = [
   { id: 'status', label: 'Status', sortable: false },
 ];
 
-export default function LogView({ loading, currentMember }: Props) {
-  const theme = useTheme();
-  const { logs } = currentMember;
+interface Props {
+  currentMember: Member;
+}
 
-  const notFound = !logs?.length;
+export default function LogView({ currentMember }: Props) {
+  const theme = useTheme();
+  const params = useParams();
+
+  const { id } = params;
+
+  const { loading, fetchMembers, members } = useFetchMembers();
+
+  const member = members[0];
+
+  const notFound = !member?.logs?.length;
+
+  useEffect(() => {
+    fetchMembers({ variables: { filter: { id: currentMember.id } } });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   return (
     <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
@@ -39,7 +53,7 @@ export default function LogView({ loading, currentMember }: Props) {
         >
           <TableHeadCustom
             headLabel={TABLE_HEAD}
-            rowCount={loading ? 0 : logs!.length}
+            rowCount={loading ? 0 : member?.logs!.length}
             sx={{
               [`& .${tableCellClasses.head}`]: {
                 '&:first-of-type': { borderTopLeftRadius: 8, borderBottomLeftRadius: 8 },
@@ -62,9 +76,7 @@ export default function LogView({ loading, currentMember }: Props) {
             </>
           ) : (
             <TableBody>
-              {logs!.map((row) => (
-                <LogTableRow key={row!.id} row={row!} />
-              ))}
+              {member?.logs!.map((row) => <LogTableRow key={row!.id} row={row!} />)}
 
               <TableNoData
                 notFound={notFound}

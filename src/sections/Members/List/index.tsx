@@ -59,11 +59,11 @@ const TABLE_HEAD = [
   { id: 'username', label: 'Username', sortable: true },
   { id: 'fullName', label: 'Full Name', sortable: true },
   { id: 'mobile', label: 'Mobile', sortable: true },
-  { id: 'assetId', label: 'AssetID', sortable: true },
-  { id: 'totalIntroducers', label: 'Sponsor', sortable: true },
-  { id: 'emailVerified', label: 'Status', sortable: true },
-  { id: 'adminNotes', label: 'Admin Notes', width: 150, sortable: true },
-  { id: 'createdAt', label: 'Joined At', sortable: true },
+  { id: 'assetId', label: 'AssetID', width: 80, sortable: true },
+  { id: 'totalIntroducers', label: 'Sponsor', width: 100, sortable: true },
+  { id: 'emailVerified', label: 'Status', width: 150, sortable: true },
+  { id: 'adminNotes', label: 'Admin Notes', width: 200, sortable: true },
+  { id: 'createdAt', label: 'Joined At', width: 120, sortable: true },
   { id: 'action', label: '', width: 60, align: 'center' },
 ];
 

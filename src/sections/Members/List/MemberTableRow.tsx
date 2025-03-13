@@ -19,7 +19,7 @@ import { useRouter } from 'src/routes/hooks';
 
 import { useBoolean, type UseBooleanReturn } from 'src/hooks/useBoolean';
 
-import { formatID } from 'src/utils/helper';
+import { formatID, cutString } from 'src/utils/helper';
 import { formatDate, formatTime } from 'src/utils/format-time';
 
 import { Label } from 'src/components/Label';
@@ -190,14 +190,11 @@ export default function MemberTableRow({
   return (
     <>
       <TableRow hover selected={selected}>
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>
-          {ID ? formatID(ID) : <Iconify icon="vaadin:line-h" color="gray" />}
-        </TableCell>
+        <TableCell>{ID ? formatID(ID) : <Iconify icon="vaadin:line-h" color="gray" />}</TableCell>
 
         <TableCell
           sx={{
             alignItems: 'center',
-            whiteSpace: 'nowrap',
             cursor: 'pointer',
             '&:hover': { bgcolor: (theme) => theme.vars.palette.action.hover },
           }}
@@ -208,16 +205,15 @@ export default function MemberTableRow({
           <UserItem user={{ username, email, avatar }} />
         </TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{fullName}</TableCell>
+        <TableCell>{fullName}</TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{mobile}</TableCell>
+        <TableCell>{mobile}</TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{assetId}</TableCell>
+        <TableCell>{cutString(assetId ?? '', 6)}</TableCell>
 
         <TableCell
           sx={{
             cursor: 'pointer',
-            whiteSpace: 'nowrap',
             '&:hover': { bgcolor: (theme) => theme.vars.palette.action.hover },
           }}
           onClick={() => handleSponsors()}
@@ -225,7 +221,7 @@ export default function MemberTableRow({
           {totalIntroducers}
         </TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>
+        <TableCell>
           <Stack direction="row" columnGap={1}>
             {allowState === 'APPROVED' && (
               <Label variant="soft" color="success">
@@ -255,9 +251,11 @@ export default function MemberTableRow({
           </Stack>
         </TableCell>
 
-        <TableCell>{adminNotes?.length ? adminNotes[0]?.description : ''}</TableCell>
+        <TableCell>
+          {cutString(`${adminNotes?.length && adminNotes[0]?.description}`, 20)}
+        </TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>
+        <TableCell>
           <ListItemText
             primary={formatDate(createdAt)}
             secondary={formatTime(createdAt)}
@@ -271,7 +269,7 @@ export default function MemberTableRow({
         </TableCell>
 
         {action && (
-          <TableCell sx={{ whiteSpace: 'nowrap' }} align="center">
+          <TableCell align="center">
             <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
               <Iconify icon="eva:more-horizontal-fill" />
             </IconButton>

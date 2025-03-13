@@ -138,7 +138,7 @@ export default function MemberEditView() {
 
         {tabs.value === 'balance' && <BalanceList />}
 
-        {tabs.value === 'log' && <Log loading={loading} currentMember={member} />}
+        {tabs.value === 'log' && <Log currentMember={member} />}
 
         {tabs.value === 'note' && <Note currentMember={member} />}
       </DashboardContent>
