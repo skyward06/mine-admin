@@ -57,6 +57,7 @@ export default function LogDrawer({ open, log }: Props) {
           <Typography>{formatDateTime(when)}</Typography>
 
           <Difference
+            action={action}
             before={action === 'create' ? {} : before}
             after={action === 'delete' ? {} : after}
           />
