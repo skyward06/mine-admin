@@ -59,7 +59,7 @@ export default function MemberCreateForm() {
     () => ({
       city: '',
       state: '',
-      avatar: '',
+      avatar: 'https://minetxc.com/assets/avatar.png',
       zipCode: '',
       sponsorId: '',
       teamReport: [],
