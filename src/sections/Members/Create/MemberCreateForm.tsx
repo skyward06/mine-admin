@@ -49,7 +49,7 @@ import { Schema, type SchemaType } from './schema';
 export default function MemberCreateForm() {
   const [state, setState] = useState<string>();
   const [country, setCountry] = useState<string>();
-  const [avatar, setAvatar] = useState<string>('');
+  const [avatar, setAvatar] = useState<string>('https://minetxc.com/assets/avatar.png');
   const [memberId, setMemberId] = useState<string>('');
   const [avatarUrl, setAvatarUrl] = useState<File | string | null>(null);
 
@@ -59,7 +59,7 @@ export default function MemberCreateForm() {
     () => ({
       city: '',
       state: '',
-      avatar: 'https://minetxc.com/assets/avatar.png',
+      avatar: '',
       zipCode: '',
       sponsorId: '',
       teamReport: [],
@@ -185,8 +185,10 @@ export default function MemberCreateForm() {
               });
             }
           });
+
+          toast.error(error.message);
         } else {
-          toast.error(err.message);
+          toast.error(err);
         }
       }
     }
