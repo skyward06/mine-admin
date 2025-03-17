@@ -10,7 +10,7 @@ interface Props {
 export default function Difference({ action, before, after }: Props) {
   return (
     <ReactJsonViewCompare
-      oldData={action === 'signup' ? before.signupFormRequest : before}
+      oldData={action === 'signup' ? {} : before}
       newData={action === 'signup' ? after.signupFormRequest : after}
     />
   );
