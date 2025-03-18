@@ -5,6 +5,8 @@ import Box, { type BoxProps } from '@mui/material/Box';
 
 import { RouterLink } from 'src/routes/components';
 
+import { CONFIG } from 'src/config';
+
 // ----------------------------------------------------------------------
 
 export interface LogoProps extends BoxProps {
@@ -18,7 +20,7 @@ export const Logo = forwardRef<HTMLDivElement, LogoProps>(
     const logo = (
       <Box
         component="img"
-        src="https://i.ibb.co/wYDCzV6/texit-logo-v4.png"
+        src={`${CONFIG.site.basePath}/assets/txc-dark-logo.png`}
         sx={{ width: 60, height: 60, cursor: 'pointer', ...sx }}
       />
     );
