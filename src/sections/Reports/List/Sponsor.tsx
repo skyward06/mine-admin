@@ -67,7 +67,7 @@ export default function SponsorListView({ setWeek, openWeek }: Props) {
             some: {
               createdAt: {
                 gte: customizeDate(`${dayjs(weekStartDate).startOf('week')}`),
-                lt: dayjs(customizeDate(`${dayjs(weekStartDate).startOf('week')}`)).add(1, 'week'),
+                lt: dayjs(customizeDate(`${dayjs(weekStartDate).endOf('week')}`)),
               },
             },
           },
@@ -88,7 +88,7 @@ export default function SponsorListView({ setWeek, openWeek }: Props) {
             some: {
               createdAt: {
                 gte: customizeDate(`${dayjs(value).startOf('week')}`),
-                lt: dayjs(customizeDate(`${dayjs(value).startOf('week')}`)).add(1, 'week'),
+                lt: dayjs(customizeDate(`${dayjs(value).endOf('week')}`)),
               },
             },
           },
