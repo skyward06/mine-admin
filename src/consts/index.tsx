@@ -84,27 +84,33 @@ export const OTHER_WALLET = [
 ];
 
 export const PROOF_TYPE = {
-  ADMINISTRATIONSALARY: 'Administration Salary',
-  COMMISSION: 'Commission',
-  DEVELOPERSAPPS: 'Developers Apps',
-  DEVELOPERSINTEGRATIONS: 'Developers Integrations',
-  DEVELOPERSPROTOCOL: 'Developers Protocol',
-  DEVELOPERSWEB: 'Developers Web',
-  EXCHANGEFEE: 'Exchange Fee',
-  INFRASTRUCTURE: 'Infrastructure',
-  LIQUIDITY: 'Liquidity',
-  MARKETINGMINETXCPROMOTION: 'Marketing MineTXC Promotion',
-  MARKETINGTXCPROMOTION: 'Marketing TXC Promotion',
-  MINEELECTRICITY: 'Mine Electricity',
-  MINEFACILITYRENTMORTAGE: 'Mine Facility Rent Mortage',
-  MINEMAINTAINANCE: 'Mine maintainance',
-  MINENEWEQUIPMENT: 'Mine New Equipment',
-  OVERHEAD: 'Overhead',
+  SALE: 'Sale',
   PREPAY: 'Prepay',
   PROFIT: 'Profit',
+  INVOICE: 'Invoice',
+  OVERHEAD: 'Overhead',
   PROMOTION: 'Promotion',
-  SALE: 'Sale',
+  LIQUIDITY: 'Liquidity',
+  COMMISSION: 'Commission',
+  EXCHANGEFEE: 'Exchange Fee',
+  DEVELOPERSWEB: 'Developers Web',
+  INFRASTRUCTURE: 'Infrastructure',
+  DEVELOPERSAPPS: 'Developers Apps',
+  MINEELECTRICITY: 'Mine Electricity',
+  MINEMAINTAINANCE: 'Mine maintainance',
+  MINENEWEQUIPMENT: 'Mine New Equipment',
+  DEVELOPERSPROTOCOL: 'Developers Protocol',
+  ADMINISTRATIONSALARY: 'Administration Salary',
   TRANSACTIONPROCESSING: 'Transaction Processing',
+  MARKETINGTXCPROMOTION: 'Marketing TXC Promotion',
+  DEVELOPERSINTEGRATIONS: 'Developers Integrations',
+  MINEFACILITYRENTMORTAGE: 'Mine Facility Rent Mortage',
+  MARKETINGMINETXCPROMOTION: 'Marketing MineTXC Promotion',
+};
+
+export const INVOICE_TYPE = {
+  PAID: 'Paid',
+  PENDING: 'Pending',
 };
 
 export const TARGET = [
