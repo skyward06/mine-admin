@@ -14,6 +14,7 @@ import { paths } from 'src/routes/paths';
 import { useRouter, usePathname } from 'src/routes/hooks';
 
 import { Label } from 'src/components/Label';
+import { Image } from 'src/components/Image';
 import { Iconify } from 'src/components/Iconify';
 import { ScrollBar } from 'src/components/ScrollBar';
 
@@ -86,13 +87,20 @@ export function AccountDrawer({ data = [], sx, ...other }: AccountDrawerProps) {
         </IconButton>
 
         <ScrollBar>
-          <Stack alignItems="center" sx={{ pt: 8 }}>
-            <Typography variant="subtitle1" noWrap sx={{ mt: 2 }}>
+          <Stack alignItems="center" sx={{ pt: 4 }}>
+            <Box
+              width={80}
+              height={80}
+              sx={{
+                border: '1px dashed gray',
+                borderRadius: '50%',
+                p: 0.4,
+              }}
+            >
+              <Image src={user?.avatar} width={72} height={72} borderRadius={50} />
+            </Box>
+            <Typography variant="h6" noWrap sx={{ mt: 0.5 }}>
               {user?.username}
-            </Typography>
-
-            <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }} noWrap>
-              {user?.email}
             </Typography>
           </Stack>
 
