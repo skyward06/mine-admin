@@ -46,6 +46,10 @@ const ProductEditPage = lazy(() => import('src/pages/Product/Edit'));
 // ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
+const InvoiceListPage = lazy(() => import('src/pages/Invoice/List'));
+// ----------------------------------------------------------------------
+
+// ----------------------------------------------------------------------
 const PlacementListPage = lazy(() => import('src/pages/Placement/List'));
 // ----------------------------------------------------------------------
 
@@ -247,6 +251,10 @@ export const dashboardRoutes = [
       {
         path: 'reports',
         children: [{ index: true, element: <ReportListPage /> }],
+      },
+      {
+        path: 'invoices',
+        children: [{ index: true, element: <InvoiceListPage /> }],
       },
       {
         path: 'template',
