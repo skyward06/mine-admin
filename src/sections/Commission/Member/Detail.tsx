@@ -218,7 +218,7 @@ export default function Detail({ open, row }: Props) {
                       to={
                         (isValidUrl(item?.link ?? '')
                           ? item?.link
-                          : item?.linkType === PREPAID_TYPE[3]
+                          : item?.linkType === PREPAID_TYPE[2]
                             ? `${EXPLORER_PATH}${item.link}`
                             : `${CONFIG.SITE_PATH}/sales/${item?.link}`) ?? ''
                       }
