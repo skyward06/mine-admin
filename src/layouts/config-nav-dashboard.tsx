@@ -107,6 +107,7 @@ export const navData = [
   {
     subheader: 'Services',
     items: [
+      { title: 'Invoice', path: paths.dashboard.invoice.root, icon: ICONS.invoice },
       { title: 'Report', path: paths.dashboard.report.root, icon: ICONS.report },
       { title: 'Resource', path: paths.dashboard.resource.root, icon: ICONS.folder },
       { title: 'Template', path: paths.dashboard.template.root, icon: ICONS.template },
