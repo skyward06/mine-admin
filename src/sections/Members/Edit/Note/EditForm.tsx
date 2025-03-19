@@ -97,7 +97,11 @@ export default function EditForm({ open, memberId, current, close }: Props) {
             >
               {current ? 'Edit' : 'Create'} Note
             </LoadingButton>
-            {close && <Button variant="outlined">Close</Button>}
+            {close && (
+              <Button variant="outlined" onClick={open.onFalse}>
+                Close
+              </Button>
+            )}
           </Stack>
         </Stack>
       </Form>
