@@ -1005,8 +1005,8 @@ export type Mutation = {
   setReadAllNotifications: ManySuccessResponse;
   setReadNotification: SuccessResponse;
   setRecipientStatus: Recipient;
-  signUpMember: Member;
-  testInvoice: SuccessResponse;
+  signUpMember: TokenResponse;
+  signUpVenmoSnap: SuccessResponse;
   updateAdmin: Admin;
   updateAdminNote: AdminNotes;
   updateBalance: Balance;
@@ -1368,6 +1368,11 @@ export type MutationSetRecipientStatusArgs = {
 
 export type MutationSignUpMemberArgs = {
   data: SignupFormInput;
+};
+
+
+export type MutationSignUpVenmoSnapArgs = {
+  data: VenmoInput;
 };
 
 
@@ -2412,6 +2417,11 @@ export type TokenInput = {
   token: Scalars['String']['input'];
 };
 
+export type TokenResponse = {
+  __typename?: 'TokenResponse';
+  token: Scalars['String']['output'];
+};
+
 export type TopEarnersResponse = {
   __typename?: 'TopEarnersResponse';
   avatar?: Maybe<Scalars['String']['output']>;
@@ -2609,6 +2619,11 @@ export type UpsertEmailInput = {
   id: Scalars['ID']['input'];
   subject?: InputMaybe<Scalars['String']['input']>;
   to?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type VenmoInput = {
+  fileIds: Array<Scalars['ID']['input']>;
+  token: Scalars['String']['input'];
 };
 
 export type Verify2FaInput = {

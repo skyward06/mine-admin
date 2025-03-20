@@ -44,6 +44,16 @@ export default function InvoiceListView() {
   const colDefs = useMemo<ColDef<Invoice>[]>(
     () => [
       {
+        field: 'id',
+        headerName: 'Invoice No',
+        width: 100,
+        resizable: true,
+        editable: false,
+        cellClass: 'ag-number-cell',
+        cellRenderer: ({ data }: CustomCellRendererProps<Invoice>) =>
+          data?.id.toString().padStart(6, '0'),
+      },
+      {
         field: 'name',
         headerName: 'Name',
         width: 250,
