@@ -93,6 +93,10 @@ const BalanceCreatePage = lazy(() => import('src/pages/Balance/Create'));
 // ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
+const CommunicationListPage = lazy(() => import('src/pages/Communication/List'));
+// ----------------------------------------------------------------------
+
+// ----------------------------------------------------------------------
 const RoleListPage = lazy(() => import('src/pages/Role/List'));
 const RoleCreatePage = lazy(() => import('src/pages/Role/Create'));
 const RoleEditPage = lazy(() => import('src/pages/Role/Edit'));
@@ -112,11 +116,6 @@ const NotificationListPage = lazy(() => import('src/pages/Notification/List'));
 
 // ----------------------------------------------------------------------
 const CalculatorPage = lazy(() => import('src/pages/Calculator'));
-// ----------------------------------------------------------------------
-
-// ----------------------------------------------------------------------
-const TemplatePage = lazy(() => import('src/pages/Template/List'));
-const TemplateEditPage = lazy(() => import('src/pages/Template/Edit'));
 // ----------------------------------------------------------------------
 
 export const dashboardRoutes = [
@@ -249,19 +248,16 @@ export const dashboardRoutes = [
         ],
       },
       {
+        path: 'communication',
+        children: [{ index: true, element: <CommunicationListPage /> }],
+      },
+      {
         path: 'reports',
         children: [{ index: true, element: <ReportListPage /> }],
       },
       {
         path: 'invoices',
         children: [{ index: true, element: <InvoiceListPage /> }],
-      },
-      {
-        path: 'template',
-        children: [
-          { index: true, element: <TemplatePage /> },
-          { path: ':id', element: <TemplateEditPage /> },
-        ],
       },
       {
         path: 'users',
