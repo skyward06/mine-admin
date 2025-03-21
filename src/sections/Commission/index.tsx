@@ -24,6 +24,7 @@ import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import { useAuthContext } from 'src/auth/hooks';
 
 import Week from './Week';
+import Price from './Price';
 import Member from './Member';
 import Preview from './Preview';
 import { useCalculateCommission } from './useApollo';
@@ -51,6 +52,7 @@ export default function CommissionListView() {
   const { loading: calculationLoading, calculateCommission } = useCalculateCommission();
 
   const openWeek = useBoolean();
+  const openPrice = useBoolean();
 
   const handleExport = async () => {
     setLoading(true);
@@ -105,21 +107,7 @@ export default function CommissionListView() {
         heading="Commission"
         links={[{ name: 'Commission', href: paths.dashboard.commission.root }, { name: 'All' }]}
         action={
-          <Box
-            display="grid"
-            columnGap={2}
-            sx={{
-              pr: 4,
-              gridTemplateColumns: {
-                xs: 'repeat(1, 1fr)',
-                sm:
-                  user?.role?.commission === PERMISSIONS.COMMISSOIN_CALCULATION_PERMISSION.value ||
-                  user?.role?.commission === 7
-                    ? '30% 35% 35%'
-                    : '50% 50%',
-              },
-            }}
-          >
+          <Box display="flex" columnGap={2}>
             <LoadingButton
               variant="contained"
               startIcon={<Iconify icon="uil:export" />}
@@ -136,20 +124,33 @@ export default function CommissionListView() {
               onClick={() => openWeek.onTrue()}
               sx={{ mb: 1 }}
             >
-              Select Week
+              <Iconify icon="tabler:calendar-week" sx={{ mr: 0.5 }} /> Select Week
             </Button>
             {(user?.role?.commission === PERMISSIONS.COMMISSOIN_CALCULATION_PERMISSION.value ||
               user?.role?.commission === 7) && (
-              <LoadingButton
-                variant="contained"
-                color="primary"
-                startIcon={<Iconify icon="fluent:preview-link-16-regular" />}
-                onClick={handleCalculate}
-                loading={calculationLoading}
-                sx={{ mb: 1 }}
-              >
-                Calculate
-              </LoadingButton>
+              <>
+                <LoadingButton
+                  variant="contained"
+                  color="primary"
+                  startIcon={<Iconify icon="fluent:preview-link-16-regular" />}
+                  onClick={handleCalculate}
+                  loading={calculationLoading}
+                  sx={{ mb: 1 }}
+                >
+                  Calculate
+                </LoadingButton>
+                {tabs.value === 'member' && (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    sx={{ mb: 1 }}
+                    onClick={openPrice.onTrue}
+                  >
+                    <Iconify icon="solar:tag-price-outline" sx={{ mr: 0.5 }} />
+                    Pay TXC
+                  </Button>
+                )}
+              </>
             )}
           </Box>
         }
@@ -169,6 +170,8 @@ export default function CommissionListView() {
       {tabs.value === 'member' && <Member openWeek={openWeek} />}
 
       {tabs.value === 'preview' && <Preview />}
+
+      <Price open={openPrice} />
     </DashboardContent>
   );
 }
