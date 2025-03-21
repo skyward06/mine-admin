@@ -113,6 +113,27 @@ export const FETCH_COMMISSION_BY_WEEK = gql(/* GraphQL */ `
   }
 `);
 
+export const GENERATE_COMMISSION_SENDMANY = gql(/* GraphQL */ `
+  query GenerateCommissionSendmany($data: TXCPriceInput!) {
+    generateCommissionSendmany(data: $data) {
+      ids
+      command
+    }
+  }
+`);
+
+export const APPROVE_COMMISSION_TRANSACTION = gql(/* GraphQL */ `
+  mutation ApproveCommissionWithTransactionIds($data: ApproveCommissionWithTxIDInput!) {
+    approveCommissionWithTransactionIds(data: $data) {
+      message
+      result
+      frontActions {
+        ...FrontActionFields
+      }
+    }
+  }
+`);
+
 export const UPDATE_COMMISSION = gql(/* GraphQL */ `
   mutation updateCommission($data: WeeklyCommissionUpdateInput!) {
     updateCommission(data: $data) {

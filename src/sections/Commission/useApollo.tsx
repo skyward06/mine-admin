@@ -10,6 +10,8 @@ import {
   UPDATE_COMMISSION_STATUS,
   FETCH_COMMISSION_STATS_QUERY,
   CALCULATE_PREVIEW_COMMISSION,
+  GENERATE_COMMISSION_SENDMANY,
+  APPROVE_COMMISSION_TRANSACTION,
 } from './query';
 
 export function useFetchCommissions() {
@@ -62,6 +64,24 @@ export function useFetchCommissionsByWeek() {
     weeklyCommissions: data?.commissionsByWeek.commissions ?? [],
     fetchWeekCommissions,
   };
+}
+
+export function useGenerateSendmany() {
+  const [generateSendmany, { loading, data, error }] = useLazyQuery(GENERATE_COMMISSION_SENDMANY);
+
+  return { loading, sendmany: data?.generateCommissionSendmany, error, generateSendmany };
+}
+
+export function useApproveCommissionTransaction() {
+  const [approveCommissionTransaction, { loading, data, error }] = useMutation(
+    APPROVE_COMMISSION_TRANSACTION,
+    {
+      awaitRefetchQueries: true,
+      refetchQueries: ['WeeklyCommissions', 'FetchCommissionStats'],
+    }
+  );
+
+  return { loading, data, error, approveCommissionTransaction };
 }
 
 export function useUpdateCommission() {
