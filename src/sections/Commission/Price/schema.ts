@@ -6,7 +6,7 @@ export const Schema = zod.object({
   txData: zod
     .array(
       zod.object({
-        txID: zod.string(),
+        txID: zod.string({ required_error: 'Transaction ID is required' }),
       })
     )
     .optional()
