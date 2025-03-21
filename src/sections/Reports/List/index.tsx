@@ -32,7 +32,7 @@ import MetalListView from './Metals';
 import WeeklyReports from './Weekly';
 import SponsorListView from './Sponsor';
 import OnepointMemberListView from './OnePointAway';
-import { useGenerateWeeklyReports, useSendCommunicationToAllSponsors } from '../useApollo';
+import { useGenerateWeeklyReports } from '../useApollo';
 
 // ----------------------------------------------------------------------
 export default function ReportView() {
@@ -70,8 +70,6 @@ export default function ReportView() {
   const [loading, setLoading] = useState<boolean>(false);
 
   const { loading: generateLoading, generateWeeklyReport } = useGenerateWeeklyReports();
-  const { loading: sendLoading, sendCommunicationToAllSponsors } =
-    useSendCommunicationToAllSponsors();
 
   const handleTabChange = (event: any, newValue: any) => {
     tabs.onChange(event, newValue);
@@ -164,18 +162,6 @@ export default function ReportView() {
     }
   };
 
-  const handleSend = async () => {
-    try {
-      const { data } = await sendCommunicationToAllSponsors();
-
-      if (data) {
-        toast.success('Successfully sent!');
-      }
-    } catch (error) {
-      console.log('error => ', error);
-    }
-  };
-
   return (
     <>
       <Helmet>
@@ -236,15 +222,6 @@ export default function ReportView() {
                   columnGap={2}
                   sx={{ pr: 2, gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: '38% 26% 36%' } }}
                 >
-                  <LoadingButton
-                    variant="contained"
-                    color="primary"
-                    sx={{ mb: 1 }}
-                    loading={sendLoading}
-                    onClick={handleSend}
-                  >
-                    Send Communication
-                  </LoadingButton>
                   <Button
                     variant="contained"
                     color="primary"
