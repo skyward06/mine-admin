@@ -1,19 +1,23 @@
+import type { UseBooleanReturn } from 'src/hooks/useBoolean';
+
 import { useState, useEffect } from 'react';
 
 import Stack from '@mui/material/Stack';
 
 import { Iconify } from 'src/components/Iconify';
 import { ConfirmView } from 'src/components/Reward';
+import { EmptyContent } from 'src/components/EmptyContent';
 import ComponentBlock from 'src/components/Component-Block';
 
 import { useGenerateSendmany } from '../useApollo';
 
 interface Props {
   txcPrice: number;
+  disabled: UseBooleanReturn;
   setTxData: Function;
 }
 
-export default function Sendmany({ txcPrice, setTxData }: Props) {
+export default function Sendmany({ disabled, txcPrice, setTxData }: Props) {
   const [tId, setTId] = useState<any>([]);
   const [copy, setCopy] = useState<any>();
 
@@ -36,7 +40,12 @@ export default function Sendmany({ txcPrice, setTxData }: Props) {
     if (sendmany) {
       sendmany?.map((_, index) => setCopy({ ...copy, [index]: false }));
       setTxData(sendmany?.map((item, index) => ({ ids: item.ids, txID: tId[index] || '' })));
+
+      if (!sendmany.length) {
+        disabled.onTrue();
+      }
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tId, sendmany]);
 
@@ -48,7 +57,7 @@ export default function Sendmany({ txcPrice, setTxData }: Props) {
         </Stack>
       )}
 
-      {sendmany &&
+      {sendmany && sendmany.length ? (
         sendmany.map((item, index) => (
           <ComponentBlock
             sx={{
@@ -79,7 +88,10 @@ export default function Sendmany({ txcPrice, setTxData }: Props) {
 
             {item.command.split(',').join(',\n')}
           </ComponentBlock>
-        ))}
+        ))
+      ) : (
+        <EmptyContent />
+      )}
     </>
   );
 }

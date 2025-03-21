@@ -1,5 +1,3 @@
-import type { UseBooleanReturn } from 'src/hooks/useBoolean';
-
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 
@@ -10,6 +8,8 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
+
+import { useBoolean, type UseBooleanReturn } from 'src/hooks/useBoolean';
 
 import { CONFIG } from 'src/config';
 
@@ -32,6 +32,8 @@ export default function Price({ open }: Props) {
   const [step, setStep] = useState<number>(0);
   const [price, setPrice] = useState<number>(0);
   const [txData, setTxData] = useState<TxData[]>([]);
+
+  const disabled = useBoolean();
 
   const { loading, approveCommissionTransaction } = useApproveCommissionTransaction();
 
@@ -73,22 +75,33 @@ export default function Price({ open }: Props) {
       <DialogContent>
         <Paper sx={{ py: 1 }}>
           {step === 0 && <Current price={price} setPrice={setPrice} />}
-          {step === 1 && <Sendmany txcPrice={price} setTxData={setTxData} />}
+          {step === 1 && <Sendmany disabled={disabled} txcPrice={price} setTxData={setTxData} />}
         </Paper>
       </DialogContent>
       <DialogActions>
-        <Button variant="soft" onClick={open.onFalse}>
+        <Button
+          variant="soft"
+          onClick={() => {
+            open.onFalse();
+            setStep(0);
+          }}
+        >
           Close
         </Button>
         <Button
           variant="outlined"
           onClick={() => setStep((prev) => prev - 1)}
-          disabled={step === 0}
+          disabled={step === 0 || disabled.value}
         >
           Previous
         </Button>
         {step === 1 ? (
-          <LoadingButton variant="contained" loading={loading} onClick={handleApprove}>
+          <LoadingButton
+            variant="contained"
+            loading={loading}
+            onClick={handleApprove}
+            disabled={disabled.value}
+          >
             Approve
           </LoadingButton>
         ) : (
