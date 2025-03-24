@@ -51,46 +51,50 @@ export default function Sendmany({ disabled, txcPrice, setTxData }: Props) {
 
   return (
     <>
-      {loading && (
+      {loading ? (
         <Stack direction="row" justifyContent="center">
           <Iconify icon="eos-icons:bubble-loading" />
         </Stack>
-      )}
-
-      {sendmany && sendmany.length ? (
-        sendmany.map((item, index) => (
-          <ComponentBlock
-            sx={{
-              display: 'block',
-              alignItems: 'unset',
-              overflow: 'auto',
-              maxHeight: 800,
-              backgroundColor: '#f2f2f2',
-              p: 2,
-            }}
-          >
-            <Stack direction="row" justifyContent="flex-end" columnGap={2} mb={2}>
-              <ConfirmView setTransactionId={(value: any) => setTId({ ...tId, [index]: value })} />
-              <Iconify
-                icon={copy && copy[index] ? 'mingcute:check-fill' : 'bxs:copy'}
-                color="#00a76f"
-                sx={{ mt: 1 }}
-                onClick={() => {
-                  handleCopy(item.command.split(',').join(',\n'));
-                  setCopy({ ...copy, [index]: true });
-
-                  setTimeout(() => {
-                    setCopy({ ...copy, [index]: false });
-                  }, 3000);
-                }}
-              />
-            </Stack>
-
-            {item.command.split(',').join(',\n')}
-          </ComponentBlock>
-        ))
       ) : (
-        <EmptyContent />
+        <>
+          {sendmany && sendmany.length ? (
+            sendmany.map((item, index) => (
+              <ComponentBlock
+                sx={{
+                  display: 'block',
+                  alignItems: 'unset',
+                  overflow: 'auto',
+                  maxHeight: 800,
+                  backgroundColor: '#f2f2f2',
+                  p: 2,
+                }}
+              >
+                <Stack direction="row" justifyContent="flex-end" columnGap={2} mb={2}>
+                  <ConfirmView
+                    setTransactionId={(value: any) => setTId({ ...tId, [index]: value })}
+                  />
+                  <Iconify
+                    icon={copy && copy[index] ? 'mingcute:check-fill' : 'bxs:copy'}
+                    color="#00a76f"
+                    sx={{ mt: 1 }}
+                    onClick={() => {
+                      handleCopy(item.command.split(',').join(',\n'));
+                      setCopy({ ...copy, [index]: true });
+
+                      setTimeout(() => {
+                        setCopy({ ...copy, [index]: false });
+                      }, 3000);
+                    }}
+                  />
+                </Stack>
+
+                {item.command.split(',').join(',\n')}
+              </ComponentBlock>
+            ))
+          ) : (
+            <EmptyContent />
+          )}
+        </>
       )}
     </>
   );

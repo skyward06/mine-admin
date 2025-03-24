@@ -7,12 +7,13 @@ interface Props {
 
 export default function Current({ price, setPrice }: Props) {
   const handlePriceChange = (event: any) => {
-    setPrice(event.target.value);
+    setPrice(+event.target.value);
   };
 
   return (
     <TextField
       fullWidth
+      type="number"
       label="Current Price"
       value={price}
       onChange={handlePriceChange}

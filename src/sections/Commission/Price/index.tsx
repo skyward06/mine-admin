@@ -39,6 +39,10 @@ export default function Price({ open }: Props) {
 
   const handleApprove = async () => {
     try {
+      if (txData.find((item) => !item.txID)) {
+        toast.error('Transaction ID is required');
+      }
+
       const { data } = await approveCommissionTransaction({ variables: { data: { txData } } });
 
       if (data) {
