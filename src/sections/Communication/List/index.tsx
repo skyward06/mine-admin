@@ -13,10 +13,7 @@ import { useBoolean } from 'src/hooks/useBoolean';
 
 import { customizeDate } from 'src/utils/format-time';
 
-import { DashboardContent } from 'src/layouts/dashboard';
-
 import { Iconify } from 'src/components/Iconify';
-import { Breadcrumbs } from 'src/components/Breadcrumbs';
 
 import { useFetchGroupSettings } from 'src/sections/GroupSettings/useApollo';
 
@@ -24,7 +21,7 @@ import MemberList from './MemberList';
 import CreateMemberList from './Create';
 import { useFetchMemberList } from '../useApollo';
 
-export default function CommunicationView() {
+export default function MemberListView() {
   const open = useBoolean();
   const tabs = useTabs('general.all');
   const [filter, setFilter] = useState<any>();
@@ -101,15 +98,7 @@ export default function CommunicationView() {
   }, []);
 
   return (
-    <DashboardContent>
-      <Breadcrumbs
-        heading="MemberList"
-        links={[{ name: 'MemberList' }, { name: 'List' }]}
-        sx={{
-          mb: { xs: 2, md: 3 },
-        }}
-      />
-
+    <>
       <Card
         sx={{
           flexGrow: 1,
@@ -153,6 +142,6 @@ export default function CommunicationView() {
       </Card>
 
       <CreateMemberList open={open} />
-    </DashboardContent>
+    </>
   );
 }

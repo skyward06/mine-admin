@@ -36,7 +36,7 @@ import NodeContext from 'src/sections/Placement/List/nodeContext';
 import { useFetchPlacementForWeek } from 'src/sections/Placement/List/useApollo';
 
 import { StandardNode } from './node';
-import SearchMiner from './searchMiner';
+import SearchMiner from '../../Week/Placement/searchMiner';
 
 interface Props {
   memberId: string | undefined;
