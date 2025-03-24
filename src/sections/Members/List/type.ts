@@ -7,8 +7,8 @@ import type {
   PlacementPosition,
 } from 'src/__generated__/graphql';
 
-export type MemberLog = {
-  __typename?: 'MemberLog';
+export type EntityLog = {
+  __typename?: 'EntityLog';
   action: string;
   after?: any | null;
   before?: any | null;
@@ -76,7 +76,7 @@ export type Member = {
   fullName: string;
   id: string;
   introduceMembers?: Array<Member> | null;
-  logs?: Array<MemberLog> | null;
+  logs?: Array<EntityLog> | null;
   memberWallets?: Array<MemberWallet> | null;
   mobile: string;
   placementChildren?: Array<Member> | null;
