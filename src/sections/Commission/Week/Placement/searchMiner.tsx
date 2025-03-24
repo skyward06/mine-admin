@@ -7,7 +7,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
-import { useFetchMembers } from 'src/sections/Members/useApollo';
+import { useFetchMemberSearch } from 'src/sections/Members/useApollo';
 
 interface Member {
   id: string;
@@ -19,14 +19,14 @@ interface Props {
   weekStartDate: string;
 }
 
-export default function PlacementListView({ onMinerChange, weekStartDate }: Props) {
-  const { fetchMembers, members, loading } = useFetchMembers();
+export default function SearchMiner({ onMinerChange, weekStartDate }: Props) {
+  const { fetchMemberSearch, members, loading } = useFetchMemberSearch();
 
   const addModal = useBoolean();
   const [miner, setMiner] = useState<Member>();
 
   useEffect(() => {
-    fetchMembers({
+    fetchMemberSearch({
       variables: {
         filter: {
           ...(addModal.value && {

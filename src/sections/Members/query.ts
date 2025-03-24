@@ -211,6 +211,19 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
   }
 `);
 
+export const FETCH_MEMBER_SEARCH_QUERY = gql(/* GraphQL */ `
+  query SearchMembers($page: String, $filter: JSONObject, $sort: String) {
+    members(page: $page, filter: $filter, sort: $sort) {
+      members {
+        id
+        username
+        fullName
+        teamStrategy
+      }
+    }
+  }
+`);
+
 export const FETCH_INDIVIDUAL_MEMBERS_QUERY = gql(/* GraphQL */ `
   query IndividualMembers {
     individualMembers {

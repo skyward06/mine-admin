@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 
-import { useFetchMembers } from 'src/sections/Members/useApollo';
+import { useFetchMemberSearch } from 'src/sections/Members/useApollo';
 
 import { Iconify } from '../Iconify';
 
@@ -26,10 +26,10 @@ export default function SearchMiner({
 }: Props) {
   const [username, setUsername] = useState<string>();
 
-  const { loading, members, fetchMembers } = useFetchMembers();
+  const { loading, members, fetchMemberSearch } = useFetchMemberSearch();
 
   useEffect(() => {
-    fetchMembers({
+    fetchMemberSearch({
       variables: {
         filter: {
           ...filter,

@@ -17,6 +17,7 @@ import {
   UPDATE_PASSWORD_QUERY,
   REMOVE_MEMBER_PLACEMENT,
   FETCH_MEMBER_STATS_QUERY,
+  FETCH_MEMBER_SEARCH_QUERY,
   FETCH_INDIVIDUAL_MEMBERS_QUERY,
 } from './query';
 
@@ -42,6 +43,12 @@ export function useFetchMembers() {
     members: data?.members.members ?? [],
     fetchMembers,
   };
+}
+
+export function useFetchMemberSearch() {
+  const [fetchMemberSearch, { loading, data, error }] = useLazyQuery(FETCH_MEMBER_SEARCH_QUERY);
+
+  return { loading, members: data?.members.members ?? [], error, fetchMemberSearch };
 }
 
 export function useFetchIndividualMembers() {
