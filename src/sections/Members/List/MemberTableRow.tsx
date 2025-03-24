@@ -406,7 +406,7 @@ export default function MemberTableRow({
                     handleLocked();
                   }}
                 >
-                  <Iconify icon="ic:round-block" color="red" /> Locked
+                  <Iconify icon="ic:round-block" color="red" /> Blocked
                   {blockLoading && <Iconify icon="eos-icons:bubble-loading" />}
                 </MenuItem>
                 <MenuItem

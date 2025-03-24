@@ -6,7 +6,7 @@ export const FETCH_MEMBER_STATS_QUERY = gql(/* GraphQL */ `
     $pendingFilter: JSONObject
     $graveyardFilter: JSONObject
     $paidFilter: JSONObject
-    $lockFilter: JSONObject
+    $blockFilter: JSONObject
   ) {
     APPROVED: members(filter: $approveFilter) {
       total
@@ -20,7 +20,7 @@ export const FETCH_MEMBER_STATS_QUERY = gql(/* GraphQL */ `
     PAID: members(filter: $paidFilter) {
       total
     }
-    LOCKED: members(filter: $lockFilter) {
+    BLOCKED: members(filter: $blockFilter) {
       total
     }
   }
