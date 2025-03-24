@@ -51,7 +51,8 @@ const STATUS_OPTIONS: { value: AllowState; label: string; color: LabelColor }[] 
   { value: 'APPROVED', label: 'Approved', color: 'info' },
   { value: 'PENDING', label: 'Pending', color: 'success' },
   { value: 'PAID', label: 'Paid', color: 'secondary' },
-  { value: 'GRAVEYARD', label: 'Graveyard', color: 'error' },
+  { value: 'GRAVEYARD', label: 'Graveyard', color: 'warning' },
+  { value: 'LOCKED', label: 'Locked', color: 'error' },
 ];
 
 const TABLE_HEAD = [
@@ -115,6 +116,8 @@ export default function MemberListView() {
       filterObj.allowState = 'APPROVED';
     } else if (filter.allowState === 'PAID') {
       filterObj.allowState = 'PAID';
+    } else if (filter.allowState === 'LOCKED') {
+      filterObj.allowState = 'LOCKED';
     }
 
     if (sponsorId) {
@@ -155,6 +158,7 @@ export default function MemberListView() {
         pendingFilter: { allowState: 'PENDING' },
         graveyardFilter: { allowState: 'GRAVEYARD' },
         paidFilter: { allowState: 'PAID' },
+        lockFilter: { allowState: 'BLOCKED' },
       },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------
 
 export type MemberRole = 'approved' | 'pending' | 'graveyard';
-export type AllowState = 'PENDING' | 'GRAVEYARD' | 'APPROVED' | 'PAID';
+export type AllowState = 'PENDING' | 'GRAVEYARD' | 'APPROVED' | 'PAID' | 'LOCKED';
 
 export type IMemberTableFilters = {
   search: string;

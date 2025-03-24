@@ -33,6 +33,7 @@ import Detail from './Detail';
 import {
   useMoveToPaid,
   useApproveMember,
+  useMoveToBlocked,
   useMoveToPending,
   useUpdatePassword,
   useMoveToGraveyard,
@@ -89,13 +90,14 @@ export default function MemberTableRow({
   } = row;
 
   const { moveToPaid } = useMoveToPaid();
-  const { approveMember } = useApproveMember();
   const { moveToPending } = useMoveToPending();
   const { duplicateMember } = useDuplicateMember();
   const { moveToGraveyard } = useMoveToGraveyard();
   const { resetBonusClock } = useResetBonusClock();
   const { verifyMemberEmail } = useVerifyMemberEmail();
   const { loading, updatePassword } = useUpdatePassword();
+  const { loading: blockLoading, moveToBlocked } = useMoveToBlocked();
+  const { loading: approveLoading, approveMember } = useApproveMember();
 
   const resetContent = (
     <Paper sx={{ py: 2 }}>
@@ -187,6 +189,18 @@ export default function MemberTableRow({
     }
   };
 
+  const handleLocked = async () => {
+    try {
+      const { data } = await moveToBlocked({ variables: { data: { id } } });
+
+      if (data) {
+        toast.success('Successfully blocked!');
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   return (
     <>
       <TableRow hover selected={selected}>
@@ -243,6 +257,11 @@ export default function MemberTableRow({
                 Graveyard
               </Label>
             )}
+            {allowState === 'BLOCKED' && (
+              <Label variant="soft" color="error">
+                Blocked
+              </Label>
+            )}
             {!emailVerified && (
               <Label variant="soft" color="error">
                 Unverified
@@ -297,6 +316,7 @@ export default function MemberTableRow({
                     >
                       <Iconify icon="fa6-solid:circle-check" color="green" />
                       Approve
+                      {approveLoading && <Iconify icon="eos-icons:bubble-loading" />}
                     </MenuItem>
                     <MenuItem
                       onClick={async () => {
@@ -383,12 +403,19 @@ export default function MemberTableRow({
                 )}
                 <MenuItem
                   onClick={() => {
+                    handleLocked();
+                  }}
+                >
+                  <Iconify icon="ic:round-block" color="red" /> Locked
+                  {blockLoading && <Iconify icon="eos-icons:bubble-loading" />}
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
                     open.onTrue();
                     popover.onClose();
                   }}
                 >
-                  <Iconify icon="solar:eye-bold" color="gray" />
-                  View
+                  <Iconify icon="solar:eye-bold" color="gray" /> View
                 </MenuItem>
                 <MenuItem
                   onClick={() => {
@@ -396,8 +423,7 @@ export default function MemberTableRow({
                     popover.onClose();
                   }}
                 >
-                  <Iconify icon="basil:unlock-solid" color="gray" />
-                  Reset Password
+                  <Iconify icon="basil:unlock-solid" color="gray" /> Reset Password
                 </MenuItem>
                 <MenuItem
                   disabled={!!sales?.length}
@@ -407,24 +433,19 @@ export default function MemberTableRow({
                     setSelected(id);
                   }}
                 >
-                  <Iconify icon="bxs:coffee-togo" color="red" />
-                  Delete
+                  <Iconify icon="bxs:coffee-togo" color="red" /> Delete
                 </MenuItem>
                 <MenuItem onClick={copyAddress}>
-                  <Iconify icon={copy.value ? 'ci:check' : 'bxs:copy'} color="green" />
-                  Copy Address
+                  <Iconify icon={copy.value ? 'ci:check' : 'bxs:copy'} color="green" /> Copy Address
                 </MenuItem>
                 <MenuItem onClick={handleVerifyEmail}>
-                  <Iconify icon="mdi:email-verified" color="green" />
-                  Verify Email
+                  <Iconify icon="mdi:email-verified" color="green" /> Verify Email
                 </MenuItem>
                 <MenuItem onClick={handleDuplicateMember}>
-                  <Iconify icon="heroicons-solid:document-duplicate" color="green" />
-                  Duplicate
+                  <Iconify icon="heroicons-solid:document-duplicate" color="green" /> Duplicate
                 </MenuItem>
                 <MenuItem onClick={handleResetBonus}>
-                  <Iconify icon="typcn:arrow-back" color="green" />
-                  Reset Bonus
+                  <Iconify icon="typcn:arrow-back" color="green" /> Reset Bonus
                 </MenuItem>
               </MenuList>
             </CustomPopover>
