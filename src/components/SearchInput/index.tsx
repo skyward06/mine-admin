@@ -14,13 +14,14 @@ type Props = {
   search: string;
   placeholder?: string;
   onSearchChange: (value: string) => void;
+  sx?: any;
 };
 
 /**
  * Debounce search input changes to prevent too many API requests.
  * Used for filtering data in the table.
  */
-export function SearchInput({ search, placeholder, onSearchChange }: Props) {
+export function SearchInput({ search, placeholder, onSearchChange, sx }: Props) {
   const [keyword, setKeyword] = useState(search);
 
   useEffect(() => {
@@ -49,7 +50,7 @@ export function SearchInput({ search, placeholder, onSearchChange }: Props) {
       alignItems="center"
       spacing={2}
       flexGrow={1}
-      sx={{ width: 1, p: 2.5, pr: { xs: 2.5, md: 1 } }}
+      sx={{ width: 1, p: 2.5, pr: { xs: 2.5, md: 1 }, ...sx }}
     >
       <TextField
         fullWidth
