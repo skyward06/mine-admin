@@ -18,9 +18,10 @@ const ICONS = {
   blank: icon('ic_blank'),
   bonus: icon('ic_bonus'),
   booking: icon('ic_booking'),
+  calculator: icon('ic_calculator'),
   calendar: icon('ic_calendar'),
   chat: icon('ic_chat'),
-  calculator: icon('ic_calculator'),
+  communication: icon('ic_send'),
   dashboard: icon('ic_dashboard'),
   diagram: icon('ic_diagram'),
   disabled: icon('ic_disabled'),
@@ -108,6 +109,11 @@ export const navData = [
     subheader: 'Services',
     items: [
       { title: 'Invoice', path: paths.dashboard.invoice.root, icon: ICONS.invoice },
+      {
+        title: 'Communication',
+        path: paths.dashboard.communication.root,
+        icon: ICONS.communication,
+      },
       { title: 'Report', path: paths.dashboard.report.root, icon: ICONS.report },
       { title: 'Resource', path: paths.dashboard.resource.root, icon: ICONS.folder },
       { title: 'Template', path: paths.dashboard.template.root, icon: ICONS.template },
