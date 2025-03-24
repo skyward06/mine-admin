@@ -6,6 +6,7 @@ export const FETCH_MEMBER_STATS_QUERY = gql(/* GraphQL */ `
     $pendingFilter: JSONObject
     $graveyardFilter: JSONObject
     $paidFilter: JSONObject
+    $lockFilter: JSONObject
   ) {
     APPROVED: members(filter: $approveFilter) {
       total
@@ -17,6 +18,9 @@ export const FETCH_MEMBER_STATS_QUERY = gql(/* GraphQL */ `
       total
     }
     PAID: members(filter: $paidFilter) {
+      total
+    }
+    LOCKED: members(filter: $lockFilter) {
       total
     }
   }
@@ -409,6 +413,18 @@ export const RESET_BONUS_CLOCK = gql(/* GraphQL */ `
     resetBonusClock(data: $data) {
       message
       result
+    }
+  }
+`);
+
+export const MOVE_TO_BLOCKED = gql(/* GraphQL */ `
+  mutation MoveToBlocked($data: IDInput!) {
+    moveToBlocked(data: $data) {
+      message
+      result
+      frontActions {
+        ...FrontActionFields
+      }
     }
   }
 `);

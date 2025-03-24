@@ -5,6 +5,7 @@ import {
   MOVE_TO_PAID,
   UPDATE_MEMBER,
   APPROVE_MEMBER,
+  MOVE_TO_BLOCKED,
   MOVE_TO_PENDING,
   DUPLICATE_MEMBER,
   MOVE_TO_GRAVEYARD,
@@ -165,4 +166,13 @@ export function useResetBonusClock() {
   });
 
   return { loading, data, error, resetBonusClock };
+}
+
+export function useMoveToBlocked() {
+  const [moveToBlocked, { loading, data, error }] = useMutation(MOVE_TO_BLOCKED, {
+    awaitRefetchQueries: true,
+    refetchQueries: ['FetchMembers', 'FetchMemberStats'],
+  });
+
+  return { loading, data, error, moveToBlocked };
 }
