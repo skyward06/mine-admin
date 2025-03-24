@@ -176,7 +176,12 @@ export default function SponsorListView({ setWeek, openWeek }: Props) {
         open={openWeek.value}
         onClose={openWeek.onFalse}
         title="Select Week"
-        content={<SearchPeriod current={weekStartDate} onChange={onPeriodChange} />}
+        content={
+          <SearchPeriod
+            current={`${dayjs(weekStartDate).add(1, 'day')}`}
+            onChange={onPeriodChange}
+          />
+        }
         action={null}
       />
     </>

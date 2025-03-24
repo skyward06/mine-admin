@@ -4,9 +4,9 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Helmet } from 'react-helmet-async';
 
-import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
+import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import LoadingButton from '@mui/lab/LoadingButton';
 
@@ -189,11 +189,7 @@ export default function ReportView() {
                 </LoadingButton>
               )}
               {tabs.value === 'weekly' && (
-                <Box
-                  display="grid"
-                  columnGap={2}
-                  sx={{ pr: 2, gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: '45% 55%' } }}
-                >
+                <Stack direction="row" columnGap={2}>
                   <LoadingButton
                     variant="contained"
                     startIcon={<Iconify icon="fluent-mdl2:generate" />}
@@ -214,14 +210,10 @@ export default function ReportView() {
                   >
                     ReGenerate
                   </LoadingButton>
-                </Box>
+                </Stack>
               )}
               {tabs.value === 'sponsors' && (
-                <Box
-                  display="grid"
-                  columnGap={2}
-                  sx={{ pr: 2, gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: '38% 26% 36%' } }}
-                >
+                <Stack direction="row" columnGap={2}>
                   <Button
                     variant="contained"
                     color="primary"
@@ -240,7 +232,7 @@ export default function ReportView() {
                   >
                     Sponsors Export
                   </LoadingButton>
-                </Box>
+                </Stack>
               )}
             </>
           }

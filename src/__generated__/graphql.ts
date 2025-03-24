@@ -758,6 +758,10 @@ export enum InvoiceStatusEnum {
   Pending = 'PENDING'
 }
 
+export type InvoiceWeekInput = {
+  weekStartDate: Scalars['Date']['input'];
+};
+
 export type LatestStatistics = {
   __typename?: 'LatestStatistics';
   id: Scalars['ID']['output'];
@@ -1040,6 +1044,7 @@ export type Mutation = {
   disable2FA: AccessTokenResponse;
   duplicateMember: Member;
   emailVerify: EmailVerifyResult;
+  generateWeekP2PInvoice: SuccessResponse;
   generateWeeklyReport: SuccessResponse;
   memberLogin: LoginResponse;
   moveEmailToTrash: Email;
@@ -1259,6 +1264,11 @@ export type MutationDuplicateMemberArgs = {
 
 export type MutationEmailVerifyArgs = {
   data: TokenInput;
+};
+
+
+export type MutationGenerateWeekP2PInvoiceArgs = {
+  data: InvoiceWeekInput;
 };
 
 
