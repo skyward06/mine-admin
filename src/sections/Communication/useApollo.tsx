@@ -4,8 +4,11 @@ import { useMutation, useLazyQuery } from '@apollo/client';
 import {
   FETCH_MEMBERS,
   CREATE_MEMBER_LIST,
+  UPDATE_EMAIL_TEMPLATE,
+  FETCH_EMAIL_TEMPLATES,
   FETCH_MEMBER_LIST_QUERY,
   FETCH_MEMBER_LIST_BY_ID,
+  FETCH_EMAIL_TEMPLATE_BY_ID,
 } from './query';
 
 export function useFetchMemberList() {
@@ -24,6 +27,30 @@ export function useFetchMemberList() {
   }, [data]);
 
   return { loading, memberList: data?.memberlists.memberLists, rowCount, fetchMemberList };
+}
+
+export function useFetchTemplates() {
+  const [fetchTemplates, { loading, data }] = useLazyQuery(FETCH_EMAIL_TEMPLATES);
+
+  const rowCountRef = useRef(data?.emailTemplates.total ?? 0);
+
+  const rowCount = useMemo(() => {
+    const newTotal = data?.emailTemplates.total ?? undefined;
+
+    if (newTotal !== undefined) {
+      rowCountRef.current = newTotal;
+    }
+
+    return rowCountRef.current;
+  }, [data]);
+
+  return { loading, templates: data?.emailTemplates.templates, rowCount, fetchTemplates };
+}
+
+export function useFetchTemplateById() {
+  const [fetchTemplateById, { loading, data, error }] = useLazyQuery(FETCH_EMAIL_TEMPLATE_BY_ID);
+
+  return { loading, template: data?.emailTemplateById, error, fetchTemplateById };
 }
 
 export function useFetchMemberListById() {
@@ -45,4 +72,13 @@ export function useCreateMemberList() {
   });
 
   return { loading, data, error, createMemberList };
+}
+
+export function useUpdateTemplate() {
+  const [updateEmailTemplate, { loading, data, error }] = useMutation(UPDATE_EMAIL_TEMPLATE, {
+    awaitRefetchQueries: true,
+    refetchQueries: ['Memberlists', 'EmailTemplates'],
+  });
+
+  return { loading, data, error, updateEmailTemplate };
 }

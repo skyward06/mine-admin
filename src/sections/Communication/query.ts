@@ -48,9 +48,46 @@ export const FETCH_MEMBER_LIST_BY_ID = gql(/* GraphQL */ `
   }
 `);
 
+export const FETCH_EMAIL_TEMPLATES = gql(/* GraphQL */ `
+  query EmailTemplates($sort: String, $page: String, $filter: JSONObject) {
+    emailTemplates(sort: $sort, page: $page, filter: $filter) {
+      templates {
+        id
+        body
+        subject
+        description
+      }
+      total
+    }
+  }
+`);
+
+export const FETCH_EMAIL_TEMPLATE_BY_ID = gql(/* GraphQL */ `
+  query EmailTemplateById($data: IDInput!) {
+    emailTemplateById(data: $data) {
+      id
+      body
+      subject
+      createdAt
+      description
+    }
+  }
+`);
+
 export const CREATE_MEMBER_LIST = gql(/* GraphQL */ `
   mutation CreateMemberList($data: CreateMemberListInput!) {
     createMemberList(data: $data) {
+      id
+      frontActions {
+        ...FrontActionFields
+      }
+    }
+  }
+`);
+
+export const UPDATE_EMAIL_TEMPLATE = gql(/* GraphQL */ `
+  mutation UpdateEmailTemplate($data: UpdateEmailTemplateInput!) {
+    updateEmailTemplate(data: $data) {
       id
       frontActions {
         ...FrontActionFields
