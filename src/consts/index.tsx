@@ -167,3 +167,10 @@ export const PERMISSIONS = {
 };
 
 export const VIEW_ROLE_ID = '82bf6179-48e3-4b5b-847d-a9f8741934aa';
+
+export const SAMPLE_VARS = {
+  FNAME: 'fName',
+  LNAME: 'lName',
+  FULLNAME: 'toMember.fullName',
+  USERNAME: 'toMember.username',
+};
