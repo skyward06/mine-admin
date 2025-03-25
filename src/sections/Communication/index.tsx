@@ -2,7 +2,8 @@ import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Button from '@mui/material/Button';
 
-import { useQuery } from 'src/routes/hooks';
+import { paths } from 'src/routes/paths';
+import { useQuery, useRouter } from 'src/routes/hooks';
 
 import { useTabs } from 'src/hooks/use-tabs';
 import { useBoolean } from 'src/hooks/useBoolean';
@@ -33,6 +34,7 @@ export default function CommunicationView() {
   ];
 
   const open = useBoolean();
+  const router = useRouter();
   const tabs = useTabs('Member List');
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -53,18 +55,31 @@ export default function CommunicationView() {
             mb: { xs: 2, md: 3 },
           }}
           action={
-            tabs.value === 'Campaigns' && (
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => {
-                  open.onTrue();
-                  setQuery({});
-                }}
-              >
-                <Iconify icon="gridicons:add-outline" sx={{ mr: 0.5 }} /> Add
-              </Button>
-            )
+            <>
+              {tabs.value === 'Campaigns' && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    open.onTrue();
+                    setQuery({});
+                  }}
+                >
+                  <Iconify icon="gridicons:add-outline" sx={{ mr: 0.5 }} /> Create & Send Campaign
+                </Button>
+              )}
+              {tabs.value === 'Email Templates' && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    router.push(paths.dashboard.template.new);
+                  }}
+                >
+                  <Iconify icon="gridicons:add-outline" sx={{ mr: 0.5 }} /> Add Email Template
+                </Button>
+              )}
+            </>
           }
         />
 

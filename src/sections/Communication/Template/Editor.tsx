@@ -10,6 +10,7 @@ import Box from '@mui/material/Box';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
@@ -21,10 +22,10 @@ import { Form, Field } from 'src/components/Form';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 
 import { Schema, type SchemaType } from './schema';
-import { useUpdateTemplate } from '../../useApollo';
+import { useCreateTemplate, useUpdateTemplate } from '../useApollo';
 
 interface Props {
-  current: EmailTemplate;
+  current?: EmailTemplate;
 }
 
 export default function EditorView({ current }: Props) {
@@ -32,9 +33,12 @@ export default function EditorView({ current }: Props) {
   const source = useBoolean();
   const htmlButton = document.querySelector('[aria-label="View HTML"]') as HTMLButtonElement;
 
+  const router = useRouter();
+
   document.getElementsByClassName('rsw-ce')[0]?.setAttribute('contenteditable', 'false');
 
-  const { loading, updateEmailTemplate } = useUpdateTemplate();
+  const { loading: createLoading, createEmailTemplate } = useCreateTemplate();
+  const { loading: updateLoading, updateEmailTemplate } = useUpdateTemplate();
 
   const defaultValues = useMemo(
     () =>
@@ -57,12 +61,26 @@ export default function EditorView({ current }: Props) {
 
   const onSubmit = handleSubmit(async (newData) => {
     try {
-      const { data } = await updateEmailTemplate({
-        variables: { data: { ...newData, id: current.id, body: html } },
-      });
+      if (!newData.subject) {
+        toast.error('Subject is required');
+      }
+
+      if (!newData.description) {
+        toast.error('Description is required');
+      }
+
+      const { data } = current
+        ? await updateEmailTemplate({
+            variables: { data: { ...newData, id: current?.id!, body: html } },
+          })
+        : await createEmailTemplate({
+            variables: { data: { ...newData, body: html } },
+          });
 
       if (data) {
         toast.success('Successfully saved!');
+
+        router.push(paths.dashboard.communication.root);
       } else {
         toast.error('Something went wrong!');
       }
@@ -72,7 +90,7 @@ export default function EditorView({ current }: Props) {
   });
 
   useEffect(() => {
-    setHtml(current.body);
+    setHtml(current?.body ?? '');
   }, [current]);
 
   useEffect(() => {
@@ -103,7 +121,7 @@ export default function EditorView({ current }: Props) {
         links={[
           { name: 'Communication' },
           { name: 'Email Templates', href: paths.dashboard.communication.root },
-          { name: current.subject },
+          { name: current?.subject ?? 'New' },
         ]}
         sx={{
           mb: { xs: 2, md: 3 },
@@ -128,7 +146,12 @@ export default function EditorView({ current }: Props) {
           </Editor>
         </EditorProvider>
 
-        <LoadingButton type="submit" variant="contained" sx={{ mt: 2 }} loading={loading}>
+        <LoadingButton
+          type="submit"
+          variant="contained"
+          sx={{ mt: 2 }}
+          loading={current ? updateLoading : createLoading}
+        >
           Save
         </LoadingButton>
       </Form>

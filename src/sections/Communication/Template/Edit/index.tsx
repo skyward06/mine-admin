@@ -4,7 +4,7 @@ import { useParams } from 'src/routes/hooks';
 
 import { LoadingScreen } from 'src/components/loading-screen';
 
-import Editor from './Editor';
+import Editor from '../Editor';
 import { useFetchTemplateById } from '../../useApollo';
 
 export default function TemplateEditView() {
