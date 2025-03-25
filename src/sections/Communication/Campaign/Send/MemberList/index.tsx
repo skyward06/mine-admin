@@ -1,31 +1,32 @@
 import dayjs from 'dayjs';
-import { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
-import IconButton from '@mui/material/IconButton';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { useTabs } from 'src/hooks/use-tabs';
-import { useBoolean } from 'src/hooks/useBoolean';
 
 import { customizeDate } from 'src/utils/format-time';
-
-import { Iconify } from 'src/components/Iconify';
 
 import { useFetchGroupSettings } from 'src/sections/GroupSettings/useApollo';
 
 import MemberList from './MemberList';
-import CreateMemberList from './Create';
-import { useFetchMemberList } from '../useApollo';
+import { useFetchMemberList } from '../../../useApollo';
 
-export function MemberListView() {
-  const open = useBoolean();
+interface Props {
+  setEmails: Function;
+}
+
+export function MemberListView({ setEmails }: Props) {
   const tabs = useTabs('general.all');
   const [filter, setFilter] = useState<any>();
   const [listId, setListId] = useState<string>('');
+  const [selectedTab, setSelectedTab] = useState<string>('general.all');
 
   const { memberList, fetchMemberList } = useFetchMemberList();
   const { groupSettings, fetchGroupSettings } = useFetchGroupSettings();
@@ -91,6 +92,10 @@ export function MemberListView() {
     }
   };
 
+  const handleCheckboxChange = (tabValue: string) => {
+    setSelectedTab(tabValue); // Update the selected tab value
+  };
+
   useEffect(() => {
     fetchMemberList();
     fetchGroupSettings();
@@ -98,50 +103,48 @@ export function MemberListView() {
   }, []);
 
   return (
-    <>
-      <Card
-        sx={{
-          flexGrow: 1,
-          display: 'flex',
-          overflow: 'hidden',
-        }}
-      >
-        <Box textAlign="center">
-          <Tabs
-            value={tabs.value}
-            onChange={handleTabChange}
-            orientation="vertical"
-            sx={{
-              minWidth: 150,
-              borderRight: 1,
-              borderColor: 'divider',
-              [`& .MuiTabs-flexContainer`]: { gap: 0 },
-              [`& .MuiTabs-flexContainerVertical`]: {
-                padding: '16px 0px 16px 16px',
-              },
-            }}
-          >
-            {TABS.map((tab) => (
-              <Tab
-                key={tab.value}
-                label={
-                  <Stack direction="row" flexGrow={1}>
-                    {tab.label}
-                  </Stack>
-                }
-                value={tab.value}
-              />
-            ))}
-          </Tabs>
-          <IconButton color="success" onClick={open.onTrue}>
-            <Iconify icon="gridicons:add-outline" />
-          </IconButton>
-        </Box>
+    <Card
+      sx={{
+        flexGrow: 1,
+        display: 'flex',
+        overflow: 'hidden',
+      }}
+    >
+      <Box textAlign="center">
+        <Tabs
+          value={tabs.value}
+          onChange={handleTabChange}
+          orientation="vertical"
+          sx={{
+            minWidth: 200,
+            borderRight: 1,
+            borderColor: 'divider',
+            [`& .MuiTabs-flexContainer`]: { gap: 0 },
+            [`& .MuiTabs-flexContainerVertical`]: {
+              padding: '16px 0px 16px 10px',
+            },
+          }}
+        >
+          {TABS.map((tab) => (
+            <Tab
+              key={tab.value}
+              label={
+                <Stack direction="row" flexGrow={1} alignItems="center" sx={{ pl: 1.5 }}>
+                  <FormControlLabel
+                    control={<Checkbox checked={selectedTab === tab.value} />}
+                    label={tab.label}
+                    onChange={() => handleCheckboxChange(tab.value)}
+                    sx={{ mr: 1 }}
+                  />
+                </Stack>
+              }
+              value={tab.value}
+            />
+          ))}
+        </Tabs>
+      </Box>
 
-        <MemberList filter={filter} listId={listId} />
-      </Card>
-
-      <CreateMemberList open={open} />
-    </>
+      <MemberList filter={filter} listId={listId} setEmails={setEmails} />
+    </Card>
   );
 }
