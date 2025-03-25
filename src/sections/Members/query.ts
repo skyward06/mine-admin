@@ -216,6 +216,7 @@ export const FETCH_MEMBER_SEARCH_QUERY = gql(/* GraphQL */ `
     members(page: $page, filter: $filter, sort: $sort) {
       members {
         id
+        email
         username
         fullName
         teamStrategy

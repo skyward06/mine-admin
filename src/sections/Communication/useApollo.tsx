@@ -4,6 +4,9 @@ import { useMutation, useLazyQuery } from '@apollo/client';
 import {
   FETCH_MEMBERS,
   CREATE_MEMBER_LIST,
+  FETCH_CAMPAIGN_QUERY,
+  FETCH_CAMPAIGN_BY_ID,
+  CREATE_SEND_CAMPAIGN,
   UPDATE_EMAIL_TEMPLATE,
   FETCH_EMAIL_TEMPLATES,
   FETCH_MEMBER_LIST_QUERY,
@@ -45,6 +48,39 @@ export function useFetchTemplates() {
   }, [data]);
 
   return { loading, templates: data?.emailTemplates.templates, rowCount, fetchTemplates };
+}
+
+export function useFetchCampaigns() {
+  const [fetchCampaigns, { loading, data }] = useLazyQuery(FETCH_CAMPAIGN_QUERY);
+
+  const rowCountRef = useRef(data?.campaigns.total ?? 0);
+
+  const rowCount = useMemo(() => {
+    const newTotal = data?.campaigns.total ?? undefined;
+
+    if (newTotal !== undefined) {
+      rowCountRef.current = newTotal;
+    }
+
+    return rowCountRef.current;
+  }, [data]);
+
+  return { loading, campaigns: data?.campaigns.campaigns ?? [], rowCount, fetchCampaigns };
+}
+
+export function useFetchCampaignById() {
+  const [fetchCampaign, { loading, data }] = useLazyQuery(FETCH_CAMPAIGN_BY_ID);
+
+  return { loading, campaign: data?.campaignById, fetchCampaign };
+}
+
+export function useCreateCampaign() {
+  const [createCampaign, { loading, data, error }] = useMutation(CREATE_SEND_CAMPAIGN, {
+    awaitRefetchQueries: true,
+    refetchQueries: ['Campaigns'],
+  });
+
+  return { loading, data, error, createCampaign };
 }
 
 export function useFetchTemplateById() {

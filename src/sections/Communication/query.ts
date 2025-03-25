@@ -74,6 +74,41 @@ export const FETCH_EMAIL_TEMPLATE_BY_ID = gql(/* GraphQL */ `
   }
 `);
 
+export const FETCH_CAMPAIGN_QUERY = gql(/* GraphQL */ `
+  query Campaigns($sort: String, $page: String, $filter: JSONObject) {
+    campaigns(sort: $sort, page: $page, filter: $filter) {
+      campaigns {
+        id
+        body
+        subject
+        listType
+        listExtra
+      }
+      total
+    }
+  }
+`);
+
+export const FETCH_CAMPAIGN_BY_ID = gql(/* GraphQL */ `
+  query CampaignById($data: IDInput!) {
+    campaignById(data: $data) {
+      id
+      body
+      subject
+      listType
+      listExtra
+    }
+  }
+`);
+
+export const CREATE_SEND_CAMPAIGN = gql(/* GraphQL */ `
+  mutation CreateAndSendCampaign($data: CreateCampaignInput!) {
+    createAndSendCampaign(data: $data) {
+      id
+    }
+  }
+`);
+
 export const CREATE_MEMBER_LIST = gql(/* GraphQL */ `
   mutation CreateMemberList($data: CreateMemberListInput!) {
     createMemberList(data: $data) {
