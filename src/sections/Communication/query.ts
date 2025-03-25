@@ -120,6 +120,17 @@ export const CREATE_MEMBER_LIST = gql(/* GraphQL */ `
   }
 `);
 
+export const CREATE_EMAIL_TEMPLATE = gql(/* GraphQL */ `
+  mutation CreateEmailTemplate($data: CreateEmailTemplateInput!) {
+    createEmailTemplate(data: $data) {
+      id
+      frontActions {
+        ...FrontActionFields
+      }
+    }
+  }
+`);
+
 export const UPDATE_EMAIL_TEMPLATE = gql(/* GraphQL */ `
   mutation UpdateEmailTemplate($data: UpdateEmailTemplateInput!) {
     updateEmailTemplate(data: $data) {

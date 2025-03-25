@@ -38,6 +38,7 @@ const documents = {
     "\n  query CampaignById($data: IDInput!) {\n    campaignById(data: $data) {\n      id\n      body\n      subject\n      listType\n      listExtra\n    }\n  }\n": types.CampaignByIdDocument,
     "\n  mutation CreateAndSendCampaign($data: CreateCampaignInput!) {\n    createAndSendCampaign(data: $data) {\n      id\n    }\n  }\n": types.CreateAndSendCampaignDocument,
     "\n  mutation CreateMemberList($data: CreateMemberListInput!) {\n    createMemberList(data: $data) {\n      id\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.CreateMemberListDocument,
+    "\n  mutation CreateEmailTemplate($data: CreateEmailTemplateInput!) {\n    createEmailTemplate(data: $data) {\n      id\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.CreateEmailTemplateDocument,
     "\n  mutation UpdateEmailTemplate($data: UpdateEmailTemplateInput!) {\n    updateEmailTemplate(data: $data) {\n      id\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.UpdateEmailTemplateDocument,
     "\n  query GroupSettings($sort: String, $page: String, $filter: JSONObject) {\n    groupSettings(sort: $sort, page: $page, filter: $filter) {\n      groupSettings {\n        createdAt\n        id\n        name\n        limitDate\n        commissionDefaults\n        sponsorBonusPackageId\n        rollSponsorBonusPackageId\n        groupSettingCommissionBonuses {\n          lPoint\n          rPoint\n          commission\n        }\n        sponsorBonusPackage {\n          id\n          ID\n          date\n          token\n          point\n          amount\n          status\n          freeShare\n          productName\n          enrollVisibility\n        }\n      }\n      total\n    }\n  }\n": types.GroupSettingsDocument,
     "\n  mutation createGroupSetting($data: CreateGroupSettingInput!) {\n    createGroupSetting(data: $data) {\n      id\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.CreateGroupSettingDocument,
@@ -269,6 +270,10 @@ export function gql(source: "\n  mutation CreateAndSendCampaign($data: CreateCam
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  mutation CreateMemberList($data: CreateMemberListInput!) {\n    createMemberList(data: $data) {\n      id\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation CreateMemberList($data: CreateMemberListInput!) {\n    createMemberList(data: $data) {\n      id\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation CreateEmailTemplate($data: CreateEmailTemplateInput!) {\n    createEmailTemplate(data: $data) {\n      id\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation CreateEmailTemplate($data: CreateEmailTemplateInput!) {\n    createEmailTemplate(data: $data) {\n      id\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

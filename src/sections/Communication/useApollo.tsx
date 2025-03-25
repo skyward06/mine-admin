@@ -7,6 +7,7 @@ import {
   FETCH_CAMPAIGN_QUERY,
   FETCH_CAMPAIGN_BY_ID,
   CREATE_SEND_CAMPAIGN,
+  CREATE_EMAIL_TEMPLATE,
   UPDATE_EMAIL_TEMPLATE,
   FETCH_EMAIL_TEMPLATES,
   FETCH_MEMBER_LIST_QUERY,
@@ -108,6 +109,12 @@ export function useCreateMemberList() {
   });
 
   return { loading, data, error, createMemberList };
+}
+
+export function useCreateTemplate() {
+  const [createEmailTemplate, { loading, data, error }] = useMutation(CREATE_EMAIL_TEMPLATE);
+
+  return { loading, data, error, createEmailTemplate };
 }
 
 export function useUpdateTemplate() {
