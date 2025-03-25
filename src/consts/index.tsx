@@ -108,6 +108,13 @@ export const PROOF_TYPE = {
   MARKETINGMINETXCPROMOTION: 'Marketing MineTXC Promotion',
 };
 
+export const CAMPAIGN_LIST_TYPE = {
+  ALL: 'All',
+  GROUP: 'Group',
+  CUSTOM: 'Custom',
+  WEEKLYSPONSOR: 'Weekly Sponsor',
+};
+
 export const INVOICE_TYPE = {
   PAID: 'Paid',
   PENDING: 'Pending',
