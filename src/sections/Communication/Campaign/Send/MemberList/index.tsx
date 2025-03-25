@@ -13,6 +13,8 @@ import { useTabs } from 'src/hooks/use-tabs';
 
 import { customizeDate } from 'src/utils/format-time';
 
+import { CampaignListType } from 'src/__generated__/graphql';
+
 import { useFetchGroupSettings } from 'src/sections/GroupSettings/useApollo';
 
 import MemberList from './MemberList';
@@ -20,9 +22,10 @@ import { useFetchMemberList } from '../../../useApollo';
 
 interface Props {
   setEmails: Function;
+  setListType: Function;
 }
 
-export function MemberListView({ setEmails }: Props) {
+export function MemberListView({ setEmails, setListType }: Props) {
   const tabs = useTabs('general.all');
   const [filter, setFilter] = useState<any>();
   const [listId, setListId] = useState<string>('');
@@ -65,9 +68,11 @@ export function MemberListView({ setEmails }: Props) {
 
       if (suffix === 'all') {
         setFilter({});
+        setListType(CampaignListType.All);
       }
 
       if (suffix === 'weeklySponsors') {
+        setListType(CampaignListType.WeeklySponsor);
         setFilter({
           introduceMembers: {
             some: {
@@ -84,11 +89,13 @@ export function MemberListView({ setEmails }: Props) {
 
     if (prefix === 'group') {
       setListId('');
+      setListType(CampaignListType.Group);
       setFilter({ groupSetting: { name: { contains: suffix, mode: 'insensitive' } } });
     }
 
     if (prefix === 'list') {
       setListId(suffix);
+      setListType(CampaignListType.Custom);
     }
   };
 

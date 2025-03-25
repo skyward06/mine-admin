@@ -1,22 +1,21 @@
+import type { EmailTemplate } from 'src/__generated__/graphql';
+
 import handlebars from 'handlebars';
 import { useState, useEffect } from 'react';
 import { Editor, EditorProvider } from 'react-simple-wysiwyg';
 
 import Stack from '@mui/material/Stack';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 
-import { SAMPLE_VARS, CAMPAIGN_LIST_TYPE } from 'src/consts';
-import { CampaignListType, type EmailTemplate } from 'src/__generated__/graphql';
+import { SAMPLE_VARS } from 'src/consts';
 
 interface Props {
   emails: string[];
-  setListType: Function;
+  listType: string;
   template: EmailTemplate;
 }
 
-export default function SendForm({ emails, template, setListType }: Props) {
+export default function SendForm({ emails, template, listType }: Props) {
   const [html, setHtml] = useState<any>('');
 
   document.getElementsByClassName('rsw-ce')[0]?.setAttribute('contenteditable', 'false');
@@ -32,22 +31,9 @@ export default function SendForm({ emails, template, setListType }: Props) {
           <Typography variant="subtitle1">Subject:</Typography>
           <Typography>{template?.subject}</Typography>
         </Stack>
-        <Stack width={0.2}>
+        <Stack width={1} direction="row" spacing={2}>
           <Typography variant="subtitle1">List Type:</Typography>
-        </Stack>
-        <Stack width={0.8}>
-          <Select
-            fullWidth
-            size="small"
-            onChange={(event) => setListType(event.target.value)}
-            defaultValue={CampaignListType.All}
-          >
-            {Object.keys(CAMPAIGN_LIST_TYPE).map((item) => (
-              <MenuItem key={item} value={item}>
-                {item}
-              </MenuItem>
-            ))}
-          </Select>
+          <Typography>{listType}</Typography>
         </Stack>
       </Stack>
 

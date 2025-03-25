@@ -81,9 +81,9 @@ export default function CreateCampaign({ open }: Props) {
       <DialogContent>
         <Paper sx={{ py: 2 }}>
           {step === 0 && <Templates setTemplateId={setTemplateId} />}
-          {step === 1 && <MemberListView setEmails={setEmails} />}
+          {step === 1 && <MemberListView setEmails={setEmails} setListType={setListType} />}
           {step === 2 && (
-            <SendForm template={template!} emails={emails ?? []} setListType={setListType} />
+            <SendForm template={template!} emails={emails ?? []} listType={listType} />
           )}
         </Paper>
       </DialogContent>
