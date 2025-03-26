@@ -20,6 +20,7 @@ import { ScrollBar } from 'src/components/ScrollBar';
 import { Label, type LabelColor } from 'src/components/Label';
 import {
   useTable,
+  TableNoData,
   getComparator,
   TableHeadCustom,
   TablePaginationCustom,
@@ -74,6 +75,8 @@ export default function EmailView({ emails }: Props) {
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     tabs.setValue(newValue);
   };
+
+  const notFound = !dataFiltered.length;
 
   return (
     <Card sx={{ my: 2 }}>
@@ -141,6 +144,7 @@ export default function EmailView({ emails }: Props) {
                   </TableCell>
                 </TableRow>
               ))}
+            <TableNoData notFound={notFound} />
           </TableBody>
         </Table>
       </ScrollBar>
