@@ -1,12 +1,13 @@
 import type { CustomCellRendererProps } from '@ag-grid-community/react';
 import type {
   ColDef,
+  CellClickedEvent,
   ISetFilterParams,
   IDateFilterParams,
   ITextFilterParams,
 } from '@ag-grid-community/core';
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -45,6 +46,11 @@ import { useRemoveSale, useFetchSales } from '../useApollo';
 
 import type { BasicSale } from './type';
 
+type Checked = {
+  checked: boolean;
+  value: string;
+};
+
 export default function SaleListView() {
   const { loading, rowCount, sales } = useFetchSales();
   const { loading: removeLoading, removeSale } = useRemoveSale();
@@ -54,6 +60,20 @@ export default function SaleListView() {
   const graphQueryFilter = useMemo(() => parseFilterModel({}, filter), [filter]);
 
   const confirm = useBoolean();
+  const [checked, setChecked] = useState<Checked>({ checked: false, value: '' });
+
+  const handleCopy = async ({ data }: CellClickedEvent<BasicSale, any>) => {
+    try {
+      await navigator.clipboard.writeText(formatID(data?.ID ?? '', 'S'));
+      setChecked({ value: formatID(data?.ID ?? '', 'S'), checked: true });
+
+      setTimeout(() => {
+        setChecked({ checked: false, value: '' });
+      }, 3000);
+    } catch (err) {
+      console.error('Failed to copy test: ', err);
+    }
+  };
 
   const colDefs = useMemo<ColDef<BasicSale>[]>(
     () => [
@@ -66,16 +86,22 @@ export default function SaleListView() {
         editable: false,
         initialSort: 'desc',
         cellRenderer: ({ data }: CustomCellRendererProps<BasicSale>) => (
-          <Stack direction="row" columnGap={1} sx={{ alignItems: 'center' }}>
+          <Stack direction="row" columnGap={1} sx={{ alignItems: 'center', cursor: 'pointer' }}>
             {formatID(data?.ID ?? '', 'S')}
-            {data!.sponsorCnt > 0 && (
-              <Label variant="soft" color="success">
-                Free
-              </Label>
+
+            {checked.value === formatID(data?.ID ?? '', 'S') ? (
+              <Iconify icon="line-md:check-all" color="green" />
+            ) : (
+              data!.sponsorCnt > 0 && (
+                <Label variant="soft" color="success">
+                  Free
+                </Label>
+              )
             )}
           </Stack>
         ),
         cellClass: 'ag-number-cell ag-cell-center',
+        onCellClicked: handleCopy,
       },
       {
         field: 'fullName',
@@ -185,7 +211,7 @@ export default function SaleListView() {
       },
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [checked]
   );
 
   const token = localStorage.getItem(CONFIG.storageTokenKey) ?? '';
