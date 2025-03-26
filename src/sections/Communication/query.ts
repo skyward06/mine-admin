@@ -99,6 +99,13 @@ export const FETCH_CAMPAIGN_QUERY = gql(/* GraphQL */ `
         subject
         listType
         listExtra
+        recipients {
+          open
+          sent
+          email
+          sentTime
+          openTime
+        }
       }
       total
     }
@@ -113,6 +120,13 @@ export const FETCH_CAMPAIGN_BY_ID = gql(/* GraphQL */ `
       subject
       listType
       listExtra
+      recipients {
+        open
+        sent
+        email
+        sentTime
+        openTime
+      }
     }
   }
 `);
