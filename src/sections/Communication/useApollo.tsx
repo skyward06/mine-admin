@@ -6,6 +6,7 @@ import {
   CREATE_MEMBER_LIST,
   FETCH_CAMPAIGN_QUERY,
   FETCH_CAMPAIGN_BY_ID,
+  FETCH_WEEKLY_MEMBERS,
   CREATE_SEND_CAMPAIGN,
   CREATE_EMAIL_TEMPLATE,
   UPDATE_EMAIL_TEMPLATE,
@@ -14,6 +15,29 @@ import {
   FETCH_MEMBER_LIST_BY_ID,
   FETCH_EMAIL_TEMPLATE_BY_ID,
 } from './query';
+
+export function useFetchWeeklyMembers() {
+  const [fetchWeeklyMembers, { loading, data }] = useLazyQuery(FETCH_WEEKLY_MEMBERS);
+
+  const rowCountRef = useRef(data?.weeklyCommissions.total ?? 0);
+
+  const rowCount = useMemo(() => {
+    const newTotal = data?.weeklyCommissions.total ?? undefined;
+
+    if (newTotal !== undefined) {
+      rowCountRef.current = newTotal;
+    }
+
+    return rowCountRef.current;
+  }, [data]);
+
+  return {
+    loading,
+    rowCount,
+    weeklyMembers: data?.weeklyCommissions.weeklyCommissions,
+    fetchWeeklyMembers,
+  };
+}
 
 export function useFetchMemberList() {
   const [fetchMemberList, { loading, data }] = useLazyQuery(FETCH_MEMBER_LIST_QUERY);

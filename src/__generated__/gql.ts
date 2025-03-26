@@ -29,6 +29,7 @@ const documents = {
     "\n  mutation CalculateCommissions {\n    calculateCommissions {\n      message\n      result\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.CalculateCommissionsDocument,
     "\n  mutation CalculatePreviewCommissions {\n    calculatePreviewCommissions {\n      message\n      result\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.CalculatePreviewCommissionsDocument,
     "\n  mutation updateCommissionShortNote($data: WeeklyCommissionNoteInput!) {\n    updateCommissionShortNote(data: $data) {\n      ID\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.UpdateCommissionShortNoteDocument,
+    "\n  query WeeklyMembers($sort: String, $page: String, $filter: JSONObject) {\n    weeklyCommissions(sort: $sort, page: $page, filter: $filter) {\n      weeklyCommissions {\n        member {\n          id\n          email\n          username\n          fullName\n        }\n      }\n      total\n    }\n  }\n": types.WeeklyMembersDocument,
     "\n  query Members($filter: JSONObject) {\n    members(filter: $filter) {\n      members {\n        email\n        username\n      }\n    }\n  }\n": types.MembersDocument,
     "\n  query Memberlists($sort: String, $page: String, $filter: JSONObject) {\n    memberlists(sort: $sort, page: $page, filter: $filter) {\n      memberLists {\n        id\n        name\n        emails\n        members {\n          id\n          email\n          mobile\n          username\n          fullName\n        }\n      }\n      total\n    }\n  }\n": types.MemberlistsDocument,
     "\n  query MemberListById($data: IDInput!) {\n    memberListById(data: $data) {\n      id\n      name\n      emails\n      members {\n        id\n        email\n        mobile\n        username\n        fullName\n      }\n    }\n  }\n": types.MemberListByIdDocument,
@@ -234,6 +235,10 @@ export function gql(source: "\n  mutation CalculatePreviewCommissions {\n    cal
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  mutation updateCommissionShortNote($data: WeeklyCommissionNoteInput!) {\n    updateCommissionShortNote(data: $data) {\n      ID\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation updateCommissionShortNote($data: WeeklyCommissionNoteInput!) {\n    updateCommissionShortNote(data: $data) {\n      ID\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  query WeeklyMembers($sort: String, $page: String, $filter: JSONObject) {\n    weeklyCommissions(sort: $sort, page: $page, filter: $filter) {\n      weeklyCommissions {\n        member {\n          id\n          email\n          username\n          fullName\n        }\n      }\n      total\n    }\n  }\n"): (typeof documents)["\n  query WeeklyMembers($sort: String, $page: String, $filter: JSONObject) {\n    weeklyCommissions(sort: $sort, page: $page, filter: $filter) {\n      weeklyCommissions {\n        member {\n          id\n          email\n          username\n          fullName\n        }\n      }\n      total\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
