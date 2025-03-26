@@ -26,6 +26,7 @@ export function MemberListView() {
   const tabs = useTabs('general.all');
   const [filter, setFilter] = useState<any>();
   const [listId, setListId] = useState<string>('');
+  const [weekly, setWeekly] = useState<boolean>(false);
 
   const { memberList, fetchMemberList } = useFetchMemberList();
   const { groupSettings, fetchGroupSettings } = useFetchGroupSettings();
@@ -36,6 +37,7 @@ export function MemberListView() {
     () => [
       { value: 'general.all', label: 'All' },
       { value: 'general.weeklySponsors', label: 'Weekly Sponsors' },
+      { value: 'general.pending', label: 'Pending Manual Commission' },
 
       ...(groupSettings && groupSettings.length > 0
         ? groupSettings.map((group) => ({
@@ -61,6 +63,7 @@ export function MemberListView() {
 
     if (prefix === 'general') {
       setListId('');
+      setWeekly(false);
 
       if (suffix === 'all') {
         setFilter({});
@@ -79,15 +82,27 @@ export function MemberListView() {
           },
         });
       }
+
+      if (suffix === 'pending') {
+        setWeekly(true);
+        setFilter({
+          status: 'PENDING',
+          member: {
+            commissionDefault: 'MANUAL',
+          },
+        });
+      }
     }
 
     if (prefix === 'group') {
       setListId('');
+      setWeekly(false);
       setFilter({ groupSetting: { name: { contains: suffix, mode: 'insensitive' } } });
     }
 
     if (prefix === 'list') {
       setListId(suffix);
+      setWeekly(false);
     }
   };
 
@@ -117,7 +132,7 @@ export function MemberListView() {
               borderColor: 'divider',
               [`& .MuiTabs-flexContainer`]: { gap: 0 },
               [`& .MuiTabs-flexContainerVertical`]: {
-                padding: '16px 0px 16px 16px',
+                padding: '16px',
               },
             }}
           >
@@ -138,7 +153,7 @@ export function MemberListView() {
           </IconButton>
         </Box>
 
-        <MemberList filter={filter} listId={listId} />
+        <MemberList filter={filter} listId={listId} weekly={weekly} />
       </Card>
 
       <CreateMemberList open={open} />

@@ -29,6 +29,7 @@ export default function CreateCampaign({ open }: Props) {
   const [step, setStep] = useState<number>(0);
   const [templateId, setTemplateId] = useState<string>();
   const [emails, setEmails] = useState<string[]>();
+  const [listExtra, setListExtra] = useState<string>('');
   const [listType, setListType] = useState<CampaignListType>(CampaignListType.All);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -53,10 +54,10 @@ export default function CreateCampaign({ open }: Props) {
       const { data } = await createCampaign({
         variables: {
           data: {
-            subject: template?.subject ?? '',
-            body: template?.body ?? '',
             listType,
-            listExtra: emails?.join(','),
+            listExtra,
+            body: template?.body ?? '',
+            subject: template?.subject ?? '',
           },
         },
       });
@@ -81,7 +82,13 @@ export default function CreateCampaign({ open }: Props) {
       <DialogContent>
         <Paper sx={{ py: 2 }}>
           {step === 0 && <Templates setTemplateId={setTemplateId} />}
-          {step === 1 && <MemberListView setEmails={setEmails} setListType={setListType} />}
+          {step === 1 && (
+            <MemberListView
+              setEmails={setEmails}
+              setListType={setListType}
+              setListExtra={setListExtra}
+            />
+          )}
           {step === 2 && (
             <SendForm template={template!} emails={emails ?? []} listType={listType} />
           )}

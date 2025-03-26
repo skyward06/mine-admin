@@ -1,4 +1,4 @@
-import type { CampaignListType } from 'src/__generated__/graphql';
+import type { CampaignMember, CampaignListType } from 'src/__generated__/graphql';
 
 export type Campaign = {
   __typename?: 'Campaign';
@@ -10,4 +10,5 @@ export type Campaign = {
   deletedAt?: any | null;
   listExtra?: string | null;
   listType: CampaignListType;
+  recipients?: Array<CampaignMember> | null;
 };

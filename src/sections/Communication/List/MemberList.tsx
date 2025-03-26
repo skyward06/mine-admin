@@ -14,14 +14,17 @@ import { AgGrid } from 'src/components/AgGrid';
 
 import { useFetchMembers } from 'src/sections/Members/useApollo';
 
-import { useFetchMemberListById } from '../useApollo';
+import { useFetchWeeklyMembers, useFetchMemberListById } from '../useApollo';
+
+import type { WeeklyMember } from './type';
 
 interface Props {
   filter: any;
   listId: string;
+  weekly: boolean;
 }
 
-export default function MemberListView({ filter: categoryFilter, listId }: Props) {
+export default function MemberListView({ filter: categoryFilter, listId, weekly }: Props) {
   const [{ page = '1,50', sort = 'createdAt', filter }] = useQueryString();
   const graphQueryFilter = useMemo(
     () => parseFilterModel({ ...categoryFilter, status: true }, filter),
@@ -29,10 +32,29 @@ export default function MemberListView({ filter: categoryFilter, listId }: Props
   );
 
   const { loading, rowCount, members, fetchMembers } = useFetchMembers();
+  const {
+    loading: weeklyLoading,
+    weeklyMembers,
+    rowCount: pendingCount,
+    fetchWeeklyMembers,
+  } = useFetchWeeklyMembers();
   const { loading: listLoading, memberList, fetchMemberListById } = useFetchMemberListById();
 
+  const pendingMembers = useMemo(
+    () =>
+      weeklyMembers?.map((item) => ({
+        id: item.member?.id!,
+        email: item.member?.email!,
+        username: item.member?.username!,
+        fullName: item.member?.fullName!,
+      })),
+    [weeklyMembers]
+  );
+
   useEffect(() => {
-    if (listId) {
+    if (weekly) {
+      fetchWeeklyMembers({ variables: { filter: categoryFilter, page, sort } });
+    } else if (listId) {
       fetchMemberListById({ variables: { data: { id: listId } } });
     } else {
       fetchMembers({ variables: { filter: graphQueryFilter, page, sort } });
@@ -40,7 +62,7 @@ export default function MemberListView({ filter: categoryFilter, listId }: Props
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [graphQueryFilter, page, sort, listId]);
 
-  const colDefs = useMemo<ColDef<Member | BasicListMember>[]>(
+  const colDefs = useMemo<ColDef<Member | BasicListMember | WeeklyMember>[]>(
     () => [
       {
         field: 'username',
@@ -59,7 +81,9 @@ export default function MemberListView({ filter: categoryFilter, listId }: Props
         editable: false,
         sortable: false,
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellRenderer: ({ data }: CustomCellRendererProps<Member | BasicListMember>) =>
+        cellRenderer: ({
+          data,
+        }: CustomCellRendererProps<Member | BasicListMember | WeeklyMember>) =>
           customizeFullName(data?.fullName ?? ''),
       },
       {
@@ -76,12 +100,12 @@ export default function MemberListView({ filter: categoryFilter, listId }: Props
   );
 
   return (
-    <AgGrid<Member | BasicListMember>
+    <AgGrid<Member | BasicListMember | WeeklyMember>
       gridKey="communication-members-list"
-      loading={listId ? listLoading : loading}
-      rowData={listId ? memberList?.members ?? [] : members}
+      loading={weekly ? weeklyLoading : listId ? listLoading : loading}
+      rowData={weekly ? pendingMembers : listId ? memberList?.members ?? [] : members}
       columnDefs={colDefs}
-      totalRowCount={listId ? memberList?.members.length ?? 0 : rowCount}
+      totalRowCount={weekly ? pendingCount : listId ? memberList?.members.length ?? 0 : rowCount}
     />
   );
 }

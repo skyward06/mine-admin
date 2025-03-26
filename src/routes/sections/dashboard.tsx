@@ -119,6 +119,10 @@ const CalculatorPage = lazy(() => import('src/pages/Calculator'));
 // ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
+const CampaignPage = lazy(() => import('src/pages/Campaign'));
+// ----------------------------------------------------------------------
+
+// ----------------------------------------------------------------------
 const TemplateCreatePage = lazy(() => import('src/pages/Template/Create'));
 const TemplateEditPage = lazy(() => import('src/pages/Template/Edit'));
 // ----------------------------------------------------------------------
@@ -270,6 +274,10 @@ export const dashboardRoutes = [
           { path: 'new', element: <TemplateCreatePage /> },
           { path: ':id', element: <TemplateEditPage /> },
         ],
+      },
+      {
+        path: 'campaign',
+        children: [{ path: ':id', element: <CampaignPage /> }],
       },
       {
         path: 'users',

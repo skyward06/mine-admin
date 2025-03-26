@@ -23,12 +23,14 @@ import { useFetchMemberList } from '../../../useApollo';
 interface Props {
   setEmails: Function;
   setListType: Function;
+  setListExtra: Function;
 }
 
-export function MemberListView({ setEmails, setListType }: Props) {
+export function MemberListView({ setEmails, setListType, setListExtra }: Props) {
   const tabs = useTabs('general.all');
   const [filter, setFilter] = useState<any>();
   const [listId, setListId] = useState<string>('');
+  const [weekly, setWeekly] = useState<boolean>(false);
   const [selectedTab, setSelectedTab] = useState<string>('general.all');
 
   const { memberList, fetchMemberList } = useFetchMemberList();
@@ -40,10 +42,11 @@ export function MemberListView({ setEmails, setListType }: Props) {
     () => [
       { value: 'general.all', label: 'All' },
       { value: 'general.weeklySponsors', label: 'Weekly Sponsors' },
+      { value: 'general.pending', label: 'Pending Manual Commission' },
 
       ...(groupSettings && groupSettings.length > 0
         ? groupSettings.map((group) => ({
-            value: `group.${group.name.toLocaleLowerCase()}`,
+            value: `group.${group.id.toLocaleLowerCase()}`,
             label: group.name,
           }))
         : []),
@@ -65,6 +68,8 @@ export function MemberListView({ setEmails, setListType }: Props) {
 
     if (prefix === 'general') {
       setListId('');
+      setListExtra('');
+      setWeekly(false);
 
       if (suffix === 'all') {
         setFilter({});
@@ -85,16 +90,31 @@ export function MemberListView({ setEmails, setListType }: Props) {
           },
         });
       }
+
+      if (suffix === 'pending') {
+        setWeekly(true);
+        setListType(CampaignListType.PendingManualCommission);
+        setFilter({
+          status: 'PENDING',
+          member: {
+            commissionDefault: 'MANUAL',
+          },
+        });
+      }
     }
 
     if (prefix === 'group') {
       setListId('');
+      setWeekly(false);
+      setListExtra(suffix);
       setListType(CampaignListType.Group);
-      setFilter({ groupSetting: { name: { contains: suffix, mode: 'insensitive' } } });
+      setFilter({ groupSetting: { id: suffix } });
     }
 
     if (prefix === 'list') {
+      setWeekly(false);
       setListId(suffix);
+      setListExtra(suffix);
       setListType(CampaignListType.Custom);
     }
   };
@@ -128,7 +148,7 @@ export function MemberListView({ setEmails, setListType }: Props) {
             borderColor: 'divider',
             [`& .MuiTabs-flexContainer`]: { gap: 0 },
             [`& .MuiTabs-flexContainerVertical`]: {
-              padding: '16px 0px 16px 10px',
+              padding: '16px',
             },
           }}
         >
@@ -151,7 +171,7 @@ export function MemberListView({ setEmails, setListType }: Props) {
         </Tabs>
       </Box>
 
-      <MemberList filter={filter} listId={listId} setEmails={setEmails} />
+      <MemberList filter={filter} listId={listId} setEmails={setEmails} weekly={weekly} />
     </Card>
   );
 }

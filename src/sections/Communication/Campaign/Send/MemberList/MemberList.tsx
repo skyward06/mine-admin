@@ -1,6 +1,7 @@
 import type { BasicListMember } from 'src/__generated__/graphql';
 import type { CustomCellRendererProps } from '@ag-grid-community/react';
 import type { ColDef, ITextFilterParams } from '@ag-grid-community/core';
+import type { WeeklyMember } from 'src/sections/Communication/List/type';
 
 import { useMemo, useEffect } from 'react';
 
@@ -13,17 +14,23 @@ import { AgGrid } from 'src/components/AgGrid';
 
 import { useFetchMemberSearch } from 'src/sections/Members/useApollo';
 
-import { useFetchMemberListById } from '../../../useApollo';
+import { useFetchWeeklyMembers, useFetchMemberListById } from '../../../useApollo';
 
 import type { MemberSearch } from './type';
 
 interface Props {
   filter: any;
   listId: string;
+  weekly: boolean;
   setEmails: Function;
 }
 
-export default function MemberListView({ filter: categoryFilter, listId, setEmails }: Props) {
+export default function MemberListView({
+  filter: categoryFilter,
+  listId,
+  weekly,
+  setEmails,
+}: Props) {
   const [{ filter }] = useQueryString();
   const graphQueryFilter = useMemo(
     () => parseFilterModel({ ...categoryFilter, status: true }, filter),
@@ -32,28 +39,42 @@ export default function MemberListView({ filter: categoryFilter, listId, setEmai
 
   const { loading, members, fetchMemberSearch } = useFetchMemberSearch();
   const { loading: listLoading, memberList, fetchMemberListById } = useFetchMemberListById();
+  const { loading: weeklyLoading, weeklyMembers, fetchWeeklyMembers } = useFetchWeeklyMembers();
+
+  const pendingMembers = useMemo(
+    () =>
+      weeklyMembers?.map((item) => ({
+        id: item.member?.id!,
+        email: item.member?.email!,
+        username: item.member?.username!,
+        fullName: item.member?.fullName!,
+      })),
+    [weeklyMembers]
+  );
 
   useEffect(() => {
-    if (listId) {
+    if (weekly) {
+      fetchWeeklyMembers({ variables: { filter: categoryFilter } });
+    } else if (listId) {
       fetchMemberListById({ variables: { data: { id: listId } } });
     } else {
       fetchMemberSearch({ variables: { filter: graphQueryFilter } });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [graphQueryFilter, listId]);
+  }, [graphQueryFilter, listId, categoryFilter]);
 
   useEffect(() => {
-    if (members) {
+    if (weekly) {
+      setEmails(pendingMembers?.map((item) => item.email));
+    } else if (listId) {
+      setEmails(memberList?.members.map((item) => item.email));
+    } else {
       setEmails(members.map((item) => item.email));
     }
-
-    if (memberList) {
-      setEmails(memberList?.members.map((item) => item.email));
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [members, memberList]);
+  }, [members, memberList, pendingMembers, listId]);
 
-  const colDefs = useMemo<ColDef<MemberSearch | BasicListMember>[]>(
+  const colDefs = useMemo<ColDef<MemberSearch | BasicListMember | WeeklyMember>[]>(
     () => [
       {
         field: 'username',
@@ -72,7 +93,9 @@ export default function MemberListView({ filter: categoryFilter, listId, setEmai
         editable: false,
         sortable: false,
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellRenderer: ({ data }: CustomCellRendererProps<MemberSearch | BasicListMember>) =>
+        cellRenderer: ({
+          data,
+        }: CustomCellRendererProps<MemberSearch | BasicListMember | WeeklyMember>) =>
           customizeFullName(data?.fullName ?? ''),
       },
       {
@@ -89,10 +112,10 @@ export default function MemberListView({ filter: categoryFilter, listId, setEmai
   );
 
   return (
-    <AgGrid<MemberSearch | BasicListMember>
+    <AgGrid<MemberSearch | BasicListMember | WeeklyMember>
       gridKey="campaign-members-list"
-      loading={listId ? listLoading : loading}
-      rowData={listId ? memberList?.members ?? [] : members}
+      loading={weekly ? weeklyLoading : listId ? listLoading : loading}
+      rowData={weekly ? pendingMembers : listId ? memberList?.members ?? [] : members}
       columnDefs={colDefs}
       pagination={false}
     />

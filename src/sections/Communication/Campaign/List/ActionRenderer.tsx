@@ -2,28 +2,29 @@ import type { CustomCellRendererProps } from '@ag-grid-community/react';
 
 import { memo } from 'react';
 
+import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 
-import { useBoolean } from 'src/hooks/useBoolean';
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
 
 import { Iconify } from 'src/components/Iconify';
-
-import Detail from './Detail';
 
 import type { Campaign } from './type';
 
 export const ActionRender = memo(
   ({ data }: CustomCellRendererProps<Campaign>) => {
-    const open = useBoolean();
+    const router = useRouter();
 
     return (
-      <>
-        <IconButton color="default" onClick={open.onTrue}>
+      <Tooltip title="View" arrow placement="left">
+        <IconButton
+          color="default"
+          onClick={() => router.push(paths.dashboard.campaign.edit(data?.id!))}
+        >
           <Iconify icon="flowbite:eye-outline" />
         </IconButton>
-
-        <Detail emails={data?.listExtra!} open={open} />
-      </>
+      </Tooltip>
     );
   },
   (prev, next) => prev.data?.id === next.data?.id
