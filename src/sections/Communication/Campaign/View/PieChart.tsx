@@ -25,7 +25,7 @@ export default function PieChart({ loading, emails }: Props) {
   const chartOptions = useChart({
     chart: { sparkline: { enabled: true } },
     colors: chartColors,
-    labels: ['Open', 'Sent', 'Failed'],
+    labels: ['Open', 'Not Open', 'Failed'],
     stroke: { width: 0 },
     plotOptions: {
       pie: { donut: { labels: { show: false } } },
@@ -66,7 +66,7 @@ export default function PieChart({ loading, emails }: Props) {
           type="pie"
           series={[
             emails.filter((item) => item.open).length,
-            emails.filter((item) => item.sent).length,
+            emails.filter((item) => item.sent).length - emails.filter((item) => item.open).length,
             emails.filter((item) => !item.sent).length,
           ]}
           options={chartOptions}

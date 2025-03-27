@@ -107,7 +107,7 @@ export default function EmailView({ emails }: Props) {
       </Tabs>
 
       <ScrollBar>
-        <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+        <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 720 }}>
           <TableHeadCustom
             order={table.order}
             orderBy={table.orderBy}

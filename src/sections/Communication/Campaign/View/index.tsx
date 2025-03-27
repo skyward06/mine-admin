@@ -36,10 +36,10 @@ export default function CampaignView() {
           />
 
           <Grid container>
-            <Grid md={8}>
+            <Grid md={6}>
               <EmailView emails={campaign?.recipients ?? []} />
             </Grid>
-            <Grid md={4} sx={{ p: 2 }}>
+            <Grid md={6} sx={{ p: 2 }}>
               <PieChart loading={loading} emails={campaign?.recipients ?? []} />
               <EmailTemplateView body={campaign?.body ?? ''} />
             </Grid>
