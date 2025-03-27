@@ -78,7 +78,7 @@ export default function MemberEditView() {
   const { id: memberId } = params;
 
   const fetchMember = useCallback(() => {
-    fetchMemberQuery({ variables: { filter: { id: memberId } } });
+    fetchMemberQuery({ variables: { filter: { id: memberId }, logsize: 100 } });
   }, [fetchMemberQuery, memberId]);
 
   const handleTabChange = (event: any, newValue: any) => {
