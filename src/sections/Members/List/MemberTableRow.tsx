@@ -32,6 +32,7 @@ import { usePopover, CustomPopover } from 'src/components/custom-popover';
 import Detail from './Detail';
 import {
   useMoveToPaid,
+  useLogoutForce,
   useApproveMember,
   useMoveToBlocked,
   useMoveToPending,
@@ -90,6 +91,7 @@ export default function MemberTableRow({
   } = row;
 
   const { moveToPaid } = useMoveToPaid();
+  const { logoutForce } = useLogoutForce();
   const { moveToPending } = useMoveToPending();
   const { duplicateMember } = useDuplicateMember();
   const { moveToGraveyard } = useMoveToGraveyard();
@@ -195,6 +197,18 @@ export default function MemberTableRow({
 
       if (data) {
         toast.success('Successfully blocked!');
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const handleForceLogout = async () => {
+    try {
+      const { data } = await logoutForce({ variables: { data: { id } } });
+
+      if (data) {
+        toast.success('Successfully logged out!');
       }
     } catch (error) {
       toast.error(error.message);
@@ -446,6 +460,9 @@ export default function MemberTableRow({
                 </MenuItem>
                 <MenuItem onClick={handleResetBonus}>
                   <Iconify icon="typcn:arrow-back" color="green" /> Reset Bonus
+                </MenuItem>
+                <MenuItem onClick={handleForceLogout}>
+                  <Iconify icon="tabler:logout" color="red" /> Logout
                 </MenuItem>
               </MenuList>
             </CustomPopover>

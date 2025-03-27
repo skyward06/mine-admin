@@ -2,6 +2,7 @@ import { useRef, useMemo } from 'react';
 import { useMutation, useLazyQuery } from '@apollo/client';
 
 import {
+  LOGOUT_FORCE,
   MOVE_TO_PAID,
   UPDATE_MEMBER,
   APPROVE_MEMBER,
@@ -182,4 +183,10 @@ export function useMoveToBlocked() {
   });
 
   return { loading, data, error, moveToBlocked };
+}
+
+export function useLogoutForce() {
+  const [logoutForce, { loading, data, error }] = useMutation(LOGOUT_FORCE);
+
+  return { loading, data, error, logoutForce };
 }

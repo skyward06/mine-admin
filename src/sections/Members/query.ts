@@ -442,3 +442,15 @@ export const MOVE_TO_BLOCKED = gql(/* GraphQL */ `
     }
   }
 `);
+
+export const LOGOUT_FORCE = gql(/* GraphQL */ `
+  mutation ForceMemberLogout($data: IDInput!) {
+    forceMemberLogout(data: $data) {
+      message
+      result
+      frontActions {
+        ...FrontActionFields
+      }
+    }
+  }
+`);
