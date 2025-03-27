@@ -209,6 +209,7 @@ export default function MemberTableRow({
 
       if (data) {
         toast.success('Successfully logged out!');
+        popover.onClose();
       }
     } catch (error) {
       toast.error(error.message);
