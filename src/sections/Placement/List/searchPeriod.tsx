@@ -17,7 +17,7 @@ interface CustomPickerDayProps extends PickersDayProps<Dayjs> {
 }
 
 interface Props {
-  current: string;
+  current?: string;
   onChange: Function;
 }
 
