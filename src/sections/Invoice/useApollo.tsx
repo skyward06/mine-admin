@@ -1,7 +1,13 @@
 import { useRef, useMemo } from 'react';
 import { useMutation, useLazyQuery } from '@apollo/client';
 
-import { MOVE_TO_PAID, UPDATE_INVOICE, FETCH_INVOICE_BY_ID, FETCH_INVOICES_QUERY } from './query';
+import {
+  MOVE_TO_PAID,
+  UPDATE_INVOICE,
+  FETCH_INVOICE_BY_ID,
+  FETCH_INVOICES_QUERY,
+  GENERATE_WEEK_INVOICE,
+} from './query';
 
 export function useFetchInvoices() {
   const [fetchInvoices, { loading, data, called }] = useLazyQuery(FETCH_INVOICES_QUERY);
@@ -49,4 +55,10 @@ export function useUpdateInvoice() {
   });
 
   return { loading, data, error, updateInvoice };
+}
+
+export function useGenerateWeekInvoice() {
+  const [generateWeekInvoice, { loading, data, error }] = useMutation(GENERATE_WEEK_INVOICE);
+
+  return { loading, data, error, generateWeekInvoice };
 }
