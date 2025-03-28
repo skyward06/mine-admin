@@ -6,12 +6,17 @@ import type {
   ITextFilterParams,
 } from '@ag-grid-community/core';
 
-import { useMemo, useEffect } from 'react';
+import dayjs from 'dayjs';
+import { useMemo, useState, useEffect } from 'react';
 
 import Card from '@mui/material/Card';
+import Button from '@mui/material/Button';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 import { paths } from 'src/routes/paths';
 import { useAgQuery as useQueryString } from 'src/routes/hooks';
+
+import { useBoolean } from 'src/hooks/useBoolean';
 
 import { formatDate } from 'src/utils/format-time';
 import { parseFilterModel } from 'src/utils/parseFilter';
@@ -21,20 +26,33 @@ import { InvoiceStatusEnum } from 'src/__generated__/graphql';
 
 import { Label } from 'src/components/Label';
 import { AgGrid } from 'src/components/AgGrid';
+import { toast } from 'src/components/SnackBar';
+import { Iconify } from 'src/components/Iconify';
+import { ConfirmDialog } from 'src/components/Dialog';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 
 import { parseType } from '../parseType';
 import { FileRenderer } from './FileRenderer';
 import { ActionRender } from './ActoinRenderer';
-import { useFetchInvoices } from '../useApollo';
+import SearchPeriod from '../../Placement/List/searchPeriod';
+import { useFetchInvoices, useGenerateWeekInvoice } from '../useApollo';
 
 import type { Invoice } from './type';
 
 export default function InvoiceListView() {
-  const { loading, invoices, rowCount, fetchInvoices } = useFetchInvoices();
+  const openWeek = useBoolean();
+  const [weekStartDate, setWeekStartDate] = useState<string>('');
+
   const [{ page = '1,50', sort = 'createdAt', filter }] = useQueryString();
 
+  const { loading, invoices, rowCount, fetchInvoices } = useFetchInvoices();
+  const { loading: generateLoading, generateWeekInvoice } = useGenerateWeekInvoice();
+
   const graphQueryFilter = useMemo(() => parseFilterModel({}, filter), [filter]);
+
+  const onPeriodChange = async (value: any) => {
+    setWeekStartDate(formatDate(`${dayjs(value).startOf('week')}`, 'YYYY-MM-DD'));
+  };
 
   useEffect(() => {
     fetchInvoices({ variables: { filter: graphQueryFilter, page, sort } });
@@ -167,6 +185,16 @@ export default function InvoiceListView() {
         sx={{
           mb: { xs: 1, md: 2 },
         }}
+        action={
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => openWeek.onTrue()}
+            sx={{ mb: 1 }}
+          >
+            <Iconify icon="streamline:ai-generate-variation-spark" sx={{ mr: 0.5 }} /> ReGenerate
+          </Button>
+        }
       />
 
       <Card
@@ -184,6 +212,40 @@ export default function InvoiceListView() {
           totalRowCount={rowCount}
         />
       </Card>
+
+      <ConfirmDialog
+        open={openWeek.value}
+        onClose={openWeek.onFalse}
+        title="Select Week"
+        content={<SearchPeriod onChange={onPeriodChange} />}
+        action={
+          <LoadingButton
+            loading={generateLoading}
+            variant="contained"
+            color="primary"
+            onClick={async () => {
+              try {
+                const { data } = await generateWeekInvoice({
+                  variables: {
+                    data: {
+                      weekStartDate,
+                    },
+                  },
+                });
+
+                if (data) {
+                  toast.success('Successfully re-generated!');
+                  openWeek.onFalse();
+                }
+              } catch (error) {
+                toast.error(error.message);
+              }
+            }}
+          >
+            Regenerate
+          </LoadingButton>
+        }
+      />
     </DashboardContent>
   );
 }
