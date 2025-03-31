@@ -274,11 +274,11 @@ export const FETCH_MEMBER_QUERY = gql(/* GraphQL */ `
         who
         role
         when
+        after
         entity
         action
         status
         before
-        after
       }
       adminNotes {
         id
@@ -286,6 +286,15 @@ export const FETCH_MEMBER_QUERY = gql(/* GraphQL */ `
         memberId
         updatedAt
         description
+      }
+      communications {
+        open
+        sent
+        body
+        email
+        subject
+        openTime
+        sentTime
       }
       createdAt
       updatedAt

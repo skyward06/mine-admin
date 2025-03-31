@@ -123,6 +123,7 @@ export const FETCH_CAMPAIGN_BY_ID = gql(/* GraphQL */ `
       recipients {
         open
         sent
+        body
         email
         sentTime
         openTime
