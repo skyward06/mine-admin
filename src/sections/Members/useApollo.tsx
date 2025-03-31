@@ -12,6 +12,7 @@ import {
   MOVE_TO_GRAVEYARD,
   RESET_BONUS_CLOCK,
   SEND_WELCOME_EMAIL,
+  FETCH_MEMBER_QUERY,
   FETCH_MEMBERS_QUERY,
   VERIFY_MEMBER_EMAIL,
   REMOVE_MEMBER_QUERY,
@@ -44,6 +45,12 @@ export function useFetchMembers() {
     members: data?.members.members ?? [],
     fetchMembers,
   };
+}
+
+export function useFetchMember() {
+  const [fetchMember, { loading, data, called, error }] = useLazyQuery(FETCH_MEMBER_QUERY);
+
+  return { loading, member: data?.memberById, called, error, fetchMember };
 }
 
 export function useFetchMemberSearch() {

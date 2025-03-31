@@ -1,5 +1,3 @@
-import type { Member } from 'src/__generated__/graphql';
-
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import ListItemText from '@mui/material/ListItemText';
@@ -12,7 +10,8 @@ import { formatDate, formatTime } from 'src/utils/format-time';
 // ----------------------------------------------------------------------
 
 type Props = {
-  row: Member;
+  /* Todo: Update type as Member */
+  row: any;
 };
 
 export default function MemberTableRow({ row }: Props) {

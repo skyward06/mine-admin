@@ -1,5 +1,3 @@
-import type { Member } from 'src/__generated__/graphql';
-
 import { useState } from 'react';
 
 import Stack from '@mui/material/Stack';
@@ -47,7 +45,8 @@ import {
 
 type Props = {
   selected: boolean;
-  row: Member;
+  /* Todo: Update type as Member */
+  row: any;
   action?: boolean;
   confirm: UseBooleanReturn;
   setSelected: Function;

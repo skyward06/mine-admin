@@ -27,7 +27,7 @@ export const FETCH_MEMBER_STATS_QUERY = gql(/* GraphQL */ `
 `);
 
 export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
-  query FetchMembers($page: String, $filter: JSONObject, $sort: String, $logsize: Float) {
+  query FetchMembers($page: String, $filter: JSONObject, $sort: String) {
     members(page: $page, filter: $filter, sort: $sort) {
       members {
         id
@@ -59,6 +59,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         totalIntroducers
         commissionDefault
         placementPosition
+        placementParentId
         signupFormRequest
         cmnCalculatedWeeks
         preferredContactDetail
@@ -73,100 +74,11 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           newL
           newR
         }
-        sponsor {
-          id
-          email
-          point
-          mobile
-          status
-          balance
-          username
-          fullName
-          allowState
-          teamReport
-          OTPEnabled
-          teamStrategy
-          syncWithSendy
-          emailVerified
-          primaryAddress
-          totalIntroducers
-          placementPosition
-          commissionDefault
-          cmnCalculatedWeeks
-        }
-        placementParentId
-        placementPosition
         placementParent {
           id
           email
-          point
-          mobile
-          status
-          balance
           username
           fullName
-          allowState
-          teamReport
-          OTPEnabled
-          teamStrategy
-          syncWithSendy
-          emailVerified
-          primaryAddress
-          totalIntroducers
-          placementPosition
-          commissionDefault
-          cmnCalculatedWeeks
-        }
-        placementChildren {
-          id
-          email
-          point
-          mobile
-          status
-          balance
-          username
-          fullName
-          allowState
-          teamReport
-          OTPEnabled
-          teamStrategy
-          syncWithSendy
-          emailVerified
-          primaryAddress
-          totalIntroducers
-          placementPosition
-          commissionDefault
-          cmnCalculatedWeeks
-        }
-        sales {
-          id
-          ID
-          isMetal
-          memberId
-          packageId
-          paymentMethod
-          sponsorCnt
-          proof {
-            id
-            type
-            note
-            refId
-            amount
-            orderedAt
-            files {
-              id
-              url
-              size
-              mimeType
-              originalName
-            }
-            reflinks {
-              link
-              linkType
-            }
-          }
-          status
-          orderedAt
         }
         memberWallets {
           id
@@ -184,17 +96,6 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
             display
           }
         }
-        logs(logsize: $logsize) {
-          id
-          who
-          role
-          when
-          entity
-          action
-          status
-          before
-          after
-        }
         adminNotes {
           id
           adminId
@@ -207,6 +108,188 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         deletedAt
       }
       total
+    }
+  }
+`);
+
+export const FETCH_MEMBER_QUERY = gql(/* GraphQL */ `
+  query MemberById($data: IDInput!, $logsize: Float!) {
+    memberById(data: $data) {
+      id
+      ID
+      city
+      email
+      point
+      state
+      status
+      avatar
+      mobile
+      assetId
+      balance
+      country
+      zipCode
+      username
+      fullName
+      sponsorId
+      promoCode
+      allowState
+      OTPEnabled
+      teamReport
+      teamStrategy
+      emailVerified
+      syncWithSendy
+      primaryAddress
+      preferredContact
+      secondaryAddress
+      totalIntroducers
+      commissionDefault
+      placementPosition
+      signupFormRequest
+      cmnCalculatedWeeks
+      preferredContactDetail
+      groupSetting {
+        id
+        name
+        commissionDefaults
+      }
+      commission {
+        begL
+        begR
+        newL
+        newR
+      }
+      sponsor {
+        id
+        email
+        point
+        mobile
+        status
+        balance
+        username
+        fullName
+        allowState
+        teamReport
+        OTPEnabled
+        teamStrategy
+        syncWithSendy
+        emailVerified
+        primaryAddress
+        totalIntroducers
+        placementPosition
+        commissionDefault
+        cmnCalculatedWeeks
+      }
+      placementParentId
+      placementPosition
+      placementParent {
+        id
+        email
+        point
+        mobile
+        status
+        balance
+        username
+        fullName
+        allowState
+        teamReport
+        OTPEnabled
+        teamStrategy
+        syncWithSendy
+        emailVerified
+        primaryAddress
+        totalIntroducers
+        placementPosition
+        commissionDefault
+        cmnCalculatedWeeks
+      }
+      placementChildren {
+        id
+        email
+        point
+        mobile
+        status
+        balance
+        username
+        fullName
+        allowState
+        teamReport
+        OTPEnabled
+        teamStrategy
+        syncWithSendy
+        emailVerified
+        primaryAddress
+        totalIntroducers
+        placementPosition
+        commissionDefault
+        cmnCalculatedWeeks
+      }
+      sales {
+        id
+        ID
+        isMetal
+        memberId
+        packageId
+        paymentMethod
+        sponsorCnt
+        proof {
+          id
+          type
+          note
+          refId
+          amount
+          orderedAt
+          files {
+            id
+            url
+            size
+            mimeType
+            originalName
+          }
+          reflinks {
+            link
+            linkType
+          }
+        }
+        status
+        orderedAt
+      }
+      memberWallets {
+        id
+        note
+        address
+        percent
+        memberId
+        payoutId
+        isDefault
+        payout {
+          id
+          name
+          method
+          status
+          display
+        }
+      }
+      logs(logsize: $logsize) {
+        id
+        who
+        role
+        when
+        entity
+        action
+        status
+        before
+        after
+      }
+      adminNotes {
+        id
+        adminId
+        memberId
+        updatedAt
+        description
+      }
+      createdAt
+      updatedAt
+      deletedAt
     }
   }
 `);

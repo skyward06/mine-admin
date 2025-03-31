@@ -1,6 +1,5 @@
 import { Helmet } from 'react-helmet-async';
-import { useLazyQuery } from '@apollo/client';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { Navigate, useParams, useNavigate } from 'react-router-dom';
 
 import Tab from '@mui/material/Tab';
@@ -29,7 +28,7 @@ import Placement from './Placement';
 import BalanceList from './Balance';
 import Commission from './Commission';
 import MemberGeneral from './General';
-import { FETCH_MEMBERS_QUERY } from '../query';
+import { useFetchMember } from '../useApollo';
 
 // ----------------------------------------------------------------------
 export default function MemberEditView() {
@@ -50,6 +49,7 @@ export default function MemberEditView() {
     { value: 'balance', label: 'Balance', icon: <Iconify icon="bx:transfer" /> },
     { value: 'log', label: 'Log', icon: <Iconify icon="ri:history-line" /> },
     { value: 'note', label: 'Note', icon: <Iconify icon="mdi:event-note-outline" /> },
+    { value: 'coomunication', label: 'Communication', icon: <Iconify icon="lucide:send" /> },
   ];
 
   if (
@@ -73,13 +73,10 @@ export default function MemberEditView() {
   const params = useParams();
   const navigate = useNavigate();
 
-  const [fetchMemberQuery, { loading, data, called }] = useLazyQuery(FETCH_MEMBERS_QUERY);
+  // const [fetchMemberQuery, { loading, data, called }] = useLazyQuery(FETCH_MEMBERS_QUERY);
+  const { loading, member, called, fetchMember } = useFetchMember();
 
   const { id: memberId } = params;
-
-  const fetchMember = useCallback(() => {
-    fetchMemberQuery({ variables: { filter: { id: memberId }, logsize: 100 } });
-  }, [fetchMemberQuery, memberId]);
 
   const handleTabChange = (event: any, newValue: any) => {
     tabs.onChange(event, newValue);
@@ -87,14 +84,12 @@ export default function MemberEditView() {
   };
 
   useEffect(() => {
-    fetchMember();
-  }, [fetchMember]);
+    fetchMember({ variables: { data: { id: memberId! }, logsize: 100 } });
+  }, [fetchMember, memberId]);
 
   useEffect(() => {
     setIsLoading(!called || loading);
   }, [loading, called]);
-
-  const member = data?.members?.members?.[0];
 
   if (isLoading) {
     return <LoadingScreen />;

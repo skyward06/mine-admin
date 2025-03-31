@@ -44,8 +44,15 @@ export const ActionRender = memo(
           popover.onClose();
         }
       } catch (error) {
-        console.log('error => ', error);
-        toast.error(error);
+        toast.error(error.message);
+      }
+    };
+
+    const handleGenerate = async () => {
+      try {
+        console.log('here');
+      } catch (error) {
+        toast.error(error.message);
       }
     };
 
@@ -78,6 +85,10 @@ export const ActionRender = memo(
             >
               <Iconify icon={loading ? 'eos-icons:bubble-loading' : 'mdi:forward'} />
               Move to Paid
+            </MenuItem>
+            <MenuItem onClick={handleGenerate}>
+              <Iconify icon="ri:ai-generate" />
+              Regenerate
             </MenuItem>
           </MenuList>
         </CustomPopover>

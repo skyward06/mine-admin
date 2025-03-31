@@ -28,7 +28,7 @@ import { Iconify } from 'src/components/Iconify';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
 import {
-  useFetchMembers,
+  useFetchMember,
   useDuplicateMember,
   useSendWelcomeEmail,
   useVerifyMemberEmail,
@@ -47,11 +47,9 @@ export const Personal = () => {
   const { id } = params;
 
   const { duplicateMember } = useDuplicateMember();
-  const { members, fetchMembers } = useFetchMembers();
+  const { member, fetchMember } = useFetchMember();
   const { verifyMemberEmail } = useVerifyMemberEmail();
   const { loading, sendWelcomeEmail } = useSendWelcomeEmail();
-
-  const member = members[0];
 
   const address = [
     member?.fullName,
@@ -76,7 +74,7 @@ export const Personal = () => {
 
   const sendEmail = async () => {
     try {
-      const { data } = await sendWelcomeEmail({ variables: { data: { email: member.email } } });
+      const { data } = await sendWelcomeEmail({ variables: { data: { email: member?.email! } } });
 
       if (data) {
         toast.success('Successfully sent welcome email');
@@ -92,7 +90,7 @@ export const Personal = () => {
 
   const handleVerifyEmail = async () => {
     try {
-      const { data } = await verifyMemberEmail({ variables: { data: { id: member.id } } });
+      const { data } = await verifyMemberEmail({ variables: { data: { id: member?.id! } } });
 
       if (data) {
         toast.success('Successfully verified!');
@@ -105,7 +103,7 @@ export const Personal = () => {
 
   const handleDuplicateMember = async () => {
     try {
-      const { data } = await duplicateMember({ variables: { data: { id: member.id } } });
+      const { data } = await duplicateMember({ variables: { data: { id: member?.id! } } });
 
       if (data) {
         toast.success('Successfully duplicated!');
@@ -126,7 +124,7 @@ export const Personal = () => {
   }, [member]);
 
   useEffect(() => {
-    fetchMembers({ variables: { filter: { id: id ?? '' } } });
+    fetchMember({ variables: { data: { id: id ?? '' }, logsize: 1 } });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
