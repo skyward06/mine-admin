@@ -28,6 +28,7 @@ import Placement from './Placement';
 import BalanceList from './Balance';
 import Commission from './Commission';
 import MemberGeneral from './General';
+import Communication from './Communication';
 import { useFetchMember } from '../useApollo';
 
 // ----------------------------------------------------------------------
@@ -49,7 +50,7 @@ export default function MemberEditView() {
     { value: 'balance', label: 'Balance', icon: <Iconify icon="bx:transfer" /> },
     { value: 'log', label: 'Log', icon: <Iconify icon="ri:history-line" /> },
     { value: 'note', label: 'Note', icon: <Iconify icon="mdi:event-note-outline" /> },
-    { value: 'coomunication', label: 'Communication', icon: <Iconify icon="lucide:send" /> },
+    { value: 'communication', label: 'Communication', icon: <Iconify icon="lucide:send" /> },
   ];
 
   if (
@@ -136,6 +137,10 @@ export default function MemberEditView() {
         {tabs.value === 'log' && <Log loading={loading} currentMember={member} />}
 
         {tabs.value === 'note' && <Note currentMember={member} />}
+
+        {tabs.value === 'communication' && (
+          <Communication loading={loading} currentMember={member} />
+        )}
       </DashboardContent>
     </>
   );
