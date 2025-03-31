@@ -1,6 +1,6 @@
 import type { CampaignMember } from 'src/__generated__/graphql';
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 import Tab from '@mui/material/Tab';
 import Card from '@mui/material/Card';
@@ -12,6 +12,7 @@ import TableCell from '@mui/material/TableCell';
 import TableBody from '@mui/material/TableBody';
 
 import { useTabs } from 'src/hooks/use-tabs';
+import { useBoolean } from 'src/hooks/useBoolean';
 
 import { formatDateTime } from 'src/utils/format-time';
 
@@ -26,9 +27,12 @@ import {
   TablePaginationCustom,
 } from 'src/components/Table';
 
+import Detail from 'src/sections/Members/Edit/Communication/Detail';
+
 /* ------------------------------------------------------------------------- */
 
 interface Props {
+  subject: string;
   emails: CampaignMember[];
 }
 
@@ -51,9 +55,11 @@ const TABLE_HEAD = [
   { id: 'sentTime', label: 'Sent Time', sortable: true },
 ];
 
-export default function EmailView({ emails }: Props) {
+export default function EmailView({ subject, emails }: Props) {
   const tabs = useTabs('all');
   const table = useTable({ defaultDense: true, defaultRowsPerPage: 20 });
+  const open = useBoolean();
+  const [body, setBody] = useState<string>('');
 
   const dataFiltered = useMemo(
     () =>
@@ -128,7 +134,15 @@ export default function EmailView({ emails }: Props) {
                 table.page * table.rowsPerPage + table.rowsPerPage
               )
               .map((row) => (
-                <TableRow hover key={row.email}>
+                <TableRow
+                  hover
+                  key={row.email}
+                  sx={{ cursor: 'pointer' }}
+                  onClick={() => {
+                    open.onTrue();
+                    setBody(emails.find((item) => item.email === row.email)?.body ?? '');
+                  }}
+                >
                   <TableCell>{row.email}</TableCell>
                   <TableCell>
                     {row.openTime ? formatDateTime(row.openTime) : 'Not opened yet'}
@@ -158,6 +172,8 @@ export default function EmailView({ emails }: Props) {
         onChangeDense={table.onChangeDense}
         onRowsPerPageChange={table.onChangeRowsPerPage}
       />
+
+      <Detail subject={subject} open={open} body={body} />
     </Card>
   );
 }

@@ -37,7 +37,7 @@ export default function CampaignView() {
 
           <Grid container>
             <Grid md={6}>
-              <EmailView emails={campaign?.recipients ?? []} />
+              <EmailView subject={campaign?.subject!} emails={campaign?.recipients ?? []} />
             </Grid>
             <Grid md={6} sx={{ p: 2 }}>
               <PieChart loading={loading} emails={campaign?.recipients ?? []} />
