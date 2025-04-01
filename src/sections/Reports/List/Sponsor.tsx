@@ -75,7 +75,7 @@ export default function SponsorListView({ setWeek, openWeek }: Props) {
         },
         page: page && `${page.page},${page.pageSize}`,
         sort: graphQuerySort,
-        week: formatDate(`${dayjs(weekStartDate).add(-1, 'week')}`, 'YYYY-MM-DD'),
+        week: formatDate(`${dayjs(weekStartDate).utc()}`, 'YYYY-MM-DD'),
       },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -97,7 +97,7 @@ export default function SponsorListView({ setWeek, openWeek }: Props) {
         },
         page: page && `${page.page},${page.pageSize}`,
         sort: graphQuerySort,
-        week: formatDate(`${dayjs(weekStartDate).add(-1, 'week')}`, 'YYYY-MM-DD'),
+        week: formatDate(`${dayjs(weekStartDate).utc()}`, 'YYYY-MM-DD'),
       },
     });
 
@@ -178,7 +178,7 @@ export default function SponsorListView({ setWeek, openWeek }: Props) {
         title="Select Week"
         content={
           <SearchPeriod
-            current={`${dayjs(weekStartDate).add(1, 'day')}`}
+            current={`${dayjs(weekStartDate).utc().add(1, 'day')}`}
             onChange={onPeriodChange}
           />
         }
