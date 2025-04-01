@@ -1,29 +1,36 @@
-import type { ConfirmationStatus } from 'src/__generated__/graphql';
+import type { ConfirmationStatus, CommissionDefaultEnum } from 'src/__generated__/graphql';
 
 import type { Proof } from '../Proof/List/type';
-import type { Member } from '../Members/List/type';
 
 export type WeeklyCommission = {
   __typename?: 'WeeklyCommission';
   ID: number;
+  id: string;
   begL: number;
   begR: number;
-  commission: number;
-  createdAt?: any | null;
-  deletedAt?: any | null;
   endL: number;
   endR: number;
-  id: string;
   maxL: number;
   maxR: number;
-  member?: Member | null;
-  memberId: string;
   newL: number;
   newR: number;
   pkgL: number;
   pkgR: number;
+  memberId: string;
+  commission: number;
+  weekStartDate: any;
   proof?: Proof | null;
-  status: ConfirmationStatus;
+  createdAt?: any | null;
   updatedAt?: any | null;
-  weekStartDate: any | null;
+  deletedAt?: any | null;
+  shortNote?: string | null;
+  status: ConfirmationStatus;
+  member?: {
+    __typename?: 'Member';
+    id: string;
+    username: string;
+    fullName: string;
+    updatedAt?: any | null;
+    commissionDefault: CommissionDefaultEnum;
+  } | null;
 };

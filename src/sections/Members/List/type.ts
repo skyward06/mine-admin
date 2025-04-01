@@ -5,6 +5,7 @@ import type {
   CommissionStatus,
   MemberStatistics,
   PlacementPosition,
+  CommissionDefaultEnum,
 } from 'src/__generated__/graphql';
 
 export type EntityLog = {
@@ -69,6 +70,7 @@ export type Member = {
   city?: string | null;
   cmnCalculatedWeeks: number;
   commission?: CommissionStatus | null;
+  commissionDefault: CommissionDefaultEnum;
   createdAt?: any | null;
   deletedAt?: any | null;
   email: string;
