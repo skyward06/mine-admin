@@ -7,6 +7,7 @@ import {
   FETCH_INVOICE_BY_ID,
   FETCH_INVOICES_QUERY,
   GENERATE_WEEK_INVOICE,
+  REGENERATE_INVOICE_BY_ID,
 } from './query';
 
 export function useFetchInvoices() {
@@ -61,4 +62,10 @@ export function useGenerateWeekInvoice() {
   const [generateWeekInvoice, { loading, data, error }] = useMutation(GENERATE_WEEK_INVOICE);
 
   return { loading, data, error, generateWeekInvoice };
+}
+
+export function useRegenerateInvoice() {
+  const [regenerateInvoice, { loading, data, error }] = useMutation(REGENERATE_INVOICE_BY_ID);
+
+  return { loading, data, error, regenerateInvoice };
 }

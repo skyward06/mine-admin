@@ -95,8 +95,20 @@ export const UPDATE_INVOICE = gql(/* GraphQL */ `
 export const GENERATE_WEEK_INVOICE = gql(/* GraphQL */ `
   mutation GenerateWeekP2PInvoice($data: InvoiceWeekInput!) {
     generateWeekP2PInvoice(data: $data) {
-      message
       result
+      message
+      frontActions {
+        ...FrontActionFields
+      }
+    }
+  }
+`);
+
+export const REGENERATE_INVOICE_BY_ID = gql(/* GraphQL */ `
+  mutation RegenerateInvoiceById($data: IDNInput!) {
+    regenerateInvoiceById(data: $data) {
+      result
+      message
       frontActions {
         ...FrontActionFields
       }

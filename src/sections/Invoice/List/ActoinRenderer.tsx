@@ -15,7 +15,7 @@ import { Iconify } from 'src/components/Iconify';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
 import Detail from './Detail';
-import { useMoveToPaid } from '../useApollo';
+import { useMoveToPaid, useRegenerateInvoice } from '../useApollo';
 
 import type { Invoice } from './type';
 
@@ -34,6 +34,7 @@ export const ActionRender = memo(
     const popover = usePopover();
 
     const { loading, moveToPaid } = useMoveToPaid();
+    const { loading: reLoading, regenerateInvoice } = useRegenerateInvoice();
 
     const handlePaid = async () => {
       try {
@@ -50,7 +51,14 @@ export const ActionRender = memo(
 
     const handleGenerate = async () => {
       try {
-        console.log('here');
+        const { data: result } = await regenerateInvoice({
+          variables: { data: { ID: data?.id! } },
+        });
+
+        if (result) {
+          toast.success('Successfully regenerated!');
+          popover.onClose();
+        }
       } catch (error) {
         toast.error(error.message);
       }
@@ -87,7 +95,7 @@ export const ActionRender = memo(
               Move to Paid
             </MenuItem>
             <MenuItem onClick={handleGenerate}>
-              <Iconify icon="ri:ai-generate" />
+              <Iconify icon={reLoading ? 'eos-icons:bubble-loading' : 'ri:ai-generate'} />
               Regenerate
             </MenuItem>
           </MenuList>
