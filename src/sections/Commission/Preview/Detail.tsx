@@ -1,5 +1,4 @@
 import type { UseBooleanReturn } from 'src/hooks/useBoolean';
-import type { WeeklyCommission } from 'src/__generated__/graphql';
 
 import dayjs from 'dayjs';
 import { useState, useEffect } from 'react';
@@ -24,6 +23,8 @@ import { ScrollBar } from 'src/components/ScrollBar';
 
 import { useUpdateCommissionNote } from '../useApollo';
 
+import type { WeeklyCommission } from '../type';
+
 interface Props {
   row: WeeklyCommission;
   open: UseBooleanReturn;
@@ -32,9 +33,6 @@ interface Props {
 export default function Detail({ open, row }: Props) {
   const {
     id,
-    member,
-    status,
-    shortNote,
     begL,
     begR,
     endL,
@@ -45,6 +43,11 @@ export default function Detail({ open, row }: Props) {
     maxR,
     pkgL,
     pkgR,
+    status,
+    username,
+    fullName,
+    shortNote,
+    updatedAt,
     commission,
     weekStartDate,
   } = row;
@@ -89,8 +92,8 @@ export default function Detail({ open, row }: Props) {
 
           <Stack direction="row" justifyContent="space-between">
             <ListItemText
-              primary={customizeFullName(member?.fullName ?? '')}
-              secondary={member?.username}
+              primary={customizeFullName(fullName ?? '')}
+              secondary={username}
               primaryTypographyProps={{ typography: 'subtitle1' }}
               secondaryTypographyProps={{
                 component: 'span',
@@ -98,7 +101,7 @@ export default function Detail({ open, row }: Props) {
               }}
             />
 
-            <Typography variant="body2">{formatDateTime(member?.updatedAt)}</Typography>
+            <Typography variant="body2">{formatDateTime(updatedAt)}</Typography>
           </Stack>
 
           <Divider sx={{ borderStyle: 'dashed', my: 1 }} />

@@ -34,22 +34,25 @@ import { FileRecentItem as EditFileItem } from 'src/sections/Sales/Edit/FileRece
 
 import LinkForm from './LinkForm';
 import { Schema, type SchemaType } from './schema';
-import { useUpdateCommission } from '../useApollo';
-
-import type { WeeklyCommission } from '../type';
+import { useUpdateCommission, useFetchCommissionById } from '../useApollo';
 
 interface Props {
-  row: WeeklyCommission;
+  id: string;
   open: UseBooleanReturn;
 }
 
-export default function Detail({ open, row }: Props) {
-  const { id, status, username, fullName, proof, shortNote, updatedAt } = row;
+export default function Detail({ id, open }: Props) {
+  const { commission, fetchCommission } = useFetchCommissionById();
+
+  useEffect(() => {
+    fetchCommission({ variables: { data: { id } } });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   const defaultValues = useMemo(
     () =>
-      proof?.reflinks
-        ? Schema.safeParse({ reflinks: proof.reflinks })?.data ?? ({} as SchemaType)
+      commission?.proof?.reflinks
+        ? Schema.safeParse({ reflinks: commission?.proof.reflinks })?.data ?? ({} as SchemaType)
         : {
             reflinks: [
               {
@@ -59,7 +62,7 @@ export default function Detail({ open, row }: Props) {
             ],
           },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [proof?.reflinks]
+    [commission?.proof?.reflinks]
   );
 
   const methods = useForm<SchemaType>({
@@ -117,9 +120,9 @@ export default function Detail({ open, row }: Props) {
   };
 
   useEffect(() => {
-    setNote(proof?.note);
-    setFiles(proof?.files);
-  }, [proof?.note, proof?.files]);
+    setNote(commission?.proof?.note);
+    setFiles(commission?.proof?.files);
+  }, [commission?.proof?.note, commission?.proof?.files]);
 
   return (
     <Drawer
@@ -132,7 +135,7 @@ export default function Detail({ open, row }: Props) {
       <ScrollBar sx={{ borderRadius: 1 }}>
         <Stack direction="row" justifyContent="space-between" sx={{ p: 2 }}>
           <Typography variant="h6">Info</Typography>
-          <Typography variant="subtitle1">{COMMISSION_TYPE[status].value}</Typography>
+          <Typography variant="subtitle1">{COMMISSION_TYPE[commission?.status!]?.value}</Typography>
         </Stack>
 
         <Stack spacing={1} sx={{ p: 2.5, bgcolor: 'background.neutral' }}>
@@ -140,8 +143,8 @@ export default function Detail({ open, row }: Props) {
 
           <Stack direction="row" justifyContent="space-between">
             <ListItemText
-              primary={customizeFullName(fullName ?? '')}
-              secondary={username}
+              primary={customizeFullName(commission?.member?.fullName ?? '')}
+              secondary={commission?.member?.username}
               primaryTypographyProps={{ typography: 'subtitle1' }}
               secondaryTypographyProps={{
                 component: 'span',
@@ -149,13 +152,15 @@ export default function Detail({ open, row }: Props) {
               }}
             />
 
-            <Typography variant="body2">{formatDateTime(updatedAt)}</Typography>
+            <Typography variant="body2">
+              {formatDateTime(commission?.member?.updatedAt ?? '')}
+            </Typography>
           </Stack>
 
           <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
 
           <Typography variant="subtitle1">Preview Note</Typography>
-          <Typography variant="body2">{shortNote}</Typography>
+          <Typography variant="body2">{commission?.shortNote}</Typography>
 
           <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
 
@@ -209,7 +214,7 @@ export default function Detail({ open, row }: Props) {
             {linkEdit.value ? (
               <LinkForm loading={loading} />
             ) : (
-              proof?.reflinks?.map((item) => (
+              commission?.proof?.reflinks?.map((item) => (
                 <Stack direction="row" columnGap={1}>
                   <Typography>{item?.linkType}:</Typography>
                   <Typography

@@ -1,9 +1,7 @@
 import type { ConfirmationStatus, CommissionDefaultEnum } from 'src/__generated__/graphql';
 
-import type { Proof } from '../Proof/List/type';
-
 export type WeeklyCommission = {
-  __typename?: 'WeeklyCommission';
+  __typename?: 'BasicWeeklyCommission';
   ID: number;
   id: string;
   begL: number;
@@ -16,21 +14,17 @@ export type WeeklyCommission = {
   newR: number;
   pkgL: number;
   pkgR: number;
+  email: string;
   memberId: string;
+  username: string;
+  fullName: string;
   commission: number;
   weekStartDate: any;
-  proof?: Proof | null;
+  note?: string | null;
   createdAt?: any | null;
   updatedAt?: any | null;
   deletedAt?: any | null;
   shortNote?: string | null;
   status: ConfirmationStatus;
-  member?: {
-    __typename?: 'Member';
-    id: string;
-    username: string;
-    fullName: string;
-    updatedAt?: any | null;
-    commissionDefault: CommissionDefaultEnum;
-  } | null;
+  commissionDefault: CommissionDefaultEnum;
 };

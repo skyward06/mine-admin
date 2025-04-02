@@ -1,58 +1,48 @@
 import type { CustomCellRendererProps } from '@ag-grid-community/react';
-import type { ColDef, ITextFilterParams } from '@ag-grid-community/core';
+import type { ColDef, ITextFilterParams, SelectionChangedEvent } from '@ag-grid-community/core';
 
 import dayjs from 'dayjs';
-import { useMemo, useEffect } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 
-import Card from '@mui/material/Card';
+import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 import { useAgQuery as useQueryString } from 'src/routes/hooks';
 
-import { customizeFullName } from 'src/utils/helper';
 import { parseFilterModel } from 'src/utils/parseFilter';
 import { formatWeekNumber } from 'src/utils/format-time';
+import { formatID, customizeFullName } from 'src/utils/helper';
 
 import { COMMISSION_TYPE } from 'src/consts';
-import { ConfirmationStatus } from 'src/__generated__/graphql';
 
 import { AgGrid } from 'src/components/AgGrid';
 
+import SelectedBar from './SelectedBar';
 import { ActionRender } from './ActionRenderer';
 import { useFetchCommissions } from '../useApollo';
 
 import type { WeeklyCommission } from '../type';
 
-export default function CommissionMemberListView() {
+interface Props {
+  tabs: string;
+  customFilter: any;
+}
+
+export default function CommissionTable({ tabs, customFilter }: Props) {
+  const [ids, setIds] = useState<string[]>([]);
+
   const [{ page = '1,50', sort = 'createdAt', filter }] = useQueryString();
   const graphQueryFilter = useMemo(
-    () =>
-      parseFilterModel(
-        {
-          AND: [
-            { status: ConfirmationStatus.Preview },
-            {
-              OR: [
-                { commission: { gt: 0 } },
-                { newL: { gt: 0 } },
-                { newR: { gt: 0 } },
-                { begL: { gt: 0 } },
-                { begR: { gt: 0 } },
-              ],
-            },
-          ],
-        },
-        filter
-      ),
+    () => parseFilterModel(customFilter, filter),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [filter]
+    [tabs, filter, customFilter]
   );
 
   const { loading, rowCount, weeklyCommissions, fetchCommissions } = useFetchCommissions();
 
   useEffect(() => {
     fetchCommissions({
-      variables: { filter: { ...graphQueryFilter }, page, sort },
+      variables: { filter: { ...graphQueryFilter, status: tabs.toUpperCase() }, page, sort },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [graphQueryFilter, page, sort]);
@@ -60,9 +50,22 @@ export default function CommissionMemberListView() {
   const colDefs = useMemo<ColDef<WeeklyCommission>[]>(
     () => [
       {
+        field: 'ID',
+        headerName: 'ID',
+        width: 120,
+        resizable: true,
+        editable: false,
+        sortable: false,
+        cellClass: 'ag-cell-center',
+        filter: 'agTextColumnFilter',
+        filterParams: { buttons: ['reset'] } as ITextFilterParams,
+        cellRenderer: ({ data }: CustomCellRendererProps<WeeklyCommission>) =>
+          formatID(data?.ID ?? '', 'C'),
+      },
+      {
         field: 'weekStartDate',
         headerName: 'Week',
-        width: 130,
+        width: 120,
         resizable: true,
         editable: false,
         sortable: false,
@@ -80,7 +83,7 @@ export default function CommissionMemberListView() {
       {
         field: 'fullName',
         headerName: 'Name',
-        width: 130,
+        width: 120,
         resizable: true,
         editable: false,
         cellClass: 'ag-cell-center',
@@ -92,12 +95,14 @@ export default function CommissionMemberListView() {
       {
         field: 'username',
         headerName: 'Username',
-        width: 150,
+        width: 130,
         resizable: true,
         editable: false,
         cellClass: 'ag-cell-center',
         filter: 'agTextColumnFilter',
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
+        cellRenderer: ({ data }: CustomCellRendererProps<WeeklyCommission>) =>
+          customizeFullName(data?.fullName ?? ''),
       },
       {
         headerName: 'BegLR',
@@ -157,7 +162,7 @@ export default function CommissionMemberListView() {
       {
         field: 'commission',
         headerName: 'Commissions',
-        width: 130,
+        width: 120,
         resizable: true,
         editable: false,
         cellClass: 'ag-cell-center',
@@ -174,9 +179,9 @@ export default function CommissionMemberListView() {
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
       },
       {
-        field: 'shortNote',
+        field: 'note',
         headerName: 'Note',
-        flex: 1,
+        width: 200,
         resizable: true,
         editable: false,
         cellClass: 'ag-cell-center',
@@ -197,23 +202,24 @@ export default function CommissionMemberListView() {
     []
   );
 
+  const handleSelectionChange = (event: SelectionChangedEvent<WeeklyCommission, any>) => {
+    setIds(event.api.getSelectedRows().map((item) => item.id));
+  };
+
   return (
-    <Card
-      sx={{
-        flexGrow: 1,
-        display: 'flex',
-        overflow: 'hidden',
-      }}
-    >
+    <Box width="100%">
+      {ids.length ? <SelectedBar ids={ids} status={tabs.toLowerCase()} /> : null}
       <AgGrid<WeeklyCommission>
-        gridKey="commission-preview-list"
+        gridKey="commission-member-list"
         loading={loading}
         rowData={weeklyCommissions}
         columnDefs={colDefs}
         totalRowCount={rowCount}
+        rowSelection={{ mode: 'multiRow' }}
         selectionColumnDef={{ cellClass: 'ag-cell-center' }}
+        onSelectionChanged={handleSelectionChange}
         rowHeight={50}
       />
-    </Card>
+    </Box>
   );
 }

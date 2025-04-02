@@ -32,6 +32,7 @@ export default function CommissionTableRow({ row }: Props) {
   const open = useBoolean();
 
   const {
+    id,
     ID,
     begL,
     begR,
@@ -94,7 +95,7 @@ export default function CommissionTableRow({ row }: Props) {
         </TableCell>
       </TableRow>
 
-      <Detail open={open} row={row} />
+      <Detail open={open} id={id} />
     </>
   );
 }
