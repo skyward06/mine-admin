@@ -6,6 +6,7 @@ import {
   CALCULATE_COMMISSION,
   UPDATE_COMMISSION_NOTE,
   FETCH_COMMISSION_QUERY,
+  FETCH_COMMISSION_BY_ID,
   FETCH_COMMISSION_BY_WEEK,
   UPDATE_COMMISSION_STATUS,
   FETCH_COMMISSION_STATS_QUERY,
@@ -35,6 +36,12 @@ export function useFetchCommissions() {
     weeklyCommissions: data?.weeklyCommissions.weeklyCommissions ?? [],
     fetchCommissions,
   };
+}
+
+export function useFetchCommissionById() {
+  const [fetchCommission, { loading, data, error }] = useLazyQuery(FETCH_COMMISSION_BY_ID);
+
+  return { loading, commission: data?.weeklyCommissionById, error, fetchCommission };
 }
 
 export function useFetchCommissionStats() {

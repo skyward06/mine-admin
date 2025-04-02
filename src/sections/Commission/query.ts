@@ -33,6 +33,52 @@ export const FETCH_COMMISSION_QUERY = gql(/* GraphQL */ `
   }
 `);
 
+export const FETCH_COMMISSION_BY_ID = gql(/* GraphQL */ `
+  query WeeklyCommissionById($data: IDInput!) {
+    weeklyCommissionById(data: $data) {
+      createdAt
+      updatedAt
+      deletedAt
+      id
+      ID
+      memberId
+      weekStartDate
+      begL
+      begR
+      newL
+      newR
+      maxL
+      maxR
+      endL
+      endR
+      pkgL
+      pkgR
+      commission
+      shortNote
+      status
+      member {
+        username
+        fullName
+        updatedAt
+      }
+      proof {
+        note
+        reflinks {
+          link
+          linkType
+        }
+        files {
+          id
+          url
+          size
+          mimeType
+          originalName
+        }
+      }
+    }
+  }
+`);
+
 export const FETCH_COMMISSION_STATS_QUERY = gql(/* GraphQL */ `
   query FetchCommissionStats(
     $allFilter: JSONObject
