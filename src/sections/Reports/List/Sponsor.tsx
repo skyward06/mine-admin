@@ -66,8 +66,8 @@ export default function SponsorListView({ setWeek, openWeek }: Props) {
           introduceMembers: {
             some: {
               createdAt: {
-                gte: customizeDate(`${dayjs(weekStartDate).startOf('week')}`),
-                lt: dayjs(customizeDate(`${dayjs(weekStartDate).endOf('week')}`)),
+                gte: customizeDate(`${dayjs(weekStartDate).utc().startOf('week')}`),
+                lt: customizeDate(`${dayjs(weekStartDate).utc().endOf('week')}`),
               },
               status: true,
             },
@@ -88,8 +88,8 @@ export default function SponsorListView({ setWeek, openWeek }: Props) {
           introduceMembers: {
             some: {
               createdAt: {
-                gte: customizeDate(`${dayjs(value).startOf('week')}`),
-                lt: dayjs(customizeDate(`${dayjs(value).endOf('week')}`)),
+                gte: customizeDate(`${dayjs(value).utc().startOf('week')}`),
+                lt: customizeDate(`${dayjs(value).utc().endOf('week')}`),
               },
               status: true,
             },
@@ -103,7 +103,7 @@ export default function SponsorListView({ setWeek, openWeek }: Props) {
 
     setQuery({
       ...query,
-      weekStartDate: customizeDate(`${dayjs(value).startOf('week')}`),
+      weekStartDate: customizeDate(`${dayjs(value).utc().startOf('week')}`),
     });
 
     setWeek(formatDate(weekStartDate, 'YYYY-MM-DD'));
