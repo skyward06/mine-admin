@@ -44,10 +44,10 @@ export default function MemberListView({
   const pendingMembers = useMemo(
     () =>
       weeklyMembers?.map((item) => ({
-        id: item.member?.id!,
-        email: item.member?.email!,
-        username: item.member?.username!,
-        fullName: item.member?.fullName!,
+        id: item?.memberId!,
+        email: item?.email!,
+        username: item?.username!,
+        fullName: item?.fullName!,
       })),
     [weeklyMembers]
   );

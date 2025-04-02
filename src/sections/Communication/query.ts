@@ -4,12 +4,10 @@ export const FETCH_WEEKLY_MEMBERS = gql(/* GraphQL */ `
   query WeeklyMembers($sort: String, $page: String, $filter: JSONObject) {
     weeklyCommissions(sort: $sort, page: $page, filter: $filter) {
       weeklyCommissions {
-        member {
-          id
-          email
-          username
-          fullName
-        }
+        email
+        memberId
+        username
+        fullName
       }
       total
     }

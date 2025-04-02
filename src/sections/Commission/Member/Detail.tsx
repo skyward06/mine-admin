@@ -1,5 +1,4 @@
 import type { UseBooleanReturn } from 'src/hooks/useBoolean';
-import type { WeeklyCommission } from 'src/__generated__/graphql';
 
 import { isEmpty } from 'lodash';
 import { Link } from 'react-router-dom';
@@ -37,13 +36,15 @@ import LinkForm from './LinkForm';
 import { Schema, type SchemaType } from './schema';
 import { useUpdateCommission } from '../useApollo';
 
+import type { WeeklyCommission } from '../type';
+
 interface Props {
   row: WeeklyCommission;
   open: UseBooleanReturn;
 }
 
 export default function Detail({ open, row }: Props) {
-  const { id, status, member, proof, shortNote } = row;
+  const { id, status, username, fullName, proof, shortNote, updatedAt } = row;
 
   const defaultValues = useMemo(
     () =>
@@ -139,8 +140,8 @@ export default function Detail({ open, row }: Props) {
 
           <Stack direction="row" justifyContent="space-between">
             <ListItemText
-              primary={customizeFullName(member?.fullName ?? '')}
-              secondary={member?.username}
+              primary={customizeFullName(fullName ?? '')}
+              secondary={username}
               primaryTypographyProps={{ typography: 'subtitle1' }}
               secondaryTypographyProps={{
                 component: 'span',
@@ -148,7 +149,7 @@ export default function Detail({ open, row }: Props) {
               }}
             />
 
-            <Typography variant="body2">{formatDateTime(member?.updatedAt)}</Typography>
+            <Typography variant="body2">{formatDateTime(updatedAt)}</Typography>
           </Stack>
 
           <Divider sx={{ borderStyle: 'dashed', my: 1 }} />

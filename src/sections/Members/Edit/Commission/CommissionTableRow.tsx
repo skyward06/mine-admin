@@ -1,4 +1,4 @@
-import type { WeeklyCommission } from 'src/__generated__/graphql';
+import type { WeeklyCommission } from 'src/sections/Commission/type';
 
 import dayjs from 'dayjs';
 
@@ -33,7 +33,6 @@ export default function CommissionTableRow({ row }: Props) {
 
   const {
     ID,
-    member,
     begL,
     begR,
     newL,
@@ -44,6 +43,9 @@ export default function CommissionTableRow({ row }: Props) {
     endR,
     pkgL,
     pkgR,
+    email,
+    username,
+    memberId,
     commission,
     weekStartDate,
   } = row;
@@ -65,11 +67,11 @@ export default function CommissionTableRow({ row }: Props) {
         <TableCell>{formatID(ID, 'C')}</TableCell>
         <TableCell
           align="left"
-          onClick={() => router.push(paths.dashboard.members.edit(member?.id ?? ''))}
+          onClick={() => router.push(paths.dashboard.members.edit(memberId ?? ''))}
         >
           <ListItemText
-            primary={member?.username}
-            secondary={member?.email}
+            primary={username}
+            secondary={email}
             primaryTypographyProps={{ typography: 'body2' }}
             secondaryTypographyProps={{
               component: 'span',
@@ -91,6 +93,7 @@ export default function CommissionTableRow({ row }: Props) {
           </Tooltip>
         </TableCell>
       </TableRow>
+
       <Detail open={open} row={row} />
     </>
   );
