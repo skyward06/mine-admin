@@ -1,6 +1,3 @@
-import axios from 'axios';
-import { useState } from 'react';
-
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
@@ -13,12 +10,15 @@ import { useQuery } from 'src/routes/hooks';
 import { useTabs } from 'src/hooks/use-tabs';
 import { useBoolean } from 'src/hooks/useBoolean';
 
+import { parseFilterModel } from 'src/utils/parseFilter';
+
 import { CONFIG } from 'src/config';
 import { PERMISSIONS } from 'src/consts';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
+import ExportButton from 'src/components/ExportButton';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 
 import { useAuthContext } from 'src/auth/hooks';
@@ -46,7 +46,8 @@ const TABS = [
 export default function CommissionListView() {
   const [query, { setQueryParams: setQuery }] = useQuery();
   const tabs = useTabs(query.tab ?? 'week');
-  const [loading, setLoading] = useState<boolean>(false);
+
+  const { filter, sort = 'ID' } = query;
 
   const { user } = useAuthContext();
   const { loading: calculationLoading, calculateCommission } = useCalculateCommission();
@@ -54,35 +55,7 @@ export default function CommissionListView() {
   const openWeek = useBoolean();
   const openPrice = useBoolean();
 
-  const handleExport = async () => {
-    setLoading(true);
-
-    const token = localStorage.getItem(CONFIG.storageTokenKey);
-
-    const { data } = await axios.get(`${CONFIG.SITE_URL}/api/export-commissions`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      responseType: 'arraybuffer',
-    });
-
-    const blob = new Blob([data], {
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `commission_by_week.xlsx`;
-
-    document.body.appendChild(a);
-    a.click();
-
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-
-    setLoading(false);
-  };
+  const token = localStorage.getItem(CONFIG.storageTokenKey) ?? '';
 
   const handleTabChange = (event: React.SyntheticEvent, value: any) => {
     setQuery({ tab: value });
@@ -108,16 +81,13 @@ export default function CommissionListView() {
         links={[{ name: 'Commission', href: paths.dashboard.commission.root }, { name: 'All' }]}
         action={
           <Box display="flex" columnGap={2}>
-            <LoadingButton
+            <ExportButton
+              target="commissions"
               variant="contained"
-              startIcon={<Iconify icon="uil:export" />}
-              loading={loading}
-              color="primary"
-              onClick={handleExport}
+              token={token}
               sx={{ mb: 1 }}
-            >
-              Export
-            </LoadingButton>
+              params={{ filter: parseFilterModel({}, filter ?? {}), sort: Object.keys(sort)[0] }}
+            />
             <Button
               variant="contained"
               color="primary"

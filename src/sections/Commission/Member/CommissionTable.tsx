@@ -57,8 +57,7 @@ export default function CommissionTable({ tabs, customFilter }: Props) {
         editable: false,
         sortable: false,
         cellClass: 'ag-cell-center',
-        filter: 'agTextColumnFilter',
-        filterParams: { buttons: ['reset'] } as ITextFilterParams,
+        filter: 'agNumberColumnFilter',
         cellRenderer: ({ data }: CustomCellRendererProps<WeeklyCommission>) =>
           formatID(data?.ID ?? '', 'C'),
       },
