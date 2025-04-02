@@ -109,12 +109,18 @@ export default function CreateCampaign({ open }: Props) {
           Previous
         </Button>
         {step === 2 ? (
-          <LoadingButton variant="contained" loading={loading} onClick={handleSendCampaign}>
+          <LoadingButton
+            variant="contained"
+            color="primary"
+            loading={loading}
+            onClick={handleSendCampaign}
+          >
             Send
           </LoadingButton>
         ) : (
           <Button
             variant="contained"
+            color="primary"
             onClick={() => {
               if (step === 0 && !templateId) {
                 toast.error('You must select the email template!');

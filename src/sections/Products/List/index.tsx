@@ -155,6 +155,7 @@ export default function ProductListView() {
             component={RouterLink}
             href={paths.dashboard.products.new}
             variant="contained"
+            color="primary"
             startIcon={<Iconify icon="mingcute:add-line" />}
           >
             New Product

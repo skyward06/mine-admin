@@ -138,6 +138,7 @@ export default function ResetPassword({ open }: Props) {
         <LoadingButton
           type="submit"
           variant="contained"
+          color="primary"
           loading={isSubmitting}
           sx={{ ml: 'auto', mt: 2 }}
         >

@@ -230,6 +230,7 @@ export default function SaleListView() {
                 component={RouterLink}
                 href={paths.dashboard.sales.new}
                 variant="contained"
+                color="primary"
                 startIcon={<Iconify icon="mingcute:add-line" />}
               >
                 New Sale

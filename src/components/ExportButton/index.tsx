@@ -55,6 +55,7 @@ export default function ExportButton({ target, token, params, ...rest }: Props) 
       variant="text"
       startIcon={<Iconify icon="uil:export" />}
       loading={loading}
+      color="primary"
       onClick={handleExport}
       {...rest}
     >

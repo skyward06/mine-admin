@@ -65,6 +65,7 @@ export function CustomUpload({
             <Button
               size="small"
               variant="contained"
+              color="primary"
               onClick={onUpload}
               startIcon={<Iconify icon="eva:cloud-upload-fill" />}
             >

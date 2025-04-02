@@ -50,7 +50,11 @@ export default function BalanceView() {
             mb: { xs: 2, md: 3 },
           }}
           action={
-            <Button variant="contained" onClick={() => router.push(paths.dashboard.balance.new)}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => router.push(paths.dashboard.balance.new)}
+            >
               Pay Miner
             </Button>
           }

@@ -271,7 +271,7 @@ export default function UserGeneral({ currentUser }: Props) {
                     )}
                   </>
                 )}
-                <LoadingButton type="submit" variant="contained" loading={loading}>
+                <LoadingButton type="submit" variant="contained" color="primary" loading={loading}>
                   Save Changes
                 </LoadingButton>
               </Stack>

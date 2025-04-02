@@ -168,6 +168,7 @@ export default function EditForm({ current }: Props) {
           <LoadingButton
             type="submit"
             variant="contained"
+            color="primary"
             loading={current ? updateLoading : loading}
           >
             {current ? 'Edit' : 'Create'}

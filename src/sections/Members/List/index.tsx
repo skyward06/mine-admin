@@ -195,6 +195,7 @@ export default function MemberListView() {
             component={RouterLink}
             href={paths.dashboard.members.new}
             variant="contained"
+            color="primary"
             startIcon={<Iconify icon="mingcute:add-line" />}
           >
             New Miner

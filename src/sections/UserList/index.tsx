@@ -211,6 +211,7 @@ export default function UserListView() {
             component={RouterLink}
             href={paths.dashboard.user.new}
             variant="contained"
+            color="primary"
             startIcon={<Iconify icon="mingcute:add-line" />}
           >
             New Admin

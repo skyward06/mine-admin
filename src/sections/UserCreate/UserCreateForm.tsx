@@ -208,7 +208,7 @@ export default function UserCreateForm() {
             </Box>
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-              <LoadingButton type="submit" variant="contained" loading={loading}>
+              <LoadingButton type="submit" variant="contained" color="primary" loading={loading}>
                 Create Admin
               </LoadingButton>
             </Stack>

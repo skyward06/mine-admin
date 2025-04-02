@@ -163,7 +163,11 @@ export default function RoleList() {
         }}
         action={
           user?.role?.role === PERMISSIONS.EDITOR_PERMISSION.value || user?.role?.sale === 7 ? (
-            <Button variant="contained" onClick={() => router.push(paths.dashboard.roles.new)}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => router.push(paths.dashboard.roles.new)}
+            >
               Create Role
             </Button>
           ) : null

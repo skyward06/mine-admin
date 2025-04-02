@@ -28,6 +28,7 @@ export default function RewardListView() {
               component={RouterLink}
               href={paths.dashboard.reward.new}
               variant="contained"
+              color="primary"
               startIcon={<Iconify icon="mingcute:add-line" />}
             >
               New Reward

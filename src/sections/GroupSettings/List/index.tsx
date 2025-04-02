@@ -46,6 +46,7 @@ export default function ProofListView() {
             component={RouterLink}
             href={paths.dashboard.groupSettings.new}
             variant="contained"
+            color="primary"
             startIcon={<Iconify icon="mingcute:add-line" />}
           >
             New Group
