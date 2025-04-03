@@ -1,3 +1,6 @@
+import { useState } from 'react';
+import { useLocation } from 'react-router';
+
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
@@ -15,6 +18,7 @@ import { parseFilterModel } from 'src/utils/parseFilter';
 import { CONFIG } from 'src/config';
 import { PERMISSIONS } from 'src/consts';
 import { DashboardContent } from 'src/layouts/dashboard';
+import { ConfirmationStatus } from 'src/__generated__/graphql';
 
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
@@ -47,7 +51,13 @@ export default function CommissionListView() {
   const [query, { setQueryParams: setQuery }] = useQuery();
   const tabs = useTabs(query.tab ?? 'week');
 
-  const { filter, sort = 'ID' } = query;
+  const { search } = useLocation();
+
+  const tabValue = new URLSearchParams(search).get('tab');
+
+  const [status, setStatus] = useState<string>(ConfirmationStatus.Pending);
+
+  const { filter, sort = { ID: 'asc' } } = query;
 
   const { user } = useAuthContext();
   const { loading: calculationLoading, calculateCommission } = useCalculateCommission();
@@ -86,7 +96,18 @@ export default function CommissionListView() {
               variant="contained"
               token={token}
               sx={{ mb: 1 }}
-              params={{ filter: parseFilterModel({}, filter ?? {}), sort: Object.keys(sort)[0] }}
+              params={{
+                filter: parseFilterModel(
+                  {
+                    status:
+                      tabValue === ConfirmationStatus.Preview.toLowerCase()
+                        ? ConfirmationStatus.Preview
+                        : status,
+                  },
+                  filter ?? {}
+                ),
+                sort: Object.keys(sort)[0],
+              }}
             />
             <Button
               variant="contained"
@@ -137,7 +158,7 @@ export default function CommissionListView() {
 
       {tabs.value === 'week' && <Week openWeek={openWeek} />}
 
-      {tabs.value === 'member' && <Member openWeek={openWeek} />}
+      {tabs.value === 'member' && <Member openWeek={openWeek} setStatus={setStatus} />}
 
       {tabs.value === 'preview' && <Preview />}
 

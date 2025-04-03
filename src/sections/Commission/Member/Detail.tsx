@@ -45,9 +45,11 @@ export default function Detail({ id, open }: Props) {
   const { commission, fetchCommission } = useFetchCommissionById();
 
   useEffect(() => {
-    fetchCommission({ variables: { data: { id } } });
+    if (id && open.value) {
+      fetchCommission({ variables: { data: { id } } });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+  }, [id, open.value]);
 
   const defaultValues = useMemo(
     () =>

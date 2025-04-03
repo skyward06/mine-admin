@@ -27,6 +27,7 @@ import type { CommissionRole } from './types';
 
 interface Props {
   openWeek: UseBooleanReturn;
+  setStatus: Function;
 }
 
 const TABS: { value: CommissionRole; label: string; color: LabelColor }[] = [
@@ -35,7 +36,7 @@ const TABS: { value: CommissionRole; label: string; color: LabelColor }[] = [
   { value: 'declined', label: 'Declined', color: 'error' },
 ];
 
-export default function CommissionMemberListView({ openWeek }: Props) {
+export default function CommissionMemberListView({ openWeek, setStatus }: Props) {
   const tabs = useTabs('pending');
   const [customFilter, setCustomFilter] = useState<any>();
 
@@ -51,7 +52,7 @@ export default function CommissionMemberListView({ openWeek }: Props) {
   const handleTabChange = (event: any, newValue: any) => {
     tabs.onChange(event, newValue);
 
-    // setQuery({ ...query, filter: { ...filter, status: newValue } });
+    setStatus(tabs.value.toUpperCase());
   };
 
   const onPeriodChange = (value: any) => {
