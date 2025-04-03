@@ -17,6 +17,7 @@ import ListItemText from '@mui/material/ListItemText';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
+import { fCurrency } from 'src/utils/formatNumber';
 import { formatDateTime } from 'src/utils/format-time';
 import { isValidUrl, customizeFullName } from 'src/utils/helper';
 
@@ -77,8 +78,10 @@ export default function Detail({ id, open }: Props) {
   const noteEdit = useBoolean();
   const fileEdit = useBoolean();
   const linkEdit = useBoolean();
+  const cashEdit = useBoolean();
 
   const [note, setNote] = useState<any>();
+  const [cash, setCash] = useState<any>();
   const [files, setFiles] = useState<any>();
 
   const { loading, updateCommission } = useUpdateCommission();
@@ -88,6 +91,14 @@ export default function Detail({ id, open }: Props) {
 
     if (noteEdit.value) {
       await updateCommission({ variables: { data: { id, note } } });
+    }
+  };
+
+  const saveCash = async () => {
+    cashEdit.onToggle();
+
+    if (cashEdit.value) {
+      await updateCommission({ variables: { data: { id, cash: +cash } } });
     }
   };
 
@@ -124,12 +135,13 @@ export default function Detail({ id, open }: Props) {
   useEffect(() => {
     setNote(commission?.proof?.note);
     setFiles(commission?.proof?.files);
-  }, [commission?.proof?.note, commission?.proof?.files]);
+    setCash(commission?.cash);
+  }, [commission?.proof?.note, commission?.proof?.files, commission?.cash]);
 
   return (
     <Drawer
       open={open.value}
-      onClose={() => open.onFalse()}
+      onClose={open.onFalse}
       anchor="right"
       slotProps={{ backdrop: { invisible: true } }}
       PaperProps={{ sx: { width: 375 } }}
@@ -177,6 +189,26 @@ export default function Detail({ id, open }: Props) {
             <TextField size="small" value={note} onChange={(e) => setNote(e.target.value)} />
           ) : (
             <Typography variant="body2">{note}</Typography>
+          )}
+
+          <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
+
+          <Stack direction="row" justifyContent="space-between">
+            <Typography variant="subtitle1">Cash</Typography>
+            <IconButton onClick={saveCash}>
+              <Iconify icon={cashEdit.value ? 'mage:check-circle-fill' : 'solar:pen-2-bold'} />
+            </IconButton>
+          </Stack>
+
+          {cashEdit.value ? (
+            <TextField
+              size="small"
+              type="number"
+              value={cash}
+              onChange={(e) => setCash(e.target.value)}
+            />
+          ) : (
+            <Typography variant="body2">{fCurrency(cash)}</Typography>
           )}
 
           <Divider sx={{ borderStyle: 'dashed', my: 1 }} />

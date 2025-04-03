@@ -14,6 +14,7 @@ export type WeeklyCommission = {
   newR: number;
   pkgL: number;
   pkgR: number;
+  cash: number;
   email: string;
   memberId: string;
   username: string;

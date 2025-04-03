@@ -16,6 +16,7 @@ export const FETCH_COMMISSION_QUERY = gql(/* GraphQL */ `
         endR
         pkgL
         pkgR
+        cash
         note
         email
         status
@@ -36,13 +37,9 @@ export const FETCH_COMMISSION_QUERY = gql(/* GraphQL */ `
 export const FETCH_COMMISSION_BY_ID = gql(/* GraphQL */ `
   query WeeklyCommissionById($data: IDInput!) {
     weeklyCommissionById(data: $data) {
-      createdAt
-      updatedAt
-      deletedAt
       id
       ID
-      memberId
-      weekStartDate
+      cash
       begL
       begR
       newL
@@ -53,9 +50,12 @@ export const FETCH_COMMISSION_BY_ID = gql(/* GraphQL */ `
       endR
       pkgL
       pkgR
-      commission
-      shortNote
+      cash
       status
+      memberId
+      shortNote
+      commission
+      weekStartDate
       member {
         username
         fullName
