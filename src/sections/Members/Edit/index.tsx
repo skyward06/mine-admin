@@ -25,7 +25,6 @@ import Note from './Note';
 import History from './History';
 import Sponsor from './Sponsor';
 import Placement from './Placement';
-import BalanceList from './Balance';
 import Commission from './Commission';
 import MemberGeneral from './General';
 import Communication from './Communication';
@@ -47,7 +46,6 @@ export default function MemberEditView() {
     { value: 'edit', label: 'Edit', icon: <Iconify icon="solar:pen-2-bold" width={24} /> },
     { value: 'sponsor', label: 'Sponsor', icon: <Iconify icon="bi:diagram-3" /> },
     { value: 'placement', label: 'Placement', icon: <Iconify icon="clarity:flow-chart-line" /> },
-    { value: 'balance', label: 'Balance', icon: <Iconify icon="bx:transfer" /> },
     { value: 'log', label: 'Log', icon: <Iconify icon="ri:history-line" /> },
     { value: 'note', label: 'Note', icon: <Iconify icon="mdi:event-note-outline" /> },
     { value: 'communication', label: 'Communication', icon: <Iconify icon="lucide:send" /> },
@@ -131,8 +129,6 @@ export default function MemberEditView() {
         {tabs.value === 'placement' && <Placement currentMember={member} />}
 
         {tabs.value === 'commission' && <Commission currentMember={member} />}
-
-        {tabs.value === 'balance' && <BalanceList />}
 
         {tabs.value === 'log' && <Log loading={loading} currentMember={member} />}
 

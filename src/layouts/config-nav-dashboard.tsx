@@ -78,7 +78,6 @@ export const navData = [
       { title: 'Sale', path: paths.dashboard.sales.root, icon: ICONS.sale },
       { title: 'Placement', path: paths.dashboard.placement.root, icon: ICONS.diagram },
       { title: 'Commission', path: paths.dashboard.commission.root, icon: ICONS.bonus },
-      { title: 'Balance', path: paths.dashboard.balance.root, icon: ICONS.prepaid },
       { title: 'Proof', path: paths.dashboard.proof.root, icon: ICONS.proof },
       {
         title: 'Group Settings',

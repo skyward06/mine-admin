@@ -88,11 +88,6 @@ const PaymentEditPage = lazy(() => import('src/pages/Payment/Edit'));
 // ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
-const BalancePage = lazy(() => import('src/pages/Balance/List'));
-const BalanceCreatePage = lazy(() => import('src/pages/Balance/Create'));
-// ----------------------------------------------------------------------
-
-// ----------------------------------------------------------------------
 const CommunicationListPage = lazy(() => import('src/pages/Communication/List'));
 // ----------------------------------------------------------------------
 
@@ -230,13 +225,6 @@ export const dashboardRoutes = [
           { index: true, element: <PaymentListPage /> },
           { path: 'new', element: <PaymentCreatePage /> },
           { path: ':id', element: <PaymentEditPage /> },
-        ],
-      },
-      {
-        path: 'balance',
-        children: [
-          { index: true, element: <BalancePage /> },
-          { path: 'new', element: <BalanceCreatePage /> },
         ],
       },
       {
