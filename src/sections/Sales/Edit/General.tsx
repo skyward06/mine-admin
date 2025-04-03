@@ -21,7 +21,7 @@ import { useRouter } from 'src/routes/hooks';
 import { useBoolean } from 'src/hooks/useBoolean';
 
 import { formatID } from 'src/utils/helper';
-import { formatDate, customizeDate } from 'src/utils/format-time';
+import { isSaturday, formatDate, customizeDate } from 'src/utils/format-time';
 
 import { PEER } from 'src/consts';
 
@@ -232,7 +232,12 @@ export default function SaleGeneral({ currentSale }: Props) {
             <LinkForm />
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-              <LoadingButton type="submit" variant="contained" loading={loading}>
+              <LoadingButton
+                type="submit"
+                variant="contained"
+                loading={loading}
+                disabled={isSaturday()}
+              >
                 Save Changes
               </LoadingButton>
             </Stack>

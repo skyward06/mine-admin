@@ -19,7 +19,7 @@ import { useRouter } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
-import { today, customizeDate } from 'src/utils/format-time';
+import { today, isSaturday, customizeDate } from 'src/utils/format-time';
 
 import { PEER } from 'src/consts';
 
@@ -197,7 +197,12 @@ export default function SaleCreateForm() {
             <LinkForm />
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-              <LoadingButton type="submit" variant="contained" loading={loading}>
+              <LoadingButton
+                type="submit"
+                variant="contained"
+                loading={loading}
+                disabled={isSaturday()}
+              >
                 Create Sale
               </LoadingButton>
             </Stack>

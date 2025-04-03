@@ -20,8 +20,8 @@ import { useAgQuery as useQueryString } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
-import { formatDate } from 'src/utils/format-time';
 import { parseFilterModel } from 'src/utils/parseFilter';
+import { formatDate, isSaturday } from 'src/utils/format-time';
 import { formatID, customizeFullName } from 'src/utils/helper';
 
 import { CONFIG } from 'src/config';
@@ -231,6 +231,7 @@ export default function SaleListView() {
                 href={paths.dashboard.sales.new}
                 variant="contained"
                 color="primary"
+                disabled={isSaturday()}
                 startIcon={<Iconify icon="mingcute:add-line" />}
               >
                 New Sale

@@ -297,3 +297,7 @@ export function formatWeekNumber(date: string | Date, base: string = '2024-04-06
 
   return weekNumber;
 }
+
+export function isSaturday(): boolean {
+  return new Date().getUTCDay() === 6;
+}
