@@ -24,7 +24,7 @@ import { useFetchCommissions } from '../useApollo';
 import type { WeeklyCommission } from '../type';
 
 export default function CommissionMemberListView() {
-  const [{ page = '1,50', sort = 'createdAt', filter }] = useQueryString();
+  const [{ page = '1,50', sort = 'commission', filter }] = useQueryString();
   const graphQueryFilter = useMemo(
     () =>
       parseFilterModel(
@@ -160,6 +160,7 @@ export default function CommissionMemberListView() {
         width: 130,
         resizable: true,
         editable: false,
+        initialSort: 'asc',
         cellClass: 'ag-cell-center',
         filter: 'agNumberColumnFilter',
       },

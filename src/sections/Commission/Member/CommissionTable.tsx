@@ -31,7 +31,7 @@ interface Props {
 export default function CommissionTable({ tabs, customFilter }: Props) {
   const [ids, setIds] = useState<string[]>([]);
 
-  const [{ page = '1,50', sort = 'createdAt', filter }] = useQueryString();
+  const [{ page = '1,50', sort = 'ID', filter }] = useQueryString();
   const graphQueryFilter = useMemo(
     () => parseFilterModel(customFilter, filter),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -55,7 +55,7 @@ export default function CommissionTable({ tabs, customFilter }: Props) {
         width: 120,
         resizable: true,
         editable: false,
-        sortable: false,
+        initialSort: 'asc',
         cellClass: 'ag-cell-center',
         filter: 'agNumberColumnFilter',
         cellRenderer: ({ data }: CustomCellRendererProps<WeeklyCommission>) =>
@@ -100,8 +100,6 @@ export default function CommissionTable({ tabs, customFilter }: Props) {
         cellClass: 'ag-cell-center',
         filter: 'agTextColumnFilter',
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellRenderer: ({ data }: CustomCellRendererProps<WeeklyCommission>) =>
-          customizeFullName(data?.fullName ?? ''),
       },
       {
         headerName: 'BegLR',

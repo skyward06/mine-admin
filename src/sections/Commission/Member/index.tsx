@@ -1,6 +1,7 @@
 import type { UseBooleanReturn } from 'src/hooks/useBoolean';
 
 import dayjs from 'dayjs';
+import { useLocation } from 'react-router';
 import { useState, useEffect } from 'react';
 
 import Tab from '@mui/material/Tab';
@@ -15,6 +16,7 @@ import { useTabs } from 'src/hooks/use-tabs';
 import { customizeDate } from 'src/utils/format-time';
 
 import { COMMISSION_TYPE } from 'src/consts';
+import { ConfirmationStatus } from 'src/__generated__/graphql';
 
 import { ConfirmDialog } from 'src/components/Dialog';
 import { Label, type LabelColor } from 'src/components/Label';
@@ -37,20 +39,24 @@ const TABS: { value: CommissionRole; label: string; color: LabelColor }[] = [
 ];
 
 export default function CommissionMemberListView({ openWeek, setStatus }: Props) {
-  const tabs = useTabs('pending');
+  const tabs = useTabs(ConfirmationStatus.Pending.toLowerCase());
   const [customFilter, setCustomFilter] = useState<any>();
+
+  const { search } = useLocation();
+  const tabValue = new URLSearchParams(search).get('tab');
 
   const { data, fetchCommissionStats } = useFetchCommissionStats();
 
   const [query, { setQueryParams: setQuery }] = useQuery<any>();
 
   const {
-    filter = { status: 'pending' },
+    filter = { status: ConfirmationStatus.Pending.toLowerCase() },
     weekStartDate = customizeDate(`${dayjs().utc().endOf('week')}`),
   } = query;
 
   const handleTabChange = (event: any, newValue: any) => {
     tabs.onChange(event, newValue);
+    setQuery({ tab: tabValue });
 
     setStatus(tabs.value.toUpperCase());
   };
