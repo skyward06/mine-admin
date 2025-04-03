@@ -74,7 +74,7 @@ export default function Revenue() {
         editable: false,
         cellClass: 'ag-number-cell ag-cell-center',
         cellRenderer: ({ data }: CustomCellRendererProps<MemberInOutRevenue>) =>
-          fCurrency((data?.cashCommissionPotential ?? 0) / 100),
+          fCurrency(data?.cashCommissionPotential ?? 0),
       },
       {
         field: 'amount',

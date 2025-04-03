@@ -40,21 +40,12 @@ export const OverView = ({ currentMember }: Props) => {
           </Box>
         </Stack>
 
-        {currentMember?.groupSetting?.id === LAUNCH_GROUP ? (
-          <Stack width={0.6}>
-            {fNumber(data?.memberOverview.cashCommissionPotential ?? 0)}
-            <Box component="span" sx={{ color: 'text.secondary', typography: 'body2' }}>
-              Cash Available
-            </Box>
-          </Stack>
-        ) : (
-          <Stack width={0.6}>
-            {fNumber((data?.memberOverview.cashCommissionPotential ?? 0) / 100)}
-            <Box component="span" sx={{ color: 'text.secondary', typography: 'body2' }}>
-              Cash Potentital
-            </Box>
-          </Stack>
-        )}
+        <Stack width={0.6}>
+          {fNumber(Math.max(data?.memberOverview.cashCommissionPotential ?? 0, 0))}
+          <Box component="span" sx={{ color: 'text.secondary', typography: 'body2' }}>
+            {currentMember?.groupSetting?.id === LAUNCH_GROUP ? 'Cash Available' : 'Cash Potential'}
+          </Box>
+        </Stack>
 
         <Stack width={1}>
           {fNumber((data?.memberOverview.totalTXCShared ?? 0) / 10 ** 8)}
