@@ -8,7 +8,6 @@ const ROOTS = {
   PROMOS: '/promos',
   REWARD: '/reward',
   MEMBERS: '/miners',
-  BALANCE: '/balance',
   INVOICE: '/invoices',
   PAYMENT: '/payment',
   REPORTS: '/reports',
@@ -70,10 +69,6 @@ export const paths = {
       root: ROOTS.PRODUCTS,
       edit: (id: string) => `${ROOTS.PRODUCTS}/${id}`,
       new: `${ROOTS.PRODUCTS}/new`,
-    },
-    balance: {
-      root: ROOTS.BALANCE,
-      new: `${ROOTS.BALANCE}/new`,
     },
     commission: {
       root: ROOTS.COMMISSION,

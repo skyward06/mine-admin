@@ -28,7 +28,6 @@ export type Sponsor = {
   avatar: string;
   mobile: string;
   status: boolean;
-  balance: number;
   username: string;
   fullName: string;
   groupName: string;

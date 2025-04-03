@@ -102,7 +102,6 @@ export const FETCH_SALE_BY_Id = gql(/* GraphQL */ `
         mobile
         status
         assetId
-        balance
         username
         fullName
         createdAt
@@ -135,7 +134,6 @@ export const FETCH_SALE_BY_Id = gql(/* GraphQL */ `
         mobile
         status
         assetId
-        balance
         username
         fullName
         createdAt
@@ -227,7 +225,6 @@ export const FETCH_SALE_BY_ID = gql(/* GraphQL */ `
         mobile
         status
         assetId
-        balance
         username
         fullName
         createdAt
@@ -260,7 +257,6 @@ export const FETCH_SALE_BY_ID = gql(/* GraphQL */ `
         mobile
         status
         assetId
-        balance
         username
         fullName
         createdAt

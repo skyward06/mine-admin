@@ -60,8 +60,7 @@ export function DashboardLayout({ sx, children, data }: DashboardLayoutProps) {
             item.title === 'Commission' &&
             user?.role?.commission === PERMISSIONS.NONE_PERMISSION.value
           )
-        // !(item.title === 'Proof' && user?.role?.proof === RoleEnum.None) &&
-        // !(item.title === 'Balance' && user?.role?.balance === RoleEnum.None)
+        // !(item.title === 'Proof' && user?.role?.proof === RoleEnum.None)
       ),
     }));
 

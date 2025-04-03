@@ -93,14 +93,6 @@ export default function Detail({ open, row }: Props) {
                 {row?.createdAt}
               </Stack>
             </Stack>
-            <Stack direction="row" spacing={2}>
-              <Stack width={0.5} sx={{ fontSize: 14, fontWeight: 700 }}>
-                Balance:
-              </Stack>
-              <Stack width={1} sx={{ fontSize: 14 }}>
-                {row?.balance}
-              </Stack>
-            </Stack>
 
             <Divider sx={{ borderStyle: 'dashed', borderColor: 'gray' }} />
 

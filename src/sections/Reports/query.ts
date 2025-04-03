@@ -69,7 +69,6 @@ export const FETCH_SPONSORS_QUERY = gql(/* GraphQL */ `
         avatar
         mobile
         status
-        balance
         username
         fullName
         allowState

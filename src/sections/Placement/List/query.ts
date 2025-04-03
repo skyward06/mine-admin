@@ -31,12 +31,10 @@ export const FETCH_PLACEMENT_MEMBERS_QUERY = gql(/* GraphQL */ `
         cmnCalculatedWeeks
         placementParent {
           id
-          balance
           username
           fullName
         }
         sponsor {
-          balance
           username
         }
         commission {

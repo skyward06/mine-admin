@@ -19,7 +19,6 @@ import { useRouter } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
-import { fCurrency } from 'src/utils/formatNumber';
 import { formatDate } from 'src/utils/format-time';
 import { formatID, customizeFullName } from 'src/utils/helper';
 
@@ -309,17 +308,6 @@ export const Personal = () => {
                 <Typography variant="body2">
                   {member?.createdAt ? formatDate(member.createdAt) : ''}
                 </Typography>
-              </Stack>
-            </Stack>
-
-            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
-              <Stack width={0.5}>
-                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                  Balance:
-                </Typography>
-              </Stack>
-              <Stack width={1}>
-                <Typography variant="body2">{fCurrency((member?.balance || 0) / 100)}</Typography>
               </Stack>
             </Stack>
 

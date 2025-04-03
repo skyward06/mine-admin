@@ -40,7 +40,6 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         avatar
         mobile
         assetId
-        balance
         country
         zipCode
         username
@@ -125,7 +124,6 @@ export const FETCH_MEMBER_QUERY = gql(/* GraphQL */ `
       avatar
       mobile
       assetId
-      balance
       country
       zipCode
       username
@@ -164,7 +162,6 @@ export const FETCH_MEMBER_QUERY = gql(/* GraphQL */ `
         point
         mobile
         status
-        balance
         username
         fullName
         allowState
@@ -187,7 +184,6 @@ export const FETCH_MEMBER_QUERY = gql(/* GraphQL */ `
         point
         mobile
         status
-        balance
         username
         fullName
         allowState
@@ -208,7 +204,6 @@ export const FETCH_MEMBER_QUERY = gql(/* GraphQL */ `
         point
         mobile
         status
-        balance
         username
         fullName
         allowState
@@ -356,8 +351,8 @@ export const UPDATE_MEMBER = gql(/* GraphQL */ `
 export const FETCH_MEMBER_HISTORY = gql(/* GraphQL */ `
   query MemberOverview($data: IDInput!) {
     memberOverview(data: $data) {
+      point
       joinDate
-      cashAvailable
       totalTXCShared
       currentHashPower
       cashCommissionPotential

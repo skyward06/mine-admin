@@ -42,7 +42,7 @@ export const OverView = ({ currentMember }: Props) => {
 
         {currentMember?.groupSetting?.id === LAUNCH_GROUP ? (
           <Stack width={0.6}>
-            {fNumber(data?.memberOverview.cashAvailable ?? 0)}
+            {fNumber(data?.memberOverview.cashCommissionPotential ?? 0)}
             <Box component="span" sx={{ color: 'text.secondary', typography: 'body2' }}>
               Cash Available
             </Box>
