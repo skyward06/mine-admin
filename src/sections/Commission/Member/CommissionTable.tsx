@@ -7,7 +7,8 @@ import { useMemo, useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
-import { useAgQuery as useQueryString } from 'src/routes/hooks';
+import { paths } from 'src/routes/paths';
+import { useRouter, useAgQuery as useQueryString } from 'src/routes/hooks';
 
 import { parseFilterModel } from 'src/utils/parseFilter';
 import { formatWeekNumber } from 'src/utils/format-time';
@@ -29,6 +30,8 @@ interface Props {
 }
 
 export default function CommissionTable({ tabs, customFilter }: Props) {
+  const router = useRouter();
+
   const [ids, setIds] = useState<string[]>([]);
 
   const [{ page = '1,50', sort = 'ID', filter }] = useQueryString();
@@ -88,8 +91,17 @@ export default function CommissionTable({ tabs, customFilter }: Props) {
         cellClass: 'ag-cell-center',
         filter: 'agTextColumnFilter',
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellRenderer: ({ data }: CustomCellRendererProps<WeeklyCommission>) =>
-          customizeFullName(data?.fullName ?? ''),
+        cellRenderer: ({ data }: CustomCellRendererProps<WeeklyCommission>) => (
+          <Box
+            sx={{
+              cursor: 'pointer',
+              '&:hover': { color: (theme) => theme.vars.palette.grey[500] },
+            }}
+            onClick={() => router.push(paths.dashboard.members.edit(data?.memberId!))}
+          >
+            {customizeFullName(data?.fullName ?? '')}
+          </Box>
+        ),
       },
       {
         field: 'username',
@@ -196,7 +208,7 @@ export default function CommissionTable({ tabs, customFilter }: Props) {
         cellRenderer: ActionRender,
       },
     ],
-    []
+    [router]
   );
 
   const handleSelectionChange = (event: SelectionChangedEvent<WeeklyCommission, any>) => {
