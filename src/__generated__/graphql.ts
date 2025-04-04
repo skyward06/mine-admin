@@ -2831,7 +2831,6 @@ export type WeeklyCommissionNoteInput = {
 
 export type WeeklyCommissionUpdateInput = {
   autoCreate?: InputMaybe<Scalars['Boolean']['input']>;
-  cash?: InputMaybe<Scalars['Int']['input']>;
   fileIds?: InputMaybe<Array<Scalars['ID']['input']>>;
   id: Scalars['ID']['input'];
   note?: InputMaybe<Scalars['String']['input']>;
