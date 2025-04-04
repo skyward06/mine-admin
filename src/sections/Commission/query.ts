@@ -24,10 +24,14 @@ export const FETCH_COMMISSION_QUERY = gql(/* GraphQL */ `
         fullName
         memberId
         createdAt
+        qualified
         shortNote
         commission
         weekStartDate
         commissionDefault
+        invoice {
+          id
+        }
       }
       total
     }
