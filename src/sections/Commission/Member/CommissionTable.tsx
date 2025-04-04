@@ -5,6 +5,8 @@ import dayjs from 'dayjs';
 import { useMemo, useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
@@ -14,6 +16,7 @@ import { parseFilterModel } from 'src/utils/parseFilter';
 import { formatWeekNumber } from 'src/utils/format-time';
 import { formatID, customizeFullName } from 'src/utils/helper';
 
+import { CONFIG } from 'src/config';
 import { COMMISSION_TYPE } from 'src/consts';
 import { ConfirmationStatus } from 'src/__generated__/graphql';
 
@@ -108,12 +111,21 @@ export default function CommissionTable({ status, customFilter }: Props) {
       {
         field: 'username',
         headerName: 'Username',
-        width: 130,
+        width: 200,
         resizable: true,
         editable: false,
-        cellClass: 'ag-cell-center',
         filter: 'agTextColumnFilter',
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
+        cellRenderer: ({ data }: CustomCellRendererProps<WeeklyCommission>) => (
+          <Stack direction="row" justifyContent="space-between">
+            <Typography variant="body2" mt={1.5}>
+              {data?.username}
+            </Typography>
+            {data?.isTexitRanger && (
+              <Avatar alt="coin" src={`${CONFIG.site.basePath}/assets/coin.jpg`} sx={{ mt: 0.5 }} />
+            )}
+          </Stack>
+        ),
       },
       {
         headerName: 'BegLR',

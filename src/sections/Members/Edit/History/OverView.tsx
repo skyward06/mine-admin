@@ -6,10 +6,12 @@ import { useQuery as useGraphQuery } from '@apollo/client';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
+import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
 
 import { fNumber } from 'src/utils/formatNumber';
 
+import { CONFIG } from 'src/config';
 import { LAUNCH_GROUP } from 'src/consts';
 
 import { FETCH_MEMBER_HISTORY } from '../../query';
@@ -32,6 +34,7 @@ export const OverView = ({ currentMember }: Props) => {
       <Stack
         direction="row"
         divider={<Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />}
+        alignItems="center"
       >
         <Stack width={0.8}>
           {fNumber(data?.memberOverview.currentHashPower ?? 0)}
@@ -40,12 +43,22 @@ export const OverView = ({ currentMember }: Props) => {
           </Box>
         </Stack>
 
-        <Stack width={0.6}>
-          {fNumber(Math.max(data?.memberOverview.cashCommissionPotential ?? 0, 0))}
-          <Box component="span" sx={{ color: 'text.secondary', typography: 'body2' }}>
-            {currentMember?.groupSetting?.id === LAUNCH_GROUP ? 'Cash Available' : 'Cash Potential'}
-          </Box>
-        </Stack>
+        {currentMember?.isTexitRanger ? (
+          <Avatar
+            alt="coin"
+            src={`${CONFIG.site.basePath}/assets/coin.jpg`}
+            sx={{ width: 80, height: 80 }}
+          />
+        ) : (
+          <Stack width={0.6}>
+            {fNumber(Math.max(data?.memberOverview.cashCommissionPotential ?? 0, 0))}
+            <Box component="span" sx={{ color: 'text.secondary', typography: 'body2' }}>
+              {currentMember?.groupSetting?.id === LAUNCH_GROUP
+                ? 'Cash Available'
+                : 'Cash Potential'}
+            </Box>
+          </Stack>
+        )}
 
         <Stack width={1}>
           {fNumber((data?.memberOverview.totalTXCShared ?? 0) / 10 ** 8)}
