@@ -15,21 +15,23 @@ import { formatWeekNumber } from 'src/utils/format-time';
 import { formatID, customizeFullName } from 'src/utils/helper';
 
 import { COMMISSION_TYPE } from 'src/consts';
+import { ConfirmationStatus } from 'src/__generated__/graphql';
 
 import { AgGrid } from 'src/components/AgGrid';
 
 import SelectedBar from './SelectedBar';
+import StatusRenderer from './StatusRenderer';
 import { ActionRender } from './ActionRenderer';
 import { useFetchCommissions } from '../useApollo';
 
 import type { WeeklyCommission } from '../type';
 
 interface Props {
-  tabs: string;
+  status: string;
   customFilter: any;
 }
 
-export default function CommissionTable({ tabs, customFilter }: Props) {
+export default function CommissionTable({ status, customFilter }: Props) {
   const router = useRouter();
 
   const [ids, setIds] = useState<string[]>([]);
@@ -38,20 +40,20 @@ export default function CommissionTable({ tabs, customFilter }: Props) {
   const graphQueryFilter = useMemo(
     () => parseFilterModel(customFilter, filter),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [tabs, filter, customFilter]
+    [status, filter, customFilter]
   );
 
   const { loading, rowCount, weeklyCommissions, fetchCommissions } = useFetchCommissions();
 
   useEffect(() => {
     fetchCommissions({
-      variables: { filter: { ...graphQueryFilter, status: tabs.toUpperCase() }, page, sort },
+      variables: { filter: { ...graphQueryFilter, status: status.toUpperCase() }, page, sort },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [graphQueryFilter, page, sort]);
 
-  const colDefs = useMemo<ColDef<WeeklyCommission>[]>(
-    () => [
+  const colDefs = useMemo<ColDef<WeeklyCommission>[]>(() => {
+    const baseColDef: ColDef<WeeklyCommission>[] = [
       {
         field: 'ID',
         headerName: 'ID',
@@ -207,9 +209,19 @@ export default function CommissionTable({ tabs, customFilter }: Props) {
         cellClass: 'ag-cell-center',
         cellRenderer: ActionRender,
       },
-    ],
-    [router]
-  );
+    ];
+
+    if (status === ConfirmationStatus.Pending.toLowerCase()) {
+      baseColDef.push({
+        headerName: 'Status',
+        width: 150,
+        sortable: false,
+        cellRenderer: StatusRenderer,
+      });
+    }
+
+    return baseColDef;
+  }, [router, status]);
 
   const handleSelectionChange = (event: SelectionChangedEvent<WeeklyCommission, any>) => {
     setIds(event.api.getSelectedRows().map((item) => item.id));
@@ -217,7 +229,7 @@ export default function CommissionTable({ tabs, customFilter }: Props) {
 
   return (
     <Box width="100%">
-      {ids.length ? <SelectedBar ids={ids} status={tabs.toLowerCase()} /> : null}
+      {ids.length ? <SelectedBar ids={ids} status={status.toLowerCase()} /> : null}
       <AgGrid<WeeklyCommission>
         gridKey="commission-member-list"
         loading={loading}

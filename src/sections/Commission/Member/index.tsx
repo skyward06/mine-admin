@@ -141,7 +141,7 @@ export default function CommissionMemberListView({ openWeek, setStatus }: Props)
           ))}
         </Tabs>
 
-        <CommissionTable tabs={tabs.value} customFilter={customFilter} />
+        <CommissionTable status={tabs.value} customFilter={customFilter} />
       </Card>
 
       <ConfirmDialog
