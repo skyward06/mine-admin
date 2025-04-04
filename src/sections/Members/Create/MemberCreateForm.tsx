@@ -65,6 +65,7 @@ export default function MemberCreateForm() {
       teamReport: [],
       primaryAddress: '',
       syncWithSendy: true,
+      isTexitRanger: false,
       secondaryAddress: '',
       teamStrategy: 'MANUAL',
       commissionDefault: 'MANUAL',
@@ -361,7 +362,10 @@ export default function MemberCreateForm() {
                   </MenuItem>
                 ))}
               </Field.Select>
-              <Field.Switch name="syncWithSendy" label="Subscribe to Sendy" sx={{ py: 1 }} />
+              <Stack direction="row" justifyContent="space-between">
+                <Field.Switch name="syncWithSendy" label="Subscribe to Sendy" sx={{ py: 1 }} />
+                <Field.Switch name="isTexitRanger" label="Texit Ranger" sx={{ py: 1 }} />
+              </Stack>
             </Box>
           </Card>
         </Grid>

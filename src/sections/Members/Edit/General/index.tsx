@@ -147,6 +147,7 @@ export default function MemberGeneral({ currentMember }: Props) {
               state,
               country,
               syncWithSendy: newMember.syncWithSendy,
+              isTexitRanger: newMember.isTexitRanger,
               preferredContact: newMember.preferredContact,
               preferredContactDetail: newMember.preferredContactDetail,
               zipCode: newMember.zipCode,
@@ -398,7 +399,10 @@ export default function MemberGeneral({ currentMember }: Props) {
                   </MenuItem>
                 ))}
               </Field.Select>
-              <Field.Switch name="syncWithSendy" label="Subscribe to Sendy" sx={{ py: 1 }} />
+              <Stack direction="row" justifyContent="space-between">
+                <Field.Switch name="syncWithSendy" label="Subscribe to Sendy" sx={{ py: 1 }} />
+                <Field.Switch name="isTexitRanger" label="Texit Ranger" sx={{ py: 1 }} />
+              </Stack>
             </Box>
           </Card>
         </Grid>

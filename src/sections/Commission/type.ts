@@ -28,6 +28,7 @@ export type WeeklyCommission = {
   createdAt?: any | null;
   updatedAt?: any | null;
   deletedAt?: any | null;
+  isTexitRanger: boolean;
   shortNote?: string | null;
   status: ConfirmationStatus;
   commissionDefault: CommissionDefaultEnum;
