@@ -146,8 +146,6 @@ export default function FreeShare() {
     </>
   );
 
-  console.log('frontAction => ', frontAction);
-
   return (
     <ConfirmDialog
       open

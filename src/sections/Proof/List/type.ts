@@ -5,14 +5,14 @@ import type { ProofType } from 'src/__generated__/graphql';
 
 export type PFile = {
   __typename?: 'PFile';
-  createdAt?: any | null;
-  deletedAt?: any | null;
   id: string;
+  url: string;
+  size: number;
   mimeType: string;
   originalName: string;
-  size: number;
+  createdAt?: any | null;
   updatedAt?: any | null;
-  url: string;
+  deletedAt?: any | null;
 };
 
 export type RefLink = {
@@ -24,16 +24,16 @@ export type RefLink = {
 export type Proof = {
   __typename?: 'Proof';
   id: string;
+  refId: string;
   amount: number;
-  createdAt?: any | null;
-  deletedAt?: any | null;
+  orderedAt: any;
+  type: ProofType;
+  note?: string | null;
+  vendor?: string | null;
   files?: Array<PFile> | null;
   mineLocation?: string | null;
-  note?: string | null;
-  orderedAt: any;
-  refId: string;
-  vendor?: string | null;
   reflinks?: Array<RefLink> | null;
-  type: ProofType;
+  createdAt?: any | null;
   updatedAt?: any | null;
+  deletedAt?: any | null;
 };

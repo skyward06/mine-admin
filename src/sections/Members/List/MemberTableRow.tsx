@@ -323,7 +323,6 @@ export default function MemberTableRow({
 
                           toast.success('Successfully approved');
                         } catch (error) {
-                          console.log('error => ', error);
                           toast.error('Something went wrong!');
                         }
                       }}
@@ -339,7 +338,6 @@ export default function MemberTableRow({
 
                           toast.success('Successfully moved');
                         } catch (error) {
-                          console.log('error => ', error);
                           toast.error('Something went wrong!');
                         }
                       }}
@@ -354,7 +352,6 @@ export default function MemberTableRow({
 
                           toast.success('Successfully moved');
                         } catch (error) {
-                          console.log('error => ', error);
                           toast.error('Something went wrong!');
                         }
                       }}
@@ -372,7 +369,6 @@ export default function MemberTableRow({
 
                         toast.success('Successfully moved');
                       } catch (error) {
-                        console.log('error => ', error);
                         toast.error('Something went wrong!');
                       }
                     }}
@@ -390,7 +386,6 @@ export default function MemberTableRow({
 
                           toast.success('Successfully approved');
                         } catch (error) {
-                          console.log('error => ', error);
                           toast.error('Something went wrong!');
                         }
                       }}
@@ -405,7 +400,6 @@ export default function MemberTableRow({
 
                           toast.success('Successfully moved');
                         } catch (error) {
-                          console.log('error => ', error);
                           toast.error('Something went wrong!');
                         }
                       }}

@@ -19,7 +19,6 @@ interface Props {
 }
 
 export default function ExportButton({ target, token, params, ...rest }: Props) {
-  console.log('sale => ', params);
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleExport = async () => {
