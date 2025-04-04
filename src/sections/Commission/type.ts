@@ -20,6 +20,7 @@ export type WeeklyCommission = {
   username: string;
   fullName: string;
   commission: number;
+  qualified: boolean;
   weekStartDate: any;
   note?: string | null;
   createdAt?: any | null;
@@ -28,4 +29,8 @@ export type WeeklyCommission = {
   shortNote?: string | null;
   status: ConfirmationStatus;
   commissionDefault: CommissionDefaultEnum;
+  invoice?: {
+    __typename?: 'Invoice';
+    id: number;
+  } | null;
 };
