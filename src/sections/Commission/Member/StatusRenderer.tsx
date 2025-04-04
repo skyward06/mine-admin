@@ -52,7 +52,7 @@ export default function StatusRenderer({ data }: CustomCellRendererProps<WeeklyC
         </Label>
       )}
       {data?.invoice && (
-        <Label variant="soft" color="success" mt={0.8}>
+        <Label variant="soft" color="secondary" mt={0.8}>
           Peer
         </Label>
       )}

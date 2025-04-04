@@ -4,8 +4,8 @@ import countries from 'country-list';
 import isEqual from 'lodash/isEqual';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ApolloError, useMutation } from '@apollo/client';
 import { useRef, useMemo, useState, useEffect, useCallback } from 'react';
+import { ApolloError, useMutation, useQuery as useGraphQuery } from '@apollo/client';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -45,7 +45,7 @@ import TXCWallets from './txcWallets';
 import OtherWallets from './otherWallets';
 import { Schema, type SchemaType } from './schema';
 import { getWallets, hasDuplicates } from './helper';
-import { UPDATE_MEMBER, APPROVE_MEMBER } from '../../query';
+import { UPDATE_MEMBER, APPROVE_MEMBER, FETCH_MEMBER_HISTORY } from '../../query';
 
 // ----------------------------------------------------------------------
 
@@ -73,6 +73,9 @@ export default function MemberGeneral({ currentMember }: Props) {
   const [submit, { loading }] = useMutation(UPDATE_MEMBER);
   const [approve] = useMutation(APPROVE_MEMBER);
   const { promos, fetchPromos } = useFetchPromos();
+  const { data: overview } = useGraphQuery(FETCH_MEMBER_HISTORY, {
+    variables: { data: { id: currentMember.id } },
+  });
 
   const ref = useRef<boolean>(false);
 
@@ -383,7 +386,14 @@ export default function MemberGeneral({ currentMember }: Props) {
                     ? currentMember.groupSetting.commissionDefaults
                     : CommissionDefaultEnum
                 ).map((option) => (
-                  <MenuItem key={option} value={option}>
+                  <MenuItem
+                    key={option}
+                    value={option}
+                    disabled={
+                      option === CommissionDefaultEnum.CashCrypto &&
+                      (overview?.memberOverview.cashCommissionPotential ?? 0) < 0
+                    }
+                  >
                     {option}
                   </MenuItem>
                 ))}
