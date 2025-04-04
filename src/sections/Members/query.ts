@@ -50,6 +50,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         OTPEnabled
         teamReport
         teamStrategy
+        isTexitRanger
         emailVerified
         syncWithSendy
         primaryAddress
@@ -134,6 +135,7 @@ export const FETCH_MEMBER_QUERY = gql(/* GraphQL */ `
       OTPEnabled
       teamReport
       teamStrategy
+      isTexitRanger
       emailVerified
       syncWithSendy
       primaryAddress
@@ -168,6 +170,7 @@ export const FETCH_MEMBER_QUERY = gql(/* GraphQL */ `
         teamReport
         OTPEnabled
         teamStrategy
+        isTexitRanger
         syncWithSendy
         emailVerified
         primaryAddress
@@ -190,6 +193,7 @@ export const FETCH_MEMBER_QUERY = gql(/* GraphQL */ `
         teamReport
         OTPEnabled
         teamStrategy
+        isTexitRanger
         syncWithSendy
         emailVerified
         primaryAddress
@@ -210,6 +214,7 @@ export const FETCH_MEMBER_QUERY = gql(/* GraphQL */ `
         teamReport
         OTPEnabled
         teamStrategy
+        isTexitRanger
         syncWithSendy
         emailVerified
         primaryAddress

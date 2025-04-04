@@ -27,6 +27,7 @@ export const FETCH_COMMISSION_QUERY = gql(/* GraphQL */ `
         qualified
         shortNote
         commission
+        isTexitRanger
         weekStartDate
         commissionDefault
         invoice {

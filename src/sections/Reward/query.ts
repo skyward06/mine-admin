@@ -51,6 +51,7 @@ export const FETCH_MEMBERSTATISTICS_QUERY = gql(/* GraphQL */ `
           teamReport
           OTPEnabled
           teamStrategy
+          isTexitRanger
           syncWithSendy
           emailVerified
           primaryAddress
