@@ -31,6 +31,15 @@ export const FETCH_COMMISSION_QUERY = gql(/* GraphQL */ `
         commissionDefault
         invoice {
           id
+          proof {
+            files {
+              id
+              url
+              size
+              mimeType
+              originalName
+            }
+          }
         }
       }
       total

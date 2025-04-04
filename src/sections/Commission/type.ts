@@ -1,5 +1,7 @@
 import type { ConfirmationStatus, CommissionDefaultEnum } from 'src/__generated__/graphql';
 
+import type { PFile } from '../Proof/List/type';
+
 export type WeeklyCommission = {
   __typename?: 'BasicWeeklyCommission';
   ID: number;
@@ -32,5 +34,9 @@ export type WeeklyCommission = {
   invoice?: {
     __typename?: 'Invoice';
     id: number;
+    proof?: {
+      __typename?: 'Proof';
+      files?: Array<PFile> | null;
+    } | null;
   } | null;
 };

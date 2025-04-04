@@ -214,8 +214,9 @@ export default function CommissionTable({ status, customFilter }: Props) {
     if (status === ConfirmationStatus.Pending.toLowerCase()) {
       baseColDef.push({
         headerName: 'Status',
-        width: 150,
+        width: 180,
         sortable: false,
+        cellClass: 'ag-cell-center',
         cellRenderer: StatusRenderer,
       });
     }
