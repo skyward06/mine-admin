@@ -167,6 +167,6 @@ input[type='number']::-webkit-inner-spin-button {
   height: 100% !important;
 }
 
-.ag-center-cols-viewport {
+/* .ag-center-cols-viewport {
   height: calc(100vh - 400px) !important;
-}
+} */

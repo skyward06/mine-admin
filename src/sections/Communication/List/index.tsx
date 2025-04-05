@@ -87,9 +87,7 @@ export function MemberListView() {
         setWeekly(true);
         setFilter({
           status: 'PENDING',
-          member: {
-            commissionDefault: 'MANUAL',
-          },
+          commissionDefault: 'MANUAL',
         });
       }
     }
