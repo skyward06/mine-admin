@@ -74,8 +74,8 @@ export function MemberListView() {
           introduceMembers: {
             some: {
               createdAt: {
-                gte: customizeDate(`${dayjs(weekStartDate).startOf('week')}`),
-                lt: dayjs(customizeDate(`${dayjs(weekStartDate).endOf('week')}`)),
+                gte: customizeDate(`${dayjs(weekStartDate).utc().startOf('week')}`),
+                lt: dayjs(customizeDate(`${dayjs(weekStartDate).utc().endOf('week')}`)),
               },
               status: true,
             },
