@@ -15,7 +15,7 @@ import { useRouter } from 'src/routes/hooks';
 import { useBoolean } from 'src/hooks/useBoolean';
 
 import { formatID } from 'src/utils/helper';
-import { today } from 'src/utils/format-time';
+import { today, isSaturday } from 'src/utils/format-time';
 
 import { PERMISSIONS } from 'src/consts';
 
@@ -103,6 +103,7 @@ export const ActionRender = memo(
                     popover.onClose();
                     confirm.onTrue();
                   }}
+                  disabled={isSaturday()}
                 >
                   <Iconify icon="bxs:coffee-togo" color="red" />
                   Delete

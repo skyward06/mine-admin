@@ -225,13 +225,20 @@ export default function SaleListView() {
         action={
           <Stack direction={{ xs: 'column', md: 'row' }} gap={1.5}>
             {(user?.role?.sale === PERMISSIONS.EDITOR_PERMISSION.value ||
+              user?.role?.sale === PERMISSIONS.PAST_EDIT_PERMISSION.value ||
               user?.role?.sale === 7) && (
               <Button
                 component={RouterLink}
                 href={paths.dashboard.sales.new}
                 variant="contained"
                 color="primary"
-                disabled={isSaturday()}
+                disabled={
+                  !(
+                    user?.role?.sale === PERMISSIONS.EDITOR_PERMISSION.value ||
+                    user?.role?.sale === PERMISSIONS.PAST_EDIT_PERMISSION.value ||
+                    user?.role?.sale === 7
+                  ) && isSaturday()
+                }
                 startIcon={<Iconify icon="mingcute:add-line" />}
               >
                 New Sale
