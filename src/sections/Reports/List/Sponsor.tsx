@@ -67,7 +67,7 @@ export default function SponsorListView({ setWeek, openWeek }: Props) {
             some: {
               createdAt: {
                 gte: customizeDate(`${dayjs(weekStartDate).utc().startOf('week')}`),
-                lt: customizeDate(`${dayjs(weekStartDate).utc().endOf('week')}`),
+                lt: customizeDate(`${dayjs(weekStartDate).utc().endOf('week').add(1, 'day')}`),
               },
               status: true,
             },
