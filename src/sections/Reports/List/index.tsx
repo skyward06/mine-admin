@@ -64,7 +64,7 @@ export default function ReportView() {
   }
 
   const [week, setWeek] = useState<string>(
-    formatDate(`${dayjs().startOf('week').add(-1, 'week')}`, 'YYYY-MM-DD')
+    formatDate(`${dayjs().utc().startOf('week')}`, 'YYYY-MM-DD')
   );
   const [all, setAll] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
