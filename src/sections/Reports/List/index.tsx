@@ -1,8 +1,7 @@
 import axios from 'axios';
-import dayjs from 'dayjs';
 import { useState } from 'react';
-import { useNavigate } from 'react-router';
 import { Helmet } from 'react-helmet-async';
+import { useLocation, useNavigate } from 'react-router';
 
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
@@ -36,9 +35,10 @@ import { useGenerateWeeklyReports } from '../useApollo';
 
 // ----------------------------------------------------------------------
 export default function ReportView() {
-  const tabs = useTabs('revenue');
-  const navigate = useNavigate();
   const openWeek = useBoolean();
+  const navigate = useNavigate();
+  const tabs = useTabs('revenue');
+  const { search } = useLocation();
 
   const { user } = useAuthContext();
 
@@ -63,9 +63,6 @@ export default function ReportView() {
     });
   }
 
-  const [week, setWeek] = useState<string>(
-    formatDate(`${dayjs().utc().startOf('week')}`, 'YYYY-MM-DD')
-  );
   const [all, setAll] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -107,11 +104,12 @@ export default function ReportView() {
   };
 
   const handleSponsorExport = async () => {
+    const temp = formatDate(`${new URLSearchParams(search).get('weekStartDate')}`, 'YYYY-MM-DD');
     setLoading(true);
 
     const token = localStorage.getItem(CONFIG.storageTokenKey);
 
-    const { data } = await axios.get(`${CONFIG.SITE_URL}/api/export-sponsors/byweek/${week}`, {
+    const { data } = await axios.get(`${CONFIG.SITE_URL}/api/export-sponsors/byweek/${temp}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -125,7 +123,7 @@ export default function ReportView() {
 
     const a = document.createElement('a');
     a.href = url;
-    a.download = `sponsors-${week}.xlsx`;
+    a.download = `sponsors-${temp}.xlsx`;
 
     document.body.appendChild(a);
     a.click();
@@ -252,7 +250,7 @@ export default function ReportView() {
 
         {tabs.value === 'metals' && <MetalListView />}
 
-        {tabs.value === 'sponsors' && <SponsorListView setWeek={setWeek} openWeek={openWeek} />}
+        {tabs.value === 'sponsors' && <SponsorListView openWeek={openWeek} />}
       </DashboardContent>
     </>
   );
