@@ -5,7 +5,7 @@ import type { ColDef, ITextFilterParams } from '@ag-grid-community/core';
 
 import { useMemo, useEffect } from 'react';
 
-import { useAgQuery as useQueryString } from 'src/routes/hooks';
+import { useQuery, useAgQuery as useQueryString } from 'src/routes/hooks';
 
 import { customizeFullName } from 'src/utils/helper';
 import { parseFilterModel } from 'src/utils/parseFilter';
@@ -25,11 +25,14 @@ interface Props {
 }
 
 export default function MemberListView({ filter: categoryFilter, listId, weekly }: Props) {
+  const [query] = useQuery();
   const [{ page = '1,50', sort = 'createdAt', filter }] = useQueryString();
   const graphQueryFilter = useMemo(
     () => parseFilterModel({ ...categoryFilter, status: true }, filter),
     [filter, categoryFilter]
   );
+
+  const { weekStartDate } = query;
 
   const { loading, rowCount, members, fetchMembers } = useFetchMembers();
   const {
@@ -53,14 +56,16 @@ export default function MemberListView({ filter: categoryFilter, listId, weekly 
 
   useEffect(() => {
     if (weekly) {
-      fetchWeeklyMembers({ variables: { filter: categoryFilter, page, sort } });
+      fetchWeeklyMembers({
+        variables: { filter: categoryFilter, page, sort },
+      });
     } else if (listId) {
       fetchMemberListById({ variables: { data: { id: listId } } });
     } else {
       fetchMembers({ variables: { filter: graphQueryFilter, page, sort } });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [graphQueryFilter, page, sort, listId]);
+  }, [graphQueryFilter, page, sort, listId, weekStartDate]);
 
   const colDefs = useMemo<ColDef<Member | BasicListMember | WeeklyMember>[]>(
     () => [
