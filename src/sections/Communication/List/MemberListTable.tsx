@@ -28,7 +28,7 @@ interface Props {
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', sortable: true },
   { id: 'createdAt', label: 'Created At', sortable: true },
-  { id: 'actions', label: 'Action', sortable: false },
+  { id: 'actions', label: 'Action', width: 80, sortable: false },
 ];
 
 export default function MemberListTable({ handleRemove }: Props) {
@@ -67,7 +67,7 @@ export default function MemberListTable({ handleRemove }: Props) {
                 <TableRow hover key={row.id}>
                   <TableCell>{row.name}</TableCell>
                   <TableCell>{formatDate(row.createdAt)}</TableCell>
-                  <TableCell>
+                  <TableCell sx={{ textAlign: 'center' }}>
                     <IconButton color="error" onClick={() => handleRemove(row.id)}>
                       <Iconify icon="bxs:coffee-togo" />
                     </IconButton>
