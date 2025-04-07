@@ -32,6 +32,7 @@ export const FETCH_MEMBER_LIST_QUERY = gql(/* GraphQL */ `
         id
         name
         emails
+        createdAt
         members {
           id
           email
@@ -164,6 +165,18 @@ export const UPDATE_EMAIL_TEMPLATE = gql(/* GraphQL */ `
   mutation UpdateEmailTemplate($data: UpdateEmailTemplateInput!) {
     updateEmailTemplate(data: $data) {
       id
+      frontActions {
+        ...FrontActionFields
+      }
+    }
+  }
+`);
+
+export const REMOVE_MEMBER_LIST = gql(/* GraphQL */ `
+  mutation RemoveMemberList($data: IDInput!) {
+    removeMemberList(data: $data) {
+      message
+      result
       frontActions {
         ...FrontActionFields
       }

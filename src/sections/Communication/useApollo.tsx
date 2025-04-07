@@ -4,6 +4,7 @@ import { useMutation, useLazyQuery } from '@apollo/client';
 import {
   FETCH_MEMBERS,
   CREATE_MEMBER_LIST,
+  REMOVE_MEMBER_LIST,
   FETCH_CAMPAIGN_QUERY,
   FETCH_CAMPAIGN_BY_ID,
   FETCH_WEEKLY_MEMBERS,
@@ -54,7 +55,7 @@ export function useFetchMemberList() {
     return rowCountRef.current;
   }, [data]);
 
-  return { loading, memberList: data?.memberlists.memberLists, rowCount, fetchMemberList };
+  return { loading, memberList: data?.memberlists.memberLists ?? [], rowCount, fetchMemberList };
 }
 
 export function useFetchTemplates() {
@@ -133,6 +134,15 @@ export function useCreateMemberList() {
   });
 
   return { loading, data, error, createMemberList };
+}
+
+export function useRemoveMemberList() {
+  const [removeMemberList, { loading, data, error }] = useMutation(REMOVE_MEMBER_LIST, {
+    awaitRefetchQueries: true,
+    refetchQueries: ['Memberlists'],
+  });
+
+  return { loading, data, error, removeMemberList };
 }
 
 export function useCreateTemplate() {
