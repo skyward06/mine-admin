@@ -24,10 +24,12 @@ import { useFetchGroupSettings } from 'src/sections/GroupSettings/useApollo';
 
 import MemberList from './MemberList';
 import CreateMemberList from './Create';
+import RemoveMemberList from './Remove';
 import { useFetchMemberList } from '../useApollo';
 
 export function MemberListView() {
   const open = useBoolean();
+  const remove = useBoolean();
   const openWeek = useBoolean();
   const tabs = useTabs('general.all');
   const [filter, setFilter] = useState<any>();
@@ -189,15 +191,21 @@ export function MemberListView() {
               />
             ))}
           </Tabs>
-          <IconButton color="success" onClick={open.onTrue}>
-            <Iconify icon="gridicons:add-outline" />
-          </IconButton>
+          <Stack direction="row" justifyContent="center" spacing={1}>
+            <IconButton color="success" onClick={open.onTrue}>
+              <Iconify icon="gridicons:add-outline" />
+            </IconButton>
+            <IconButton color="error" onClick={remove.onTrue}>
+              <Iconify icon="mingcute:minus-circle-line" />
+            </IconButton>
+          </Stack>
         </Box>
 
         <MemberList filter={filter} listId={listId} weekly={weekly} />
       </Card>
 
       <CreateMemberList open={open} />
+      <RemoveMemberList open={remove} />
 
       <ConfirmDialog
         open={openWeek.value}
