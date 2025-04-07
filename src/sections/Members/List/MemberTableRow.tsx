@@ -478,7 +478,7 @@ export default function MemberTableRow({
               try {
                 await updatePassword({ variables: { data: { id, newPassword } } });
 
-                toast.success('password updated successfully!');
+                toast.success('Password updated successfully!');
 
                 confirm.onFalse();
               } catch (err) {

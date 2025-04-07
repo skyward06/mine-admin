@@ -65,9 +65,9 @@ export default function CreateMemberList({ open }: Props) {
         setQuery({ ...query, filter: {} });
       }}
     >
-      <DialogTitle>Create MemberList</DialogTitle>
+      <DialogTitle>Create Memberlist Group</DialogTitle>
       <DialogContent>
-        <Paper sx={{ my: 0 }}>
+        <Paper>
           <TextField
             label="Name"
             size="small"
