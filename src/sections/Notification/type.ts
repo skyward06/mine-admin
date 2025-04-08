@@ -7,8 +7,6 @@ export type NotificationClient = {
   id: string;
   read: boolean;
   message: string;
-  readMembers: number;
-  totalMembers: number;
   members: Array<Member>;
   level: NotificationLevel;
   createdAt?: any | null;

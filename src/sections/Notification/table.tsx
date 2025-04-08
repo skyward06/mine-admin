@@ -76,20 +76,6 @@ export default function NotificationTable() {
         ),
       },
       {
-        field: 'totalMembers',
-        headerName: 'Total Miners',
-        filter: 'agNumberColumnFilter',
-        width: 150,
-        cellClass: 'ag-number-cell ag-cell-center',
-      },
-      {
-        field: 'readMembers',
-        headerName: 'Read Miners',
-        filter: 'agNumberColumnFilter',
-        width: 150,
-        cellClass: 'ag-number-cell ag-cell-center',
-      },
-      {
         field: 'createdAt',
         headerName: 'Created At',
         filter: 'agDateColumnFilter',

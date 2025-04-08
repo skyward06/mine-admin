@@ -18,7 +18,7 @@ interface Props {
 }
 
 export function NotificationItem({ notification }: Props) {
-  const { id, level, message, readMembers, totalMembers, read, updatedAt } = notification;
+  const { id, level, message, read, updatedAt } = notification;
 
   const { readNotifications } = useReadNotifications();
 
@@ -50,20 +50,7 @@ export function NotificationItem({ notification }: Props) {
             </Label>
             {!read && <Iconify icon="radix-icons:dot-filled" color="red" />}
           </Stack>
-          <Stack
-            direction="row"
-            justifyContent="flex-end"
-            divider={<Iconify icon="bi:dot" color="gray" />}
-          >
-            <Stack direction="row" color="dimgray" sx={{ pt: 0.2 }}>
-              <Iconify icon="mdi:user-outline" width={16} />
-              <Typography fontSize={12}>{totalMembers}</Typography>
-              <Typography fontSize={12}>/</Typography>
-              <Iconify icon="mdi:user-check-outline" width={16} color="lightseagreen" />
-              <Typography fontSize={12} color="lightseagreen">
-                {readMembers}
-              </Typography>
-            </Stack>
+          <Stack direction="row" justifyContent="flex-end">
             <Typography variant="body2" color="dimgray">
               {formatDateTime(updatedAt)}
             </Typography>
