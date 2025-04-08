@@ -28,7 +28,7 @@ interface Bonus {
 }
 
 export default function Bonuses({ packages, groupSettingCommissionBonuses }: Props) {
-  const [editable, setEditable] = useState<any>({});
+  const [editable, setEditable] = useState<any>();
 
   const { control, setValue } = useFormContext();
   const { fields, append, remove } = useFieldArray({
@@ -46,11 +46,17 @@ export default function Bonuses({ packages, groupSettingCommissionBonuses }: Pro
       }));
 
   useEffect(() => {
-    groupSettingCommissionBonuses.forEach(({ commission, lPoint, rPoint }, index) => {
-      setValue(`groupSettingCommissionBonuses[${index}].commission`, commission);
-      setValue(`groupSettingCommissionBonuses[${index}].lPoint`, lPoint);
-      setValue(`groupSettingCommissionBonuses[${index}].rPoint`, rPoint);
-    });
+    groupSettingCommissionBonuses.forEach(
+      ({ commission, lPoint, rPoint, qPackageId, uPackageId }, index) => {
+        setEditable({ ...editable, [index]: !!uPackageId });
+
+        setValue(`groupSettingCommissionBonuses[${index}].commission`, commission);
+        setValue(`groupSettingCommissionBonuses[${index}].lPoint`, lPoint);
+        setValue(`groupSettingCommissionBonuses[${index}].rPoint`, rPoint);
+        setValue(`groupSettingCommissionBonuses[${index}].qPackageId`, qPackageId);
+        setValue(`groupSettingCommissionBonuses[${index}].uPackageId`, uPackageId);
+      }
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [groupSettingCommissionBonuses]);
 
@@ -59,6 +65,8 @@ export default function Bonuses({ packages, groupSettingCommissionBonuses }: Pro
       commission: 0,
       lPoint: 0,
       rPoint: 0,
+      qPackageId: null,
+      uPackageId: null,
     });
   };
 
@@ -131,27 +139,35 @@ export default function Bonuses({ packages, groupSettingCommissionBonuses }: Pro
               }}
             >
               <Box textAlign="end">
-                <Checkbox
-                  onClick={() => {
-                    setEditable({ ...editable, [index]: !editable[index] });
-                    setValue(`groupSettingCommissionBonuses[${index}].uPackageId`, null);
-                  }}
-                />
+                {editable && (
+                  <Checkbox
+                    checked={editable[index]}
+                    onChange={(event) => {
+                      setEditable({ ...editable, [index]: event.target.checked });
+
+                      if (!event.target.checked) {
+                        setValue(`groupSettingCommissionBonuses[${index}].uPackageId`, null);
+                      }
+                    }}
+                  />
+                )}
               </Box>
 
-              <Field.Select
-                name={`groupSettingCommissionBonuses[${index}].uPackageId`}
-                label="Unqualified Package"
-                disabled={!editable[index]}
-              >
-                <MenuItem value="">None</MenuItem>
-                <Divider sx={{ borderStyle: 'dashsed' }} />
-                {packages.map((option) => (
-                  <MenuItem key={option.id} value={option.id}>
-                    {option.productName}
-                  </MenuItem>
-                ))}
-              </Field.Select>
+              {editable && (
+                <Field.Select
+                  name={`groupSettingCommissionBonuses[${index}].uPackageId`}
+                  label="Unqualified Package"
+                  disabled={!editable[index]}
+                >
+                  <MenuItem value="">None</MenuItem>
+                  <Divider sx={{ borderStyle: 'dashsed' }} />
+                  {packages.map((option) => (
+                    <MenuItem key={option.id} value={option.id}>
+                      {option.productName}
+                    </MenuItem>
+                  ))}
+                </Field.Select>
+              )}
 
               <Button
                 color="error"
