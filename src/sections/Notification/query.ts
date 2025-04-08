@@ -10,8 +10,6 @@ export const FETCH_NOTIFICATION_QUERY = gql(/* GraphQL */ `
         message
         createdAt
         updatedAt
-        readMembers
-        totalMembers
       }
       total
     }
