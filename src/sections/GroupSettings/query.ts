@@ -15,6 +15,8 @@ export const FETCH_GROUP_SETTINGS = gql(/* GraphQL */ `
           lPoint
           rPoint
           commission
+          qPackageId
+          uPackageId
         }
         sponsorBonusPackage {
           id
