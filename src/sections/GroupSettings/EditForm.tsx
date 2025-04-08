@@ -118,25 +118,21 @@ export default function EditForm({ current }: Props) {
           <Field.Text name="name" label="Name" />
           <Field.DatePicker name="limitDate" label="Limit Date" format="YYYY-MM-DD" />
 
-          <Field.Select name="sponsorBonusPackageId" label="Sponsor Bonus Package">
-            <MenuItem value="">None</MenuItem>
-            <Divider sx={{ borderStyle: 'dashed' }} />
-            {packages.map((option) => (
-              <MenuItem key={option?.id} value={option?.id}>
-                {option?.productName}
-              </MenuItem>
-            ))}
-          </Field.Select>
-
-          <Field.Select name="rollSponsorBonusPackageId" label="Roll Sponsor Bonus Package">
-            <MenuItem value="">None</MenuItem>
-            <Divider sx={{ borderStyle: 'dashed' }} />
-            {packages.map((option) => (
-              <MenuItem key={option?.id} value={option?.id}>
-                {option?.productName}
-              </MenuItem>
-            ))}
-          </Field.Select>
+          {['sponsorBonusPackageId', 'rollSponsorBonusPackageId'].map((field) => {
+            const label = field.replace(/([A-Z])/g, ' $1');
+            const capitalizedLabel = label.charAt(0).toUpperCase() + label.slice(1);
+            return (
+              <Field.Select key={field} name={field} label={capitalizedLabel}>
+                <MenuItem value="">None</MenuItem>
+                <Divider sx={{ borderStyle: 'dashed' }} />
+                {packages.map((option) => (
+                  <MenuItem key={option?.id} value={option?.id}>
+                    {option?.productName}
+                  </MenuItem>
+                ))}
+              </Field.Select>
+            );
+          })}
 
           <Field.MultiSelect
             name="commissionDefaults"
@@ -149,7 +145,10 @@ export default function EditForm({ current }: Props) {
           />
         </Box>
 
-        <Bonuses groupSettingCommissionBonuses={current?.groupSettingCommissionBonuses ?? []} />
+        <Bonuses
+          groupSettingCommissionBonuses={current?.groupSettingCommissionBonuses ?? []}
+          packages={packages}
+        />
       </Card>
 
       <Stack alignItems="flex-end" sx={{ mt: 3 }}>

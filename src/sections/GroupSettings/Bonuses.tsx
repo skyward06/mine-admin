@@ -1,10 +1,14 @@
-import { useEffect } from 'react';
+import type { Package } from 'src/__generated__/graphql';
+
+import { useState, useEffect } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
+import Checkbox from '@mui/material/Checkbox';
+import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 
@@ -12,17 +16,20 @@ import { Field } from 'src/components/Form';
 import { Iconify } from 'src/components/Iconify';
 
 interface Props {
+  packages: Package[];
   groupSettingCommissionBonuses: any[];
 }
 
 interface Bonus {
   id: string;
-  commission?: string;
   lPoint?: string;
   rPoint?: number;
+  commission?: string;
 }
 
-export default function Bonuses({ groupSettingCommissionBonuses }: Props) {
+export default function Bonuses({ packages, groupSettingCommissionBonuses }: Props) {
+  const [editable, setEditable] = useState<any>({});
+
   const { control, setValue } = useFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
@@ -74,7 +81,7 @@ export default function Bonuses({ groupSettingCommissionBonuses }: Props) {
               display="grid"
               sx={{
                 mb: 2,
-                gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: '32% 32% 32% auto' },
+                gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: '20% 20% 20% 34%' },
               }}
             >
               <Field.Text
@@ -98,6 +105,54 @@ export default function Bonuses({ groupSettingCommissionBonuses }: Props) {
                 defaultValue={item.rPoint}
               />
 
+              <Field.Select
+                name={`groupSettingCommissionBonuses[${index}].qPackageId`}
+                label="Package"
+              >
+                <MenuItem value="">None</MenuItem>
+                <Divider sx={{ borderStyle: 'dashsed' }} />
+                {packages.map((option) => (
+                  <MenuItem key={option.id} value={option.id}>
+                    {option.productName}
+                  </MenuItem>
+                ))}
+              </Field.Select>
+            </Box>
+
+            <Box
+              key={`${item.id}-second`}
+              rowGap={2}
+              columnGap={1}
+              display="grid"
+              alignItems="center"
+              sx={{
+                mb: 2,
+                gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: '61% 34% auto' },
+              }}
+            >
+              <Box textAlign="end">
+                <Checkbox
+                  onClick={() => {
+                    setEditable({ ...editable, [index]: !editable[index] });
+                    setValue(`groupSettingCommissionBonuses[${index}].uPackageId`, null);
+                  }}
+                />
+              </Box>
+
+              <Field.Select
+                name={`groupSettingCommissionBonuses[${index}].uPackageId`}
+                label="Unqualified Package"
+                disabled={!editable[index]}
+              >
+                <MenuItem value="">None</MenuItem>
+                <Divider sx={{ borderStyle: 'dashsed' }} />
+                {packages.map((option) => (
+                  <MenuItem key={option.id} value={option.id}>
+                    {option.productName}
+                  </MenuItem>
+                ))}
+              </Field.Select>
+
               <Button
                 color="error"
                 sx={{ mt: 0.5 }}
@@ -109,6 +164,7 @@ export default function Bonuses({ groupSettingCommissionBonuses }: Props) {
           <Divider sx={{ borderStyle: 'dashed' }} />
         </Stack>
       ))}
+
       <IconButton
         color="default"
         sx={{

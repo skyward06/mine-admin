@@ -10,9 +10,11 @@ export const Schema = zod.object({
   commissionDefaults: zod.array(zod.string({ required_error: 'Commission Defaults is required' })),
   groupSettingCommissionBonuses: zod.array(
     zod.object({
-      commission: zod.number(),
       lPoint: zod.number(),
       rPoint: zod.number(),
+      commission: zod.number(),
+      qPackageId: zod.string({ required_error: 'Package is requried' }),
+      uPackageId: zod.string().optional().nullable(),
     })
   ),
 });
