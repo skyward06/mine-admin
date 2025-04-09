@@ -28,7 +28,10 @@ export default function SendForm({ emails, template, listType }: Props) {
 
       <Stack direction={{ md: 'row', xs: 'column' }} sx={{ py: 4 }} spacing={2}>
         <Stack width={{ md: 0.5, xs: 1 }} border="1px solid #eeeeee" borderRadius={1} p={2}>
-          <Box height={{ md: 530, xs: 200 }} style={{ overflowY: 'scroll', overflowX: 'hidden' }}>
+          <Box
+            height={{ md: 'calc(100vh - 330px)', xs: 200 }}
+            style={{ overflowY: 'scroll', overflowX: 'hidden' }}
+          >
             {emails.join('\n')}
           </Box>
         </Stack>
