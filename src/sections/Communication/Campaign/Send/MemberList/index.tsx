@@ -82,8 +82,10 @@ export function MemberListView({ setEmails, setListType, setListExtra }: Props) 
           introduceMembers: {
             some: {
               createdAt: {
-                gte: customizeDate(`${dayjs(weekStartDate).startOf('week')}`),
-                lt: dayjs(customizeDate(`${dayjs(weekStartDate).endOf('week')}`)),
+                gte: customizeDate(`${dayjs(weekStartDate).utc().startOf('week')}`),
+                lt: dayjs(
+                  customizeDate(`${dayjs(weekStartDate).utc().endOf('week').add(1, 'day')}`)
+                ),
               },
               status: true,
             },
@@ -96,9 +98,7 @@ export function MemberListView({ setEmails, setListType, setListExtra }: Props) 
         setListType(CampaignListType.PendingManualCommission);
         setFilter({
           status: 'PENDING',
-          member: {
-            commissionDefault: 'MANUAL',
-          },
+          commissionDefault: 'MANUAL',
         });
       }
     }
