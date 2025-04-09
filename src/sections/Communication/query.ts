@@ -102,6 +102,7 @@ export const FETCH_CAMPAIGN_QUERY = gql(/* GraphQL */ `
           open
           sent
           email
+          sender
           sentTime
           openTime
         }
@@ -116,6 +117,7 @@ export const FETCH_CAMPAIGN_BY_ID = gql(/* GraphQL */ `
     campaignById(data: $data) {
       id
       body
+      sender
       subject
       listType
       listExtra
@@ -124,6 +126,7 @@ export const FETCH_CAMPAIGN_BY_ID = gql(/* GraphQL */ `
         sent
         body
         email
+        sender
         sentTime
         openTime
       }

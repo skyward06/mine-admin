@@ -292,6 +292,7 @@ export const FETCH_MEMBER_QUERY = gql(/* GraphQL */ `
         sent
         body
         email
+        sender
         subject
         openTime
         sentTime
