@@ -103,6 +103,11 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
           updatedAt
           description
         }
+        setting {
+          id
+          memberId
+          communication
+        }
         createdAt
         updatedAt
         deletedAt
@@ -296,6 +301,11 @@ export const FETCH_MEMBER_QUERY = gql(/* GraphQL */ `
         subject
         openTime
         sentTime
+      }
+      setting {
+        id
+        memberId
+        communication
       }
       createdAt
       updatedAt

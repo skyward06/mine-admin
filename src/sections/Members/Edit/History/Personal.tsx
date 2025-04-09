@@ -157,9 +157,9 @@ export const Personal = () => {
 
           <Stack>
             {/* Basic info */}
-            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+            <Stack direction="row" spacing={2} pb={1}>
               <Stack width={0.5}>
-                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                <Typography variant="body2" fontWeight="bold">
                   Username:
                 </Typography>
               </Stack>
@@ -168,9 +168,9 @@ export const Personal = () => {
               </Stack>
             </Stack>
 
-            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+            <Stack direction="row" spacing={2} pb={1}>
               <Stack width={0.5}>
-                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                <Typography variant="body2" fontWeight="bold">
                   Sponsor:
                 </Typography>
               </Stack>
@@ -188,9 +188,9 @@ export const Personal = () => {
               </Stack>
             </Stack>
 
-            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+            <Stack direction="row" spacing={2} pb={1}>
               <Stack width={0.5}>
-                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                <Typography variant="body2" fontWeight="bold">
                   Email:
                 </Typography>
               </Stack>
@@ -199,9 +199,9 @@ export const Personal = () => {
               </Stack>
             </Stack>
 
-            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+            <Stack direction="row" spacing={2} pb={1}>
               <Stack width={0.5}>
-                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                <Typography variant="body2" fontWeight="bold">
                   Mobile:
                 </Typography>
               </Stack>
@@ -210,9 +210,9 @@ export const Personal = () => {
               </Stack>
             </Stack>
 
-            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+            <Stack direction="row" spacing={2} pb={1}>
               <Stack width={0.5}>
-                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                <Typography variant="body2" fontWeight="bold">
                   Address:
                 </Typography>
               </Stack>
@@ -221,9 +221,9 @@ export const Personal = () => {
               </Stack>
             </Stack>
 
-            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+            <Stack direction="row" spacing={2} pb={1}>
               <Stack width={0.5}>
-                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                <Typography variant="body2" fontWeight="bold">
                   Address 2:
                 </Typography>
               </Stack>
@@ -232,9 +232,9 @@ export const Personal = () => {
               </Stack>
             </Stack>
 
-            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+            <Stack direction="row" spacing={2} pb={1}>
               <Stack width={0.5}>
-                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                <Typography variant="body2" fontWeight="bold">
                   City:
                 </Typography>
               </Stack>
@@ -243,9 +243,9 @@ export const Personal = () => {
               </Stack>
             </Stack>
 
-            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+            <Stack direction="row" spacing={2} pb={1}>
               <Stack width={0.5}>
-                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                <Typography variant="body2" fontWeight="bold">
                   ZIP Code:
                 </Typography>
               </Stack>
@@ -254,9 +254,9 @@ export const Personal = () => {
               </Stack>
             </Stack>
 
-            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+            <Stack direction="row" spacing={2} pb={1}>
               <Stack width={0.5}>
-                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                <Typography variant="body2" fontWeight="bold">
                   Country:
                 </Typography>
               </Stack>
@@ -265,9 +265,9 @@ export const Personal = () => {
               </Stack>
             </Stack>
 
-            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+            <Stack direction="row" spacing={2} pb={1}>
               <Stack width={0.5}>
-                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                <Typography variant="body2" fontWeight="bold">
                   State:
                 </Typography>
               </Stack>
@@ -276,9 +276,9 @@ export const Personal = () => {
               </Stack>
             </Stack>
 
-            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+            <Stack direction="row" spacing={2} pb={1}>
               <Stack width={0.5}>
-                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                <Typography variant="body2" fontWeight="bold">
                   Asset ID:
                 </Typography>
               </Stack>
@@ -287,9 +287,9 @@ export const Personal = () => {
               </Stack>
             </Stack>
 
-            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+            <Stack direction="row" spacing={2} pb={1}>
               <Stack width={0.5}>
-                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                <Typography variant="body2" fontWeight="bold">
                   PromoCode:
                 </Typography>
               </Stack>
@@ -298,9 +298,9 @@ export const Personal = () => {
               </Stack>
             </Stack>
 
-            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+            <Stack direction="row" spacing={2} pb={1}>
               <Stack width={0.5}>
-                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                <Typography variant="body2" fontWeight="bold">
                   Joined At:
                 </Typography>
               </Stack>
@@ -311,9 +311,9 @@ export const Personal = () => {
               </Stack>
             </Stack>
 
-            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+            <Stack direction="row" spacing={2} pb={1}>
               <Stack width={0.5}>
-                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                <Typography variant="body2" fontWeight="bold">
                   Commission Default:
                 </Typography>
               </Stack>
@@ -325,9 +325,9 @@ export const Personal = () => {
             <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
 
             {/* Team info */}
-            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+            <Stack direction="row" spacing={2} pb={1}>
               <Stack width={0.5}>
-                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                <Typography variant="body2" fontWeight="bold">
                   Group:
                 </Typography>
               </Stack>
@@ -336,9 +336,9 @@ export const Personal = () => {
               </Stack>
             </Stack>
 
-            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+            <Stack direction="row" spacing={2} pb={1}>
               <Stack width={0.5}>
-                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                <Typography variant="body2" fontWeight="bold">
                   Team Strategy:
                 </Typography>
               </Stack>
@@ -347,9 +347,9 @@ export const Personal = () => {
               </Stack>
             </Stack>
 
-            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+            <Stack direction="row" spacing={2} pb={1}>
               <Stack width={0.5}>
-                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                <Typography variant="body2" fontWeight="bold">
                   Starting Points:
                 </Typography>
               </Stack>
@@ -358,9 +358,9 @@ export const Personal = () => {
               </Stack>
             </Stack>
 
-            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+            <Stack direction="row" spacing={2} pb={1}>
               <Stack width={0.5}>
-                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                <Typography variant="body2" fontWeight="bold">
                   New Points:
                 </Typography>
               </Stack>
@@ -369,9 +369,9 @@ export const Personal = () => {
               </Stack>
             </Stack>
 
-            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+            <Stack direction="row" spacing={2} pb={1}>
               <Stack width={0.5}>
-                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                <Typography variant="body2" fontWeight="bold">
                   Placement Parent:
                 </Typography>
               </Stack>
@@ -380,9 +380,9 @@ export const Personal = () => {
               </Stack>
             </Stack>
 
-            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+            <Stack direction="row" spacing={2} pb={1}>
               <Stack width={0.5}>
-                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                <Typography variant="body2" fontWeight="bold">
                   Miner Left:
                 </Typography>
               </Stack>
@@ -391,9 +391,9 @@ export const Personal = () => {
               </Stack>
             </Stack>
 
-            <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
+            <Stack direction="row" spacing={2} pb={1}>
               <Stack width={0.5}>
-                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                <Typography variant="body2" fontWeight="bold">
                   Miner Right:
                 </Typography>
               </Stack>
@@ -408,13 +408,38 @@ export const Personal = () => {
           {/* Wallet info */}
           <Stack sx={{ mt: 2 }}>
             {member?.memberWallets?.map((item) => (
-              <Stack sx={{ pb: 1 }}>
-                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+              <Stack pb={1}>
+                <Typography variant="body2" fontWeight="bold">
                   {item?.payout?.method}
                 </Typography>
                 <Typography variant="body2">{item?.address}</Typography>
               </Stack>
             ))}
+          </Stack>
+
+          <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
+
+          {/* Setting info */}
+          <Typography variant="body1" fontWeight="bold" mt={2}>
+            Setting
+          </Typography>
+
+          <Stack direction="row" spacing={2} pb={1}>
+            <Stack width={0.5}>
+              <Typography variant="body2" fontWeight="bold">
+                Communication
+              </Typography>
+            </Stack>
+            <Stack width={1}>
+              <Iconify
+                icon={
+                  member?.setting?.communication
+                    ? 'ic:twotone-check-box'
+                    : 'iconamoon:sign-times-square-duotone'
+                }
+                color={member?.setting?.communication ? 'green' : 'red'}
+              />
+            </Stack>
           </Stack>
         </Card>
       </Grid>

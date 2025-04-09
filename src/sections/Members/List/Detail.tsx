@@ -165,6 +165,8 @@ export default function Detail({ open, row }: Props) {
 
             {row?.adminNotes?.map((item) => (
               <>
+                <Divider sx={{ borderStyle: 'solid' }} />
+
                 <Stack direction="row" justifyContent="space-between" alignItems="center">
                   <Typography variant="subtitle1">{item?.admin?.username}</Typography>
                   <Stack direction="row" alignItems="center">
@@ -180,9 +182,30 @@ export default function Detail({ open, row }: Props) {
                   </Stack>
                 </Stack>
                 <Typography>{item?.description}</Typography>
-                <Divider sx={{ borderStyle: 'solid' }} />
               </>
             ))}
+
+            <Divider sx={{ borderStyle: 'dashed', borderColor: 'gray' }} />
+
+            <Stack mt={0.5}>
+              <Typography variant="subtitle1" fontWeight={700}>
+                Setting
+              </Typography>
+
+              <Stack direction="row" spacing={2} alignItems="center">
+                <Typography variant="body2" fontWeight={600}>
+                  Communication:
+                </Typography>
+                <Iconify
+                  icon={
+                    row?.setting?.communication
+                      ? 'ic:twotone-check-box'
+                      : 'iconamoon:sign-times-square-duotone'
+                  }
+                  color={row?.setting?.communication ? 'green' : 'red'}
+                />
+              </Stack>
+            </Stack>
           </Stack>
         </ScrollBar>
       </Drawer>
