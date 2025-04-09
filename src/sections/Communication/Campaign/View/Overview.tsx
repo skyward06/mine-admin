@@ -6,12 +6,13 @@ import { formatWeekNumber } from 'src/utils/format-time';
 import { CampaignListType } from 'src/__generated__/graphql';
 
 interface Props {
+  sender: string;
   subject: string;
   listType: string;
   listExtra: any;
 }
 
-export default function Overview({ subject, listType, listExtra }: Props) {
+export default function Overview({ sender, subject, listType, listExtra }: Props) {
   return (
     <Stack direction="row" spacing={2} alignItems="center" pb={2}>
       <Typography variant="subtitle1">Subject:</Typography>
@@ -26,6 +27,10 @@ export default function Overview({ subject, listType, listExtra }: Props) {
         </>
         )
       </Typography>
+      <Typography variant="subtitle1" ml={2}>
+        Sender:
+      </Typography>
+      <Typography>{sender}</Typography>
     </Stack>
   );
 }

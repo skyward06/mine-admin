@@ -30,6 +30,7 @@ export default function CampaignView() {
       ) : (
         <DashboardContent>
           <Overview
+            sender={campaign?.sender!}
             subject={campaign?.subject!}
             listType={campaign?.listType!}
             listExtra={campaign?.listExtra}

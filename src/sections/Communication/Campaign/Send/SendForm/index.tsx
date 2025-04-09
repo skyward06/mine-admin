@@ -2,6 +2,7 @@ import type { EmailTemplate } from 'src/__generated__/graphql';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
 import EmailTemplateView from 'src/components/Template';
@@ -9,10 +10,11 @@ import EmailTemplateView from 'src/components/Template';
 interface Props {
   emails: string[];
   listType: string;
+  setSender: Function;
   template: EmailTemplate;
 }
 
-export default function SendForm({ emails, template, listType }: Props) {
+export default function SendForm({ emails, template, listType, setSender }: Props) {
   return (
     <>
       <Stack direction={{ md: 'row', xs: 'column' }} spacing={2} alignItems="center">
@@ -23,6 +25,15 @@ export default function SendForm({ emails, template, listType }: Props) {
         <Stack width={1} direction="row" spacing={2}>
           <Typography variant="subtitle1">List Type:</Typography>
           <Typography>{listType}</Typography>
+        </Stack>
+        <Stack width={1} direction="row" spacing={2} alignItems="center">
+          <Typography variant="subtitle1">Sender:</Typography>
+          <TextField
+            size="small"
+            fullWidth
+            onChange={(event) => setSender(event.target.value)}
+            required
+          />
         </Stack>
       </Stack>
 

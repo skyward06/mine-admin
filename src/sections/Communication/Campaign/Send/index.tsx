@@ -29,6 +29,7 @@ export default function CreateCampaign({ open }: Props) {
   const [step, setStep] = useState<number>(0);
   const [templateId, setTemplateId] = useState<string>();
   const [emails, setEmails] = useState<string[]>();
+  const [sender, setSender] = useState<string>();
   const [listExtra, setListExtra] = useState<string>('');
   const [listType, setListType] = useState<CampaignListType>(CampaignListType.All);
 
@@ -51,9 +52,15 @@ export default function CreateCampaign({ open }: Props) {
 
   const handleSendCampaign = async () => {
     try {
+      if (!sender) {
+        toast.warning('Sender is required');
+        return;
+      }
+
       const { data } = await createCampaign({
         variables: {
           data: {
+            sender,
             listType,
             listExtra,
             body: template?.body ?? '',
@@ -90,7 +97,12 @@ export default function CreateCampaign({ open }: Props) {
             />
           )}
           {step === 2 && (
-            <SendForm template={template!} emails={emails ?? []} listType={listType} />
+            <SendForm
+              template={template!}
+              emails={emails ?? []}
+              listType={listType}
+              setSender={setSender}
+            />
           )}
         </Paper>
       </DialogContent>

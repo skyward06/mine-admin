@@ -43,7 +43,7 @@ export function CampaignListView() {
       {
         field: 'listType',
         headerName: 'List Type',
-        width: 300,
+        flex: 1,
         filter: 'agMultiColumnFilter',
         resizable: true,
         editable: false,
