@@ -35,7 +35,16 @@ export default function Communication({ loading, currentMember }: Props) {
       {
         field: 'email',
         headerName: 'Email',
-        width: 300,
+        width: 200,
+        filter: 'agTextColumnFilter',
+        resizable: true,
+        editable: false,
+        filterParams: { buttons: ['reset'] } as ITextFilterParams,
+      },
+      {
+        field: 'sender',
+        headerName: 'Sender',
+        width: 200,
         filter: 'agTextColumnFilter',
         resizable: true,
         editable: false,
@@ -73,7 +82,7 @@ export default function Communication({ loading, currentMember }: Props) {
       },
       {
         headerName: 'Status',
-        width: 100,
+        flex: 1,
         filter: false,
         resizable: true,
         editable: false,
