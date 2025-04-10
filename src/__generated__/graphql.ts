@@ -2795,7 +2795,6 @@ export type UpsertEmailInput = {
 
 export type UpsertSettingInput = {
   communication?: InputMaybe<Scalars['Boolean']['input']>;
-  memberId: Scalars['ID']['input'];
 };
 
 export type Verify2FaInput = {

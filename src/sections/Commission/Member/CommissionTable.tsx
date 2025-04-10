@@ -1,5 +1,10 @@
 import type { CustomCellRendererProps } from '@ag-grid-community/react';
-import type { ColDef, ITextFilterParams, SelectionChangedEvent } from '@ag-grid-community/core';
+import type {
+  ColDef,
+  CellClickedEvent,
+  ITextFilterParams,
+  SelectionChangedEvent,
+} from '@ag-grid-community/core';
 
 import dayjs from 'dayjs';
 import { useMemo, useState, useEffect } from 'react';
@@ -21,6 +26,7 @@ import { COMMISSION_TYPE } from 'src/consts';
 import { ConfirmationStatus } from 'src/__generated__/graphql';
 
 import { AgGrid } from 'src/components/AgGrid';
+import { Iconify } from 'src/components/Iconify';
 
 import SelectedBar from './SelectedBar';
 import StatusRenderer from './StatusRenderer';
@@ -34,8 +40,14 @@ interface Props {
   customFilter: any;
 }
 
+type Checked = {
+  checked: boolean;
+  value: string;
+};
+
 export default function CommissionTable({ status, customFilter }: Props) {
   const router = useRouter();
+  const [checked, setChecked] = useState<Checked>({ checked: false, value: '' });
 
   const [ids, setIds] = useState<string[]>([]);
 
@@ -47,6 +59,20 @@ export default function CommissionTable({ status, customFilter }: Props) {
   );
 
   const { loading, rowCount, weeklyCommissions, fetchCommissions } = useFetchCommissions();
+
+  const handleCopy = async ({ data }: CellClickedEvent<WeeklyCommission, any>) => {
+    try {
+      console.log('here');
+      await navigator.clipboard.writeText(formatID(data?.ID ?? '', 'C'));
+      setChecked({ value: formatID(data?.ID ?? '', 'C'), checked: true });
+
+      setTimeout(() => {
+        setChecked({ checked: false, value: '' });
+      }, 3000);
+    } catch (err) {
+      console.error('Failed to copy test: ', err);
+    }
+  };
 
   useEffect(() => {
     fetchCommissions({
@@ -66,8 +92,16 @@ export default function CommissionTable({ status, customFilter }: Props) {
         initialSort: 'asc',
         cellClass: 'ag-cell-center',
         filter: 'agNumberColumnFilter',
-        cellRenderer: ({ data }: CustomCellRendererProps<WeeklyCommission>) =>
-          formatID(data?.ID ?? '', 'C'),
+        cellRenderer: ({ data }: CustomCellRendererProps<WeeklyCommission>) => (
+          <Stack direction="row" columnGap={1} sx={{ alignItems: 'center', cursor: 'pointer' }}>
+            {formatID(data?.ID ?? '', 'C')}
+
+            {checked.value === formatID(data?.ID ?? '', 'C') && (
+              <Iconify icon="line-md:check-all" color="green" />
+            )}
+          </Stack>
+        ),
+        onCellClicked: handleCopy,
       },
       {
         field: 'weekStartDate',
@@ -234,7 +268,7 @@ export default function CommissionTable({ status, customFilter }: Props) {
     }
 
     return baseColDef;
-  }, [router, status]);
+  }, [router, status, checked]);
 
   const handleSelectionChange = (event: SelectionChangedEvent<WeeklyCommission, any>) => {
     setIds(event.api.getSelectedRows().map((item) => item.id));
