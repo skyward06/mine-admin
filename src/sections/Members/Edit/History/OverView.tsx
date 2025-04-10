@@ -6,13 +6,13 @@ import { useQuery as useGraphQuery } from '@apollo/client';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
-import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
 
 import { fNumber } from 'src/utils/formatNumber';
 
-import { CONFIG } from 'src/config';
-import { LAUNCH_GROUP } from 'src/consts';
+import { CASH_POTENTIAL_URL } from 'src/consts';
+
+import { Iconify } from 'src/components/Iconify';
 
 import { FETCH_MEMBER_HISTORY } from '../../query';
 
@@ -43,22 +43,25 @@ export const OverView = ({ currentMember }: Props) => {
           </Box>
         </Stack>
 
-        {currentMember?.isTexitRanger ? (
-          <Avatar
-            alt="coin"
-            src={`${CONFIG.site.basePath}/assets/coin.jpg`}
-            sx={{ width: 80, height: 80 }}
-          />
-        ) : (
-          <Stack width={0.6}>
+        <Stack width={0.8}>
+          <Stack direction="row" justifyContent="space-around" alignItems="center">
             {fNumber(Math.max(data?.memberOverview.cashCommissionPotential ?? 0, 0))}
-            <Box component="span" sx={{ color: 'text.secondary', typography: 'body2' }}>
-              {currentMember?.groupSetting?.id === LAUNCH_GROUP
-                ? 'Cash Available'
-                : 'Cash Potential'}
-            </Box>
+            {currentMember?.isTexitRanger && (
+              <Iconify
+                icon="mingcute:copper-coin-fill"
+                color="#ff9933"
+                width={32}
+                height={32}
+                cursor="pointer"
+                sx={{ '&:hover': { color: '#e67300' } }}
+                onClick={() => window.open(CASH_POTENTIAL_URL, '_blank')}
+              />
+            )}
           </Stack>
-        )}
+          <Box component="span" sx={{ color: 'text.secondary', typography: 'body2' }}>
+            Cash Potential
+          </Box>
+        </Stack>
 
         <Stack width={1}>
           {fNumber((data?.memberOverview.totalTXCShared ?? 0) / 10 ** 8)}

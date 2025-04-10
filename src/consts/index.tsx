@@ -182,3 +182,5 @@ export const SAMPLE_VARS = {
   FULLNAME: 'toMember.fullName',
   USERNAME: 'toMember.username',
 };
+
+export const CASH_POTENTIAL_URL = 'https://help.minetxc.com/understanding-cash-potential/';
