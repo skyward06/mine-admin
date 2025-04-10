@@ -44,23 +44,21 @@ export const OverView = ({ currentMember }: Props) => {
         </Stack>
 
         <Stack width={0.8}>
+          {fNumber(Math.max(data?.memberOverview.cashCommissionPotential ?? 0, 0))}
           <Stack direction="row" justifyContent="space-around" alignItems="center">
-            {fNumber(Math.max(data?.memberOverview.cashCommissionPotential ?? 0, 0))}
+            <Box component="span" sx={{ color: 'text.secondary', typography: 'body2' }}>
+              Cash Potential
+            </Box>
             {currentMember?.isTexitRanger && (
               <Iconify
-                icon="mingcute:copper-coin-fill"
-                color="#ff9933"
-                width={32}
-                height={32}
+                icon="emojione:star"
                 cursor="pointer"
-                sx={{ '&:hover': { color: '#e67300' } }}
+                sx={{ '&:hover': { transform: 'scale(1.5)' } }}
+                color="#000000"
                 onClick={() => window.open(CASH_POTENTIAL_URL, '_blank')}
               />
             )}
           </Stack>
-          <Box component="span" sx={{ color: 'text.secondary', typography: 'body2' }}>
-            Cash Potential
-          </Box>
         </Stack>
 
         <Stack width={1}>
