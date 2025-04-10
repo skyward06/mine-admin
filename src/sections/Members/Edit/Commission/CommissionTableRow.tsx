@@ -1,7 +1,9 @@
 import type { WeeklyCommission } from 'src/sections/Commission/type';
 
 import dayjs from 'dayjs';
+import { useState } from 'react';
 
+import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
@@ -26,8 +28,14 @@ type Props = {
   row: WeeklyCommission;
 };
 
+type Checked = {
+  checked: boolean;
+  value: string;
+};
+
 export default function CommissionTableRow({ row }: Props) {
   const router = useRouter();
+  const [checked, setChecked] = useState<Checked>({ checked: false, value: '' });
 
   const open = useBoolean();
 
@@ -51,6 +59,19 @@ export default function CommissionTableRow({ row }: Props) {
     weekStartDate,
   } = row;
 
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(formatID(ID ?? '', 'C'));
+      setChecked({ value: formatID(ID ?? '', 'C'), checked: true });
+
+      setTimeout(() => {
+        setChecked({ checked: false, value: '' });
+      }, 3000);
+    } catch (err) {
+      console.error('Failed to copy test: ', err);
+    }
+  };
+
   return (
     <>
       <TableRow hover>
@@ -65,7 +86,15 @@ export default function CommissionTableRow({ row }: Props) {
             }}
           />
         </TableCell>
-        <TableCell>{formatID(ID, 'C')}</TableCell>
+        <TableCell onClick={handleCopy}>
+          <Stack direction="row" columnGap={1} sx={{ alignItems: 'center', cursor: 'pointer' }}>
+            {formatID(ID, 'C')}
+
+            {checked.value === formatID(ID ?? '', 'C') && (
+              <Iconify icon="line-md:check-all" color="green" />
+            )}
+          </Stack>
+        </TableCell>
         <TableCell
           align="left"
           onClick={() => router.push(paths.dashboard.members.edit(memberId ?? ''))}
