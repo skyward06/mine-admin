@@ -63,51 +63,6 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         signupFormRequest
         cmnCalculatedWeeks
         preferredContactDetail
-        groupSetting {
-          id
-          name
-          commissionDefaults
-        }
-        commission {
-          begL
-          begR
-          newL
-          newR
-        }
-        placementParent {
-          id
-          email
-          username
-          fullName
-        }
-        memberWallets {
-          id
-          note
-          address
-          percent
-          memberId
-          payoutId
-          isDefault
-          payout {
-            id
-            name
-            method
-            status
-            display
-          }
-        }
-        adminNotes {
-          id
-          adminId
-          memberId
-          updatedAt
-          description
-        }
-        setting {
-          id
-          memberId
-          communication
-        }
         createdAt
         updatedAt
         deletedAt
