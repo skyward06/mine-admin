@@ -289,8 +289,18 @@ export const FETCH_MEMBER_QUERY = gql(/* GraphQL */ `
         id
         adminId
         memberId
+        createdAt
         updatedAt
         description
+        admin {
+          id
+          email
+          avatar
+          roleId
+          username
+          fullName
+          OTPEnabled
+        }
       }
       communications {
         open

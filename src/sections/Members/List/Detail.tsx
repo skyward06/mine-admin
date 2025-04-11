@@ -1,6 +1,6 @@
-import type { Member, AdminNotes } from 'src/__generated__/graphql';
+import type { AdminNotes } from 'src/__generated__/graphql';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import Stack from '@mui/material/Stack';
 import Drawer from '@mui/material/Drawer';
@@ -18,15 +18,25 @@ import { Iconify } from 'src/components/Iconify';
 import { ScrollBar } from 'src/components/ScrollBar';
 
 import EditForm from '../Edit/Note/EditForm';
+import { useFetchMember } from '../useApollo';
 
 interface Props {
   open: UseBooleanReturn;
-  row: Member;
+  id: string;
 }
 
-export default function Detail({ open, row }: Props) {
+export default function Detail({ open, id }: Props) {
   const edit = useBoolean();
   const [current, setCurrent] = useState<AdminNotes>();
+
+  const { member, fetchMember } = useFetchMember();
+
+  useEffect(() => {
+    if (open.value && id) {
+      fetchMember({ variables: { data: { id }, logsize: 1 } });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, open]);
 
   return (
     <>
@@ -40,12 +50,12 @@ export default function Detail({ open, row }: Props) {
         <ScrollBar sx={{ borderRadius: 1 }}>
           <Stack direction="row" justifyContent="space-between" sx={{ p: 2 }}>
             <Stack direction="row" spacing={1}>
-              <Typography variant="h6">{formatID(row?.ID ?? '', 'M')}</Typography>
-              {row?.emailVerified && (
+              <Typography variant="h6">{formatID(member?.ID ?? '', 'M')}</Typography>
+              {member?.emailVerified && (
                 <Iconify icon="pajamas:partner-verified" color="green" sx={{ mt: 0.2 }} />
               )}
             </Stack>
-            <Typography variant="subtitle1">{row?.allowState}</Typography>
+            <Typography variant="subtitle1">{member?.allowState}</Typography>
           </Stack>
 
           <Stack spacing={1} sx={{ p: 2.5, bgcolor: 'background.neutral' }}>
@@ -58,7 +68,7 @@ export default function Detail({ open, row }: Props) {
                 Username:
               </Stack>
               <Stack width={1} sx={{ fontSize: 14 }}>
-                {row?.username}
+                {member?.username}
               </Stack>
             </Stack>
             <Stack direction="row" spacing={2}>
@@ -66,7 +76,7 @@ export default function Detail({ open, row }: Props) {
                 Full Name:
               </Stack>
               <Stack width={1} sx={{ fontSize: 14 }}>
-                {row?.fullName}
+                {member?.fullName}
               </Stack>
             </Stack>
             <Stack direction="row" spacing={2}>
@@ -74,7 +84,7 @@ export default function Detail({ open, row }: Props) {
                 Email:
               </Stack>
               <Stack width={1} sx={{ fontSize: 14 }}>
-                {row?.email}
+                {member?.email}
               </Stack>
             </Stack>
             <Stack direction="row" spacing={2}>
@@ -82,7 +92,7 @@ export default function Detail({ open, row }: Props) {
                 Asset ID:
               </Stack>
               <Stack width={1} sx={{ fontSize: 14 }}>
-                {row?.assetId}
+                {member?.assetId}
               </Stack>
             </Stack>
             <Stack direction="row" spacing={2}>
@@ -90,7 +100,7 @@ export default function Detail({ open, row }: Props) {
                 Joined At:
               </Stack>
               <Stack width={1} sx={{ fontSize: 14 }}>
-                {row?.createdAt}
+                {member?.createdAt}
               </Stack>
             </Stack>
 
@@ -98,7 +108,7 @@ export default function Detail({ open, row }: Props) {
 
             <Stack direction="row" spacing={2}>
               <Typography variant="subtitle1">Group:</Typography>
-              <Typography>{row?.groupSetting?.name}</Typography>
+              <Typography>{member?.groupSetting?.name}</Typography>
             </Stack>
 
             <Stack direction="row" spacing={2}>
@@ -106,7 +116,7 @@ export default function Detail({ open, row }: Props) {
                 Team Strategy:
               </Stack>
               <Stack width={1} sx={{ fontSize: 14 }}>
-                {row?.teamStrategy}
+                {member?.teamStrategy}
               </Stack>
             </Stack>
 
@@ -115,7 +125,7 @@ export default function Detail({ open, row }: Props) {
                 Starting Points:
               </Stack>
               <Stack width={1} sx={{ fontSize: 14 }}>
-                {`L${row?.commission?.begL ?? 0}, R${row?.commission?.begR ?? 0}`}
+                {`L${member?.commission?.begL ?? 0}, R${member?.commission?.begR ?? 0}`}
               </Stack>
             </Stack>
 
@@ -124,7 +134,7 @@ export default function Detail({ open, row }: Props) {
                 New Points:
               </Stack>
               <Stack width={1} sx={{ fontSize: 14 }}>
-                {`L${row?.commission?.newL ?? 0}, R${row?.commission?.newR ?? 0}`}
+                {`L${member?.commission?.newL ?? 0}, R${member?.commission?.newR ?? 0}`}
               </Stack>
             </Stack>
 
@@ -133,14 +143,14 @@ export default function Detail({ open, row }: Props) {
                 Placement Parent:
               </Stack>
               <Stack width={1} sx={{ fontSize: 14 }}>
-                {row?.placementParent?.fullName}
+                {member?.placementParent?.fullName}
               </Stack>
             </Stack>
 
             <Divider sx={{ borderStyle: 'dashed', borderColor: 'gray' }} />
 
             <Stack sx={{ mt: 0.5 }}>
-              {row?.memberWallets?.map((item) => (
+              {member?.memberWallets?.map((item) => (
                 <Stack sx={{ pb: 1 }}>
                   <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
                     {item?.payout?.method}
@@ -150,7 +160,7 @@ export default function Detail({ open, row }: Props) {
               ))}
             </Stack>
 
-            {row?.memberWallets?.length && (
+            {member?.memberWallets?.length && (
               <Divider sx={{ borderStyle: 'dashed', borderColor: 'gray' }} />
             )}
 
@@ -163,7 +173,7 @@ export default function Detail({ open, row }: Props) {
               </IconButton>
             </Stack>
 
-            {row?.adminNotes?.map((item) => (
+            {member?.adminNotes?.map((item) => (
               <>
                 <Divider sx={{ borderStyle: 'solid' }} />
 
@@ -198,11 +208,11 @@ export default function Detail({ open, row }: Props) {
                 </Typography>
                 <Iconify
                   icon={
-                    row?.setting?.communication
+                    member?.setting?.communication
                       ? 'ic:twotone-check-box'
                       : 'iconamoon:sign-times-square-duotone'
                   }
-                  color={row?.setting?.communication ? 'green' : 'red'}
+                  color={member?.setting?.communication ? 'green' : 'red'}
                 />
               </Stack>
             </Stack>
@@ -211,7 +221,7 @@ export default function Detail({ open, row }: Props) {
       </Drawer>
 
       <Dialog fullWidth maxWidth="xs" open={edit.value} onClose={edit.onFalse}>
-        <EditForm open={edit} memberId={row?.id!} current={current} close />
+        <EditForm open={edit} memberId={member?.id!} current={current} close />
       </Dialog>
     </>
   );

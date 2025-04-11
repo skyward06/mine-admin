@@ -491,7 +491,7 @@ export default function MemberTableRow({
         }
       />
 
-      <Detail open={open} row={row} />
+      <Detail open={open} id={id} />
     </>
   );
 }
