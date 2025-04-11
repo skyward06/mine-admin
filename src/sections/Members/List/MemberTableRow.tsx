@@ -273,7 +273,7 @@ export default function MemberTableRow({
             )}
             {allowState === 'BLOCKED' && (
               <Label variant="soft" color="error">
-                Blocked
+                Block
               </Label>
             )}
             {!emailVerified && (
@@ -414,7 +414,7 @@ export default function MemberTableRow({
                     handleLocked();
                   }}
                 >
-                  <Iconify icon="ic:round-block" color="red" /> Blocked
+                  <Iconify icon="ic:round-block" color="red" /> Block
                   {blockLoading && <Iconify icon="eos-icons:bubble-loading" />}
                 </MenuItem>
                 <MenuItem
