@@ -14,7 +14,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
-  /** BigInt custom scalar type */
+  /** The `BigInt` scalar type represents non-fractional signed whole numeric values. */
   BigInt: { input: any; output: any; }
   /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   Date: { input: any; output: any; }
@@ -29,6 +29,23 @@ export type Scalars = {
 export type AccessTokenResponse = {
   __typename?: 'AccessTokenResponse';
   accessToken: Scalars['String']['output'];
+};
+
+export type Address = {
+  __typename?: 'Address';
+  address: Scalars['ID']['output'];
+  type: ChainType;
+};
+
+export type AddressInput = {
+  address: Scalars['ID']['input'];
+  type: ChainType;
+};
+
+export type AddressResponse = {
+  __typename?: 'AddressResponse';
+  addresses?: Maybe<Array<Address>>;
+  total?: Maybe<Scalars['Int']['output']>;
 };
 
 export type Admin = {
@@ -248,6 +265,11 @@ export type CampaignResponse = {
   total?: Maybe<Scalars['Int']['output']>;
 };
 
+export enum ChainType {
+  Eth = 'ETH',
+  Txc = 'TXC'
+}
+
 export enum CommissionDefaultEnum {
   Bogo = 'BOGO',
   CashCrypto = 'CASH_CRYPTO',
@@ -291,6 +313,11 @@ export type CommissionStatus = {
   begR: Scalars['Int']['output'];
   newL: Scalars['Int']['output'];
   newR: Scalars['Int']['output'];
+};
+
+export type CompleteOrderInput = {
+  orderId: Scalars['String']['input'];
+  paymentId: Scalars['String']['input'];
 };
 
 export type ConfirmStatistics = {
@@ -422,6 +449,11 @@ export type CreateMemberStatisticsInput = {
   percent: Scalars['Float']['input'];
   statisticsId: Scalars['String']['input'];
   txcShared: Scalars['Float']['input'];
+};
+
+export type CreateOrderInput = {
+  packageId: Scalars['String']['input'];
+  paymentType: ChainType;
 };
 
 export type CreatePackageInput = {
@@ -1037,6 +1069,9 @@ export type Mutation = {
   approveMember: SuccessResponse;
   calculateCommissions: SuccessResponse;
   calculatePreviewCommissions: SuccessResponse;
+  cancelOrder: SuccessResponse;
+  cancelWaitingTransaction: SuccessResponse;
+  completeOrder: OrderStatusResponse;
   confirmStatistics: Statistics;
   createAdmin: Admin;
   createAdminNote: AdminNotes;
@@ -1050,6 +1085,7 @@ export type Mutation = {
   createMember: Member;
   createMemberList: MemberList;
   createMemberStatistics: MemberStatistics;
+  createOrder: Order;
   createPackage: Package;
   createPaymentMethod: PaymentMethod;
   createPayout: Payout;
@@ -1072,6 +1108,7 @@ export type Mutation = {
   moveToGraveyard: SuccessResponse;
   moveToPaid: SuccessResponse;
   moveToPending: SuccessResponse;
+  refreshBalance: SuccessResponse;
   regenerateInvoiceById: SuccessResponse;
   removeAdminNote: SuccessResponse;
   removeAdmins: ManySuccessResponse;
@@ -1166,6 +1203,21 @@ export type MutationApproveMemberArgs = {
 };
 
 
+export type MutationCancelOrderArgs = {
+  data: IdInput;
+};
+
+
+export type MutationCancelWaitingTransactionArgs = {
+  data: IdInput;
+};
+
+
+export type MutationCompleteOrderArgs = {
+  data: CompleteOrderInput;
+};
+
+
 export type MutationConfirmStatisticsArgs = {
   data: ConfirmStatistics;
 };
@@ -1228,6 +1280,11 @@ export type MutationCreateMemberListArgs = {
 
 export type MutationCreateMemberStatisticsArgs = {
   data: CreateMemberStatisticsInput;
+};
+
+
+export type MutationCreateOrderArgs = {
+  data: CreateOrderInput;
 };
 
 
@@ -1333,6 +1390,11 @@ export type MutationMoveToPaidArgs = {
 
 export type MutationMoveToPendingArgs = {
   data: IdInput;
+};
+
+
+export type MutationRefreshBalanceArgs = {
+  data: AddressInput;
 };
 
 
@@ -1671,6 +1733,40 @@ export type NotificationResponse = {
   total?: Maybe<Scalars['Int']['output']>;
 };
 
+export type Order = {
+  __typename?: 'Order';
+  createdAt?: Maybe<Scalars['DateTimeISO']['output']>;
+  deletedAt?: Maybe<Scalars['DateTimeISO']['output']>;
+  frontActions?: Maybe<Array<FrontAction>>;
+  id: Scalars['ID']['output'];
+  member?: Maybe<Member>;
+  memberId: Scalars['String']['output'];
+  package?: Maybe<Package>;
+  packageId: Scalars['String']['output'];
+  status: OrderStatus;
+  updatedAt?: Maybe<Scalars['DateTimeISO']['output']>;
+  waitAddress?: Maybe<WaitAddress>;
+  waitAddressId: Scalars['String']['output'];
+};
+
+export type OrderResponse = {
+  __typename?: 'OrderResponse';
+  orders?: Maybe<Array<Order>>;
+  total?: Maybe<Scalars['Int']['output']>;
+};
+
+export enum OrderStatus {
+  Canceled = 'CANCELED',
+  Failed = 'FAILED',
+  Pending = 'PENDING',
+  Success = 'SUCCESS'
+}
+
+export type OrderStatusResponse = {
+  __typename?: 'OrderStatusResponse';
+  status: OrderStatus;
+};
+
 export type PFile = {
   __typename?: 'PFile';
   createdAt?: Maybe<Scalars['DateTimeISO']['output']>;
@@ -1892,6 +1988,7 @@ export enum ProofType {
 
 export type Query = {
   __typename?: 'Query';
+  addresses: AddressResponse;
   adminMe: Admin;
   adminNotes: AdminNotesResponse;
   admins: AdminsResponse;
@@ -1901,6 +1998,7 @@ export type Query = {
   calculateProfitability: ProfitabilityCalculationResponse;
   campaignById: Campaign;
   campaigns: CampaignResponse;
+  checkAddressWaitStatus: WaitTransactionStatusResponse;
   commissionByMemberIDAndWeek: WeeklyCommission;
   commissionByPeriod: Array<CommissionPeriodResponse>;
   commissionsByWeek: CommissionOverviewResponse;
@@ -1938,6 +2036,7 @@ export type Query = {
   newMemberCounts: Array<MinerCountStatsResponse>;
   notifications: NotificationResponse;
   onepointAwayMembers: MembersResponse;
+  orders: OrderResponse;
   packages: PackageResponse;
   paymentMethodLinks: PaymentMethodLinkResponse;
   paymentMethods: PaymentMethodResponse;
@@ -1964,10 +2063,19 @@ export type Query = {
   topEarners: Array<TopEarnersResponse>;
   topRecruiters: Array<TopRecruitersResponse>;
   totalMemberCounts: Array<MinerCountStatsResponse>;
+  transactions: TransactionResponse;
   txcShares: Array<TxcSharedResponse>;
+  waitAddresses: WaitAddressResponse;
   weeklyCommissionById: WeeklyCommission;
   weeklyCommissions: BasicWeeklyCommissionResponse;
   weeklyReports: WeeklyReportResponse;
+};
+
+
+export type QueryAddressesArgs = {
+  filter?: InputMaybe<Scalars['JSONObject']['input']>;
+  page?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -2016,6 +2124,11 @@ export type QueryCampaignsArgs = {
   filter?: InputMaybe<Scalars['JSONObject']['input']>;
   page?: InputMaybe<Scalars['String']['input']>;
   sort?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryCheckAddressWaitStatusArgs = {
+  data: IdInput;
 };
 
 
@@ -2198,6 +2311,13 @@ export type QueryOnepointAwayMembersArgs = {
 };
 
 
+export type QueryOrdersArgs = {
+  filter?: InputMaybe<Scalars['JSONObject']['input']>;
+  page?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Scalars['String']['input']>;
+};
+
+
 export type QueryPackagesArgs = {
   filter?: InputMaybe<Scalars['JSONObject']['input']>;
   page?: InputMaybe<Scalars['String']['input']>;
@@ -2330,8 +2450,22 @@ export type QueryTotalMemberCountsArgs = {
 };
 
 
+export type QueryTransactionsArgs = {
+  filter?: InputMaybe<Scalars['JSONObject']['input']>;
+  page?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Scalars['String']['input']>;
+};
+
+
 export type QueryTxcSharesArgs = {
   data: PeriodStatsArgs;
+};
+
+
+export type QueryWaitAddressesArgs = {
+  filter?: InputMaybe<Scalars['JSONObject']['input']>;
+  page?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -2610,6 +2744,29 @@ export type TopRecruitersResponse = {
   totalIntroducers: Scalars['Float']['output'];
 };
 
+export type Transaction = {
+  __typename?: 'Transaction';
+  address: Scalars['String']['output'];
+  createdAt?: Maybe<Scalars['DateTimeISO']['output']>;
+  deletedAt?: Maybe<Scalars['DateTimeISO']['output']>;
+  expiredAt: Scalars['DateTimeISO']['output'];
+  frontActions?: Maybe<Array<FrontAction>>;
+  id: Scalars['ID']['output'];
+  initBalance: Scalars['BigInt']['output'];
+  initUnitPrice: Scalars['Float']['output'];
+  receivedAt: Scalars['DateTimeISO']['output'];
+  receivedBalance: Scalars['BigInt']['output'];
+  status: WaitTransactionStatus;
+  type: ChainType;
+  updatedAt?: Maybe<Scalars['DateTimeISO']['output']>;
+};
+
+export type TransactionResponse = {
+  __typename?: 'TransactionResponse';
+  total?: Maybe<Scalars['Int']['output']>;
+  transactions?: Maybe<Array<Transaction>>;
+};
+
 export type UpdateAdminInput = {
   avatar?: InputMaybe<Scalars['String']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
@@ -2806,6 +2963,41 @@ export type VerifyTokenResponse = {
   __typename?: 'VerifyTokenResponse';
   email: Scalars['String']['output'];
   token: Scalars['String']['output'];
+};
+
+export type WaitAddress = {
+  __typename?: 'WaitAddress';
+  address: Scalars['String']['output'];
+  createdAt?: Maybe<Scalars['DateTimeISO']['output']>;
+  deletedAt?: Maybe<Scalars['DateTimeISO']['output']>;
+  expiredAt: Scalars['DateTimeISO']['output'];
+  frontActions?: Maybe<Array<FrontAction>>;
+  id: Scalars['ID']['output'];
+  initBalance: Scalars['BigInt']['output'];
+  initUnitPrice: Scalars['Float']['output'];
+  order: Order;
+  receivedAt: Scalars['DateTimeISO']['output'];
+  receivedBalance: Scalars['BigInt']['output'];
+  status: WaitTransactionStatus;
+  type: ChainType;
+  updatedAt?: Maybe<Scalars['DateTimeISO']['output']>;
+};
+
+export type WaitAddressResponse = {
+  __typename?: 'WaitAddressResponse';
+  total?: Maybe<Scalars['Int']['output']>;
+  waitAddresses?: Maybe<Array<WaitAddress>>;
+};
+
+export enum WaitTransactionStatus {
+  Failed = 'FAILED',
+  Received = 'RECEIVED',
+  Wait = 'WAIT'
+}
+
+export type WaitTransactionStatusResponse = {
+  __typename?: 'WaitTransactionStatusResponse';
+  status: WaitTransactionStatus;
 };
 
 export type WeekPlacementMember = {
@@ -3280,7 +3472,7 @@ export type FetchMembersQueryVariables = Exact<{
 }>;
 
 
-export type FetchMembersQuery = { __typename?: 'Query', members: { __typename?: 'MembersResponse', total?: number | null, members?: Array<{ __typename?: 'Member', id: string, ID?: number | null, city?: string | null, email: string, point: number, state?: string | null, status: boolean, avatar?: string | null, mobile: string, assetId?: string | null, country?: string | null, zipCode?: string | null, username: string, fullName: string, sponsorId?: string | null, promoCode?: string | null, allowState: MemberState, OTPEnabled: boolean, teamReport: Array<TeamReport>, teamStrategy: TeamStrategy, isTexitRanger: boolean, emailVerified: boolean, syncWithSendy: boolean, primaryAddress: string, preferredContact?: string | null, secondaryAddress?: string | null, totalIntroducers: number, commissionDefault: CommissionDefaultEnum, placementPosition: PlacementPosition, placementParentId?: string | null, signupFormRequest?: any | null, cmnCalculatedWeeks: number, preferredContactDetail?: string | null, createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null }> | null } };
+export type FetchMembersQuery = { __typename?: 'Query', members: { __typename?: 'MembersResponse', total?: number | null, members?: Array<{ __typename?: 'Member', id: string, ID?: number | null, city?: string | null, email: string, point: number, state?: string | null, status: boolean, avatar?: string | null, mobile: string, assetId?: string | null, country?: string | null, zipCode?: string | null, username: string, fullName: string, sponsorId?: string | null, promoCode?: string | null, allowState: MemberState, OTPEnabled: boolean, teamReport: Array<TeamReport>, teamStrategy: TeamStrategy, isTexitRanger: boolean, emailVerified: boolean, syncWithSendy: boolean, primaryAddress: string, preferredContact?: string | null, secondaryAddress?: string | null, totalIntroducers: number, commissionDefault: CommissionDefaultEnum, placementPosition: PlacementPosition, placementParentId?: string | null, signupFormRequest?: any | null, cmnCalculatedWeeks: number, preferredContactDetail?: string | null, createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null, adminNotes?: Array<{ __typename?: 'AdminNotes', id: string, adminId: string, memberId: string, createdAt?: any | null, updatedAt?: any | null, description?: string | null, admin?: { __typename?: 'Admin', id: string, email: string, avatar: string, roleId: string, username: string, fullName: string, OTPEnabled: boolean } | null }> | null }> | null } };
 
 export type MemberByIdQueryVariables = Exact<{
   data: IdInput;
@@ -4217,7 +4409,7 @@ export const CreateAdminNoteDocument = {"kind":"Document","definitions":[{"kind"
 export const UpdateAdminNoteDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateAdminNote"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateAdminNotesInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateAdminNote"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"admin"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"frontActions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"FrontActionFields"}}]}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"FrontActionFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"FrontAction"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"action"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"extra"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"FrontActionCreate12FreeBonusSale"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"fullName"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"packageId"}},{"kind":"Field","name":{"kind":"Name","value":"sponsorCnt"}},{"kind":"Field","name":{"kind":"Name","value":"packageName"}},{"kind":"Field","name":{"kind":"Name","value":"paymentMethod"}},{"kind":"Field","name":{"kind":"Name","value":"isWithinSponsorRollDuration"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"FrontActionUpdate12FreeBonusSale"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"oldPackageId"}},{"kind":"Field","name":{"kind":"Name","value":"newPackageId"}},{"kind":"Field","name":{"kind":"Name","value":"oldPackageName"}},{"kind":"Field","name":{"kind":"Name","value":"newPackageName"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"FrontActionRemove12FreeBonusSale"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<UpdateAdminNoteMutation, UpdateAdminNoteMutationVariables>;
 export const RemoveAdminNoteDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"removeAdminNote"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"IDInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"removeAdminNote"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"result"}},{"kind":"Field","name":{"kind":"Name","value":"frontActions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"FrontActionFields"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"FrontActionFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"FrontAction"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"action"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"extra"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"FrontActionCreate12FreeBonusSale"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"fullName"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"packageId"}},{"kind":"Field","name":{"kind":"Name","value":"sponsorCnt"}},{"kind":"Field","name":{"kind":"Name","value":"packageName"}},{"kind":"Field","name":{"kind":"Name","value":"paymentMethod"}},{"kind":"Field","name":{"kind":"Name","value":"isWithinSponsorRollDuration"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"FrontActionUpdate12FreeBonusSale"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"oldPackageId"}},{"kind":"Field","name":{"kind":"Name","value":"newPackageId"}},{"kind":"Field","name":{"kind":"Name","value":"oldPackageName"}},{"kind":"Field","name":{"kind":"Name","value":"newPackageName"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"FrontActionRemove12FreeBonusSale"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<RemoveAdminNoteMutation, RemoveAdminNoteMutationVariables>;
 export const FetchMemberStatsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"FetchMemberStats"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"approveFilter"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSONObject"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"pendingFilter"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSONObject"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"graveyardFilter"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSONObject"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"paidFilter"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSONObject"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"blockFilter"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSONObject"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"APPROVED"},"name":{"kind":"Name","value":"members"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"Variable","name":{"kind":"Name","value":"approveFilter"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"total"}}]}},{"kind":"Field","alias":{"kind":"Name","value":"PENDING"},"name":{"kind":"Name","value":"members"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"Variable","name":{"kind":"Name","value":"pendingFilter"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"total"}}]}},{"kind":"Field","alias":{"kind":"Name","value":"GRAVEYARD"},"name":{"kind":"Name","value":"members"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"Variable","name":{"kind":"Name","value":"graveyardFilter"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"total"}}]}},{"kind":"Field","alias":{"kind":"Name","value":"PAID"},"name":{"kind":"Name","value":"members"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"Variable","name":{"kind":"Name","value":"paidFilter"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"total"}}]}},{"kind":"Field","alias":{"kind":"Name","value":"BLOCKED"},"name":{"kind":"Name","value":"members"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"Variable","name":{"kind":"Name","value":"blockFilter"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"total"}}]}}]}}]} as unknown as DocumentNode<FetchMemberStatsQuery, FetchMemberStatsQueryVariables>;
-export const FetchMembersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"FetchMembers"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"page"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"filter"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSONObject"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sort"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"members"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"page"},"value":{"kind":"Variable","name":{"kind":"Name","value":"page"}}},{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"Variable","name":{"kind":"Name","value":"filter"}}},{"kind":"Argument","name":{"kind":"Name","value":"sort"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sort"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"members"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"ID"}},{"kind":"Field","name":{"kind":"Name","value":"city"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"point"}},{"kind":"Field","name":{"kind":"Name","value":"state"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}},{"kind":"Field","name":{"kind":"Name","value":"mobile"}},{"kind":"Field","name":{"kind":"Name","value":"assetId"}},{"kind":"Field","name":{"kind":"Name","value":"country"}},{"kind":"Field","name":{"kind":"Name","value":"zipCode"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"fullName"}},{"kind":"Field","name":{"kind":"Name","value":"sponsorId"}},{"kind":"Field","name":{"kind":"Name","value":"promoCode"}},{"kind":"Field","name":{"kind":"Name","value":"allowState"}},{"kind":"Field","name":{"kind":"Name","value":"OTPEnabled"}},{"kind":"Field","name":{"kind":"Name","value":"teamReport"}},{"kind":"Field","name":{"kind":"Name","value":"teamStrategy"}},{"kind":"Field","name":{"kind":"Name","value":"isTexitRanger"}},{"kind":"Field","name":{"kind":"Name","value":"emailVerified"}},{"kind":"Field","name":{"kind":"Name","value":"syncWithSendy"}},{"kind":"Field","name":{"kind":"Name","value":"primaryAddress"}},{"kind":"Field","name":{"kind":"Name","value":"preferredContact"}},{"kind":"Field","name":{"kind":"Name","value":"secondaryAddress"}},{"kind":"Field","name":{"kind":"Name","value":"totalIntroducers"}},{"kind":"Field","name":{"kind":"Name","value":"commissionDefault"}},{"kind":"Field","name":{"kind":"Name","value":"placementPosition"}},{"kind":"Field","name":{"kind":"Name","value":"placementParentId"}},{"kind":"Field","name":{"kind":"Name","value":"signupFormRequest"}},{"kind":"Field","name":{"kind":"Name","value":"cmnCalculatedWeeks"}},{"kind":"Field","name":{"kind":"Name","value":"preferredContactDetail"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"deletedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"total"}}]}}]}}]} as unknown as DocumentNode<FetchMembersQuery, FetchMembersQueryVariables>;
+export const FetchMembersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"FetchMembers"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"page"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"filter"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSONObject"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sort"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"members"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"page"},"value":{"kind":"Variable","name":{"kind":"Name","value":"page"}}},{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"Variable","name":{"kind":"Name","value":"filter"}}},{"kind":"Argument","name":{"kind":"Name","value":"sort"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sort"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"members"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"ID"}},{"kind":"Field","name":{"kind":"Name","value":"city"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"point"}},{"kind":"Field","name":{"kind":"Name","value":"state"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}},{"kind":"Field","name":{"kind":"Name","value":"mobile"}},{"kind":"Field","name":{"kind":"Name","value":"assetId"}},{"kind":"Field","name":{"kind":"Name","value":"country"}},{"kind":"Field","name":{"kind":"Name","value":"zipCode"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"fullName"}},{"kind":"Field","name":{"kind":"Name","value":"sponsorId"}},{"kind":"Field","name":{"kind":"Name","value":"promoCode"}},{"kind":"Field","name":{"kind":"Name","value":"allowState"}},{"kind":"Field","name":{"kind":"Name","value":"OTPEnabled"}},{"kind":"Field","name":{"kind":"Name","value":"teamReport"}},{"kind":"Field","name":{"kind":"Name","value":"teamStrategy"}},{"kind":"Field","name":{"kind":"Name","value":"isTexitRanger"}},{"kind":"Field","name":{"kind":"Name","value":"emailVerified"}},{"kind":"Field","name":{"kind":"Name","value":"syncWithSendy"}},{"kind":"Field","name":{"kind":"Name","value":"primaryAddress"}},{"kind":"Field","name":{"kind":"Name","value":"preferredContact"}},{"kind":"Field","name":{"kind":"Name","value":"secondaryAddress"}},{"kind":"Field","name":{"kind":"Name","value":"totalIntroducers"}},{"kind":"Field","name":{"kind":"Name","value":"commissionDefault"}},{"kind":"Field","name":{"kind":"Name","value":"placementPosition"}},{"kind":"Field","name":{"kind":"Name","value":"placementParentId"}},{"kind":"Field","name":{"kind":"Name","value":"signupFormRequest"}},{"kind":"Field","name":{"kind":"Name","value":"cmnCalculatedWeeks"}},{"kind":"Field","name":{"kind":"Name","value":"preferredContactDetail"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"deletedAt"}},{"kind":"Field","name":{"kind":"Name","value":"adminNotes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"adminId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"admin"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}},{"kind":"Field","name":{"kind":"Name","value":"roleId"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"fullName"}},{"kind":"Field","name":{"kind":"Name","value":"OTPEnabled"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"total"}}]}}]}}]} as unknown as DocumentNode<FetchMembersQuery, FetchMembersQueryVariables>;
 export const MemberByIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"MemberById"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"IDInput"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"logsize"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"memberById"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"ID"}},{"kind":"Field","name":{"kind":"Name","value":"city"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"point"}},{"kind":"Field","name":{"kind":"Name","value":"state"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}},{"kind":"Field","name":{"kind":"Name","value":"mobile"}},{"kind":"Field","name":{"kind":"Name","value":"assetId"}},{"kind":"Field","name":{"kind":"Name","value":"country"}},{"kind":"Field","name":{"kind":"Name","value":"zipCode"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"fullName"}},{"kind":"Field","name":{"kind":"Name","value":"sponsorId"}},{"kind":"Field","name":{"kind":"Name","value":"promoCode"}},{"kind":"Field","name":{"kind":"Name","value":"allowState"}},{"kind":"Field","name":{"kind":"Name","value":"OTPEnabled"}},{"kind":"Field","name":{"kind":"Name","value":"teamReport"}},{"kind":"Field","name":{"kind":"Name","value":"teamStrategy"}},{"kind":"Field","name":{"kind":"Name","value":"isTexitRanger"}},{"kind":"Field","name":{"kind":"Name","value":"emailVerified"}},{"kind":"Field","name":{"kind":"Name","value":"syncWithSendy"}},{"kind":"Field","name":{"kind":"Name","value":"primaryAddress"}},{"kind":"Field","name":{"kind":"Name","value":"preferredContact"}},{"kind":"Field","name":{"kind":"Name","value":"secondaryAddress"}},{"kind":"Field","name":{"kind":"Name","value":"totalIntroducers"}},{"kind":"Field","name":{"kind":"Name","value":"commissionDefault"}},{"kind":"Field","name":{"kind":"Name","value":"placementPosition"}},{"kind":"Field","name":{"kind":"Name","value":"signupFormRequest"}},{"kind":"Field","name":{"kind":"Name","value":"cmnCalculatedWeeks"}},{"kind":"Field","name":{"kind":"Name","value":"preferredContactDetail"}},{"kind":"Field","name":{"kind":"Name","value":"groupSetting"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"commissionDefaults"}}]}},{"kind":"Field","name":{"kind":"Name","value":"commission"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"begL"}},{"kind":"Field","name":{"kind":"Name","value":"begR"}},{"kind":"Field","name":{"kind":"Name","value":"newL"}},{"kind":"Field","name":{"kind":"Name","value":"newR"}}]}},{"kind":"Field","name":{"kind":"Name","value":"sponsor"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"point"}},{"kind":"Field","name":{"kind":"Name","value":"mobile"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"fullName"}},{"kind":"Field","name":{"kind":"Name","value":"allowState"}},{"kind":"Field","name":{"kind":"Name","value":"teamReport"}},{"kind":"Field","name":{"kind":"Name","value":"OTPEnabled"}},{"kind":"Field","name":{"kind":"Name","value":"teamStrategy"}},{"kind":"Field","name":{"kind":"Name","value":"isTexitRanger"}},{"kind":"Field","name":{"kind":"Name","value":"syncWithSendy"}},{"kind":"Field","name":{"kind":"Name","value":"emailVerified"}},{"kind":"Field","name":{"kind":"Name","value":"primaryAddress"}},{"kind":"Field","name":{"kind":"Name","value":"totalIntroducers"}},{"kind":"Field","name":{"kind":"Name","value":"placementPosition"}},{"kind":"Field","name":{"kind":"Name","value":"commissionDefault"}},{"kind":"Field","name":{"kind":"Name","value":"cmnCalculatedWeeks"}}]}},{"kind":"Field","name":{"kind":"Name","value":"placementParentId"}},{"kind":"Field","name":{"kind":"Name","value":"placementPosition"}},{"kind":"Field","name":{"kind":"Name","value":"placementParent"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"point"}},{"kind":"Field","name":{"kind":"Name","value":"mobile"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"fullName"}},{"kind":"Field","name":{"kind":"Name","value":"allowState"}},{"kind":"Field","name":{"kind":"Name","value":"teamReport"}},{"kind":"Field","name":{"kind":"Name","value":"OTPEnabled"}},{"kind":"Field","name":{"kind":"Name","value":"teamStrategy"}},{"kind":"Field","name":{"kind":"Name","value":"isTexitRanger"}},{"kind":"Field","name":{"kind":"Name","value":"syncWithSendy"}},{"kind":"Field","name":{"kind":"Name","value":"emailVerified"}},{"kind":"Field","name":{"kind":"Name","value":"primaryAddress"}},{"kind":"Field","name":{"kind":"Name","value":"totalIntroducers"}},{"kind":"Field","name":{"kind":"Name","value":"placementPosition"}},{"kind":"Field","name":{"kind":"Name","value":"commissionDefault"}},{"kind":"Field","name":{"kind":"Name","value":"cmnCalculatedWeeks"}}]}},{"kind":"Field","name":{"kind":"Name","value":"placementChildren"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"point"}},{"kind":"Field","name":{"kind":"Name","value":"mobile"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"fullName"}},{"kind":"Field","name":{"kind":"Name","value":"allowState"}},{"kind":"Field","name":{"kind":"Name","value":"teamReport"}},{"kind":"Field","name":{"kind":"Name","value":"OTPEnabled"}},{"kind":"Field","name":{"kind":"Name","value":"teamStrategy"}},{"kind":"Field","name":{"kind":"Name","value":"isTexitRanger"}},{"kind":"Field","name":{"kind":"Name","value":"syncWithSendy"}},{"kind":"Field","name":{"kind":"Name","value":"emailVerified"}},{"kind":"Field","name":{"kind":"Name","value":"primaryAddress"}},{"kind":"Field","name":{"kind":"Name","value":"totalIntroducers"}},{"kind":"Field","name":{"kind":"Name","value":"placementPosition"}},{"kind":"Field","name":{"kind":"Name","value":"commissionDefault"}},{"kind":"Field","name":{"kind":"Name","value":"cmnCalculatedWeeks"}}]}},{"kind":"Field","name":{"kind":"Name","value":"sales"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"ID"}},{"kind":"Field","name":{"kind":"Name","value":"isMetal"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"packageId"}},{"kind":"Field","name":{"kind":"Name","value":"paymentMethod"}},{"kind":"Field","name":{"kind":"Name","value":"sponsorCnt"}},{"kind":"Field","name":{"kind":"Name","value":"proof"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"note"}},{"kind":"Field","name":{"kind":"Name","value":"refId"}},{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"orderedAt"}},{"kind":"Field","name":{"kind":"Name","value":"files"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"size"}},{"kind":"Field","name":{"kind":"Name","value":"mimeType"}},{"kind":"Field","name":{"kind":"Name","value":"originalName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"reflinks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"link"}},{"kind":"Field","name":{"kind":"Name","value":"linkType"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"orderedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"memberWallets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"note"}},{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"percent"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"payoutId"}},{"kind":"Field","name":{"kind":"Name","value":"isDefault"}},{"kind":"Field","name":{"kind":"Name","value":"payout"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"method"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"display"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"logs"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"logsize"},"value":{"kind":"Variable","name":{"kind":"Name","value":"logsize"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"who"}},{"kind":"Field","name":{"kind":"Name","value":"role"}},{"kind":"Field","name":{"kind":"Name","value":"when"}},{"kind":"Field","name":{"kind":"Name","value":"after"}},{"kind":"Field","name":{"kind":"Name","value":"entity"}},{"kind":"Field","name":{"kind":"Name","value":"action"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"before"}}]}},{"kind":"Field","name":{"kind":"Name","value":"adminNotes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"adminId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"admin"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}},{"kind":"Field","name":{"kind":"Name","value":"roleId"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"fullName"}},{"kind":"Field","name":{"kind":"Name","value":"OTPEnabled"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"communications"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"open"}},{"kind":"Field","name":{"kind":"Name","value":"sent"}},{"kind":"Field","name":{"kind":"Name","value":"body"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"sender"}},{"kind":"Field","name":{"kind":"Name","value":"subject"}},{"kind":"Field","name":{"kind":"Name","value":"openTime"}},{"kind":"Field","name":{"kind":"Name","value":"sentTime"}}]}},{"kind":"Field","name":{"kind":"Name","value":"setting"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"communication"}}]}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"deletedAt"}}]}}]}}]} as unknown as DocumentNode<MemberByIdQuery, MemberByIdQueryVariables>;
 export const SearchMembersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"SearchMembers"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"page"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"filter"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSONObject"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sort"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"members"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"page"},"value":{"kind":"Variable","name":{"kind":"Name","value":"page"}}},{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"Variable","name":{"kind":"Name","value":"filter"}}},{"kind":"Argument","name":{"kind":"Name","value":"sort"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sort"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"members"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"fullName"}},{"kind":"Field","name":{"kind":"Name","value":"teamStrategy"}}]}}]}}]}}]} as unknown as DocumentNode<SearchMembersQuery, SearchMembersQueryVariables>;
 export const IndividualMembersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"IndividualMembers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"individualMembers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"fullName"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"sponsorUsername"}},{"kind":"Field","name":{"kind":"Name","value":"sponsorFullname"}}]}}]}}]} as unknown as DocumentNode<IndividualMembersQuery, IndividualMembersQueryVariables>;

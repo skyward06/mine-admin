@@ -285,7 +285,10 @@ export default function MemberTableRow({
         </TableCell>
 
         <TableCell>
-          {cutString(`${adminNotes?.length ? adminNotes[0]?.description : ''}`, 20)}
+          {cutString(
+            `${adminNotes?.length ? adminNotes[(adminNotes?.length ?? 0) - 1]?.description : ''}`,
+            20
+          )}
         </TableCell>
 
         <TableCell>

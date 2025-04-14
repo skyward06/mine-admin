@@ -66,6 +66,23 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         createdAt
         updatedAt
         deletedAt
+        adminNotes {
+          id
+          adminId
+          memberId
+          createdAt
+          updatedAt
+          description
+          admin {
+            id
+            email
+            avatar
+            roleId
+            username
+            fullName
+            OTPEnabled
+          }
+        }
       }
       total
     }
