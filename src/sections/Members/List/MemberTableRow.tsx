@@ -147,7 +147,7 @@ export default function MemberTableRow({
         copy.onFalse();
       }, 3000);
     } catch (error) {
-      console.log('Failed to copy text: ', error);
+      toast.error('Failed to copy text: ', error.message);
     }
   };
 
@@ -160,7 +160,7 @@ export default function MemberTableRow({
         popover.onClose();
       }
     } catch (error) {
-      console.error('Error: ', error);
+      toast.error('Error: ', error.message);
     }
   };
 
@@ -173,7 +173,7 @@ export default function MemberTableRow({
         popover.onClose();
       }
     } catch (error) {
-      console.log('Error: ', error);
+      toast.error('Error: ', error.message);
     }
   };
 
@@ -186,7 +186,7 @@ export default function MemberTableRow({
         popover.onClose();
       }
     } catch (error) {
-      console.log('error => ', error);
+      toast.error('error => ', error.message);
     }
   };
 
@@ -482,7 +482,7 @@ export default function MemberTableRow({
 
                 confirm.onFalse();
               } catch (err) {
-                console.log(err);
+                toast.error(err.message);
               }
             }}
           >

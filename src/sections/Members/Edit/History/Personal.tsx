@@ -67,7 +67,7 @@ export const Personal = () => {
         copy.onFalse();
       }, 3000);
     } catch (error) {
-      console.log('Failed to copy text: ', error);
+      toast.error('Failed to copy text: ', error.message);
     }
   };
 
@@ -109,7 +109,7 @@ export const Personal = () => {
         popover.onClose();
       }
     } catch (error) {
-      console.log('Error: ', error);
+      toast.error('Error: ', error.message);
     }
   };
 

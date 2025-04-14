@@ -85,7 +85,7 @@ export default function EditorView({ current }: Props) {
         toast.error('Something went wrong!');
       }
     } catch (error) {
-      console.log('error => ', error);
+      toast.error(error.message);
     }
   });
 

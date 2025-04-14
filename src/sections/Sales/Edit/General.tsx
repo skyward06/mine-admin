@@ -134,7 +134,7 @@ export default function SaleGeneral({ currentSale }: Props) {
       if (err instanceof ApolloError) {
         const [error] = err.graphQLErrors;
 
-        console.log('error => ', error);
+        toast.error(error.message);
       }
       toast.error(err.message);
     }

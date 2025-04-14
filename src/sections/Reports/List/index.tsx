@@ -143,7 +143,7 @@ export default function ReportView() {
         toast.success('Successfully generated!');
       }
     } catch (error) {
-      console.log('error => ', error);
+      toast.error(error.message);
     }
   };
 
@@ -156,7 +156,7 @@ export default function ReportView() {
         toast.success('Successfully generated!');
       }
     } catch (error) {
-      console.log('error => ', error);
+      toast.error(error.message);
     }
   };
 

@@ -9,6 +9,7 @@ import { NOTIFICATION_LEVEL } from 'src/consts';
 import { NotificationLevel, type NotificationClient } from 'src/__generated__/graphql';
 
 import { Label } from 'src/components/Label';
+import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 
 import { useReadNotifications } from './useApollo';
@@ -33,7 +34,7 @@ export function NotificationItem({ notification }: Props) {
     try {
       await readNotifications({ variables: { data: { id } } });
     } catch (error) {
-      console.log('error');
+      toast.error(error.message);
     }
   };
 

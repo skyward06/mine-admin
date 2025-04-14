@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 
 import { client } from 'src/utils/sanity/client';
 
+import { toast } from 'src/components/SnackBar';
 import { EmptyContent } from 'src/components/EmptyContent';
 
 import { PostItemSkeleton } from './post-skeleton';
@@ -38,7 +39,7 @@ export default function Item({ title }: Props) {
         setLoading(false);
       })
       .catch((error) => {
-        console.log('error => ', error);
+        toast.error(error.message);
         setLoading(false);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps

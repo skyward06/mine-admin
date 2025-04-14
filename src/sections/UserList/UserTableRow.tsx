@@ -185,7 +185,7 @@ export default function UserTableRow({
 
                 confirm.onFalse();
               } catch (err) {
-                console.log(err);
+                toast.error(err.message);
               }
             }}
           >

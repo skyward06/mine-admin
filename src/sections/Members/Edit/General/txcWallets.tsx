@@ -87,7 +87,7 @@ export default function TXCWallets({ wallets }: Props) {
         toast.error("Can't find the address from this Coin ID");
       }
     } catch (error) {
-      console.log('error => ', error);
+      toast.error(error.message);
     }
   };
 

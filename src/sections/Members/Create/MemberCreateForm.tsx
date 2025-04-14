@@ -131,14 +131,6 @@ export default function MemberCreateForm() {
           toast.error('You must select only one default');
         }
 
-        console.log(
-          'wallets => ',
-          [...txcWallets, ...otherWallets].map(({ percent, ...rest }) => ({
-            percent: percent * 100,
-            ...rest,
-          }))
-        );
-
         if (total === 100) {
           await submit({
             variables: {

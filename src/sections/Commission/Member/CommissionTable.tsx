@@ -60,7 +60,6 @@ export default function CommissionTable({ status, customFilter }: Props) {
 
   const handleCopy = async ({ data }: CellClickedEvent<WeeklyCommission, any>) => {
     try {
-      console.log('here');
       await navigator.clipboard.writeText(formatID(data?.ID ?? '', 'C'));
       setChecked({ value: formatID(data?.ID ?? '', 'C'), checked: true });
 

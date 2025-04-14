@@ -11,6 +11,7 @@ import { client } from 'src/utils/sanity/client';
 import { CONFIG } from 'src/config';
 import { DashboardContent } from 'src/layouts/dashboard';
 
+import { toast } from 'src/components/SnackBar';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 
 import Item from './item';
@@ -38,7 +39,7 @@ export default function Resource() {
     client
       .fetch(CONTENT_QUERY)
       .then((content) => setData(content))
-      .catch((error) => console.log('error => ', error));
+      .catch((error) => toast.error(error.message));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

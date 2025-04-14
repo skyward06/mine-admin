@@ -50,7 +50,7 @@ export default function Price({ open }: Props) {
         open.onFalse();
       }
     } catch (error) {
-      toast.error(error);
+      toast.error(error.message);
     }
   };
 
@@ -63,7 +63,7 @@ export default function Price({ open }: Props) {
 
         setPrice(data);
       } catch (error) {
-        console.log('error => ', error);
+        toast.error(error.message);
       }
     }
 

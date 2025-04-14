@@ -54,7 +54,7 @@ export default function ResetPassword({ open }: Props) {
         open.onFalse();
       }
     } catch (err) {
-      console.log('error => ', err);
+      toast.error(err.message);
     }
   });
 

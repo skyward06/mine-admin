@@ -18,6 +18,7 @@ import { CONFIG } from 'src/config';
 import { maxLine } from 'src/theme/styles';
 import { DashboardContent } from 'src/layouts/dashboard';
 
+import { toast } from 'src/components/SnackBar';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import { LoadingScreen } from 'src/components/loading-screen';
 
@@ -37,7 +38,7 @@ export default function Detail() {
     client
       .fetch(CONTENT_QUERY)
       .then((content) => setData(content))
-      .catch((error) => console.log('error => ', error));
+      .catch((error) => toast.error(error.message));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

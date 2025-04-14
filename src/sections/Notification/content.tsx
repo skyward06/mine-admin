@@ -10,6 +10,7 @@ import IconButton from '@mui/material/IconButton';
 
 import { paths } from 'src/routes/paths';
 
+import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 import { ScrollBar } from 'src/components/ScrollBar';
 
@@ -32,7 +33,7 @@ export function Content({ drawer, notifications, totalUnRead }: Props) {
         refetchQueries: ['Notifications'],
       });
     } catch (error) {
-      console.log('error => ', error);
+      toast.error(error.message);
     }
   };
 

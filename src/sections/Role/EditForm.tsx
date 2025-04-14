@@ -17,6 +17,7 @@ import { useRouter } from 'src/routes/hooks';
 
 import { PERMISSIONS } from 'src/consts';
 
+import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
 
 import { Schema, type SchemaType } from './schema';
@@ -94,7 +95,7 @@ export default function EditForm({ current }: Props) {
       reset();
       router.push(paths.dashboard.roles.root);
     } catch (error) {
-      console.log('error => ', error);
+      toast.error(error.message);
     }
   });
 
