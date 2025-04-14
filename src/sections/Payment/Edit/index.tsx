@@ -36,7 +36,7 @@ export default function PaymentEditView() {
       <DashboardContent>
         <Breadcrumbs
           heading="Edit"
-          links={[{ name: 'Payment', href: paths.dashboard.payment.root }, { name: 'Edit' }]}
+          links={[{ name: 'Payment', href: paths.dashboard.paymentMethod.root }, { name: 'Edit' }]}
           sx={{
             mb: { xs: 2, md: 3 },
           }}

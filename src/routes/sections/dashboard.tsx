@@ -220,7 +220,7 @@ export const dashboardRoutes = [
         ],
       },
       {
-        path: 'payment',
+        path: 'payment-method',
         children: [
           { index: true, element: <PaymentListPage /> },
           { path: 'new', element: <PaymentCreatePage /> },

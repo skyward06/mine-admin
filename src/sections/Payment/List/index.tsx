@@ -85,14 +85,17 @@ export default function PaymentListView() {
     <DashboardContent>
       <Breadcrumbs
         heading="Payment Methods"
-        links={[{ name: 'Payment Methods', href: paths.dashboard.payment.root }, { name: 'List' }]}
+        links={[
+          { name: 'Payment Methods', href: paths.dashboard.paymentMethod.root },
+          { name: 'List' },
+        ]}
         sx={{
           mb: { xs: 1, md: 2 },
         }}
         action={
           <Button
             component={RouterLink}
-            href={paths.dashboard.payment.new}
+            href={paths.dashboard.paymentMethod.new}
             variant="contained"
             color="primary"
             startIcon={<Iconify icon="mingcute:add-line" />}

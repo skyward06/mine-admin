@@ -56,7 +56,7 @@ export const ActionRender = memo(
             </MenuItem>
             <MenuItem
               onClick={() => {
-                router.push(`${paths.dashboard.payment.edit(data?.id ?? '')}`);
+                router.push(`${paths.dashboard.paymentMethod.edit(data?.id ?? '')}`);
               }}
             >
               <Iconify icon="solar:pen-2-bold" />

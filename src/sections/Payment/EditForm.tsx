@@ -73,7 +73,7 @@ export default function EditForm({ current }: Props) {
       }
 
       reset();
-      router.push(paths.dashboard.payment.root);
+      router.push(paths.dashboard.paymentMethod.root);
     } catch (err) {
       toast.error(err.message);
     }

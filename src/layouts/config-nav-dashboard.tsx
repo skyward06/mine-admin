@@ -97,7 +97,7 @@ export const navData = [
     items: [
       { title: 'Promos', path: paths.dashboard.promos.root, icon: ICONS.promo },
       { title: 'Product', path: paths.dashboard.products.root, icon: ICONS.package },
-      { title: 'Payment Method', path: paths.dashboard.payment.root, icon: ICONS.payment },
+      { title: 'Payment Method', path: paths.dashboard.paymentMethod.root, icon: ICONS.payment },
     ],
   },
 

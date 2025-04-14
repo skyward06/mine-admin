@@ -17,7 +17,7 @@ export default function PaymentCreateView() {
         links={[
           {
             name: 'Payment',
-            href: paths.dashboard.payment.root,
+            href: paths.dashboard.paymentMethod.root,
           },
           { name: 'New Payment' },
         ]}

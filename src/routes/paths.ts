@@ -8,11 +8,10 @@ const ROOTS = {
   PROMOS: '/promos',
   REWARD: '/reward',
   MEMBERS: '/miners',
-  INVOICE: '/invoices',
-  PAYMENT: '/payment',
   REPORTS: '/reports',
   SPONSOR: '/sponsor',
   SIGN_IN: '/sign-in',
+  INVOICE: '/invoices',
   CAMPAIGN: '/campaign',
   PRODUCTS: '/products',
   RESOURCE: '/resource',
@@ -26,6 +25,7 @@ const ROOTS = {
   NOTIFICATIONS: '/notifications',
   WEEKLYREPORTS: '/weekly-reports',
   GROUP_SETTINGS: '/group-settings',
+  PAYMENT_METHOD: '/payment-method',
   RESET_PASSWORD: '/reset-password',
   FORGOT_PASSWORD: '/forgot-password',
 };
@@ -79,10 +79,10 @@ export const paths = {
       edit: (id: string) => `${ROOTS.PROOF}/${id}`,
       new: `${ROOTS.PROOF}/new`,
     },
-    payment: {
-      root: ROOTS.PAYMENT,
-      edit: (id: string) => `${ROOTS.PAYMENT}/${id}`,
-      new: `${ROOTS.PAYMENT}/new`,
+    paymentMethod: {
+      root: ROOTS.PAYMENT_METHOD,
+      edit: (id: string) => `${ROOTS.PAYMENT_METHOD}/${id}`,
+      new: `${ROOTS.PAYMENT_METHOD}/new`,
     },
     groupSettings: {
       root: ROOTS.GROUP_SETTINGS,
