@@ -1,4 +1,4 @@
-import PaymentEditView from 'src/sections/Payment/Edit';
+import PaymentEditView from 'src/sections/PaymentMethod/Edit';
 // ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------

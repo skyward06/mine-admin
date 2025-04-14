@@ -2,7 +2,7 @@ import { Helmet } from 'react-helmet-async';
 
 import { CONFIG } from 'src/config';
 
-import PaymentList from 'src/sections/Payment/List';
+import PaymentList from 'src/sections/PaymentMethod/List';
 
 // ----------------------------------------------------------------------
 
