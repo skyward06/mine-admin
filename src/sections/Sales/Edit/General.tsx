@@ -30,8 +30,8 @@ import { Form, Field } from 'src/components/Form';
 import SearchMiner from 'src/components/SearchMiner';
 
 import LinkForm from 'src/sections/PrepaidCommission/LinkForm';
-import { useFetchPayments } from 'src/sections/Payment/useApollo';
 import { useFetchPackages } from 'src/sections/Products/useApollo';
+import { useFetchPayments } from 'src/sections/PaymentMethod/useApollo';
 
 import { useUpdateSale } from '../useApollo';
 import { FileRecentItem } from './FileRecentItem';

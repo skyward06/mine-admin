@@ -1,5 +1,5 @@
 import type { Sale } from 'src/sections/Sales/List/type';
-import type { PaymentMethodLink } from 'src/sections/Payment/List/type';
+import type { PaymentMethodLink } from 'src/sections/PaymentMethod/List/type';
 
 export type Package = {
   __typename?: 'Package';

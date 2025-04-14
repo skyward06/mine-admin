@@ -82,9 +82,13 @@ const GroupSettingsEditPage = lazy(() => import('src/pages/GroupSettings/Edit'))
 // ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
-const PaymentListPage = lazy(() => import('src/pages/Payment/List'));
-const PaymentCreatePage = lazy(() => import('src/pages/Payment/Create'));
-const PaymentEditPage = lazy(() => import('src/pages/Payment/Edit'));
+const PaymentListPage = lazy(() => import('src/pages/PaymentMethod/List'));
+const PaymentCreatePage = lazy(() => import('src/pages/PaymentMethod/Create'));
+const PaymentEditPage = lazy(() => import('src/pages/PaymentMethod/Edit'));
+// ----------------------------------------------------------------------
+
+// ----------------------------------------------------------------------
+const PaymentPage = lazy(() => import('src/pages/Payment'));
 // ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
@@ -218,6 +222,10 @@ export const dashboardRoutes = [
           { path: 'new', element: <GroupSettingsCreatePage /> },
           { path: ':id', element: <GroupSettingsEditPage /> },
         ],
+      },
+      {
+        path: 'payment',
+        childrend: [{ index: true, element: <PaymentPage /> }],
       },
       {
         path: 'payment-method',
