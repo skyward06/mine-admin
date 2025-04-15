@@ -128,6 +128,24 @@ export const PROOF_TYPE = {
   MARKETINGMINETXCPROMOTION: 'Marketing MineTXC Promotion',
 };
 
+export const TRANSACTION_STATUS = {
+  WAIT: 'Wait',
+  RECEIVED: 'Received',
+  FAILED: 'Failed',
+};
+
+export const CHAIN_TYPE = {
+  ETH: 'Ethereum',
+  TXC: 'Texitcoin',
+};
+
+export const ORDER_STATUS = {
+  SUCCESS: 'Success',
+  PENDING: 'Pending',
+  CANCELED: 'Canceled',
+  FAILED: 'Failed',
+};
+
 export const CAMPAIGN_LIST_TYPE = {
   ALL: 'All',
   GROUP: 'Group',
