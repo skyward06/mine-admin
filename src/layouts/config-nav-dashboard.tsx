@@ -47,6 +47,7 @@ const ICONS = {
   prepaid: icon('ic_prepaid'),
   promo: icon('ic_promo'),
   proof: icon('ic_proof'),
+  transaction: icon('ic_transaction'),
   reward: icon('ic_reward'),
   report: icon('ic_report'),
   role: icon('ic_role'),
@@ -109,6 +110,7 @@ export const navData = [
   {
     subheader: 'Services',
     items: [
+      { title: 'Payment', path: paths.dashboard.payment.root, icon: ICONS.transaction },
       { title: 'Invoice', path: paths.dashboard.invoice.root, icon: ICONS.invoice },
       {
         title: 'Communication',

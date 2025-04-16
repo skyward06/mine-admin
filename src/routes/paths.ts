@@ -10,6 +10,7 @@ const ROOTS = {
   REWARD: '/reward',
   MEMBERS: '/miners',
   REPORTS: '/reports',
+  PAYMENT: '/payment',
   SPONSOR: '/sponsor',
   SIGN_IN: '/sign-in',
   INVOICE: '/invoices',
@@ -80,6 +81,9 @@ export const paths = {
       root: ROOTS.PROOF,
       edit: (id: string) => `${ROOTS.PROOF}/${id}`,
       new: `${ROOTS.PROOF}/new`,
+    },
+    payment: {
+      root: ROOTS.PAYMENT,
     },
     paymentMethod: {
       root: ROOTS.PAYMENT_METHOD,
