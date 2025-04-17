@@ -318,6 +318,7 @@ export const FETCH_INDIVIDUAL_MEMBERS_QUERY = gql(/* GraphQL */ `
       username
       fullName
       createdAt
+      sponsorId
       sponsorUsername
       sponsorFullname
     }
