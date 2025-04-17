@@ -553,7 +553,7 @@ function PlacementListView() {
         slotProps={{ backdrop: { invisible: true } }}
         PaperProps={{ sx: { width: { xs: 375, sm: 700 }, p: 2 } }}
       >
-        <IndividualMembers />
+        <IndividualMembers open={open} onMinerChange={onMinerChange} />
       </Drawer>
     </DashboardContent>
   );
