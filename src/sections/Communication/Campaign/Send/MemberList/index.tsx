@@ -7,14 +7,23 @@ import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Checkbox from '@mui/material/Checkbox';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
+import { useQuery } from 'src/routes/hooks';
+
 import { useTabs } from 'src/hooks/use-tabs';
+import { useBoolean } from 'src/hooks/useBoolean';
 
 import { customizeDate } from 'src/utils/format-time';
 
 import { CampaignListType } from 'src/__generated__/graphql';
 
+import { Iconify } from 'src/components/Iconify';
+import { ConfirmDialog } from 'src/components/Dialog';
+
+import SearchPeriod from 'src/sections/Placement/List/searchPeriod';
 import { useFetchGroupSettings } from 'src/sections/GroupSettings/useApollo';
 
 import MemberList from './MemberList';
@@ -33,15 +42,27 @@ export function MemberListView({ setEmails, setListType, setListExtra }: Props) 
   const [weekly, setWeekly] = useState<boolean>(false);
   const [selectedTab, setSelectedTab] = useState<string>('general.all');
 
+  const [query, { setQueryParams: setQuery }] = useQuery();
+
+  const openWeek = useBoolean();
+
   const { memberList, fetchMemberList } = useFetchMemberList();
   const { groupSettings, fetchGroupSettings } = useFetchGroupSettings();
-
-  const weekStartDate = customizeDate(`${dayjs().startOf('week')}`);
 
   const TABS = useMemo(
     () => [
       { value: 'general.all', label: 'All' },
-      { value: 'general.weeklySponsors', label: 'Weekly Sponsors' },
+      {
+        value: 'general.weeklySponsors',
+        label: (
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <Typography variant="body2">Weekly Sponsors</Typography>
+            <IconButton onClick={openWeek.onTrue}>
+              <Iconify icon="la:calendar-week" />
+            </IconButton>
+          </Stack>
+        ),
+      },
       { value: 'general.pending', label: 'Pending Manual Commission' },
 
       ...(groupSettings && groupSettings.length > 0
@@ -58,6 +79,7 @@ export function MemberListView({ setEmails, setListType, setListExtra }: Props) 
           }))
         : []),
     ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [groupSettings, memberList]
   );
 
@@ -82,9 +104,9 @@ export function MemberListView({ setEmails, setListType, setListExtra }: Props) 
           introduceMembers: {
             some: {
               createdAt: {
-                gte: customizeDate(`${dayjs(weekStartDate).utc().startOf('week')}`),
+                gte: customizeDate(`${dayjs(query?.weekStartDate).utc().startOf('week')}`),
                 lt: dayjs(
-                  customizeDate(`${dayjs(weekStartDate).utc().endOf('week').add(1, 'day')}`)
+                  customizeDate(`${dayjs(query?.weekStartDate).utc().endOf('week').add(1, 'day')}`)
                 ),
               },
               status: true,
@@ -119,6 +141,27 @@ export function MemberListView({ setEmails, setListType, setListExtra }: Props) 
     }
   };
 
+  const onPeriodChange = (value: any) => {
+    setQuery({
+      ...query,
+      weekStartDate: customizeDate(`${dayjs(value).utc().startOf('week')}`),
+    });
+
+    setFilter({
+      introduceMembers: {
+        some: {
+          createdAt: {
+            gte: customizeDate(`${dayjs(value).utc().startOf('week')}`),
+            lt: dayjs(customizeDate(`${dayjs(value).utc().endOf('week').add(1, 'day')}`)),
+          },
+          status: true,
+        },
+      },
+    });
+
+    openWeek.onFalse();
+  };
+
   const handleCheckboxChange = (tabValue: string) => {
     setSelectedTab(tabValue); // Update the selected tab value
   };
@@ -130,48 +173,63 @@ export function MemberListView({ setEmails, setListType, setListExtra }: Props) 
   }, []);
 
   return (
-    <Card
-      sx={{
-        flexGrow: 1,
-        display: 'flex',
-        overflow: 'hidden',
-      }}
-    >
-      <Box textAlign="center">
-        <Tabs
-          value={tabs.value}
-          onChange={handleTabChange}
-          orientation="vertical"
-          sx={{
-            minWidth: 200,
-            borderRight: 1,
-            borderColor: 'divider',
-            [`& .MuiTabs-flexContainer`]: { gap: 0 },
-            [`& .MuiTabs-flexContainerVertical`]: {
-              padding: '16px',
-            },
-          }}
-        >
-          {TABS.map((tab) => (
-            <Tab
-              key={tab.value}
-              label={
-                <Stack direction="row" flexGrow={1} alignItems="center" sx={{ pl: 1.5 }}>
-                  <FormControlLabel
-                    control={<Checkbox checked={selectedTab === tab.value} />}
-                    label={tab.label}
-                    onChange={() => handleCheckboxChange(tab.value)}
-                    sx={{ mr: 1 }}
-                  />
-                </Stack>
-              }
-              value={tab.value}
-            />
-          ))}
-        </Tabs>
-      </Box>
+    <>
+      <Card
+        sx={{
+          flexGrow: 1,
+          display: 'flex',
+          overflow: 'hidden',
+        }}
+      >
+        <Box textAlign="center">
+          <Tabs
+            value={tabs.value}
+            onChange={handleTabChange}
+            orientation="vertical"
+            sx={{
+              minWidth: 200,
+              borderRight: 1,
+              borderColor: 'divider',
+              [`& .MuiTabs-flexContainer`]: { gap: 0 },
+              [`& .MuiTabs-flexContainerVertical`]: {
+                padding: '16px',
+              },
+            }}
+          >
+            {TABS.map((tab) => (
+              <Tab
+                key={tab.value}
+                label={
+                  <Stack direction="row" flexGrow={1} alignItems="center" sx={{ pl: 1.5 }}>
+                    <FormControlLabel
+                      control={<Checkbox checked={selectedTab === tab.value} />}
+                      label={tab.label}
+                      onChange={() => handleCheckboxChange(tab.value)}
+                      sx={{ mr: 1 }}
+                    />
+                  </Stack>
+                }
+                value={tab.value}
+              />
+            ))}
+          </Tabs>
+        </Box>
 
-      <MemberList filter={filter} listId={listId} setEmails={setEmails} weekly={weekly} />
-    </Card>
+        <MemberList filter={filter} listId={listId} setEmails={setEmails} weekly={weekly} />
+      </Card>
+
+      <ConfirmDialog
+        open={openWeek.value}
+        onClose={openWeek.onFalse}
+        title="Select Week"
+        content={
+          <SearchPeriod
+            current={`${dayjs(query?.weekStartDate).utc().add(1, 'day')}`}
+            onChange={onPeriodChange}
+          />
+        }
+        action={null}
+      />
+    </>
   );
 }

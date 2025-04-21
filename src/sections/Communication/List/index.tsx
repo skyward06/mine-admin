@@ -41,8 +41,6 @@ export function MemberListView() {
   const { memberList, fetchMemberList } = useFetchMemberList();
   const { groupSettings, fetchGroupSettings } = useFetchGroupSettings();
 
-  const weekStartDate = customizeDate(`${dayjs().startOf('week')}`);
-
   const TABS = useMemo(
     () => [
       { value: 'general.all', label: 'All' },
@@ -94,9 +92,9 @@ export function MemberListView() {
           introduceMembers: {
             some: {
               createdAt: {
-                gte: customizeDate(`${dayjs(weekStartDate).utc().startOf('week')}`),
+                gte: customizeDate(`${dayjs(query?.weekStartDate).utc().startOf('week')}`),
                 lt: dayjs(
-                  customizeDate(`${dayjs(weekStartDate).utc().endOf('week').add(1, 'day')}`)
+                  customizeDate(`${dayjs(query?.weekStartDate).utc().endOf('week').add(1, 'day')}`)
                 ),
               },
               status: true,
@@ -136,10 +134,8 @@ export function MemberListView() {
       introduceMembers: {
         some: {
           createdAt: {
-            gte: customizeDate(`${dayjs(query?.weekStartDate).utc().startOf('week')}`),
-            lt: dayjs(
-              customizeDate(`${dayjs(query?.weekStartDate).utc().endOf('week').add(1, 'day')}`)
-            ),
+            gte: customizeDate(`${dayjs(value).utc().startOf('week')}`),
+            lt: dayjs(customizeDate(`${dayjs(value).utc().endOf('week').add(1, 'day')}`)),
           },
           status: true,
         },
