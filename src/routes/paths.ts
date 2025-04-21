@@ -28,7 +28,7 @@ const ROOTS = {
   NOTIFICATIONS: '/notifications',
   WEEKLYREPORTS: '/weekly-reports',
   GROUP_SETTINGS: '/group-settings',
-  PAYMENT_METHOD: '/payment-method',
+  PAYMENT_METHOD: '/method',
   RESET_PASSWORD: '/reset-password',
   FORGOT_PASSWORD: '/forgot-password',
 };

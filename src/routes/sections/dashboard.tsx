@@ -244,7 +244,7 @@ export const dashboardRoutes = [
         children: [{ index: true, element: <LogPage /> }],
       },
       {
-        path: 'payment-method',
+        path: 'method',
         children: [
           { index: true, element: <PaymentListPage /> },
           { path: 'new', element: <PaymentCreatePage /> },
