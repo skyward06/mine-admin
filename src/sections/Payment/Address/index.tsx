@@ -10,7 +10,7 @@ import { useAgQuery as useQueryString } from 'src/routes/hooks';
 import { parseFilterModel } from 'src/utils/parseFilter';
 
 import { CHAIN_TYPE, CHAIN_UNIT } from 'src/consts';
-import { ChainType } from 'src/__generated__/graphql';
+import { PaymentType } from 'src/__generated__/graphql';
 
 import { AgGrid } from 'src/components/AgGrid';
 
@@ -50,7 +50,7 @@ export default function Addresses() {
         resizable: true,
         editable: false,
         filterParams: {
-          values: Object.values(ChainType),
+          values: Object.values(PaymentType),
           valueFormatter: (params: any) => parseType(params.value),
           defaultToNothingSelected: true,
         } as ISetFilterParams<Address>,
