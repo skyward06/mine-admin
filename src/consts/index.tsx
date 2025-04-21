@@ -135,8 +135,17 @@ export const TRANSACTION_STATUS = {
 };
 
 export const CHAIN_TYPE = {
-  ETH: 'Ethereum',
+  // ETH: 'Ethereum',
   TXC: 'Texitcoin',
+  USDT: 'USDT',
+  USDC: 'USDC',
+};
+
+export const CHAIN_UNIT = {
+  TXC: 10 ** 9,
+  // ETH: 10 ** 18,
+  USDC: 10 ** 6,
+  USDT: 10 ** 6,
 };
 
 export const ORDER_STATUS = {
@@ -220,11 +229,6 @@ export const SAMPLE_VARS = {
   LNAME: 'lName',
   FULLNAME: 'toMember.fullName',
   USERNAME: 'toMember.username',
-};
-
-export const CHAIN_UNIT = {
-  TXC: 10 ** 9,
-  ETH: 10 ** 18,
 };
 
 export const CASH_POTENTIAL_URL = 'https://help.minetxc.com/understanding-cash-potential/';
