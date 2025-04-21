@@ -1,4 +1,4 @@
-import type { ChainType, OrderStatus } from 'src/__generated__/graphql';
+import type { PaymentType, OrderStatus } from 'src/__generated__/graphql';
 
 export type Order = {
   __typename?: 'Order';
@@ -16,7 +16,7 @@ export type Order = {
   } | null;
   waitAddress?: {
     __typename?: 'WaitAddress';
-    type: ChainType;
+    type: PaymentType;
     address: string;
     totalBalance: number;
   } | null;
