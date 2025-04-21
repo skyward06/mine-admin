@@ -33,6 +33,27 @@ export type AccessTokenResponse = {
   accessToken: Scalars['String']['output'];
 };
 
+<<<<<<< HEAD
+=======
+export type Address = {
+  __typename?: 'Address';
+  address: Scalars['ID']['output'];
+  balance: Scalars['BigInt']['output'];
+  type: PaymentType;
+};
+
+export type AddressInput = {
+  address: Scalars['ID']['input'];
+  type: PaymentType;
+};
+
+export type AddressResponse = {
+  __typename?: 'AddressResponse';
+  addresses?: Maybe<Array<Address>>;
+  total?: Maybe<Scalars['Int']['output']>;
+};
+
+>>>>>>> ae4d819 (Update graphql typescript)
 export type Admin = {
   __typename?: 'Admin';
   OTPEnabled: Scalars['Boolean']['output'];
@@ -462,6 +483,14 @@ export type CreateMemberStatisticsInput = {
   txcShared: Scalars['Float']['input'];
 };
 
+<<<<<<< HEAD
+=======
+export type CreateOrderInput = {
+  packageId: Scalars['String']['input'];
+  paymentType: PaymentType;
+};
+
+>>>>>>> ae4d819 (Update graphql typescript)
 export type CreatePackageInput = {
   amount: Scalars['Float']['input'];
   date?: InputMaybe<Scalars['DateTimeISO']['input']>;
@@ -1849,6 +1878,12 @@ export type PaymentMethodResponse = {
   total?: Maybe<Scalars['Int']['output']>;
 };
 
+export enum PaymentType {
+  Txc = 'TXC',
+  Usdc = 'USDC',
+  Usdt = 'USDT'
+}
+
 export type Payout = {
   __typename?: 'Payout';
   createdAt?: Maybe<Scalars['DateTimeISO']['output']>;
@@ -2755,6 +2790,30 @@ export type TopRecruitersResponse = {
   totalIntroducers: Scalars['Float']['output'];
 };
 
+<<<<<<< HEAD
+=======
+export type Transaction = {
+  __typename?: 'Transaction';
+  balance: Scalars['BigInt']['output'];
+  createdAt?: Maybe<Scalars['DateTimeISO']['output']>;
+  deletedAt?: Maybe<Scalars['DateTimeISO']['output']>;
+  from: Scalars['String']['output'];
+  frontActions?: Maybe<Array<FrontAction>>;
+  hash: Scalars['ID']['output'];
+  to: Scalars['String']['output'];
+  type: PaymentType;
+  updatedAt?: Maybe<Scalars['DateTimeISO']['output']>;
+  waitAddress?: Maybe<WaitAddress>;
+  waitAddressId?: Maybe<Scalars['String']['output']>;
+};
+
+export type TransactionResponse = {
+  __typename?: 'TransactionResponse';
+  total?: Maybe<Scalars['Int']['output']>;
+  transactions?: Maybe<Array<Transaction>>;
+};
+
+>>>>>>> ae4d819 (Update graphql typescript)
 export type UpdateAdminInput = {
   avatar?: InputMaybe<Scalars['String']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
@@ -2967,6 +3026,7 @@ export type VerifyTokenResponse = {
   token: Scalars['String']['output'];
 };
 
+<<<<<<< HEAD
 export type WdmsvegasContestWinner = {
   __typename?: 'WDMSVEGASContestWinner';
   fullName: Scalars['String']['output'];
@@ -2982,6 +3042,48 @@ export type WdmsvegasContestWinnerResponse = {
   winners?: Maybe<Array<WdmsvegasContestWinner>>;
 };
 
+=======
+<<<<<<< HEAD
+=======
+export type WaitAddress = {
+  __typename?: 'WaitAddress';
+  address: Scalars['String']['output'];
+  createdAt?: Maybe<Scalars['DateTimeISO']['output']>;
+  deletedAt?: Maybe<Scalars['DateTimeISO']['output']>;
+  expiredAt: Scalars['DateTimeISO']['output'];
+  fee: Scalars['BigInt']['output'];
+  frontActions?: Maybe<Array<FrontAction>>;
+  id: Scalars['ID']['output'];
+  initBalance: Scalars['BigInt']['output'];
+  initUnitPrice: Scalars['Float']['output'];
+  order: Order;
+  receivedAt?: Maybe<Scalars['DateTimeISO']['output']>;
+  receivedBalance: Scalars['BigInt']['output'];
+  status: WaitTransactionStatus;
+  totalBalance: Scalars['BigInt']['output'];
+  type: PaymentType;
+  updatedAt?: Maybe<Scalars['DateTimeISO']['output']>;
+};
+
+export type WaitAddressResponse = {
+  __typename?: 'WaitAddressResponse';
+  total?: Maybe<Scalars['Int']['output']>;
+  waitAddresses?: Maybe<Array<WaitAddress>>;
+};
+
+export enum WaitTransactionStatus {
+  Failed = 'FAILED',
+  Received = 'RECEIVED',
+  Wait = 'WAIT'
+}
+
+export type WaitTransactionStatusResponse = {
+  __typename?: 'WaitTransactionStatusResponse';
+  status: WaitTransactionStatus;
+};
+
+>>>>>>> ae4d819 (Update graphql typescript)
+>>>>>>> 098c34b (Update graphql typescript)
 export type WeekPlacementMember = {
   __typename?: 'WeekPlacementMember';
   commission: Scalars['Int']['output'];
@@ -3732,14 +3834,14 @@ export type OrdersQueryVariables = Exact<{
 }>;
 
 
-export type OrdersQuery = { __typename?: 'Query', orders: { __typename?: 'OrderResponse', total?: number | null, orders?: Array<{ __typename?: 'Order', id: number, status: OrderStatus, createdAt?: any | null, member?: { __typename?: 'Member', username: string, fullName: string } | null, package?: { __typename?: 'Package', productName: string } | null, waitAddress?: { __typename?: 'WaitAddress', type: ChainType, address: string, totalBalance: any } | null }> | null } };
+export type OrdersQuery = { __typename?: 'Query', orders: { __typename?: 'OrderResponse', total?: number | null, orders?: Array<{ __typename?: 'Order', id: number, status: OrderStatus, createdAt?: any | null, member?: { __typename?: 'Member', username: string, fullName: string } | null, package?: { __typename?: 'Package', productName: string } | null, waitAddress?: { __typename?: 'WaitAddress', type: PaymentType, address: string, totalBalance: any } | null }> | null } };
 
 export type OrderByIdQueryVariables = Exact<{
   data: IdnInput;
 }>;
 
 
-export type OrderByIdQuery = { __typename?: 'Query', orderById: { __typename?: 'Order', id: number, status: OrderStatus, createdAt?: any | null, member?: { __typename?: 'Member', ID?: number | null, assetId?: string | null, username: string, fullName: string } | null, package?: { __typename?: 'Package', token: number, point: number, amount: number, productName: string } | null, waitAddress?: { __typename?: 'WaitAddress', type: ChainType, address: string, receivedAt: any, initBalance: any, totalBalance: any, initUnitPrice: number, receivedBalance: any } | null } };
+export type OrderByIdQuery = { __typename?: 'Query', orderById: { __typename?: 'Order', id: number, status: OrderStatus, createdAt?: any | null, member?: { __typename?: 'Member', ID?: number | null, assetId?: string | null, username: string, fullName: string } | null, package?: { __typename?: 'Package', token: number, point: number, amount: number, productName: string } | null, waitAddress?: { __typename?: 'WaitAddress', type: PaymentType, address: string, receivedAt?: any | null, initBalance: any, totalBalance: any, initUnitPrice: number, receivedBalance: any } | null } };
 
 export type AddressesQueryVariables = Exact<{
   sort?: InputMaybe<Scalars['String']['input']>;
@@ -3748,7 +3850,7 @@ export type AddressesQueryVariables = Exact<{
 }>;
 
 
-export type AddressesQuery = { __typename?: 'Query', addresses: { __typename?: 'AddressResponse', total?: number | null, addresses?: Array<{ __typename?: 'Address', type: ChainType, address: string, balance: any }> | null } };
+export type AddressesQuery = { __typename?: 'Query', addresses: { __typename?: 'AddressResponse', total?: number | null, addresses?: Array<{ __typename?: 'Address', type: PaymentType, address: string, balance: any }> | null } };
 
 export type TransactionsQueryVariables = Exact<{
   sort?: InputMaybe<Scalars['String']['input']>;
@@ -3757,7 +3859,7 @@ export type TransactionsQueryVariables = Exact<{
 }>;
 
 
-export type TransactionsQuery = { __typename?: 'Query', transactions: { __typename?: 'TransactionResponse', total?: number | null, transactions?: Array<{ __typename?: 'Transaction', to: string, from: string, hash: string, type: ChainType, balance: any, createdAt?: any | null, waitAddress?: { __typename?: 'WaitAddress', status: WaitTransactionStatus, address: string, receivedAt: any, initBalance: any, totalBalance: any, initUnitPrice: number, receivedBalance: any } | null }> | null } };
+export type TransactionsQuery = { __typename?: 'Query', transactions: { __typename?: 'TransactionResponse', total?: number | null, transactions?: Array<{ __typename?: 'Transaction', to: string, from: string, hash: string, type: PaymentType, balance: any, createdAt?: any | null, waitAddress?: { __typename?: 'WaitAddress', status: WaitTransactionStatus, address: string, receivedAt?: any | null, initBalance: any, totalBalance: any, initUnitPrice: number, receivedBalance: any } | null }> | null } };
 
 export type CancelOrderMutationVariables = Exact<{
   data: IdnInput;
