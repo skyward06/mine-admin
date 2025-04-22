@@ -14,7 +14,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
-  /** BigInt custom scalar type */
+  /** The `BigInt` scalar type represents non-fractional signed whole numeric values. */
   BigInt: { input: any; output: any; }
   /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   Date: { input: any; output: any; }
@@ -33,8 +33,6 @@ export type AccessTokenResponse = {
   accessToken: Scalars['String']['output'];
 };
 
-<<<<<<< HEAD
-=======
 export type Address = {
   __typename?: 'Address';
   address: Scalars['ID']['output'];
@@ -53,7 +51,6 @@ export type AddressResponse = {
   total?: Maybe<Scalars['Int']['output']>;
 };
 
->>>>>>> ae4d819 (Update graphql typescript)
 export type Admin = {
   __typename?: 'Admin';
   OTPEnabled: Scalars['Boolean']['output'];
@@ -344,6 +341,11 @@ export type CommissionStatus = {
   newR: Scalars['Int']['output'];
 };
 
+export type CompleteOrderInput = {
+  orderId: Scalars['Int']['input'];
+  paymentId: Scalars['String']['input'];
+};
+
 export type ConfirmStatistics = {
   id: Scalars['ID']['input'];
   transactionId: Scalars['ID']['input'];
@@ -483,14 +485,11 @@ export type CreateMemberStatisticsInput = {
   txcShared: Scalars['Float']['input'];
 };
 
-<<<<<<< HEAD
-=======
 export type CreateOrderInput = {
   packageId: Scalars['String']['input'];
   paymentType: PaymentType;
 };
 
->>>>>>> ae4d819 (Update graphql typescript)
 export type CreatePackageInput = {
   amount: Scalars['Float']['input'];
   date?: InputMaybe<Scalars['DateTimeISO']['input']>;
@@ -1122,6 +1121,9 @@ export type Mutation = {
   approveMember: SuccessResponse;
   calculateCommissions: SuccessResponse;
   calculatePreviewCommissions: SuccessResponse;
+  cancelOrder: SuccessResponse;
+  cancelWaitingTransaction: SuccessResponse;
+  completeOrder: OrderStatusResponse;
   confirmStatistics: Statistics;
   createAdmin: Admin;
   createAdminNote: AdminNotes;
@@ -1136,6 +1138,7 @@ export type Mutation = {
   createMember: Member;
   createMemberList: MemberList;
   createMemberStatistics: MemberStatistics;
+  createOrder: Order;
   createPackage: Package;
   createPaymentMethod: PaymentMethod;
   createPayout: Payout;
@@ -1162,8 +1165,12 @@ export type Mutation = {
   moveToGraveyard: SuccessResponse;
   moveToPaid: SuccessResponse;
   moveToPending: SuccessResponse;
+<<<<<<< HEAD
   moveToSolve: SuccessResponse;
   moveToWIP: SuccessResponse;
+=======
+  refreshBalance: SuccessResponse;
+>>>>>>> 0453bbd (Update gprahql typescript)
   regenerateInvoiceById: SuccessResponse;
   removeAdminNote: SuccessResponse;
   removeAdmins: ManySuccessResponse;
@@ -1260,6 +1267,21 @@ export type MutationApproveMemberArgs = {
 };
 
 
+export type MutationCancelOrderArgs = {
+  data: IdnInput;
+};
+
+
+export type MutationCancelWaitingTransactionArgs = {
+  data: IdInput;
+};
+
+
+export type MutationCompleteOrderArgs = {
+  data: CompleteOrderInput;
+};
+
+
 export type MutationConfirmStatisticsArgs = {
   data: ConfirmStatistics;
 };
@@ -1327,6 +1349,11 @@ export type MutationCreateMemberListArgs = {
 
 export type MutationCreateMemberStatisticsArgs = {
   data: CreateMemberStatisticsInput;
+};
+
+
+export type MutationCreateOrderArgs = {
+  data: CreateOrderInput;
 };
 
 
@@ -1445,6 +1472,7 @@ export type MutationMoveToPendingArgs = {
 };
 
 
+<<<<<<< HEAD
 export type MutationMoveToSolveArgs = {
   data: IdInput;
 };
@@ -1452,6 +1480,10 @@ export type MutationMoveToSolveArgs = {
 
 export type MutationMoveToWipArgs = {
   data: IdInput;
+=======
+export type MutationRefreshBalanceArgs = {
+  data: AddressInput;
+>>>>>>> 0453bbd (Update gprahql typescript)
 };
 
 
@@ -1795,6 +1827,40 @@ export type NotificationResponse = {
   total?: Maybe<Scalars['Int']['output']>;
 };
 
+export type Order = {
+  __typename?: 'Order';
+  createdAt?: Maybe<Scalars['DateTimeISO']['output']>;
+  deletedAt?: Maybe<Scalars['DateTimeISO']['output']>;
+  frontActions?: Maybe<Array<FrontAction>>;
+  id: Scalars['Int']['output'];
+  member?: Maybe<Member>;
+  memberId: Scalars['String']['output'];
+  package?: Maybe<Package>;
+  packageId: Scalars['String']['output'];
+  status: OrderStatus;
+  updatedAt?: Maybe<Scalars['DateTimeISO']['output']>;
+  waitAddress?: Maybe<WaitAddress>;
+  waitAddressId: Scalars['String']['output'];
+};
+
+export type OrderResponse = {
+  __typename?: 'OrderResponse';
+  orders?: Maybe<Array<Order>>;
+  total?: Maybe<Scalars['Int']['output']>;
+};
+
+export enum OrderStatus {
+  Canceled = 'CANCELED',
+  Failed = 'FAILED',
+  Pending = 'PENDING',
+  Success = 'SUCCESS'
+}
+
+export type OrderStatusResponse = {
+  __typename?: 'OrderStatusResponse';
+  status: OrderStatus;
+};
+
 export type PFile = {
   __typename?: 'PFile';
   createdAt?: Maybe<Scalars['DateTimeISO']['output']>;
@@ -2022,7 +2088,11 @@ export enum ProofType {
 
 export type Query = {
   __typename?: 'Query';
+<<<<<<< HEAD
   WDMSVegasContestWinners: WdmsvegasContestWinnerResponse;
+=======
+  addresses: AddressResponse;
+>>>>>>> 0453bbd (Update gprahql typescript)
   adminMe: Admin;
   adminNotes: AdminNotesResponse;
   admins: AdminsResponse;
@@ -2034,6 +2104,7 @@ export type Query = {
   calculateProfitability: ProfitabilityCalculationResponse;
   campaignById: Campaign;
   campaigns: CampaignResponse;
+  checkAddressWaitStatus: WaitTransactionStatusResponse;
   commissionByMemberIDAndWeek: WeeklyCommission;
   commissionByPeriod: Array<CommissionPeriodResponse>;
   commissionsByWeek: CommissionOverviewResponse;
@@ -2073,6 +2144,8 @@ export type Query = {
   newMemberCounts: Array<MinerCountStatsResponse>;
   notifications: NotificationResponse;
   onepointAwayMembers: MembersResponse;
+  orderById: Order;
+  orders: OrderResponse;
   packages: PackageResponse;
   paymentMethodLinks: PaymentMethodLinkResponse;
   paymentMethods: PaymentMethodResponse;
@@ -2099,14 +2172,20 @@ export type Query = {
   topEarners: Array<TopEarnersResponse>;
   topRecruiters: Array<TopRecruitersResponse>;
   totalMemberCounts: Array<MinerCountStatsResponse>;
+  transactions: TransactionResponse;
   txcShares: Array<TxcSharedResponse>;
+  waitAddresses: WaitAddressResponse;
   weeklyCommissionById: WeeklyCommission;
   weeklyCommissions: BasicWeeklyCommissionResponse;
   weeklyReports: WeeklyReportResponse;
 };
 
 
+<<<<<<< HEAD
 export type QueryWdmsVegasContestWinnersArgs = {
+=======
+export type QueryAddressesArgs = {
+>>>>>>> 0453bbd (Update gprahql typescript)
   filter?: InputMaybe<Scalars['JSONObject']['input']>;
   page?: InputMaybe<Scalars['String']['input']>;
   sort?: InputMaybe<Scalars['String']['input']>;
@@ -2170,6 +2249,11 @@ export type QueryCampaignsArgs = {
   filter?: InputMaybe<Scalars['JSONObject']['input']>;
   page?: InputMaybe<Scalars['String']['input']>;
   sort?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryCheckAddressWaitStatusArgs = {
+  data: IdInput;
 };
 
 
@@ -2366,6 +2450,18 @@ export type QueryOnepointAwayMembersArgs = {
 };
 
 
+export type QueryOrderByIdArgs = {
+  data: IdnInput;
+};
+
+
+export type QueryOrdersArgs = {
+  filter?: InputMaybe<Scalars['JSONObject']['input']>;
+  page?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Scalars['String']['input']>;
+};
+
+
 export type QueryPackagesArgs = {
   filter?: InputMaybe<Scalars['JSONObject']['input']>;
   page?: InputMaybe<Scalars['String']['input']>;
@@ -2498,8 +2594,22 @@ export type QueryTotalMemberCountsArgs = {
 };
 
 
+export type QueryTransactionsArgs = {
+  filter?: InputMaybe<Scalars['JSONObject']['input']>;
+  page?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Scalars['String']['input']>;
+};
+
+
 export type QueryTxcSharesArgs = {
   data: PeriodStatsArgs;
+};
+
+
+export type QueryWaitAddressesArgs = {
+  filter?: InputMaybe<Scalars['JSONObject']['input']>;
+  page?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -2790,8 +2900,6 @@ export type TopRecruitersResponse = {
   totalIntroducers: Scalars['Float']['output'];
 };
 
-<<<<<<< HEAD
-=======
 export type Transaction = {
   __typename?: 'Transaction';
   balance: Scalars['BigInt']['output'];
@@ -2813,7 +2921,6 @@ export type TransactionResponse = {
   transactions?: Maybe<Array<Transaction>>;
 };
 
->>>>>>> ae4d819 (Update graphql typescript)
 export type UpdateAdminInput = {
   avatar?: InputMaybe<Scalars['String']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
@@ -3027,6 +3134,7 @@ export type VerifyTokenResponse = {
 };
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 export type WdmsvegasContestWinner = {
   __typename?: 'WDMSVEGASContestWinner';
   fullName: Scalars['String']['output'];
@@ -3045,6 +3153,8 @@ export type WdmsvegasContestWinnerResponse = {
 =======
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> 0453bbd (Update gprahql typescript)
 export type WaitAddress = {
   __typename?: 'WaitAddress';
   address: Scalars['String']['output'];
@@ -3072,7 +3182,8 @@ export type WaitAddressResponse = {
 };
 
 export enum WaitTransactionStatus {
-  Failed = 'FAILED',
+  Canceled = 'CANCELED',
+  Expired = 'EXPIRED',
   Received = 'RECEIVED',
   Wait = 'WAIT'
 }
@@ -3082,8 +3193,11 @@ export type WaitTransactionStatusResponse = {
   status: WaitTransactionStatus;
 };
 
+<<<<<<< HEAD
 >>>>>>> ae4d819 (Update graphql typescript)
 >>>>>>> 098c34b (Update graphql typescript)
+=======
+>>>>>>> 0453bbd (Update gprahql typescript)
 export type WeekPlacementMember = {
   __typename?: 'WeekPlacementMember';
   commission: Scalars['Int']['output'];
