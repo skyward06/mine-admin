@@ -130,8 +130,9 @@ export const PROOF_TYPE = {
 
 export const TRANSACTION_STATUS = {
   WAIT: 'Wait',
+  EXPIRED: 'Expired',
   RECEIVED: 'Received',
-  FAILED: 'Failed',
+  CANCELED: 'Canceled',
 };
 
 export const CHAIN_TYPE = {

@@ -4,9 +4,11 @@ export const parseType = (transactionStatus: WaitTransactionStatus): string => {
   switch (transactionStatus) {
     case WaitTransactionStatus.Wait:
       return 'Wait';
+    case WaitTransactionStatus.Expired:
+      return 'Expired';
     case WaitTransactionStatus.Received:
       return 'Received';
-    case WaitTransactionStatus.Failed:
+    case WaitTransactionStatus.Canceled:
       return 'Failed';
     default:
       return transactionStatus;
