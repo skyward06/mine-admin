@@ -7,6 +7,7 @@ import TotalMiner from 'src/sections/Statistics/Chart/TotalMiner';
 import Commission from 'src/sections/Statistics/Chart/Commission';
 import MemberCount from 'src/sections/Statistics/Chart/MemberCount';
 import MemberReward from 'src/sections/Statistics/Chart/MemberReward';
+import MemberByCountry from 'src/sections/Statistics/Chart/MemberByCountry';
 
 export default function Summary() {
   return (
@@ -18,19 +19,22 @@ export default function Summary() {
         <TXCShared />
       </Grid>
       <Grid xs={12} md={4}>
-        <MemberCount />
+        <MemberReward />
       </Grid>
       <Grid xs={12} md={4}>
         <Revenue />
       </Grid>
       <Grid xs={12} md={4}>
-        <MemberReward />
+        <MemberCount />
       </Grid>
-      <Grid xs={12} md={6}>
+      <Grid xs={12} md={4}>
         <Commission />
       </Grid>
-      <Grid xs={12} md={6}>
+      <Grid xs={12} md={4}>
         <TotalMiner />
+      </Grid>
+      <Grid xs={12} md={4}>
+        <MemberByCountry />
       </Grid>
     </Grid>
   );

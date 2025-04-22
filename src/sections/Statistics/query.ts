@@ -96,3 +96,12 @@ export const FETCH_MEMBERSTATISTICS_QUERY = gql(/* GraphQL */ `
     }
   }
 `);
+
+export const FETCH_MEMBERS_BY_COUNTRY = gql(/* GraphQL */ `
+  query MembersByCountry {
+    membersByCountry {
+      country
+      memberCount
+    }
+  }
+`);
