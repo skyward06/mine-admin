@@ -8,6 +8,7 @@ import { Editor, Toolbar, HtmlButton, EditorProvider } from 'react-simple-wysiwy
 
 import Box from '@mui/material/Box';
 import LoadingButton from '@mui/lab/LoadingButton';
+import InputAdornment from '@mui/material/InputAdornment';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
@@ -44,7 +45,7 @@ export default function EditorView({ current }: Props) {
     () =>
       current
         ? Schema.safeParse(current).data ?? ({} as SchemaType)
-        : { subject: '', description: '' },
+        : { templateID: 0, subject: '', description: '' },
     [current]
   );
 
@@ -129,7 +130,19 @@ export default function EditorView({ current }: Props) {
       />
 
       <Form methods={methods} onSubmit={onSubmit}>
-        <Box display="grid" gridTemplateColumns="30% 70%" columnGap={2} mb={2}>
+        <Box display="grid" gridTemplateColumns="15% 25% 58%" columnGap={2} mb={2}>
+          <Field.Text
+            type="number"
+            name="templateID"
+            label="Template ID"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start" sx={{ pt: 0.3 }}>
+                  EM
+                </InputAdornment>
+              ),
+            }}
+          />
           <Field.Text name="subject" label="Subject" />
           <Field.Text name="description" label="Description" />
         </Box>

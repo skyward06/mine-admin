@@ -20,6 +20,7 @@ export default function TemplateEditView() {
     id: '',
     body: '',
     subject: '',
+    templateID: 0,
     description: '',
   };
 

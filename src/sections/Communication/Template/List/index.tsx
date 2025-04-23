@@ -1,3 +1,4 @@
+import type { CustomCellRendererProps } from '@ag-grid-community/react';
 import type { ColDef, ITextFilterParams } from '@ag-grid-community/core';
 
 import { useMemo, useEffect } from 'react';
@@ -6,6 +7,7 @@ import Card from '@mui/material/Card';
 
 import { useAgQuery as useQueryString } from 'src/routes/hooks';
 
+import { formatID } from 'src/utils/helper';
 import { parseFilterModel } from 'src/utils/parseFilter';
 
 import { AgGrid } from 'src/components/AgGrid';
@@ -28,6 +30,18 @@ export function TemplateListView() {
 
   const colDefs = useMemo<ColDef<EmailTemplate>[]>(
     () => [
+      {
+        field: 'templateID',
+        headerName: 'ID',
+        width: 120,
+        filter: 'agNumberColumnFilter',
+        resizable: true,
+        editable: false,
+        initialSort: 'desc',
+        cellRenderer: ({ data }: CustomCellRendererProps<EmailTemplate>) =>
+          formatID(data?.templateID ?? '', 'EM', 4),
+        cellClass: 'ag-number-cell',
+      },
       {
         field: 'subject',
         headerName: 'Subject',
