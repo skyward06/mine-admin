@@ -5,6 +5,8 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
+import { CAMPAIGN_LIST_TYPE } from 'src/consts';
+
 import EmailTemplateView from 'src/components/Template';
 
 interface Props {
@@ -24,7 +26,7 @@ export default function SendForm({ emails, template, listType, setSender }: Prop
         </Stack>
         <Stack width={1} direction="row" spacing={2}>
           <Typography variant="subtitle1">List Type:</Typography>
-          <Typography>{listType}</Typography>
+          <Typography>{CAMPAIGN_LIST_TYPE[listType as keyof typeof CAMPAIGN_LIST_TYPE]}</Typography>
         </Stack>
         <Stack width={1} direction="row" spacing={2} alignItems="center">
           <Typography variant="subtitle1">Sender:</Typography>

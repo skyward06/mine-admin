@@ -3,6 +3,7 @@ import Typography from '@mui/material/Typography';
 
 import { formatWeekNumber } from 'src/utils/format-time';
 
+import { CAMPAIGN_LIST_TYPE } from 'src/consts';
 import { CampaignListType } from 'src/__generated__/graphql';
 
 interface Props {
@@ -18,7 +19,7 @@ export default function Overview({ sender, subject, listType, listExtra }: Props
       <Typography variant="subtitle1">Subject:</Typography>
       <Typography>{subject}</Typography>
       <Typography>
-        ({listType}
+        ({CAMPAIGN_LIST_TYPE[listType as keyof typeof CAMPAIGN_LIST_TYPE]}
         <>
           {listType === CampaignListType.Group && `: ${listExtra?.name ?? ''}`}
           {listType === CampaignListType.Custom && `: ${listExtra?.name ?? ''}`}

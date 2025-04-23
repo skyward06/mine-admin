@@ -1,3 +1,4 @@
+import type { CustomCellRendererProps } from '@ag-grid-community/react';
 import type { ColDef, ISetFilterParams, ITextFilterParams } from '@ag-grid-community/core';
 
 import { useMemo, useEffect } from 'react';
@@ -8,6 +9,7 @@ import { useAgQuery as useQueryString } from 'src/routes/hooks';
 
 import { parseFilterModel } from 'src/utils/parseFilter';
 
+import { CAMPAIGN_LIST_TYPE } from 'src/consts';
 import { CampaignListType } from 'src/__generated__/graphql';
 
 import { AgGrid } from 'src/components/AgGrid';
@@ -34,7 +36,7 @@ export function CampaignListView() {
       {
         field: 'subject',
         headerName: 'Subject',
-        width: 1100,
+        width: 800,
         filter: 'agTextColumnFilter',
         resizable: true,
         editable: false,
@@ -43,7 +45,7 @@ export function CampaignListView() {
       {
         field: 'listType',
         headerName: 'List Type',
-        flex: 1,
+        width: 300,
         filter: 'agMultiColumnFilter',
         resizable: true,
         editable: false,
@@ -52,6 +54,19 @@ export function CampaignListView() {
           valueFormatter: (params: any) => parseType(params.value),
           defaultToNothingSelected: true,
         } as ISetFilterParams<Campaign>,
+        cellRenderer: ({ data }: CustomCellRendererProps<Campaign>) =>
+          data ? CAMPAIGN_LIST_TYPE[data.listType] : '',
+      },
+      {
+        field: 'listExtra',
+        headerName: 'List Extra',
+        flex: 1,
+        filter: 'agTextColumnFilter',
+        resizable: true,
+        editable: false,
+        filterParams: { buttons: ['reset'] } as ITextFilterParams,
+        cellRenderer: ({ data }: CustomCellRendererProps<Campaign>) =>
+          data?.listExtra ? (data.listExtra as any)?.name : '',
       },
       {
         colId: 'action',

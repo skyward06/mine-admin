@@ -59,7 +59,7 @@ export const PAYMENT_TYPE = [
   { label: 'CASH', value: 'Cash' },
   { label: 'KILO_OF_SILVER', value: 'Kilo of Silver' },
   { label: 'CRYPTO', value: 'Crypto' },
-  { label: 'Commission', value: 'Commission' },
+  { label: 'COMMISSION', value: 'Commission' },
 ];
 
 export const PREPAYMRENT_TYPE = [
@@ -112,7 +112,8 @@ export const CAMPAIGN_LIST_TYPE = {
   ALL: 'All',
   GROUP: 'Group',
   CUSTOM: 'Custom',
-  WEEKLYSPONSOR: 'Weekly Sponsor',
+  WEEKLY_SPONSOR: 'Weekly Sponsor',
+  PENDING_MANUAL_COMMISSION: 'Pending Manual Commission',
 };
 
 export const INVOICE_TYPE = {
