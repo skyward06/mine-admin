@@ -70,6 +70,7 @@ export const FETCH_EMAIL_TEMPLATES = gql(/* GraphQL */ `
         id
         body
         subject
+        templateID
         description
       }
       total
@@ -84,6 +85,7 @@ export const FETCH_EMAIL_TEMPLATE_BY_ID = gql(/* GraphQL */ `
       body
       subject
       createdAt
+      templateID
       description
     }
   }
