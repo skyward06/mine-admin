@@ -143,8 +143,8 @@ export const merge = (target: any, ...sources: any[]): any => {
   return merge(target, ...sources);
 };
 
-export const formatID = (id: string | number, prefix: string = 'M') =>
-  `${prefix}-${id.toString().padStart(7, '0')}`;
+export const formatID = (id: string | number, prefix: string = 'M', length = 7) =>
+  `${prefix}-${id.toString().padStart(length, '0')}`;
 
 export const isValidUrl = (str: string) => {
   try {
