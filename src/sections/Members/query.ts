@@ -289,6 +289,16 @@ export const FETCH_MEMBER_QUERY = gql(/* GraphQL */ `
         memberId
         communication
       }
+      session {
+        os
+        device
+        browser
+        platform
+        ipAddress
+        userAgent
+        accessToken
+        browserVersion
+      }
       createdAt
       updatedAt
       deletedAt
