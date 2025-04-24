@@ -92,6 +92,10 @@ const PaymentEditPage = lazy(() => import('src/pages/PaymentMethod/Edit'));
 // ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
+const BugPage = lazy(() => import('src/pages/Bug/List'));
+// ----------------------------------------------------------------------
+
+// ----------------------------------------------------------------------
 const CommunicationListPage = lazy(() => import('src/pages/Communication/List'));
 // ----------------------------------------------------------------------
 
@@ -225,8 +229,12 @@ export const dashboardRoutes = [
       },
       // {
       //   path: 'payment',
-      //   childrend: [{ index: true, element: <PaymentPage /> }],
+      //   children: [{ index: true, element: <PaymentPage /> }],
       // },
+      {
+        path: 'bug-report',
+        children: [{ index: true, element: <BugPage /> }],
+      },
       {
         path: 'payment-method',
         children: [
