@@ -160,6 +160,90 @@ export default function Detail({ open, id }: Props) {
               ))}
             </Stack>
 
+            <Divider sx={{ borderStyle: 'dashed', borderColor: 'gray' }} />
+
+            <Stack mt={0.5}>
+              <Typography variant="subtitle1" fontWeight={700}>
+                Setting
+              </Typography>
+
+              <Stack direction="row" spacing={2} alignItems="center">
+                <Typography variant="body2" fontWeight={600}>
+                  Communication:
+                </Typography>
+                <Iconify
+                  icon={
+                    member?.setting?.communication
+                      ? 'ic:twotone-check-box'
+                      : 'iconamoon:sign-times-square-duotone'
+                  }
+                  color={member?.setting?.communication ? 'green' : 'red'}
+                />
+              </Stack>
+            </Stack>
+
+            <Divider sx={{ borderStyle: 'dashed', borderColor: 'gray' }} />
+
+            <Stack mt={0.5}>
+              <Typography variant="subtitle1" fontWeight={700}>
+                Session
+              </Typography>
+
+              <Stack direction="row" spacing={2} alignItems="center">
+                <Stack width={0.4} fontSize={14} fontWeight={600}>
+                  IP Address:
+                </Stack>
+                <Stack width={1} fontSize={14}>
+                  {member?.session?.ipAddress}
+                </Stack>
+              </Stack>
+
+              <Stack direction="row" spacing={2} alignItems="center">
+                <Stack width={0.4} fontSize={14} fontWeight={600}>
+                  Device:
+                </Stack>
+                <Stack width={1} fontSize={14}>
+                  {member?.session?.device}
+                </Stack>
+              </Stack>
+
+              <Stack direction="row" spacing={2} alignItems="center">
+                <Stack width={0.4} fontSize={14} fontWeight={600}>
+                  Platform:
+                </Stack>
+                <Stack width={1} fontSize={14}>
+                  {member?.session?.platform}
+                </Stack>
+              </Stack>
+
+              <Stack direction="row" spacing={2} alignItems="center">
+                <Stack width={0.4} fontSize={14} fontWeight={600}>
+                  OS:
+                </Stack>
+                <Stack width={1} fontSize={14}>
+                  {member?.session?.os}
+                </Stack>
+              </Stack>
+
+              <Stack direction="row" spacing={2} alignItems="center">
+                <Stack width={0.4} fontSize={14} fontWeight={600}>
+                  Browser:
+                </Stack>
+                <Stack width={1} fontSize={14}>
+                  {member?.session?.browser} {member?.session?.browserVersion}
+                </Stack>
+              </Stack>
+
+              <Stack direction="row" spacing={2} alignItems="center">
+                <Stack width={0.4} fontSize={14} fontWeight={600}>
+                  Fingerprint:
+                </Stack>
+                <Stack width={1} fontSize={14}>
+                  {member?.session?.userAgent}
+                </Stack>
+              </Stack>
+            </Stack>
+
             {member?.memberWallets?.length && (
               <Divider sx={{ borderStyle: 'dashed', borderColor: 'gray' }} />
             )}
@@ -194,28 +278,6 @@ export default function Detail({ open, id }: Props) {
                 <Typography>{item?.description}</Typography>
               </>
             ))}
-
-            <Divider sx={{ borderStyle: 'dashed', borderColor: 'gray' }} />
-
-            <Stack mt={0.5}>
-              <Typography variant="subtitle1" fontWeight={700}>
-                Setting
-              </Typography>
-
-              <Stack direction="row" spacing={2} alignItems="center">
-                <Typography variant="body2" fontWeight={600}>
-                  Communication:
-                </Typography>
-                <Iconify
-                  icon={
-                    member?.setting?.communication
-                      ? 'ic:twotone-check-box'
-                      : 'iconamoon:sign-times-square-duotone'
-                  }
-                  color={member?.setting?.communication ? 'green' : 'red'}
-                />
-              </Stack>
-            </Stack>
           </Stack>
         </ScrollBar>
       </Drawer>

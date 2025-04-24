@@ -441,6 +441,81 @@ export const Personal = () => {
               />
             </Stack>
           </Stack>
+
+          <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
+
+          {/* Session info */}
+          <Typography variant="body1" fontWeight="bold" mt={2}>
+            Session
+          </Typography>
+
+          <Stack direction="row" spacing={2} pb={1}>
+            <Stack width={0.5}>
+              <Typography variant="body2" fontWeight="bold">
+                IP Address:
+              </Typography>
+            </Stack>
+            <Stack width={1}>
+              <Typography variant="body2">{member?.session?.ipAddress}</Typography>
+            </Stack>
+          </Stack>
+
+          <Stack direction="row" spacing={2} pb={1}>
+            <Stack width={0.5}>
+              <Typography variant="body2" fontWeight="bold">
+                Device:
+              </Typography>
+            </Stack>
+            <Stack width={1}>
+              <Typography variant="body2">{member?.session?.device}</Typography>
+            </Stack>
+          </Stack>
+
+          <Stack direction="row" spacing={2} pb={1}>
+            <Stack width={0.5}>
+              <Typography variant="body2" fontWeight="bold">
+                Platform:
+              </Typography>
+            </Stack>
+            <Stack width={1}>
+              <Typography variant="body2">{member?.session?.platform}</Typography>
+            </Stack>
+          </Stack>
+
+          <Stack direction="row" spacing={2} pb={1}>
+            <Stack width={0.5}>
+              <Typography variant="body2" fontWeight="bold">
+                OS:
+              </Typography>
+            </Stack>
+            <Stack width={1}>
+              <Typography variant="body2">{member?.session?.os}</Typography>
+            </Stack>
+          </Stack>
+
+          <Stack direction="row" spacing={2} pb={1}>
+            <Stack width={0.5}>
+              <Typography variant="body2" fontWeight="bold">
+                Browser:
+              </Typography>
+            </Stack>
+            <Stack width={1}>
+              <Typography variant="body2">
+                {member?.session?.browser} {member?.session?.browserVersion}
+              </Typography>
+            </Stack>
+          </Stack>
+
+          <Stack direction="row" spacing={2} pb={1}>
+            <Stack width={0.5}>
+              <Typography variant="body2" fontWeight="bold">
+                Fingerprint:
+              </Typography>
+            </Stack>
+            <Stack width={1}>
+              <Typography variant="body2">{member?.session?.userAgent}</Typography>
+            </Stack>
+          </Stack>
         </Card>
       </Grid>
 
