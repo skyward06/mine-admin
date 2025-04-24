@@ -34,15 +34,23 @@ export default function TXCWallets({ wallets }: Props) {
   const { watch, control, setValue } = useFormContext();
   const { fields, append, remove } = useFieldArray({ control, name: 'txcWallets' });
 
-  const forms: Wallet[] = fields?.length
-    ? fields
-    : wallets.map(({ id, payoutId, address, percent, isDefault }) => ({
-        id,
-        payoutId,
-        address,
-        percent,
-        isDefault,
-      }));
+  const forms = fields as Wallet[];
+
+  useEffect(() => {
+    if (fields.length === 0) {
+      wallets.forEach(({ id, payoutId, address, percent, note, isDefault }) => {
+        append({
+          id,
+          payoutId,
+          address,
+          percent: percent || 0,
+          note: note || '',
+          isDefault,
+        });
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     wallets.forEach(({ payoutId, address, note, percent, isDefault }, index) => {
@@ -102,7 +110,7 @@ export default function TXCWallets({ wallets }: Props) {
       </Stack>
 
       {forms?.map((item, index) => (
-        <Stack sx={{ mb: 2 }}>
+        <Stack sx={{ mb: 2 }} key={item.id}>
           <Stack key={item.id} sx={{ mb: 2 }}>
             <Box
               key={item.id}
