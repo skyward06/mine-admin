@@ -83,6 +83,12 @@ export const OTHER_WALLET = [
   { id: 'ac26f196-d377-4846-8b86-7a7dda622d01', method: 'OTHER' },
 ];
 
+export const BUG_REPORT_STATUS = {
+  BACKLOG: { value: 'Backlog', color: 'warning' },
+  DONE: { value: 'Done', color: 'success' },
+  WIP: { value: 'Work In Progress', color: 'secondary' },
+};
+
 export const PROOF_TYPE = {
   SALE: 'Sale',
   PREPAY: 'Prepay',
