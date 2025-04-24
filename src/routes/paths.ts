@@ -18,6 +18,7 @@ const ROOTS = {
   TMEPLATE: '/template',
   DASHBOARD: '/dashboard',
   PLACEMENT: '/placement',
+  BUG_REPORT: '/bug-report',
   COMMISSION: '/commission',
   CALCULATOR: '/calculator',
   STATISTICS: '/statistics',
@@ -110,6 +111,7 @@ export const paths = {
     sponsor: { root: ROOTS.SPONSOR },
     history: { root: ROOTS.DASHBOARD },
     communication: { root: ROOTS.COMMUNICATION },
+    bugReport: { root: ROOTS.BUG_REPORT },
     template: {
       root: ROOTS.TMEPLATE,
       new: `${ROOTS.TMEPLATE}/new`,
