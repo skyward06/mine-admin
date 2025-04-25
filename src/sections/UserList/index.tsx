@@ -140,7 +140,7 @@ export default function UserListView() {
     const filterObj: IUserPrismaFilter = {};
     if (filter.search) {
       filterObj.OR = [
-        { name: { contains: filter.search } },
+        { username: { contains: filter.search } },
         { email: { contains: filter.search } },
       ];
     }
