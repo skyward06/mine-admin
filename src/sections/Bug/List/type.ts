@@ -4,7 +4,9 @@ export type BugReport = {
   __typename?: 'BugReport';
   id: string;
   subject: string;
+  who?: string | null;
   description: string;
+  contact?: string | null;
   status: BugReportStatus;
   files?: Array<PFile> | null;
   solvedBy?: {

@@ -45,9 +45,18 @@ export default function BugList() {
   const colDefs = useMemo<ColDef<BugReport>[]>(
     () => [
       {
+        field: 'who',
+        headerName: 'Reporter',
+        width: 150,
+        filter: 'agTextColumnFilter',
+        resizable: true,
+        editable: false,
+        filterParams: { buttons: ['reset'] } as ITextFilterParams,
+      },
+      {
         field: 'subject',
         headerName: 'Subject',
-        width: 300,
+        width: 200,
         filter: 'agTextColumnFilter',
         resizable: true,
         editable: false,

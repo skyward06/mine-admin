@@ -74,10 +74,12 @@ export default function Detail({ open, id }: Props) {
             <Skeleton />
           ) : (
             <Stack direction="row" columnGap={2}>
-              <Typography variant="body2" color="text.disabled">
-                Subject:
-              </Typography>
-              <Typography variant="body2">{bugReport?.subject}</Typography>
+              <Stack width={0.4} fontSize={14} color="text.disabled">
+                Reporter:
+              </Stack>
+              <Stack width={1} fontSize={14}>
+                {bugReport?.who}
+              </Stack>
             </Stack>
           )}
 
@@ -85,10 +87,38 @@ export default function Detail({ open, id }: Props) {
             <Skeleton />
           ) : (
             <Stack direction="row" columnGap={2}>
-              <Typography variant="body2" color="text.disabled">
+              <Stack width={0.4} fontSize={14} color="text.disabled">
+                Contact:
+              </Stack>
+              <Stack width={1} fontSize={14}>
+                {bugReport?.contact}
+              </Stack>
+            </Stack>
+          )}
+
+          {loading ? (
+            <Skeleton />
+          ) : (
+            <Stack direction="row" columnGap={2}>
+              <Stack width={0.4} fontSize={14} color="text.disabled">
+                Subject:
+              </Stack>
+              <Stack width={1} fontSize={14}>
+                {bugReport?.subject}
+              </Stack>
+            </Stack>
+          )}
+
+          {loading ? (
+            <Skeleton />
+          ) : (
+            <Stack direction="row" columnGap={2}>
+              <Stack width={0.4} fontSize={14} color="text.disabled">
                 Description:
-              </Typography>
-              <Typography variant="body2">{bugReport?.description}</Typography>
+              </Stack>
+              <Stack width={1} fontSize={14}>
+                {bugReport?.description}
+              </Stack>
             </Stack>
           )}
 
