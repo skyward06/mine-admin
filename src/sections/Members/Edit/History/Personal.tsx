@@ -427,17 +427,17 @@ export const Personal = () => {
           <Stack direction="row" spacing={2} pb={1}>
             <Stack width={0.5}>
               <Typography variant="body2" fontWeight="bold">
-                Communication
+                Communication:
               </Typography>
             </Stack>
             <Stack width={1}>
               <Iconify
                 icon={
-                  member?.setting?.communication
+                  !member?.setting || member?.setting?.communication
                     ? 'ic:twotone-check-box'
                     : 'iconamoon:sign-times-square-duotone'
                 }
-                color={member?.setting?.communication ? 'green' : 'red'}
+                color={!member?.setting || member?.setting?.communication ? 'green' : 'red'}
               />
             </Stack>
           </Stack>
