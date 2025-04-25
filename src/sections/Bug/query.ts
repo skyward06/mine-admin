@@ -5,7 +5,9 @@ export const FETCH_BUG_REPORTS = gql(/* GraphQL */ `
     bugReports(sort: $sort, page: $page, filter: $filter) {
       bugReports {
         id
+        who
         status
+        contact
         subject
         description
         createdAt
@@ -27,7 +29,9 @@ export const FETCH_BUG_REPORT = gql(/* GraphQL */ `
     bugReportById(data: $data) {
       createdAt
       id
+      who
       status
+      contact
       subject
       description
       solvedBy {
