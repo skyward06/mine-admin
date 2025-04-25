@@ -57,7 +57,7 @@ const TABLE_HEAD = [
 
 export default function EmailView({ subject, emails }: Props) {
   const tabs = useTabs('all');
-  const table = useTable({ defaultDense: true, defaultRowsPerPage: 20 });
+  const table = useTable({ defaultDense: true, defaultRowsPerPage: 25 });
   const open = useBoolean();
   const [body, setBody] = useState<string>('');
 
