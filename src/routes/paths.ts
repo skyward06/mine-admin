@@ -1,6 +1,7 @@
 // ----------------------------------------------------------------------
 
 const ROOTS = {
+  LOGS: '/logs',
   PROOF: '/proof',
   ROLES: '/roles',
   SALES: '/sales',
@@ -107,6 +108,7 @@ export const paths = {
       new: `${ROOTS.PROMOS}/new`,
       edit: (id: string) => `${ROOTS.PROMOS}/${id}`,
     },
+    logs: { root: ROOTS.LOGS },
     report: { root: ROOTS.REPORTS },
     sponsor: { root: ROOTS.SPONSOR },
     history: { root: ROOTS.DASHBOARD },

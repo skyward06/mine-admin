@@ -96,6 +96,10 @@ const BugPage = lazy(() => import('src/pages/Bug/List'));
 // ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
+const LogPage = lazy(() => import('src/pages/Logs/List'));
+// ----------------------------------------------------------------------
+
+// ----------------------------------------------------------------------
 const CommunicationListPage = lazy(() => import('src/pages/Communication/List'));
 // ----------------------------------------------------------------------
 
@@ -234,6 +238,10 @@ export const dashboardRoutes = [
       {
         path: 'bug-report',
         children: [{ index: true, element: <BugPage /> }],
+      },
+      {
+        path: 'logs',
+        children: [{ index: true, element: <LogPage /> }],
       },
       {
         path: 'payment-method',
