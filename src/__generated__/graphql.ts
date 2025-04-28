@@ -1118,9 +1118,11 @@ export type Mutation = {
   disable2FA: AccessTokenResponse;
   duplicateMember: Member;
   emailVerify: EmailVerifyResult;
+  emailVerifyCode: SuccessResponse;
   forceMemberLogout: SuccessResponse;
   generateWeekP2PInvoice: SuccessResponse;
   generateWeeklyReport: SuccessResponse;
+  memberExchangeLogin: LoginResponse;
   memberLogin: LoginResponse;
   memberLogout: SuccessResponse;
   moveEmailToTrash: Email;
@@ -1159,7 +1161,8 @@ export type Mutation = {
   resetTokenVerify: VerifyTokenResponse;
   restoreEmailFromTrash: Email;
   sendEmail: SuccessResponse;
-  sendEmailVerification: SuccessResponse;
+  sendEmailVerificationCode: SuccessResponse;
+  sendEmailVerificationLink: SuccessResponse;
   sendWelcomeEmail: SuccessResponse;
   setReadAllNotifications: ManySuccessResponse;
   setReadNotification: SuccessResponse;
@@ -1351,6 +1354,11 @@ export type MutationEmailVerifyArgs = {
 };
 
 
+export type MutationEmailVerifyCodeArgs = {
+  data: VerificationCodeInput;
+};
+
+
 export type MutationForceMemberLogoutArgs = {
   data: IdInput;
 };
@@ -1363,6 +1371,11 @@ export type MutationGenerateWeekP2PInvoiceArgs = {
 
 export type MutationGenerateWeeklyReportArgs = {
   data: GenerateWeeklyReportInput;
+};
+
+
+export type MutationMemberExchangeLoginArgs = {
+  data: MemberLoginInput;
 };
 
 
@@ -1551,7 +1564,7 @@ export type MutationSendEmailArgs = {
 };
 
 
-export type MutationSendEmailVerificationArgs = {
+export type MutationSendEmailVerificationLinkArgs = {
   data: EmailInput;
 };
 
@@ -2927,6 +2940,10 @@ export type UpsertEmailInput = {
 
 export type UpsertSettingInput = {
   communication?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type VerificationCodeInput = {
+  verificationCode: Scalars['String']['input'];
 };
 
 export type Verify2FaInput = {

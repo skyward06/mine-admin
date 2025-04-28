@@ -32,7 +32,7 @@ export default function LogDrawer({ open, log }: Props) {
             xs: 380,
             sm: 600,
           },
-          background: '#fff',
+          // background: '#fff',
         },
       }}
     >

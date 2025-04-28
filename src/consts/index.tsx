@@ -99,6 +99,7 @@ export const LOG_LABEL = {
     signin: 'signed in',
     signout: 'signed out',
     access: 'access',
+    tokenExchange: 'changed the token',
   },
 };
 
