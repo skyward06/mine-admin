@@ -89,6 +89,19 @@ export const BUG_REPORT_STATUS = {
   WIP: { value: 'Work In Progress', color: 'secondary' },
 };
 
+export const LOG_LABEL = {
+  status: { success: 'successfully', failed: 'failed to' },
+  action: {
+    create: 'created',
+    update: 'updated',
+    remove: 'removed',
+    signup: 'signed up',
+    signin: 'signed in',
+    signout: 'signed out',
+    access: 'access',
+  },
+};
+
 export const PROOF_TYPE = {
   SALE: 'Sale',
   PREPAY: 'Prepay',
