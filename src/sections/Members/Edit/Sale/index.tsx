@@ -1,6 +1,11 @@
 import type { BasicSale } from 'src/sections/Sales/List/type';
 import type { CustomCellRendererProps } from '@ag-grid-community/react';
-import type { ColDef, IDateFilterParams, ITextFilterParams } from '@ag-grid-community/core';
+import type {
+  ColDef,
+  ISetFilterParams,
+  IDateFilterParams,
+  ITextFilterParams,
+} from '@ag-grid-community/core';
 
 import { useMemo } from 'react';
 
@@ -21,6 +26,8 @@ import { AgGrid } from 'src/components/AgGrid';
 import { toast } from 'src/components/SnackBar';
 import { ConfirmDialog } from 'src/components/Dialog';
 import { LoadingScreen } from 'src/components/loading-screen';
+import { StatusRenderer } from 'src/components/AgGrid/Renderers/Status';
+import { BooleanFormatter } from 'src/components/AgGrid/Renderers/BooleanFormatter';
 
 import { useRemoveSale, useFetchSales } from 'src/sections/Sales/useApollo';
 
@@ -83,7 +90,7 @@ export default function SaleListView() {
       {
         field: 'paymentMethod',
         headerName: 'Payment Method',
-        width: 180,
+        width: 250,
         filter: 'agTextColumnFilter',
         resizable: true,
         editable: false,
@@ -109,11 +116,22 @@ export default function SaleListView() {
       {
         field: 'point',
         headerName: 'Point',
-        width: 90,
+        width: 120,
         filter: 'agNumberColumnFilter',
         resizable: true,
         editable: false,
         cellClass: 'ag-number-cell',
+      },
+      {
+        field: 'status',
+        headerName: 'Status',
+        width: 120,
+        filter: 'agMultiColumnFilter',
+        filterParams: {
+          values: ['true', 'false'],
+          valueFormatter: BooleanFormatter,
+        } as ISetFilterParams<BasicSale>,
+        cellRenderer: StatusRenderer,
       },
       {
         field: 'orderedAt',
