@@ -63,8 +63,12 @@ export default function LogTableRow({ row }: Props) {
           ...(details.value && { [`& .${tableCellClasses.root}`]: { ...defaultStyles } }),
         }}
       >
-        <TableCell sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Stack direction="row" spacing={1} width={{ xs: 1, md: 1, lg: 0.5 }}>
+        <TableCell sx={{ display: 'flex' }}>
+          <Stack width={0.3}>
+            <Typography variant="body2">{formatDateTime(when)}</Typography>
+          </Stack>
+
+          <Stack direction="row" spacing={1} width={1}>
             <Typography variant="body2" fontWeight={600}>
               {who}
             </Typography>
@@ -75,19 +79,12 @@ export default function LogTableRow({ row }: Props) {
               {LOG_LABEL.action[action as keyof typeof LOG_LABEL.action]}.
             </Typography>
             {(action === 'create' || 'update' || 'remove') && (
-              <Typography>{customizeFullName(after?.fullName ?? '')}</Typography>
+              <Typography variant="body2">{customizeFullName(after?.fullName ?? '')}</Typography>
             )}
-          </Stack>
-
-          <Stack direction="row" spacing={4} width={1}>
             <Typography variant="body2">{after?.ip && `IP: ${after?.ip}`}</Typography>
             <Typography variant="body2">
               {after?.userAgent && `Device: ${after?.userAgent.device}`}
             </Typography>
-          </Stack>
-
-          <Stack width={{ xs: 0.5, md: 0.5, lg: 0.3 }} direction="row" justifyContent="flex-end">
-            <Typography variant="body2">{formatDateTime(when)}</Typography>
           </Stack>
         </TableCell>
       </TableRow>

@@ -14,7 +14,7 @@ import { ScrollBar } from 'src/components/ScrollBar';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import { TableNoData, TableSkeleton, TablePaginationCustom } from 'src/components/Table';
 
-import LogTableRow from './TableRow';
+import LogTableRow from './LogTableRow';
 import { useFetchLogs } from './useApollo';
 
 export default function LogView() {
