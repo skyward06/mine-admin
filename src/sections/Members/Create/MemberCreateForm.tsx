@@ -129,6 +129,7 @@ export default function MemberCreateForm() {
 
         if (txcWallets.filter((item) => item.isDefault).length > 1) {
           toast.error('You must select only one default');
+          return;
         }
 
         if (total === 100) {
@@ -170,14 +171,14 @@ export default function MemberCreateForm() {
             setError('email', { type: 'manual', message: error?.message || '' });
           }
 
-          error.path?.forEach((item: any, index: number) => {
-            if (item.includes('wallets')) {
-              setError(`txcWallets.${index}.address`, {
-                type: 'manual',
-                message: 'Invalid Address',
-              });
-            }
-          });
+          // error.path?.forEach((item: any, index: number) => {
+          //   if (item.includes('wallets')) {
+          //     setError(`txcWallets.${index}.address`, {
+          //       type: 'manual',
+          //       message: 'Invalid Address',
+          //     });
+          //   }
+          // });
 
           toast.error(error.message);
         } else {

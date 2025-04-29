@@ -37,7 +37,7 @@ export const Schema = zod.object({
   otherWallets: zod.array(
     zod.object({
       payoutId: zod.string(),
-      address: zod.string(),
+      address: zod.string().regex(/^0x[a-fA-F0-9]{40}$/, { message: 'Invalid Ethereum address' }),
       note: zod.string(),
       percent: zod.number().default(0),
     })

@@ -196,14 +196,17 @@ export default function MemberGeneral({ currentMember }: Props) {
           setError('assetId', { type: 'manual', message: error?.message || '' });
         }
 
-        error.path?.forEach((item: any, index: number) => {
-          if (item.includes('wallets')) {
-            setError(`txcWallets.${index}.address`, {
-              type: 'manual',
-              message: 'Invalid Address',
-            });
-          }
-        });
+        // error.path?.forEach((item: any, index: number) => {
+        //   if (item.includes('wallets')) {
+        //     setError(`txcWallets.${index}.address`, {
+        //       type: 'manual',
+        //       message: 'Invalid Address',
+        //     });
+        //   }
+        // });
+        toast.error(error.message);
+      } else {
+        toast.error(err);
       }
     }
   });
