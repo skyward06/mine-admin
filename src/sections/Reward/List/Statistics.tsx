@@ -140,7 +140,7 @@ export default function StatisticsTable() {
   const cardHeader = (
     <Stack direction="row" justifyContent="space-between">
       <Typography variant="h6">Reward</Typography>
-      <ExportButton target="rewards" token={token} />
+      <ExportButton target="export-rewards" token={token} />
     </Stack>
   );
 

@@ -245,7 +245,7 @@ export default function SaleListView() {
               </Button>
             )}
             <ExportButton
-              target="sales"
+              target="export-sales"
               token={token}
               variant="contained"
               params={{ filter: graphQueryFilter, sort }}

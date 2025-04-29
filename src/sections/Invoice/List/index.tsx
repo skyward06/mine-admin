@@ -10,6 +10,7 @@ import dayjs from 'dayjs';
 import { useMemo, useState, useEffect } from 'react';
 
 import Card from '@mui/material/Card';
+import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import LoadingButton from '@mui/lab/LoadingButton';
 
@@ -21,6 +22,7 @@ import { useBoolean } from 'src/hooks/useBoolean';
 import { formatDate } from 'src/utils/format-time';
 import { parseFilterModel } from 'src/utils/parseFilter';
 
+import { CONFIG } from 'src/config';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { InvoiceStatusEnum } from 'src/__generated__/graphql';
 
@@ -29,6 +31,7 @@ import { AgGrid } from 'src/components/AgGrid';
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 import { ConfirmDialog } from 'src/components/Dialog';
+import ExportButton from 'src/components/ExportButton';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 
 import { parseType } from '../parseType';
@@ -40,7 +43,10 @@ import { useFetchInvoices, useGenerateWeekInvoice } from '../useApollo';
 import type { Invoice } from './type';
 
 export default function InvoiceListView() {
+  const invoice = useBoolean();
   const openWeek = useBoolean();
+
+  const [invoiceWeek, setInvoiceWeek] = useState<string>('');
   const [weekStartDate, setWeekStartDate] = useState<string>('');
 
   const [{ page = '1,50', sort = 'createdAt', filter }] = useQueryString();
@@ -52,6 +58,10 @@ export default function InvoiceListView() {
 
   const onPeriodChange = async (value: any) => {
     setWeekStartDate(formatDate(`${dayjs(value).startOf('week')}`, 'YYYY-MM-DD'));
+  };
+
+  const onInvoicPeriodChange = async (value: any) => {
+    setInvoiceWeek(formatDate(`${dayjs(value).startOf('week')}`, 'YYYY-MM-DD'));
   };
 
   useEffect(() => {
@@ -186,14 +196,16 @@ export default function InvoiceListView() {
           mb: { xs: 1, md: 2 },
         }}
         action={
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => openWeek.onTrue()}
-            sx={{ mb: 1 }}
-          >
-            <Iconify icon="streamline:ai-generate-variation-spark" sx={{ mr: 0.5 }} /> ReGenerate
-          </Button>
+          <Stack direction="row" spacing={1}>
+            <Button variant="contained" color="primary" onClick={invoice.onTrue} sx={{ mb: 1 }}>
+              <Iconify icon="flowbite:merge-cells-outline" sx={{ mr: 0.5 }} strokeWidth={1} />
+              Merge Invoice
+            </Button>
+
+            <Button variant="contained" color="primary" onClick={openWeek.onTrue} sx={{ mb: 1 }}>
+              <Iconify icon="streamline:ai-generate-variation-spark" sx={{ mr: 0.5 }} /> ReGenerate
+            </Button>
+          </Stack>
         }
       />
 
@@ -244,6 +256,21 @@ export default function InvoiceListView() {
           >
             Regenerate
           </LoadingButton>
+        }
+      />
+
+      <ConfirmDialog
+        open={invoice.value}
+        onClose={invoice.onFalse}
+        title="Select Week"
+        content={<SearchPeriod onChange={onInvoicPeriodChange} />}
+        action={
+          <ExportButton
+            target={`invoice/week/${invoiceWeek}`}
+            token={localStorage.getItem(CONFIG.storageTokenKey) ?? ''}
+            variant="contained"
+            type="pdf"
+          />
         }
       />
     </DashboardContent>

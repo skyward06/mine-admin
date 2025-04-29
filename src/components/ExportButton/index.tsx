@@ -15,16 +15,17 @@ interface Props {
   target: string;
   token: string;
   params?: { filter: FilterModel; sort: string } | {};
+  type?: 'xlsx' | 'csv' | 'pdf';
   [key: string]: unknown;
 }
 
-export default function ExportButton({ target, token, params, ...rest }: Props) {
+export default function ExportButton({ target, token, params, type = 'xlsx', ...rest }: Props) {
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleExport = async () => {
     setLoading(true);
 
-    const { data } = await axios.get(`${CONFIG.SITE_URL}/api/export-${target}`, {
+    const { data } = await axios.get(`${CONFIG.SITE_URL}/api/${target}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -39,7 +40,7 @@ export default function ExportButton({ target, token, params, ...rest }: Props) 
 
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${target}-${formatDate(new Date(), 'YYYYMMDD')}${fTime(new Date(), 'hhmmss')}.xlsx`;
+    a.download = `${target}-${formatDate(new Date(), 'YYYYMMDD')}${fTime(new Date(), 'hhmmss')}.${type}`;
 
     document.body.appendChild(a);
     a.click();

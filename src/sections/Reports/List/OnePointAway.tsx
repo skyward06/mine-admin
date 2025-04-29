@@ -97,7 +97,7 @@ export default function OnepointMemberListView() {
           />
         </Tabs>
         <Stack width={0.1} sx={{ p: 0.5 }}>
-          <ExportButton target="onepoint-away-members" token={token} />
+          <ExportButton target="export-onepoint-away-members" token={token} />
         </Stack>
       </Stack>
 

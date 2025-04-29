@@ -92,7 +92,7 @@ export default function CommissionListView() {
         action={
           <Box display="flex" columnGap={2}>
             <ExportButton
-              target="commissions"
+              target="export-commissions"
               variant="contained"
               token={token}
               sx={{ mb: 1 }}

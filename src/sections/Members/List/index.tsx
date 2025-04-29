@@ -238,7 +238,7 @@ export default function MemberListView() {
             <SearchInput search={filter.search} onSearchChange={handleSearchChange} />
           </Stack>
           <Stack width={0.1} sx={{ p: 2.5 }}>
-            <ExportButton target="members" token={token} />
+            <ExportButton target="export-members" token={token} />
           </Stack>
         </Stack>
 
