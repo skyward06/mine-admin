@@ -100,6 +100,8 @@ export default function MemberTableRow({
   const { loading: blockLoading, moveToBlocked } = useMoveToBlocked();
   const { loading: approveLoading, approveMember } = useApproveMember();
 
+  const passwordRegexp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&-])[A-Za-z\d@$!%*?&-]{8,}$/;
+
   const resetContent = (
     <Paper sx={{ py: 2 }}>
       <TextField
@@ -479,6 +481,13 @@ export default function MemberTableRow({
             loading={loading}
             onClick={async () => {
               try {
+                if (!passwordRegexp.test(newPassword)) {
+                  toast.error(
+                    'Password must be at least 8 characters long, include at least one lowercase letter, one uppercase letter, one digit, and one special character.'
+                  );
+                  return;
+                }
+
                 await updatePassword({ variables: { data: { id, newPassword } } });
 
                 toast.success('Password updated successfully!');
