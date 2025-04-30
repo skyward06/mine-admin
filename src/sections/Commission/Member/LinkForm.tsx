@@ -1,3 +1,6 @@
+import type { RefLink } from 'src/__generated__/graphql';
+
+import { useEffect } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
 import Box from '@mui/material/Box';
@@ -13,9 +16,11 @@ import { LoadingScreen } from 'src/components/loading-screen';
 
 interface Props {
   loading: boolean;
+  reflinks?: RefLink[];
+  setReflinks?: Function;
 }
 
-export default function LinkForm({ loading }: Props) {
+export default function LinkForm({ loading, reflinks, setReflinks }: Props) {
   const { control } = useFormContext();
   const { fields, append, remove } = useFieldArray({ control, name: 'reflinks' });
 
@@ -24,11 +29,25 @@ export default function LinkForm({ loading }: Props) {
       link: '',
       linkType: '',
     });
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    setReflinks && setReflinks((prev: any) => [...prev, { link: '', linkType: '' }]);
   };
 
   const handleRemove = (index: number) => {
     remove(index);
   };
+
+  useEffect(() => {
+    reflinks?.forEach(({ link, linkType }, index) => {
+      append({
+        id: index,
+        link,
+        linkType,
+      });
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>

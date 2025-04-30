@@ -52,17 +52,7 @@ export default function Detail({ id, open }: Props) {
   }, [id, open.value]);
 
   const defaultValues = useMemo(
-    () =>
-      commission?.proof?.reflinks
-        ? Schema.safeParse({ reflinks: commission?.proof.reflinks })?.data ?? ({} as SchemaType)
-        : {
-            reflinks: [
-              {
-                link: '',
-                linkType: '',
-              },
-            ],
-          },
+    () => ({}),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [commission?.proof?.reflinks]
   );
@@ -80,6 +70,7 @@ export default function Detail({ id, open }: Props) {
 
   const [note, setNote] = useState<any>();
   const [files, setFiles] = useState<any>();
+  const [reflinks, setReflinks] = useState<any[]>();
 
   const { loading, updateCommission } = useUpdateCommission();
 
@@ -103,6 +94,8 @@ export default function Detail({ id, open }: Props) {
 
   const onSubmit = handleSubmit(async (newData) => {
     if (linkEdit.value) {
+      setReflinks(newData.reflinks ?? []);
+
       await updateCommission({ variables: { data: { id, reflinks: newData.reflinks } } });
 
       if (!loading) {
@@ -124,7 +117,8 @@ export default function Detail({ id, open }: Props) {
   useEffect(() => {
     setNote(commission?.proof?.note);
     setFiles(commission?.proof?.files);
-  }, [commission?.proof?.note, commission?.proof?.files]);
+    setReflinks(commission?.proof?.reflinks ?? []);
+  }, [commission?.proof?.note, commission?.proof?.files, commission?.proof?.reflinks]);
 
   return (
     <Drawer
@@ -214,10 +208,14 @@ export default function Detail({ id, open }: Props) {
             </Stack>
 
             {linkEdit.value ? (
-              <LinkForm loading={loading} />
+              <LinkForm
+                loading={loading}
+                reflinks={commission?.proof?.reflinks ?? []}
+                setReflinks={setReflinks}
+              />
             ) : (
-              commission?.proof?.reflinks?.map((item) => (
-                <Stack direction="row" columnGap={1}>
+              reflinks?.map((item, index) => (
+                <Stack key={index} direction="row" columnGap={1}>
                   <Typography>{item?.linkType}:</Typography>
                   <Typography
                     sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}

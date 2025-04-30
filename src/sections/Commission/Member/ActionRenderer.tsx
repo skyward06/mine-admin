@@ -99,7 +99,7 @@ export const ActionRender = memo(
           </MenuList>
         </CustomPopover>
 
-        <Detail open={detailOpen} id={data?.id!} />
+        {detailOpen.value && data?.id && <Detail open={detailOpen} id={data?.id!} />}
 
         <Dialog
           fullWidth
