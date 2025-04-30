@@ -646,7 +646,7 @@ export type EntityLog = {
   id: Scalars['String']['output'];
   role: Scalars['String']['output'];
   status: Scalars['String']['output'];
-  when: Scalars['DateTimeISO']['output'];
+  when: Scalars['DateTime']['output'];
   who: Scalars['String']['output'];
 };
 
@@ -848,6 +848,7 @@ export type LogResponse = {
 export type LoginResponse = {
   __typename?: 'LoginResponse';
   accessToken: Scalars['String']['output'];
+  passwordExpired: Scalars['Boolean']['output'];
   status: LoginResult;
 };
 
@@ -1118,7 +1119,7 @@ export type Mutation = {
   disable2FA: AccessTokenResponse;
   duplicateMember: Member;
   emailVerify: EmailVerifyResult;
-  emailVerifyCode: SuccessResponse;
+  emailVerifyCode: AccessTokenResponse;
   forceMemberLogout: SuccessResponse;
   generateWeekP2PInvoice: SuccessResponse;
   generateWeeklyReport: SuccessResponse;

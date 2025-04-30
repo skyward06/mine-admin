@@ -10,3 +10,12 @@ export type EntityLog = {
   after?: any | null;
   before?: any | null;
 };
+
+export type LogFilterType = {
+  to?: string;
+  who?: string;
+  from?: string;
+  role?: string;
+  action?: string;
+  status?: string;
+};

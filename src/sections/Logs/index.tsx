@@ -8,21 +8,26 @@ import TableContainer from '@mui/material/TableContainer';
 import { paths } from 'src/routes/paths';
 import { useQuery } from 'src/routes/hooks';
 
+import { customizeDate } from 'src/utils/format-time';
+
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { ScrollBar } from 'src/components/ScrollBar';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import { TableNoData, TableSkeleton, TablePaginationCustom } from 'src/components/Table';
 
+import LogFilter from './LogFilter';
 import LogTableRow from './LogTableRow';
 import { useFetchLogs } from './useApollo';
+
+import type { LogFilterType } from './type';
 
 export default function LogView() {
   const theme = useTheme();
 
-  const [query, { setQueryParams: setQuery, setPage, setPageSize }] = useQuery();
+  const [query, { setQueryParams: setQuery, setPage, setPageSize }] = useQuery<LogFilterType>();
 
-  const { page = { page: 1, pageSize: 50 } } = query;
+  const { filter, page = { page: 1, pageSize: 50 } } = query;
 
   const { loading, logs, rowCount, fetchLogs } = useFetchLogs();
 
@@ -31,6 +36,12 @@ export default function LogView() {
   useEffect(() => {
     fetchLogs({
       variables: {
+        who: filter?.who,
+        role: filter?.role,
+        status: filter?.status,
+        action: filter?.action,
+        beforeWhen: filter?.to && customizeDate(filter.to),
+        afterWhen: filter?.from && customizeDate(filter.from),
         start: page?.page,
         size: page?.pageSize,
       },
@@ -52,6 +63,8 @@ export default function LogView() {
           mb: { xs: 1, md: 2 },
         }}
       />
+
+      <LogFilter query={query} setQuery={setQuery} />
 
       <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
         <ScrollBar>
