@@ -324,16 +324,20 @@ export default function MemberListView() {
             color="error"
             loading={removeLoading}
             onClick={async () => {
-              const promise = await removeMember({ variables: { data: { id: selected } } });
-              const result = promise.data?.removeMember.result;
+              try {
+                const promise = await removeMember({ variables: { data: { id: selected } } });
+                const result = promise.data?.removeMember.result;
 
-              if (result === 'success') {
-                toast.success('Miner removed successfully');
-              } else {
-                toast.error('You are not allowed to remove this miner');
+                if (result === 'success') {
+                  toast.success('Miner removed successfully');
+                } else {
+                  toast.error(promise.data?.removeMember.message);
+                }
+
+                confirm.onFalse();
+              } catch (error) {
+                toast.error(error.message);
               }
-
-              confirm.onFalse();
             }}
           >
             Confirm
