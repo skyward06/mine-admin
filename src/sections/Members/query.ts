@@ -62,6 +62,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         placementParentId
         signupFormRequest
         cmnCalculatedWeeks
+        placementRequested
         preferredContactDetail
         createdAt
         updatedAt
@@ -123,6 +124,7 @@ export const FETCH_MEMBER_QUERY = gql(/* GraphQL */ `
       placementPosition
       signupFormRequest
       cmnCalculatedWeeks
+      placementRequested
       preferredContactDetail
       groupSetting {
         id
@@ -155,6 +157,7 @@ export const FETCH_MEMBER_QUERY = gql(/* GraphQL */ `
         placementPosition
         commissionDefault
         cmnCalculatedWeeks
+        placementRequested
       }
       placementParentId
       placementPosition
@@ -178,6 +181,7 @@ export const FETCH_MEMBER_QUERY = gql(/* GraphQL */ `
         placementPosition
         commissionDefault
         cmnCalculatedWeeks
+        placementRequested
       }
       placementChildren {
         id
@@ -199,6 +203,7 @@ export const FETCH_MEMBER_QUERY = gql(/* GraphQL */ `
         placementPosition
         commissionDefault
         cmnCalculatedWeeks
+        placementRequested
       }
       sales {
         id

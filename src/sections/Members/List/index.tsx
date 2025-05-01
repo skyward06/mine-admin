@@ -62,6 +62,7 @@ const TABLE_HEAD = [
   { id: 'mobile', label: 'Mobile', sortable: true },
   { id: 'assetId', label: 'AssetID', width: 80, sortable: true },
   { id: 'totalIntroducers', label: 'Sponsor', width: 100, sortable: true },
+  { id: 'placementRequested', label: 'PR', width: 150, sortable: true },
   { id: 'emailVerified', label: 'Status', width: 150, sortable: true },
   { id: 'adminNotes', label: 'Admin Notes', width: 200, sortable: true },
   { id: 'createdAt', label: 'Joined At', width: 120, sortable: true },

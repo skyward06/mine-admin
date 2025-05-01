@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
+import Switch from '@mui/material/Switch';
 import TableRow from '@mui/material/TableRow';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
@@ -31,6 +32,7 @@ import Detail from './Detail';
 import {
   useMoveToPaid,
   useLogoutForce,
+  useUpdateMember,
   useApproveMember,
   useMoveToBlocked,
   useMoveToPending,
@@ -87,10 +89,12 @@ export default function MemberTableRow({
     primaryAddress,
     totalIntroducers,
     secondaryAddress,
+    placementRequested,
   } = row;
 
   const { moveToPaid } = useMoveToPaid();
   const { logoutForce } = useLogoutForce();
+  const { updateMember } = useUpdateMember();
   const { moveToPending } = useMoveToPending();
   const { duplicateMember } = useDuplicateMember();
   const { moveToGraveyard } = useMoveToGraveyard();
@@ -216,6 +220,20 @@ export default function MemberTableRow({
       toast.error(error.message);
     }
   };
+  const handlePRChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      await updateMember({
+        variables: {
+          data: {
+            id,
+            placementRequested: event.target.checked,
+          },
+        },
+      });
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
 
   return (
     <>
@@ -249,6 +267,10 @@ export default function MemberTableRow({
           onClick={() => handleSponsors()}
         >
           {totalIntroducers}
+        </TableCell>
+
+        <TableCell>
+          <Switch defaultChecked={placementRequested} onChange={handlePRChange} />
         </TableCell>
 
         <TableCell>

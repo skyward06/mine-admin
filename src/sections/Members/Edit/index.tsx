@@ -72,7 +72,6 @@ export default function MemberEditView() {
   const params = useParams();
   const navigate = useNavigate();
 
-  // const [fetchMemberQuery, { loading, data, called }] = useLazyQuery(FETCH_MEMBERS_QUERY);
   const { loading, member, called, fetchMember } = useFetchMember();
 
   const { id: memberId } = params;
