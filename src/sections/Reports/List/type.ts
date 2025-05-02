@@ -8,3 +8,12 @@ export type MemberInOutRevenue = {
   commission: number;
   cashCommissionPotential: number;
 };
+
+export type WdmsvegasContestWinner = {
+  __typename?: 'WDMSVEGASContestWinner';
+  level: number;
+  points: number;
+  fullName: string;
+  username: string;
+  sponsored: number;
+};
