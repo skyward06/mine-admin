@@ -394,7 +394,7 @@ export default function MemberGeneral({ currentMember }: Props) {
                     key={option}
                     value={option}
                     disabled={
-                      option === CommissionDefaultEnum.CashCrypto &&
+                      option === CommissionDefaultEnum.Usdc &&
                       (overview?.memberOverview.cashCommissionPotential ?? 0) < 0
                     }
                   >
