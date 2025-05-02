@@ -280,11 +280,10 @@ export type CampaignResponse = {
 };
 
 export enum CommissionDefaultEnum {
-  Bogo = 'BOGO',
-  CashCrypto = 'CASH_CRYPTO',
   Hash = 'HASH',
   Manual = 'MANUAL',
-  Txc = 'TXC'
+  Txc = 'TXC',
+  Usdc = 'USDC'
 }
 
 export type CommissionOverview = {
@@ -395,7 +394,6 @@ export type CreateGroupSettingCommissionBonusInput = {
 };
 
 export type CreateGroupSettingInput = {
-  commissionDefaults: Array<CommissionDefaultEnum>;
   groupSettingCommissionBonuses: Array<CreateGroupSettingCommissionBonusInput>;
   limitDate: Scalars['DateTimeISO']['input'];
   name: Scalars['String']['input'];
@@ -2799,7 +2797,6 @@ export type UpdateEmailTemplateInput = {
 };
 
 export type UpdateGroupSettingInput = {
-  commissionDefaults?: InputMaybe<Array<CommissionDefaultEnum>>;
   groupSettingCommissionBonuses?: InputMaybe<Array<CreateGroupSettingCommissionBonusInput>>;
   id: Scalars['ID']['input'];
   limitDate?: InputMaybe<Scalars['DateTimeISO']['input']>;
