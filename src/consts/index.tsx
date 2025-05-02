@@ -205,3 +205,4 @@ export const SAMPLE_VARS = {
 };
 
 export const CASH_POTENTIAL_URL = 'https://help.minetxc.com/understanding-cash-potential/';
+export const WINNER_REPORT_HTML = 'https://report.minetxc.com/wdms-vegas-2025-contest/report.html';
