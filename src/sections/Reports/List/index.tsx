@@ -1,4 +1,4 @@
-import axios from 'axios';
+import dayjs from 'dayjs';
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useLocation, useNavigate } from 'react-router';
@@ -17,21 +17,23 @@ import { useBoolean } from 'src/hooks/useBoolean';
 import { formatDate } from 'src/utils/format-time';
 
 import { CONFIG } from 'src/config';
-import { PERMISSIONS } from 'src/consts';
 import { DashboardContent } from 'src/layouts/dashboard';
+import { PERMISSIONS, WINNER_REPORT_HTML } from 'src/consts';
 
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
+import ExportButton from 'src/components/ExportButton';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 
 import { useAuthContext } from 'src/auth/hooks';
 
 import Revenue from './Revenue';
+import Special from './Special';
 import MetalListView from './Metals';
 import WeeklyReports from './Weekly';
 import SponsorListView from './Sponsor';
 import OnepointMemberListView from './OnePointAway';
-import { useGenerateWeeklyReports } from '../useApollo';
+import { useGenerateWinnerReports, useGenerateWeeklyReports } from '../useApollo';
 
 // ----------------------------------------------------------------------
 export default function ReportView() {
@@ -42,6 +44,8 @@ export default function ReportView() {
 
   const { user } = useAuthContext();
 
+  const token = localStorage.getItem(CONFIG.storageTokenKey) ?? '';
+
   const TABS = [
     { value: 'revenue', label: 'Revenue', icon: <Iconify icon="mdi:non-profit" /> },
     {
@@ -51,6 +55,11 @@ export default function ReportView() {
     },
     { value: 'weekly', label: 'Weekly', icon: <Iconify icon="tabler:calendar-week-filled" /> },
     { value: 'sponsors', label: 'Sponsors', icon: <Iconify icon="carbon:user-sponsor" /> },
+    {
+      value: 'special-report',
+      label: 'Special Report',
+      icon: <Iconify icon="uil:window-restore" />,
+    },
   ];
 
   if (
@@ -64,74 +73,13 @@ export default function ReportView() {
   }
 
   const [all, setAll] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
 
+  const { generateWinnerReport } = useGenerateWinnerReports();
   const { loading: generateLoading, generateWeeklyReport } = useGenerateWeeklyReports();
 
   const handleTabChange = (event: any, newValue: any) => {
     tabs.onChange(event, newValue);
     navigate(`${paths.dashboard.report.root}`, { replace: true });
-  };
-
-  const handleExport = async () => {
-    setLoading(true);
-
-    const token = localStorage.getItem(CONFIG.storageTokenKey);
-
-    const { data } = await axios.get(`${CONFIG.SITE_URL}/api/export-member-in-out-revenues`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      responseType: 'arraybuffer',
-    });
-
-    const blob = new Blob([data], {
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `revenue.xlsx`;
-
-    document.body.appendChild(a);
-    a.click();
-
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-
-    setLoading(false);
-  };
-
-  const handleSponsorExport = async () => {
-    const temp = formatDate(`${new URLSearchParams(search).get('weekStartDate')}`, 'YYYY-MM-DD');
-    setLoading(true);
-
-    const token = localStorage.getItem(CONFIG.storageTokenKey);
-
-    const { data } = await axios.get(`${CONFIG.SITE_URL}/api/export-sponsors/byweek/${temp}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      responseType: 'arraybuffer',
-    });
-
-    const blob = new Blob([data], {
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `sponsors-${temp}.xlsx`;
-
-    document.body.appendChild(a);
-    a.click();
-
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-
-    setLoading(false);
   };
 
   const handleGenerate = async () => {
@@ -160,6 +108,18 @@ export default function ReportView() {
     }
   };
 
+  const handleViewReport = async () => {
+    try {
+      const { data } = await generateWinnerReport();
+
+      if (data?.generateWDMSVegasReport.result === 'success') {
+        window.open(WINNER_REPORT_HTML, '_blank');
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   return (
     <>
       <Helmet>
@@ -175,16 +135,12 @@ export default function ReportView() {
           action={
             <>
               {tabs.value === 'revenue' && (
-                <LoadingButton
+                <ExportButton
+                  target="export-member-in-out-revenues"
+                  token={token}
                   variant="contained"
-                  startIcon={<Iconify icon="uil:export" />}
-                  loading={loading}
-                  color="primary"
-                  onClick={handleExport}
                   sx={{ mb: 1 }}
-                >
-                  Revenue Export
-                </LoadingButton>
+                />
               )}
               {tabs.value === 'weekly' && (
                 <Stack direction="row" columnGap={2}>
@@ -215,22 +171,30 @@ export default function ReportView() {
                   <Button
                     variant="contained"
                     color="primary"
+                    startIcon={<Iconify icon="tabler:calendar-week" />}
                     onClick={openWeek.onTrue}
                     sx={{ mb: 1 }}
                   >
                     Select Week
                   </Button>
-                  <LoadingButton
+                  <ExportButton
+                    target={`export-sponsors/byweek/${formatDate(`${new URLSearchParams(search).get('weekStartDate') ?? dayjs().utc().startOf('week')}`, 'YYYY-MM-DD')}`}
+                    token={token}
                     variant="contained"
-                    startIcon={<Iconify icon="uil:export" />}
-                    color="primary"
-                    loading={loading}
-                    onClick={handleSponsorExport}
                     sx={{ mb: 1 }}
-                  >
-                    Sponsors Export
-                  </LoadingButton>
+                  />
                 </Stack>
+              )}
+              {tabs.value === 'special-report' && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<Iconify icon="tabler:eye-filled" />}
+                  onClick={handleViewReport}
+                  sx={{ mb: 1 }}
+                >
+                  View Report
+                </Button>
               )}
             </>
           }
@@ -243,6 +207,8 @@ export default function ReportView() {
         </Tabs>
 
         {tabs.value === 'revenue' && <Revenue />}
+
+        {tabs.value === 'special-report' && <Special />}
 
         {tabs.value === 'onePointAway' && <OnepointMemberListView />}
 
