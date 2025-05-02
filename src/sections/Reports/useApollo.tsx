@@ -3,9 +3,11 @@ import { useMutation, useLazyQuery } from '@apollo/client';
 
 import {
   FETCH_WEEKLY_REPORT,
+  FETCH_WINNERS_QUERY,
   FETCH_REVENUES_QUERY,
   FETCH_SPONSORS_QUERY,
   GENERATE_WEEKLY_REPORT,
+  GENERATE_WINNER_REPORT,
   FETCH_ONEPOINT_AWAY_MEMBERS_QUERY,
 } from './query';
 
@@ -100,6 +102,24 @@ export function useFetchSponsors() {
   return { loading, rowCount, sponsors: data?.members.members ?? [], fetchSponsors };
 }
 
+export function useFetchWinners() {
+  const [fetchWinners, { loading, data }] = useLazyQuery(FETCH_WINNERS_QUERY);
+
+  const rowCountRef = useRef(data?.WDMSVegasContestWinners.total ?? 0);
+
+  const rowCount = useMemo(() => {
+    const newTotal = data?.WDMSVegasContestWinners.total ?? undefined;
+
+    if (newTotal !== undefined) {
+      rowCountRef.current = newTotal;
+    }
+
+    return rowCountRef.current;
+  }, [data]);
+
+  return { loading, rowCount, winners: data?.WDMSVegasContestWinners.winners ?? [], fetchWinners };
+}
+
 export function useGenerateWeeklyReports() {
   const [generateWeeklyReport, { loading, data }] = useMutation(GENERATE_WEEKLY_REPORT, {
     awaitRefetchQueries: true,
@@ -107,4 +127,10 @@ export function useGenerateWeeklyReports() {
   });
 
   return { loading, data, generateWeeklyReport };
+}
+
+export function useGenerateWinnerReports() {
+  const [generateWinnerReport, { loading, data, error }] = useMutation(GENERATE_WINNER_REPORT);
+
+  return { loading, data, error, generateWinnerReport };
 }

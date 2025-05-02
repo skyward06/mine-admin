@@ -89,6 +89,21 @@ export const FETCH_SPONSORS_QUERY = gql(/* GraphQL */ `
   }
 `);
 
+export const FETCH_WINNERS_QUERY = gql(/* GraphQL */ `
+  query Winners($sort: String, $page: String, $filter: JSONObject) {
+    WDMSVegasContestWinners(sort: $sort, page: $page, filter: $filter) {
+      winners {
+        level
+        points
+        username
+        fullName
+        sponsored
+      }
+      total
+    }
+  }
+`);
+
 export const GENERATE_WEEKLY_REPORT = gql(/* GraphQL */ `
   mutation generateWeeklyReport($data: GenerateWeeklyReportInput!) {
     generateWeeklyReport(data: $data) {
@@ -97,6 +112,15 @@ export const GENERATE_WEEKLY_REPORT = gql(/* GraphQL */ `
       frontActions {
         ...FrontActionFields
       }
+    }
+  }
+`);
+
+export const GENERATE_WINNER_REPORT = gql(/* GraphQL */ `
+  mutation GenerateWDMSVegasReport {
+    generateWDMSVegasReport {
+      result
+      message
     }
   }
 `);
