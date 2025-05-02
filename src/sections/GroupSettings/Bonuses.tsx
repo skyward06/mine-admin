@@ -48,7 +48,7 @@ export default function Bonuses({ packages, groupSettingCommissionBonuses }: Pro
   useEffect(() => {
     groupSettingCommissionBonuses.forEach(
       ({ commission, lPoint, rPoint, qPackageId, uPackageId }, index) => {
-        setEditable({ ...editable, [index]: !!uPackageId });
+        setEditable((prev: any) => ({ ...prev, [index]: !!uPackageId }));
 
         setValue(`groupSettingCommissionBonuses[${index}].commission`, commission);
         setValue(`groupSettingCommissionBonuses[${index}].lPoint`, lPoint);
