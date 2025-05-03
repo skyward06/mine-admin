@@ -19,7 +19,7 @@ import { useRouter } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
-import { today, isSaturday, customizeDate } from 'src/utils/format-time';
+import { today, customizeDate } from 'src/utils/format-time';
 
 import { PEER } from 'src/consts';
 
@@ -201,7 +201,7 @@ export default function SaleCreateForm() {
                 type="submit"
                 variant="contained"
                 loading={loading}
-                disabled={isSaturday()}
+                // disabled={isSaturday()}
               >
                 Create Sale
               </LoadingButton>

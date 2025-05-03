@@ -21,7 +21,7 @@ import { useRouter } from 'src/routes/hooks';
 import { useBoolean } from 'src/hooks/useBoolean';
 
 import { formatID } from 'src/utils/helper';
-import { isSaturday, formatDate, customizeDate } from 'src/utils/format-time';
+import { formatDate, customizeDate } from 'src/utils/format-time';
 
 import { PEER } from 'src/consts';
 
@@ -236,7 +236,7 @@ export default function SaleGeneral({ currentSale }: Props) {
                 type="submit"
                 variant="contained"
                 loading={loading}
-                disabled={isSaturday()}
+                // disabled={isSaturday()}
               >
                 Save Changes
               </LoadingButton>
