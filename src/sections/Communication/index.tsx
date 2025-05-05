@@ -18,21 +18,21 @@ import CreateCampaign from './Campaign/Send';
 import { CampaignListView } from './Campaign';
 import { TemplateListView } from './Template';
 
-export default function CommunicationView() {
-  const TABS = [
-    { value: 'Member List', label: 'Member List', icon: <Iconify icon="majesticons:users-line" /> },
-    {
-      value: 'Email Templates',
-      label: 'Email Templates',
-      icon: <Iconify icon="fluent:mail-template-16-filled" />,
-    },
-    {
-      value: 'Campaigns',
-      label: 'Campaigns',
-      icon: <Iconify icon="tabler:brand-campaignmonitor" />,
-    },
-  ];
+const TABS = [
+  { value: 'Member List', label: 'Member List', icon: <Iconify icon="majesticons:users-line" /> },
+  {
+    value: 'Email Templates',
+    label: 'Email Templates',
+    icon: <Iconify icon="fluent:mail-template-16-filled" />,
+  },
+  {
+    value: 'Campaigns',
+    label: 'Campaigns',
+    icon: <Iconify icon="tabler:brand-campaignmonitor" />,
+  },
+];
 
+export default function CommunicationView() {
   const open = useBoolean();
   const router = useRouter();
   const tabs = useTabs('Member List');
