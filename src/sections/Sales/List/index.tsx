@@ -52,6 +52,8 @@ type Checked = {
 };
 
 export default function SaleListView() {
+  const { user } = useAuthContext();
+
   const { loading, rowCount, sales } = useFetchSales();
   const { loading: removeLoading, removeSale } = useRemoveSale();
 
@@ -215,7 +217,6 @@ export default function SaleListView() {
   );
 
   const token = localStorage.getItem(CONFIG.storageTokenKey) ?? '';
-  const { user } = useAuthContext();
 
   return (
     <DashboardContent>
