@@ -1,6 +1,8 @@
 import type { Member } from 'src/__generated__/graphql';
 import type { UseBooleanReturn } from 'src/hooks/useBoolean';
 
+import { Link } from 'react-router-dom';
+
 import Dialog from '@mui/material/Dialog';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -8,10 +10,9 @@ import Typography from '@mui/material/Typography';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 
-import { formatID, customizeFullName } from 'src/utils/helper';
-
-import { useRouter } from 'src/routes/hooks';
 import { paths } from 'src/routes/paths';
+
+import { customizeFullName } from 'src/utils/helper';
 
 interface Props {
   open: UseBooleanReturn;
@@ -19,8 +20,6 @@ interface Props {
 }
 
 export default function SignUpInfo({ open, member }: Props) {
-  const router = useRouter();
-
   return (
     <Dialog open={open.value} onClose={open.onFalse} fullWidth maxWidth="md">
       <DialogTitle>{customizeFullName(member?.fullName)}</DialogTitle>
@@ -97,13 +96,10 @@ export default function SignUpInfo({ open, member }: Props) {
             <Grid md={2}>
               <Typography fontWeight={700}>Sale ID: </Typography>
             </Grid>
-            <Grid
-              md={10}
-              onClick={() =>
-                router.push(paths.dashboard.sales.edit(member?.signupFormRequest?.saleID))
-              }
-            >
-              {formatID(member?.signupFormRequest?.saleID ?? '')}
+            <Grid md={10}>
+              <Link to={paths.dashboard.sales.edit(member?.signupFormRequest?.saleID)}>
+                {member?.signupFormRequest?.saleID}
+              </Link>
             </Grid>
           </Grid>
         )}
