@@ -143,10 +143,10 @@ export const CHAIN_TYPE = {
 };
 
 export const CHAIN_UNIT = {
-  TXC: 10 ** 9,
-  // ETH: 10 ** 18,
-  USDC: 10 ** 6,
-  USDT: 10 ** 6,
+  TXC: 9,
+  // ETH:  18,
+  USDC: 6,
+  USDT: 6,
 };
 
 export const ORDER_STATUS = {
