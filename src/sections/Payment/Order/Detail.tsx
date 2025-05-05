@@ -1,5 +1,3 @@
-import type { UseBooleanReturn } from 'src/hooks/useBoolean';
-
 import { useEffect } from 'react';
 
 import Stack from '@mui/material/Stack';
@@ -7,10 +5,16 @@ import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 
+import { useBoolean, type UseBooleanReturn } from 'src/hooks/useBoolean';
+
 import { formatDateTime } from 'src/utils/format-time';
 import { truncateMiddle } from 'src/utils/formatNumber';
 import { formatID, customizeFullName } from 'src/utils/helper';
 
+import { CHAIN_UNIT } from 'src/consts';
+
+import { toast } from 'src/components/SnackBar';
+import { Iconify } from 'src/components/Iconify';
 import { ScrollBar } from 'src/components/ScrollBar';
 
 import { useFetchOrder } from '../useApollo';
@@ -21,7 +25,23 @@ interface Props {
 }
 
 export default function Detail({ id, open }: Props) {
+  const copy = useBoolean();
+
   const { order, fetchOrder } = useFetchOrder();
+
+  const copyAddress = async () => {
+    try {
+      await navigator.clipboard.writeText(order?.waitAddress?.address ?? '');
+
+      copy.onTrue();
+
+      setTimeout(() => {
+        copy.onFalse();
+      }, 2000);
+    } catch (error) {
+      toast.error('Failed to copy text: ', error.message);
+    }
+  };
 
   useEffect(() => {
     if (open.value && id) {
@@ -62,8 +82,14 @@ export default function Detail({ id, open }: Props) {
           </Stack>
 
           <Stack direction="row" spacing={2}>
-            <Stack width={0.5} sx={{ fontSize: 14, fontWeight: 700 }}>
-              Address:
+            <Stack width={0.5} sx={{ fontSize: 14, fontWeight: 700 }} direction="row" spacing={1}>
+              Address:{' '}
+              <Iconify
+                icon={copy.value ? 'ci:check' : 'bxs:copy'}
+                color="#00cca4"
+                sx={{ cursor: 'pointer' }}
+                onClick={copyAddress}
+              />
             </Stack>
             <Stack width={1} sx={{ fontSize: 14 }}>
               {truncateMiddle(order?.waitAddress?.address ?? '', 25)}
@@ -75,7 +101,7 @@ export default function Detail({ id, open }: Props) {
               Balance:
             </Stack>
             <Stack width={1} sx={{ fontSize: 14 }}>
-              {(order?.waitAddress?.receivedBalance ?? 0) / 10 ** 18}
+              {(order?.waitAddress?.totalBalance ?? 0) / CHAIN_UNIT[order?.waitAddress?.type!] ?? 0}
             </Stack>
           </Stack>
 
