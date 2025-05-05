@@ -4,28 +4,26 @@ import { useParams } from 'react-router-dom';
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
-import Dialog from '@mui/material/Dialog';
 import Divider from '@mui/material/Divider';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
+import { formatID } from 'src/utils/helper';
 import { formatDate } from 'src/utils/format-time';
-import { formatID, customizeFullName } from 'src/utils/helper';
 
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
+import SignUpInfo from './SignUpInfo';
 import {
   useFetchMember,
   useDuplicateMember,
@@ -570,79 +568,7 @@ export const Personal = () => {
         </MenuList>
       </CustomPopover>
 
-      {member?.signupFormRequest && (
-        <Dialog open={sign.value} onClose={sign.onFalse} fullWidth maxWidth="md">
-          <DialogTitle>{customizeFullName(member?.fullName)}</DialogTitle>
-
-          <Divider flexItem sx={{ borderStyle: 'dashed', mb: 2 }} />
-
-          <DialogContent sx={{ pb: 4 }}>
-            <Grid container spacing={1}>
-              <Grid md={6} container>
-                <Grid md={12} container>
-                  <Grid md={4}>
-                    <Typography fontWeight={700}>Email:</Typography>{' '}
-                  </Grid>
-                  <Grid md={8}>{member?.signupFormRequest.email}</Grid>
-                </Grid>
-                <Grid md={12} container>
-                  <Grid md={4}>
-                    <Typography fontWeight={700}>Username:</Typography>{' '}
-                  </Grid>
-                  <Grid md={8}>{member?.signupFormRequest.username}</Grid>
-                </Grid>
-                <Grid md={12} container>
-                  <Grid md={4}>
-                    <Typography fontWeight={700}>Sponsor:</Typography>{' '}
-                  </Grid>
-                  <Grid md={8}>{member?.signupFormRequest?.sponsorUserId}</Grid>
-                </Grid>
-                <Grid md={12} container>
-                  <Grid md={4}>
-                    <Typography fontWeight={700}>Package: </Typography>
-                  </Grid>
-                  <Grid md={8}>{member?.signupFormRequest?.package}</Grid>
-                </Grid>
-              </Grid>
-              <Grid md={6} container>
-                <Grid md={12} container>
-                  <Grid md={4}>
-                    <Typography fontWeight={700}>Mobile:</Typography>{' '}
-                  </Grid>
-                  <Grid md={8}>{member?.signupFormRequest.mobile}</Grid>
-                </Grid>
-                <Grid md={12} container>
-                  <Grid md={4}>
-                    <Typography fontWeight={700}>Full Name:</Typography>{' '}
-                  </Grid>
-                  <Grid md={8}>{member?.signupFormRequest.fullName}</Grid>
-                </Grid>
-                {member?.signupFormRequest.promoCode && (
-                  <Grid md={12} container>
-                    <Grid md={4}>
-                      <Typography fontWeight={700}>Promo:</Typography>{' '}
-                    </Grid>
-                    <Grid md={8}>{member?.signupFormRequest.promoCode}</Grid>
-                  </Grid>
-                )}
-                <Grid md={12} container>
-                  <Grid md={4}>
-                    <Typography fontWeight={700}>Payment Method: </Typography>
-                  </Grid>
-                  <Grid md={8}>{member?.signupFormRequest.paymentMethod}</Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-
-            <Grid container sx={{ mt: 0.5 }}>
-              <Grid md={2}>
-                <Typography fontWeight={700}>Note: </Typography>
-              </Grid>
-              <Grid md={10}>{member?.signupFormRequest.note}</Grid>
-            </Grid>
-          </DialogContent>
-        </Dialog>
-      )}
+      {member?.signupFormRequest && <SignUpInfo open={sign} member={member} />}
     </>
   );
 };
