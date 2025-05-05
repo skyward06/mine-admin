@@ -18,6 +18,7 @@ export const FETCH_ORDERS_QUERY = gql(/* GraphQL */ `
           type
           address
           totalBalance
+          receivedBalance
         }
       }
       total
