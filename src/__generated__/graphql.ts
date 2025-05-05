@@ -135,7 +135,7 @@ export type BasicSale = {
   __typename?: 'BasicSale';
   ID: Scalars['Int']['output'];
   amount: Scalars['Float']['output'];
-  assetId: Scalars['String']['output'];
+  assetId?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTimeISO']['output'];
   email: Scalars['String']['output'];
   fullName: Scalars['String']['output'];
@@ -503,7 +503,6 @@ export type CreatePackageInput = {
 export type CreatePaymentMethodInput = {
   defaultLink?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
-  paymentMethodLinks?: InputMaybe<Array<PaymentMethodLinkInput>>;
   visible?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
@@ -554,6 +553,12 @@ export type CreateSaleInput = {
   sponsorCnt?: InputMaybe<Scalars['Float']['input']>;
   status: Scalars['Boolean']['input'];
   toMemberId?: InputMaybe<Scalars['ID']['input']>;
+};
+
+export type CreateSignUpOrderInput = {
+  email: Scalars['String']['input'];
+  packageId: Scalars['String']['input'];
+  paymentType: PaymentType;
 };
 
 export type CreateStatisticsInput = {
@@ -1146,6 +1151,7 @@ export type Mutation = {
   createProof: Proof;
   createRole: Role;
   createSale: Sale;
+  createSignUpOrder: Order;
   createStatistics: Statistics;
   createStatisticsSale: StatisticsSale;
   disable2FA: AccessTokenResponse;
@@ -1165,12 +1171,9 @@ export type Mutation = {
   moveToGraveyard: SuccessResponse;
   moveToPaid: SuccessResponse;
   moveToPending: SuccessResponse;
-<<<<<<< HEAD
   moveToSolve: SuccessResponse;
   moveToWIP: SuccessResponse;
-=======
   refreshBalance: SuccessResponse;
->>>>>>> 0453bbd (Update gprahql typescript)
   regenerateInvoiceById: SuccessResponse;
   removeAdminNote: SuccessResponse;
   removeAdmins: ManySuccessResponse;
@@ -1205,7 +1208,7 @@ export type Mutation = {
   setReadAllNotifications: ManySuccessResponse;
   setReadNotification: SuccessResponse;
   setRecipientStatus: Recipient;
-  signUpMember: Member;
+  signUpMember: SignupMemberResponse;
   updateAdmin: Admin;
   updateAdminNote: AdminNotes;
   updateBugReport: BugReport;
@@ -1392,6 +1395,11 @@ export type MutationCreateSaleArgs = {
 };
 
 
+export type MutationCreateSignUpOrderArgs = {
+  data: CreateSignUpOrderInput;
+};
+
+
 export type MutationCreateStatisticsArgs = {
   data: CreateStatisticsInput;
 };
@@ -1472,7 +1480,6 @@ export type MutationMoveToPendingArgs = {
 };
 
 
-<<<<<<< HEAD
 export type MutationMoveToSolveArgs = {
   data: IdInput;
 };
@@ -1480,10 +1487,11 @@ export type MutationMoveToSolveArgs = {
 
 export type MutationMoveToWipArgs = {
   data: IdInput;
-=======
+};
+
+
 export type MutationRefreshBalanceArgs = {
   data: AddressInput;
->>>>>>> 0453bbd (Update gprahql typescript)
 };
 
 
@@ -1885,7 +1893,6 @@ export type Package = {
   freeShare: Scalars['Boolean']['output'];
   frontActions?: Maybe<Array<FrontAction>>;
   id: Scalars['ID']['output'];
-  paymentMethodLinks?: Maybe<Array<PaymentMethodLink>>;
   point: Scalars['Float']['output'];
   productName: Scalars['String']['output'];
   sales?: Maybe<Array<Sale>>;
@@ -1903,39 +1910,12 @@ export type PackageResponse = {
 export type PaymentMethod = {
   __typename?: 'PaymentMethod';
   createdAt?: Maybe<Scalars['DateTimeISO']['output']>;
-  defaultLink?: Maybe<Scalars['String']['output']>;
   deletedAt?: Maybe<Scalars['DateTimeISO']['output']>;
   frontActions?: Maybe<Array<FrontAction>>;
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
-  paymentMethodLinks?: Maybe<Array<PaymentMethodLink>>;
   updatedAt?: Maybe<Scalars['DateTimeISO']['output']>;
   visible: Scalars['Boolean']['output'];
-};
-
-export type PaymentMethodLink = {
-  __typename?: 'PaymentMethodLink';
-  createdAt?: Maybe<Scalars['DateTimeISO']['output']>;
-  deletedAt?: Maybe<Scalars['DateTimeISO']['output']>;
-  frontActions?: Maybe<Array<FrontAction>>;
-  id: Scalars['ID']['output'];
-  link: Scalars['String']['output'];
-  package?: Maybe<Package>;
-  packageId: Scalars['ID']['output'];
-  paymentMethod?: Maybe<PaymentMethod>;
-  paymentMethodId: Scalars['ID']['output'];
-  updatedAt?: Maybe<Scalars['DateTimeISO']['output']>;
-};
-
-export type PaymentMethodLinkInput = {
-  link: Scalars['String']['input'];
-  packageId: Scalars['ID']['input'];
-};
-
-export type PaymentMethodLinkResponse = {
-  __typename?: 'PaymentMethodLinkResponse';
-  paymentMethodLinks?: Maybe<Array<PaymentMethodLink>>;
-  total?: Maybe<Scalars['Int']['output']>;
 };
 
 export type PaymentMethodResponse = {
@@ -2088,11 +2068,8 @@ export enum ProofType {
 
 export type Query = {
   __typename?: 'Query';
-<<<<<<< HEAD
   WDMSVegasContestWinners: WdmsvegasContestWinnerResponse;
-=======
   addresses: AddressResponse;
->>>>>>> 0453bbd (Update gprahql typescript)
   adminMe: Admin;
   adminNotes: AdminNotesResponse;
   admins: AdminsResponse;
@@ -2147,7 +2124,6 @@ export type Query = {
   orderById: Order;
   orders: OrderResponse;
   packages: PackageResponse;
-  paymentMethodLinks: PaymentMethodLinkResponse;
   paymentMethods: PaymentMethodResponse;
   payouts: PayoutResponse;
   placementMembers: Array<PlacementMember>;
@@ -2181,11 +2157,14 @@ export type Query = {
 };
 
 
-<<<<<<< HEAD
 export type QueryWdmsVegasContestWinnersArgs = {
-=======
+  filter?: InputMaybe<Scalars['JSONObject']['input']>;
+  page?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Scalars['String']['input']>;
+};
+
+
 export type QueryAddressesArgs = {
->>>>>>> 0453bbd (Update gprahql typescript)
   filter?: InputMaybe<Scalars['JSONObject']['input']>;
   page?: InputMaybe<Scalars['String']['input']>;
   sort?: InputMaybe<Scalars['String']['input']>;
@@ -2463,13 +2442,6 @@ export type QueryOrdersArgs = {
 
 
 export type QueryPackagesArgs = {
-  filter?: InputMaybe<Scalars['JSONObject']['input']>;
-  page?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type QueryPaymentMethodLinksArgs = {
   filter?: InputMaybe<Scalars['JSONObject']['input']>;
   page?: InputMaybe<Scalars['String']['input']>;
   sort?: InputMaybe<Scalars['String']['input']>;
@@ -2786,6 +2758,15 @@ export type SignupFormInput = {
   zipCode?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type SignupMemberResponse = {
+  __typename?: 'SignupMemberResponse';
+  createdAt: Scalars['Date']['output'];
+  email: Scalars['String']['output'];
+  fullName: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  username: Scalars['String']['output'];
+};
+
 export type Statistics = {
   __typename?: 'Statistics';
   createdAt?: Maybe<Scalars['DateTimeISO']['output']>;
@@ -3049,7 +3030,6 @@ export type UpdatePaymentMethodInput = {
   defaultLink?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
-  paymentMethodLinks?: InputMaybe<Array<PaymentMethodLinkInput>>;
   visible?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
@@ -3133,8 +3113,6 @@ export type VerifyTokenResponse = {
   token: Scalars['String']['output'];
 };
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 export type WdmsvegasContestWinner = {
   __typename?: 'WDMSVEGASContestWinner';
   fullName: Scalars['String']['output'];
@@ -3150,11 +3128,6 @@ export type WdmsvegasContestWinnerResponse = {
   winners?: Maybe<Array<WdmsvegasContestWinner>>;
 };
 
-=======
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 0453bbd (Update gprahql typescript)
 export type WaitAddress = {
   __typename?: 'WaitAddress';
   address: Scalars['String']['output'];
@@ -3193,11 +3166,6 @@ export type WaitTransactionStatusResponse = {
   status: WaitTransactionStatus;
 };
 
-<<<<<<< HEAD
->>>>>>> ae4d819 (Update graphql typescript)
->>>>>>> 098c34b (Update graphql typescript)
-=======
->>>>>>> 0453bbd (Update gprahql typescript)
 export type WeekPlacementMember = {
   __typename?: 'WeekPlacementMember';
   commission: Scalars['Int']['output'];
@@ -4002,7 +3970,7 @@ export type PaymentMethodsQueryVariables = Exact<{
 }>;
 
 
-export type PaymentMethodsQuery = { __typename?: 'Query', paymentMethods: { __typename?: 'PaymentMethodResponse', total?: number | null, paymentMethods?: Array<{ __typename?: 'PaymentMethod', id: string, name: string, visible: boolean, createdAt?: any | null, defaultLink?: string | null, paymentMethodLinks?: Array<{ __typename?: 'PaymentMethodLink', id: string, link: string, packageId: string, paymentMethodId: string }> | null }> | null } };
+export type PaymentMethodsQuery = { __typename?: 'Query', paymentMethods: { __typename?: 'PaymentMethodResponse', total?: number | null, paymentMethods?: Array<{ __typename?: 'PaymentMethod', id: string, name: string, visible: boolean, createdAt?: any | null }> | null } };
 
 export type CreatePaymentMethodMutationVariables = Exact<{
   data: CreatePaymentMethodInput;
@@ -4411,7 +4379,7 @@ export type SalesQueryVariables = Exact<{
 }>;
 
 
-export type SalesQuery = { __typename?: 'Query', sales: { __typename?: 'BasicSalesResponse', total?: number | null, sales?: Array<{ __typename?: 'BasicSale', id: string, ID: number, email: string, token: number, point: number, amount: number, status: boolean, isMetal: boolean, toEmail?: string | null, assetId: string, memberId: string, username: string, fullName: string, orderedAt: any, createdAt: any, sponsorCnt: number, toMemberId?: string | null, toUsername?: string | null, toFullName?: string | null, productName: string, paymentMethod: string }> | null } };
+export type SalesQuery = { __typename?: 'Query', sales: { __typename?: 'BasicSalesResponse', total?: number | null, sales?: Array<{ __typename?: 'BasicSale', id: string, ID: number, email: string, token: number, point: number, amount: number, status: boolean, isMetal: boolean, toEmail?: string | null, assetId?: string | null, memberId: string, username: string, fullName: string, orderedAt: any, createdAt: any, sponsorCnt: number, toMemberId?: string | null, toUsername?: string | null, toFullName?: string | null, productName: string, paymentMethod: string }> | null } };
 
 export type SaleByIdQueryVariables = Exact<{
   data: IdInput;
@@ -4763,7 +4731,7 @@ export const AddressesDocument = {"kind":"Document","definitions":[{"kind":"Oper
 export const TransactionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Transactions"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sort"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"page"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"filter"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSONObject"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"transactions"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"sort"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sort"}}},{"kind":"Argument","name":{"kind":"Name","value":"page"},"value":{"kind":"Variable","name":{"kind":"Name","value":"page"}}},{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"Variable","name":{"kind":"Name","value":"filter"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"transactions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"to"}},{"kind":"Field","name":{"kind":"Name","value":"from"}},{"kind":"Field","name":{"kind":"Name","value":"hash"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"balance"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"waitAddress"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"receivedAt"}},{"kind":"Field","name":{"kind":"Name","value":"initBalance"}},{"kind":"Field","name":{"kind":"Name","value":"totalBalance"}},{"kind":"Field","name":{"kind":"Name","value":"initUnitPrice"}},{"kind":"Field","name":{"kind":"Name","value":"receivedBalance"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"total"}}]}}]}}]} as unknown as DocumentNode<TransactionsQuery, TransactionsQueryVariables>;
 export const CancelOrderDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CancelOrder"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"IDNInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cancelOrder"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"frontActions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"FrontActionFields"}}]}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"result"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"FrontActionFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"FrontAction"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"action"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"extra"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"FrontActionCreate12FreeBonusSale"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"fullName"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"packageId"}},{"kind":"Field","name":{"kind":"Name","value":"sponsorCnt"}},{"kind":"Field","name":{"kind":"Name","value":"packageName"}},{"kind":"Field","name":{"kind":"Name","value":"paymentMethod"}},{"kind":"Field","name":{"kind":"Name","value":"isWithinSponsorRollDuration"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"FrontActionUpdate12FreeBonusSale"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"oldPackageId"}},{"kind":"Field","name":{"kind":"Name","value":"newPackageId"}},{"kind":"Field","name":{"kind":"Name","value":"oldPackageName"}},{"kind":"Field","name":{"kind":"Name","value":"newPackageName"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"FrontActionRemove12FreeBonusSale"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<CancelOrderMutation, CancelOrderMutationVariables>;
 export const RefreshBalanceDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"RefreshBalance"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"AddressInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"refreshBalance"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"frontActions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"FrontActionFields"}}]}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"result"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"FrontActionFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"FrontAction"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"action"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"extra"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"FrontActionCreate12FreeBonusSale"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"fullName"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"packageId"}},{"kind":"Field","name":{"kind":"Name","value":"sponsorCnt"}},{"kind":"Field","name":{"kind":"Name","value":"packageName"}},{"kind":"Field","name":{"kind":"Name","value":"paymentMethod"}},{"kind":"Field","name":{"kind":"Name","value":"isWithinSponsorRollDuration"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"FrontActionUpdate12FreeBonusSale"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"oldPackageId"}},{"kind":"Field","name":{"kind":"Name","value":"newPackageId"}},{"kind":"Field","name":{"kind":"Name","value":"oldPackageName"}},{"kind":"Field","name":{"kind":"Name","value":"newPackageName"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"FrontActionRemove12FreeBonusSale"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<RefreshBalanceMutation, RefreshBalanceMutationVariables>;
-export const PaymentMethodsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PaymentMethods"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sort"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"page"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"filter"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSONObject"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"paymentMethods"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"sort"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sort"}}},{"kind":"Argument","name":{"kind":"Name","value":"page"},"value":{"kind":"Variable","name":{"kind":"Name","value":"page"}}},{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"Variable","name":{"kind":"Name","value":"filter"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"paymentMethods"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"visible"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"defaultLink"}},{"kind":"Field","name":{"kind":"Name","value":"paymentMethodLinks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"link"}},{"kind":"Field","name":{"kind":"Name","value":"packageId"}},{"kind":"Field","name":{"kind":"Name","value":"paymentMethodId"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"total"}}]}}]}}]} as unknown as DocumentNode<PaymentMethodsQuery, PaymentMethodsQueryVariables>;
+export const PaymentMethodsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PaymentMethods"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sort"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"page"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"filter"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSONObject"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"paymentMethods"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"sort"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sort"}}},{"kind":"Argument","name":{"kind":"Name","value":"page"},"value":{"kind":"Variable","name":{"kind":"Name","value":"page"}}},{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"Variable","name":{"kind":"Name","value":"filter"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"paymentMethods"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"visible"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"total"}}]}}]}}]} as unknown as DocumentNode<PaymentMethodsQuery, PaymentMethodsQueryVariables>;
 export const CreatePaymentMethodDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createPaymentMethod"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreatePaymentMethodInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createPaymentMethod"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"frontActions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"FrontActionFields"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"FrontActionFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"FrontAction"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"action"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"extra"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"FrontActionCreate12FreeBonusSale"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"fullName"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"packageId"}},{"kind":"Field","name":{"kind":"Name","value":"sponsorCnt"}},{"kind":"Field","name":{"kind":"Name","value":"packageName"}},{"kind":"Field","name":{"kind":"Name","value":"paymentMethod"}},{"kind":"Field","name":{"kind":"Name","value":"isWithinSponsorRollDuration"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"FrontActionUpdate12FreeBonusSale"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"oldPackageId"}},{"kind":"Field","name":{"kind":"Name","value":"newPackageId"}},{"kind":"Field","name":{"kind":"Name","value":"oldPackageName"}},{"kind":"Field","name":{"kind":"Name","value":"newPackageName"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"FrontActionRemove12FreeBonusSale"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<CreatePaymentMethodMutation, CreatePaymentMethodMutationVariables>;
 export const UpdatePaymentMethodDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updatePaymentMethod"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdatePaymentMethodInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updatePaymentMethod"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"frontActions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"FrontActionFields"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"FrontActionFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"FrontAction"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"action"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"extra"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"FrontActionCreate12FreeBonusSale"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"fullName"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"packageId"}},{"kind":"Field","name":{"kind":"Name","value":"sponsorCnt"}},{"kind":"Field","name":{"kind":"Name","value":"packageName"}},{"kind":"Field","name":{"kind":"Name","value":"paymentMethod"}},{"kind":"Field","name":{"kind":"Name","value":"isWithinSponsorRollDuration"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"FrontActionUpdate12FreeBonusSale"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"oldPackageId"}},{"kind":"Field","name":{"kind":"Name","value":"newPackageId"}},{"kind":"Field","name":{"kind":"Name","value":"oldPackageName"}},{"kind":"Field","name":{"kind":"Name","value":"newPackageName"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"FrontActionRemove12FreeBonusSale"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<UpdatePaymentMethodMutation, UpdatePaymentMethodMutationVariables>;
 export const RemovePaymentMethodDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"removePaymentMethod"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"IDInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"removePaymentMethod"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"result"}},{"kind":"Field","name":{"kind":"Name","value":"frontActions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"FrontActionFields"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"FrontActionFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"FrontAction"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"action"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"extra"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"FrontActionCreate12FreeBonusSale"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"fullName"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"packageId"}},{"kind":"Field","name":{"kind":"Name","value":"sponsorCnt"}},{"kind":"Field","name":{"kind":"Name","value":"packageName"}},{"kind":"Field","name":{"kind":"Name","value":"paymentMethod"}},{"kind":"Field","name":{"kind":"Name","value":"isWithinSponsorRollDuration"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"FrontActionUpdate12FreeBonusSale"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"oldPackageId"}},{"kind":"Field","name":{"kind":"Name","value":"newPackageId"}},{"kind":"Field","name":{"kind":"Name","value":"oldPackageName"}},{"kind":"Field","name":{"kind":"Name","value":"newPackageName"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"FrontActionRemove12FreeBonusSale"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<RemovePaymentMethodMutation, RemovePaymentMethodMutationVariables>;
