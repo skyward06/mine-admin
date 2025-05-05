@@ -9,7 +9,7 @@ import { useBoolean, type UseBooleanReturn } from 'src/hooks/useBoolean';
 
 import { formatDateTime } from 'src/utils/format-time';
 import { truncateMiddle } from 'src/utils/formatNumber';
-import { formatID, customizeFullName } from 'src/utils/helper';
+import { formatID, makeDecimal, customizeFullName } from 'src/utils/helper';
 
 import { CHAIN_UNIT } from 'src/consts';
 
@@ -101,7 +101,11 @@ export default function Detail({ id, open }: Props) {
               Balance:
             </Stack>
             <Stack width={1} sx={{ fontSize: 14 }}>
-              {(order?.waitAddress?.totalBalance ?? 0) / CHAIN_UNIT[order?.waitAddress?.type!] ?? 0}
+              {makeDecimal(
+                (order?.waitAddress?.totalBalance ?? 0) /
+                  10 ** CHAIN_UNIT[order?.waitAddress?.type!] ?? 0,
+                CHAIN_UNIT[order?.waitAddress?.type!]
+              )}
             </Stack>
           </Stack>
 

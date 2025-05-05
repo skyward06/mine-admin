@@ -14,7 +14,7 @@ import { useAgQuery as useQueryString } from 'src/routes/hooks';
 
 import { formatDate } from 'src/utils/format-time';
 import { parseFilterModel } from 'src/utils/parseFilter';
-import { formatID, customizeFullName } from 'src/utils/helper';
+import { formatID, makeDecimal, customizeFullName } from 'src/utils/helper';
 
 import { CHAIN_UNIT, ORDER_STATUS } from 'src/consts';
 import { OrderStatus } from 'src/__generated__/graphql';
@@ -87,14 +87,31 @@ export default function Orders() {
       },
       {
         field: 'waitAddress.totalBalance',
-        headerName: 'Total Balance',
-        width: 250,
+        headerName: 'Requested Balance',
+        width: 200,
         filter: 'agTextColumnFilter',
         resizable: true,
         editable: false,
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
         cellRenderer: ({ data }: CustomCellRendererProps<Order>) =>
-          (data?.waitAddress?.totalBalance ?? 0) / CHAIN_UNIT[data?.waitAddress?.type!],
+          makeDecimal(
+            (data?.waitAddress?.totalBalance ?? 0) / 10 ** CHAIN_UNIT[data?.waitAddress?.type!],
+            CHAIN_UNIT[data?.waitAddress?.type!]
+          ),
+      },
+      {
+        field: 'waitAddress.receivedBalance',
+        headerName: 'Received Balance',
+        width: 200,
+        filter: 'agTextColumnFilter',
+        resizable: true,
+        editable: false,
+        filterParams: { buttons: ['reset'] } as ITextFilterParams,
+        cellRenderer: ({ data }: CustomCellRendererProps<Order>) =>
+          makeDecimal(
+            (data?.waitAddress?.receivedBalance ?? 0) / 10 ** CHAIN_UNIT[data?.waitAddress?.type!],
+            CHAIN_UNIT[data?.waitAddress?.type!]
+          ),
       },
       {
         field: 'createdAt',

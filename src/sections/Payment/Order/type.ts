@@ -19,5 +19,6 @@ export type Order = {
     type: PaymentType;
     address: string;
     totalBalance: number;
+    receivedBalance: number;
   } | null;
 };

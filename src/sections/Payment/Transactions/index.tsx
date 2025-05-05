@@ -13,6 +13,7 @@ import Typography from '@mui/material/Typography';
 
 import { useAgQuery as useQueryString } from 'src/routes/hooks';
 
+import { makeDecimal } from 'src/utils/helper';
 import { formatDate } from 'src/utils/format-time';
 import { parseFilterModel } from 'src/utils/parseFilter';
 
@@ -86,7 +87,10 @@ export default function Orders() {
         editable: false,
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
         cellRenderer: ({ data }: CustomCellRendererProps<Transaction>) =>
-          (data?.waitAddress?.initBalance ?? 0) / CHAIN_UNIT[data?.type!],
+          makeDecimal(
+            (data?.balance ?? 0) / 10 ** CHAIN_UNIT[data?.type!],
+            CHAIN_UNIT[data?.type!]
+          ),
       },
       {
         field: 'type',
