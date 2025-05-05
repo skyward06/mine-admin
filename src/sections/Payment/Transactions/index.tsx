@@ -9,18 +9,18 @@ import type {
 import { useMemo, useEffect } from 'react';
 
 import Card from '@mui/material/Card';
+import Typography from '@mui/material/Typography';
 
 import { useAgQuery as useQueryString } from 'src/routes/hooks';
 
 import { formatDate } from 'src/utils/format-time';
 import { parseFilterModel } from 'src/utils/parseFilter';
 
-import { CHAIN_TYPE, CHAIN_UNIT, TRANSACTION_STATUS } from 'src/consts';
-import { PaymentType, WaitTransactionStatus } from 'src/__generated__/graphql';
+import { PaymentType } from 'src/__generated__/graphql';
+import { CHAIN_TYPE, CHAIN_UNIT, EXPLORER_PATH } from 'src/consts';
 
 import { AgGrid } from 'src/components/AgGrid';
 
-import { parseType } from './parseType';
 import { useFetchTransactions } from '../useApollo';
 import { parseType as chainParse } from '../Address/parseType';
 
@@ -41,8 +41,27 @@ export default function Orders() {
   const colDefs = useMemo<ColDef<Transaction>[]>(
     () => [
       {
-        field: 'waitAddress.address',
-        headerName: 'Address',
+        field: 'hash',
+        headerName: 'Hash',
+        flex: 1,
+        filter: 'agTextColumnFilter',
+        resizable: true,
+        editable: false,
+        filterParams: { buttons: ['reset'] } as ITextFilterParams,
+        cellClass: 'ag-cell-center',
+        cellRenderer: ({ data }: CustomCellRendererProps<Transaction>) => (
+          <Typography
+            variant="body2"
+            sx={{ cursor: 'pointer' }}
+            onClick={() => window.open(`${EXPLORER_PATH}${data?.hash}`)}
+          >
+            {data?.hash}
+          </Typography>
+        ),
+      },
+      {
+        field: 'from',
+        headerName: 'From',
         flex: 1,
         filter: 'agTextColumnFilter',
         resizable: true,
@@ -50,9 +69,18 @@ export default function Orders() {
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
       },
       {
-        field: 'waitAddress.initBalance',
+        field: 'to',
+        headerName: 'To',
+        flex: 1,
+        filter: 'agTextColumnFilter',
+        resizable: true,
+        editable: false,
+        filterParams: { buttons: ['reset'] } as ITextFilterParams,
+      },
+      {
+        field: 'balance',
         headerName: 'Balance',
-        width: 200,
+        width: 150,
         filter: 'agNumberColumnFilter',
         resizable: true,
         editable: false,
@@ -61,35 +89,9 @@ export default function Orders() {
           (data?.waitAddress?.initBalance ?? 0) / CHAIN_UNIT[data?.type!],
       },
       {
-        field: 'waitAddress.receivedBalance',
-        headerName: 'Received Balance',
-        width: 200,
-        filter: 'agNumberColumnFilter',
-        resizable: true,
-        editable: false,
-        filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellRenderer: ({ data }: CustomCellRendererProps<Transaction>) =>
-          (data?.waitAddress?.receivedBalance ?? 0) / CHAIN_UNIT[data?.type!],
-      },
-      {
-        field: 'waitAddress.status',
-        headerName: 'Status',
-        width: 150,
-        filter: 'agMultiColumnFilter',
-        resizable: true,
-        editable: false,
-        filterParams: {
-          values: Object.values(WaitTransactionStatus),
-          valueFormatter: (params: any) => parseType(params.value),
-          defaultToNothingSelected: true,
-        } as ISetFilterParams<Transaction>,
-        cellRenderer: ({ data }: CustomCellRendererProps<Transaction>) =>
-          data ? TRANSACTION_STATUS[data?.waitAddress?.status!] : '',
-      },
-      {
         field: 'type',
         headerName: 'Type',
-        width: 150,
+        width: 100,
         filter: 'agMultiColumnFilter',
         resizable: true,
         editable: false,
@@ -104,7 +106,7 @@ export default function Orders() {
       {
         field: 'createdAt',
         headerName: 'Created At',
-        width: 150,
+        width: 200,
         filter: 'agDateColumnFilter',
         filterParams: {
           buttons: ['reset'],
@@ -116,21 +118,6 @@ export default function Orders() {
         initialSort: 'desc',
         cellRenderer: ({ data }: CustomCellRendererProps<Transaction>) =>
           formatDate(data?.createdAt),
-      },
-      {
-        field: 'waitAddress.receivedAt',
-        headerName: 'Received At',
-        width: 150,
-        filter: 'agDateColumnFilter',
-        filterParams: {
-          buttons: ['reset'],
-          defaultOption: 'greaterThan',
-          filterOptions: ['greaterThan', 'lessThan', 'equals', 'notEqual'],
-        } as IDateFilterParams,
-        resizable: true,
-        editable: false,
-        cellRenderer: ({ data }: CustomCellRendererProps<Transaction>) =>
-          formatDate(data?.waitAddress?.receivedAt),
       },
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
