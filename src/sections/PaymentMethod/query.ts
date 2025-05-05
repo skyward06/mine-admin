@@ -8,13 +8,6 @@ export const FETCH_PAYMENT_QUERY = gql(/* GraphQL */ `
         name
         visible
         createdAt
-        defaultLink
-        paymentMethodLinks {
-          id
-          link
-          packageId
-          paymentMethodId
-        }
       }
       total
     }
