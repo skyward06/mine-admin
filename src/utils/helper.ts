@@ -213,3 +213,11 @@ export const cutString = (text: string, length: number) => {
 
   return text;
 };
+
+export const makeDecimal = (value: number, length: number): string => {
+  if (Number.isInteger(value)) {
+    return `${value}.${'0'.repeat(length)}`;
+  }
+
+  return value.toString();
+};
