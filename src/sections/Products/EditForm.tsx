@@ -29,6 +29,7 @@ interface Props {
 export default function EditForm({ current }: Props) {
   const [status, setStatus] = useState(current?.status ?? true);
   const [visibility, setVisibility] = useState(current?.enrollVisibility ?? false);
+  const [orderVisibility, setOrderVisibility] = useState(current?.orderVisibility ?? false);
 
   const NewProductSchema = zod.object({
     amount: zod.number({ required_error: 'Amount is required' }),
@@ -37,6 +38,9 @@ export default function EditForm({ current }: Props) {
     status: current
       ? zod.boolean({ required_error: 'Status is required' }).default(true)
       : zod.number({ required_error: 'Status is required' }).default(1),
+    orderVisibility: current
+      ? zod.boolean({ required_error: 'Order Visibility is required' }).default(false)
+      : zod.number({ required_error: 'Order Visibility is required' }).default(0),
     enrollVisibility: current
       ? zod.boolean({ required_error: 'Visibility is required' }).default(false)
       : zod.number({ required_error: 'Visibility is required' }).default(0),
@@ -56,6 +60,7 @@ export default function EditForm({ current }: Props) {
             amount: 0,
             token: 0,
             status: 1,
+            orderVisibility: 0,
             enrollVisibility: 0,
             point: 0,
           },
@@ -82,6 +87,7 @@ export default function EditForm({ current }: Props) {
               ...newData,
               id: current.id,
               status,
+              orderVisibility,
               enrollVisibility: visibility,
             },
           },
@@ -92,6 +98,7 @@ export default function EditForm({ current }: Props) {
             data: {
               ...newData,
               status,
+              orderVisibility,
               enrollVisibility: visibility,
             },
           },
@@ -143,15 +150,6 @@ export default function EditForm({ current }: Props) {
             disabled={!!(current?.sales ?? []).length}
           />
           <Field.Select
-            name="status"
-            label="Status"
-            value={status ? 1 : 0}
-            onChange={(e) => (Number(e.target.value) === 1 ? setStatus(true) : setStatus(false))}
-          >
-            <MenuItem value={1}>Active</MenuItem>
-            <MenuItem value={0}>Inactive</MenuItem>
-          </Field.Select>
-          <Field.Select
             name="enrollVisibility"
             label="Visibility"
             value={visibility ? 1 : 0}
@@ -161,6 +159,26 @@ export default function EditForm({ current }: Props) {
           >
             <MenuItem value={1}>Show</MenuItem>
             <MenuItem value={0}>Hide</MenuItem>
+          </Field.Select>
+          <Field.Select
+            name="orderVisibility"
+            label="Order Visibility"
+            value={orderVisibility ? 1 : 0}
+            onChange={(e) =>
+              Number(e.target.value) === 1 ? setOrderVisibility(true) : setOrderVisibility(false)
+            }
+          >
+            <MenuItem value={1}>Show</MenuItem>
+            <MenuItem value={0}>Hide</MenuItem>
+          </Field.Select>
+          <Field.Select
+            name="status"
+            label="Status"
+            value={status ? 1 : 0}
+            onChange={(e) => (Number(e.target.value) === 1 ? setStatus(true) : setStatus(false))}
+          >
+            <MenuItem value={1}>Active</MenuItem>
+            <MenuItem value={0}>Inactive</MenuItem>
           </Field.Select>
         </Box>
 
