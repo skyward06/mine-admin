@@ -103,7 +103,7 @@ export default function Detail({ id, open }: Props) {
             <Stack width={1} sx={{ fontSize: 14 }}>
               {makeDecimal(
                 (order?.waitAddress?.totalBalance ?? 0) /
-                  10 ** CHAIN_UNIT[order?.waitAddress?.type!] ?? 0,
+                  10 ** CHAIN_UNIT[order?.waitAddress?.type!],
                 CHAIN_UNIT[order?.waitAddress?.type!]
               )}
             </Stack>
