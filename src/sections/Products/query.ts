@@ -16,6 +16,7 @@ export const FETCH_PACKAGES_QUERY = gql(/* GraphQL */ `
         updatedAt
         deletedAt
         productName
+        orderVisibility
         enrollVisibility
         sales {
           id

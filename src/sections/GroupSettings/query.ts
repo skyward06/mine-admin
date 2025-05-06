@@ -28,6 +28,7 @@ export const FETCH_GROUP_SETTINGS = gql(/* GraphQL */ `
           status
           freeShare
           productName
+          orderVisibility
           enrollVisibility
         }
       }
