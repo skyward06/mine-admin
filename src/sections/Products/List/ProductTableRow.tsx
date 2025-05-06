@@ -33,19 +33,8 @@ export default function ProductTableRow({ row, confirm, setSelected }: Props) {
   const router = useRouter();
   const popover = usePopover();
 
-  const {
-    id,
-    ID,
-    amount,
-    date,
-    productName,
-    point,
-    enrollVisibility,
-    token,
-    sales,
-    status,
-    freeShare,
-  } = row;
+  const { id, ID, date, point, token, amount, status, freeShare, productName, enrollVisibility } =
+    row;
 
   const { updatePackage, loading } = useUpdatePackage();
 
@@ -117,7 +106,6 @@ export default function ProductTableRow({ row, confirm, setSelected }: Props) {
             Edit
           </MenuItem>
           <MenuItem
-            disabled={!!sales?.length}
             onClick={() => {
               confirm.onTrue();
               setSelected(id);

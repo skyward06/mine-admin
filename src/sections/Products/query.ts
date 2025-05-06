@@ -18,42 +18,6 @@ export const FETCH_PACKAGES_QUERY = gql(/* GraphQL */ `
         productName
         orderVisibility
         enrollVisibility
-        sales {
-          id
-          ID
-          status
-          memberId
-          isMetal
-          orderedAt
-          packageId
-          paymentMethod
-          sponsorCnt
-          proof {
-            createdAt
-            updatedAt
-            deletedAt
-            id
-            refId
-            type
-            amount
-            orderedAt
-            note
-            files {
-              createdAt
-              updatedAt
-              deletedAt
-              id
-              url
-              originalName
-              mimeType
-              size
-            }
-            reflinks {
-              linkType
-              link
-            }
-          }
-        }
       }
       total
     }
