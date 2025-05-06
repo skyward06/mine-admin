@@ -4,6 +4,7 @@ export type Order = {
   __typename?: 'Order';
   id: number;
   status: OrderStatus;
+  signUpOrder: boolean;
   createdAt?: any | null;
   member?: {
     __typename?: 'Member';

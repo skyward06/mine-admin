@@ -24,6 +24,7 @@ import { AgGrid } from 'src/components/AgGrid';
 import { parseType } from './parseType';
 import { useFetchOrders } from '../useApollo';
 import { ActionRender } from './ActionRenderer';
+import { StatusRenderer } from './StatusRenderer';
 
 import type { Order } from './type';
 
@@ -57,6 +58,7 @@ export default function Orders() {
         filter: 'agTextColumnFilter',
         resizable: true,
         editable: false,
+        sortable: false,
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
         cellRenderer: ({ data }: CustomCellRendererProps<Order>) =>
           customizeFullName(data?.member?.fullName ?? ''),
@@ -68,6 +70,7 @@ export default function Orders() {
         filter: 'agTextColumnFilter',
         resizable: true,
         editable: false,
+        sortable: false,
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
       },
       {
@@ -92,6 +95,7 @@ export default function Orders() {
         filter: 'agTextColumnFilter',
         resizable: true,
         editable: false,
+        sortable: false,
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
         cellRenderer: ({ data }: CustomCellRendererProps<Order>) =>
           makeDecimal(
@@ -106,12 +110,24 @@ export default function Orders() {
         filter: 'agTextColumnFilter',
         resizable: true,
         editable: false,
+        sortable: false,
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
         cellRenderer: ({ data }: CustomCellRendererProps<Order>) =>
           makeDecimal(
             (data?.waitAddress?.receivedBalance ?? 0) / 10 ** CHAIN_UNIT[data?.waitAddress?.type!],
             CHAIN_UNIT[data?.waitAddress?.type!]
           ),
+      },
+      {
+        field: 'signUpOrder',
+        headerName: 'Status',
+        width: 120,
+        filter: 'agMultiColumnFilter',
+        filterParams: {
+          values: ['true', 'false'],
+          valueFormatter: BooleanFormatter,
+        } as ISetFilterParams<Order>,
+        cellRenderer: StatusRenderer,
       },
       {
         field: 'createdAt',
@@ -160,3 +176,5 @@ export default function Orders() {
     </Card>
   );
 }
+
+const BooleanFormatter = (params: any) => (params.value === 'true' ? 'Sign Up' : 'Add Hash');
