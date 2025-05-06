@@ -114,7 +114,9 @@ export default function Detail({ id, open }: Props) {
               Received At:
             </Stack>
             <Stack width={1} sx={{ fontSize: 14 }}>
-              {formatDateTime(order?.waitAddress?.receivedAt ?? '')}
+              {order?.waitAddress?.receivedAt
+                ? formatDateTime(order.waitAddress.receivedAt!)
+                : 'Not yet'}
             </Stack>
           </Stack>
 
