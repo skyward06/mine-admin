@@ -7,6 +7,7 @@ export const FETCH_ORDERS_QUERY = gql(/* GraphQL */ `
         id
         status
         createdAt
+        signUpOrder
         member {
           username
           fullName
