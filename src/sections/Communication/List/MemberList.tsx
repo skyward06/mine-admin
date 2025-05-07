@@ -110,7 +110,7 @@ export default function MemberListView({ filter: categoryFilter, listId, weekly 
       loading={weekly ? weeklyLoading : listId ? listLoading : loading}
       rowData={weekly ? pendingMembers : listId ? memberList?.members ?? [] : members}
       columnDefs={colDefs}
-      totalRowCount={weekly ? pendingCount : listId ? memberList?.members.length ?? 0 : rowCount}
+      totalRowCount={weekly ? pendingCount : listId ? memberList?.members?.length ?? 0 : rowCount}
     />
   );
 }

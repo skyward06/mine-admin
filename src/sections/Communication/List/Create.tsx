@@ -2,10 +2,14 @@ import type { UseBooleanReturn } from 'src/hooks/useBoolean';
 
 import { useState } from 'react';
 
+import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
+import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -23,6 +27,7 @@ interface Props {
 }
 
 export default function CreateMemberList({ open }: Props) {
+  const [mode, setMode] = useState<boolean>(true);
   const [name, setName] = useState<string>();
   const [emails, setEmails] = useState<string[]>([]);
   const [query, { setQueryParams: setQuery }] = useQuery();
@@ -77,10 +82,28 @@ export default function CreateMemberList({ open }: Props) {
             required
             sx={{ mb: 2 }}
           />
-          <MemberTable setEmails={setEmails} />
+
+          {mode ? (
+            <Box>
+              <TextField
+                multiline
+                rows={10}
+                label="Emails"
+                fullWidth
+                required
+                onChange={(event) => setEmails(event.target.value.split(/[, \n]+/).filter(Boolean))}
+              />
+            </Box>
+          ) : (
+            <MemberTable setEmails={setEmails} />
+          )}
         </Paper>
       </DialogContent>
       <DialogActions>
+        <Stack direction="row" alignItems="center" mr={2}>
+          <Switch checked={mode} onChange={(_, checked) => setMode(checked)} />
+          <Typography variant="body1">Input Mode</Typography>
+        </Stack>
         <LoadingButton variant="contained" loading={loading} onClick={handleCreateMemberList}>
           Create
         </LoadingButton>

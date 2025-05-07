@@ -67,7 +67,7 @@ export default function MemberListView({
     if (weekly) {
       setEmails(pendingMembers?.map((item) => item.email));
     } else if (listId) {
-      setEmails(memberList?.members.map((item) => item.email));
+      setEmails(memberList?.members?.map((item) => item.email));
     } else {
       setEmails(members.map((item) => item.email));
     }

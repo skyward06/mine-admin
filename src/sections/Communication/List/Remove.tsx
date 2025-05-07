@@ -24,7 +24,6 @@ export default function RemoveMemberList({ open }: Props) {
 
       if (data) {
         toast.success('Successfully removed!');
-        open.onFalse();
       }
     } catch (error) {
       toast.error(error.message);
