@@ -18,7 +18,7 @@ import { formatDate } from 'src/utils/format-time';
 import { parseFilterModel } from 'src/utils/parseFilter';
 
 import { PaymentType } from 'src/__generated__/graphql';
-import { CHAIN_TYPE, CHAIN_UNIT, EXPLORER_PATH } from 'src/consts';
+import { CHAIN_TYPE, CHAIN_UNIT, ETHEREUM_PATH } from 'src/consts';
 
 import { AgGrid } from 'src/components/AgGrid';
 
@@ -54,7 +54,7 @@ export default function Orders() {
           <Typography
             variant="body2"
             sx={{ cursor: 'pointer' }}
-            onClick={() => window.open(`${EXPLORER_PATH}${data?.hash}`)}
+            onClick={() => window.open(`${ETHEREUM_PATH}${data?.hash}`)}
           >
             {data?.hash}
           </Typography>

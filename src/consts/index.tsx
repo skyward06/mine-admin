@@ -6,6 +6,8 @@ export const STORAGE_TOKEN_KEY = 'token';
 // EXPLORER URL
 export const EXPLORER_PATH = 'https://explorer.texitcoin.org/tx/';
 
+export const ETHEREUM_PATH = 'https://etherscan.io/tx/';
+
 // ASSET INFO URL
 export const ASSET_INFO_PATH = 'https://api.blockchainmint.com/api/v2/asset-info?public_key=';
 
