@@ -103,13 +103,13 @@ export default function MainFields({
       >
         {listType === CampaignListType.Group &&
           groupSettings.map((group: GroupSetting) => (
-            <MenuItem key={group.id} value={group.name}>
+            <MenuItem key={group.id} value={group.id}>
               {group.name}
             </MenuItem>
           ))}
         {listType === CampaignListType.Custom &&
           memberList.map((list: MemberList) => (
-            <MenuItem key={list.id} value={list.name}>
+            <MenuItem key={list.id} value={list.id}>
               {list.name}
             </MenuItem>
           ))}

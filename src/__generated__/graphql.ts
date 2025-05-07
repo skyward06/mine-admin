@@ -206,6 +206,7 @@ export type BasicWeeklyCommission = {
   note?: Maybe<Scalars['String']['output']>;
   pkgL: Scalars['Int']['output'];
   pkgR: Scalars['Int']['output'];
+  proofNote?: Maybe<Scalars['String']['output']>;
   qualified: Scalars['Boolean']['output'];
   shortNote?: Maybe<Scalars['String']['output']>;
   status: ConfirmationStatus;
@@ -3347,7 +3348,6 @@ export type WeeklyCommission = {
   pkgL: Scalars['Float']['output'];
   pkgR: Scalars['Float']['output'];
   proof?: Maybe<Proof>;
-  proofNote?: Maybe<Scalars['String']['output']>;
   qualified: Scalars['Boolean']['output'];
   shortNote?: Maybe<Scalars['String']['output']>;
   status: ConfirmationStatus;
