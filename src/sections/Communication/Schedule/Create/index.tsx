@@ -2,6 +2,7 @@ import type { IDatePickerControl } from 'src/types/common';
 import type { UseBooleanReturn } from 'src/hooks/useBoolean';
 
 import dayjs from 'dayjs';
+import utcPlugin from 'dayjs/plugin/utc';
 import { useMemo, useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
@@ -28,6 +29,8 @@ import { useUpdateSchdule, useCreateSchedule } from '../../useApollo';
 
 import type { WeekType } from './type';
 import type { Schedule } from '../List/type';
+
+dayjs.extend(utcPlugin);
 
 interface Props {
   current?: Schedule;
@@ -104,10 +107,14 @@ export default function CampaignCreate({ open, current }: Props) {
 
   useEffect(() => {
     if (current) {
+      console.log('when => ', current.when);
+      console.log('minute => ', Number(current.when.split(' ')[1]));
+      console.log('hour => ', Number(current.when.split('')[0]));
+
       setTime(
         dayjs()
-          .hour(Number(current.when.split('')[1]))
-          .minute(Number(current.when.split('')[0]))
+          .hour(Number(current.when.split(' ')[1]))
+          .minute(Number(current.when.split(' ')[0]))
           .second(0)
       );
 

@@ -12,8 +12,8 @@ import Card from '@mui/material/Card';
 
 import { useAgQuery as useQueryString } from 'src/routes/hooks';
 
-import { formatDate } from 'src/utils/format-time';
 import { parseFilterModel } from 'src/utils/parseFilter';
+import { formatDate, formatDateTime } from 'src/utils/format-time';
 
 import { CAMPAIGN_LIST_TYPE } from 'src/consts';
 import { CampaignListType } from 'src/__generated__/graphql';
@@ -81,7 +81,7 @@ export default function ScheduleView() {
         resizable: true,
         editable: false,
         cellRenderer: ({ data }: CustomCellRendererProps<Schedule>) =>
-          data?.lastRun && formatDate(data.lastRun),
+          data?.lastRun && formatDateTime(data.lastRun),
       },
       {
         field: 'nextRun',
@@ -95,7 +95,8 @@ export default function ScheduleView() {
         } as IDateFilterParams,
         resizable: true,
         editable: false,
-        cellRenderer: ({ data }: CustomCellRendererProps<Schedule>) => formatDate(data?.nextRun),
+        cellRenderer: ({ data }: CustomCellRendererProps<Schedule>) =>
+          formatDateTime(data?.nextRun),
       },
       {
         field: 'status',
