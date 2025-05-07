@@ -9,6 +9,7 @@ export const FETCH_ORDERS_QUERY = gql(/* GraphQL */ `
         createdAt
         signUpOrder
         member {
+          id
           username
           fullName
         }

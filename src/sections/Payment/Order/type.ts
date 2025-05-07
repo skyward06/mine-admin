@@ -8,6 +8,7 @@ export type Order = {
   createdAt?: any | null;
   member?: {
     __typename?: 'Member';
+    id: string;
     username: string;
     fullName: string;
   } | null;
