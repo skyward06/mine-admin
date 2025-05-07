@@ -72,7 +72,7 @@ export function Templates({ setTemplateId, pagination = true, ...other }: Props)
     >
       <AgGrid<EmailTemplate>
         gridKey="campaign-template-list"
-        rowSelection={{ mode: 'singleRow' }}
+        rowSelection={{ mode: 'singleRow', enableClickSelection: 'enableSelection' }}
         onRowSelected={handleRowSelected}
         loading={loading}
         rowData={templates}

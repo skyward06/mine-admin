@@ -124,7 +124,7 @@ export default function MainFields({
 
       <Stack direction="row" alignItems="center" mb={2}>
         <Checkbox value={status} checked={status} onChange={(_, checked) => setStatus(checked)} />
-        <Typography variant="body2">{status ? 'Enable' : 'Disable'}</Typography>
+        <Typography variant="body2">{status ? 'Enabled' : 'Disabled'}</Typography>
       </Stack>
     </Box>
   );

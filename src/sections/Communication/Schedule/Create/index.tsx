@@ -2,7 +2,7 @@ import type { IDatePickerControl } from 'src/types/common';
 import type { UseBooleanReturn } from 'src/hooks/useBoolean';
 
 import dayjs from 'dayjs';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -23,16 +23,18 @@ import { toast } from 'src/components/SnackBar';
 import MainFields from './MainFields';
 import ProContent from './ProContent';
 import WeekPicker from './WeekPicker';
-import { useCreateSchedule } from '../../useApollo';
 import { Templates } from '../../Campaign/Send/Templates';
+import { useUpdateSchdule, useCreateSchedule } from '../../useApollo';
 
 import type { WeekType } from './type';
+import type { Schedule } from '../List/type';
 
 interface Props {
+  current?: Schedule;
   open: UseBooleanReturn;
 }
 
-export default function CampaignCreate({ open }: Props) {
+export default function CampaignCreate({ open, current }: Props) {
   const [pro, setPro] = useState<boolean>(false);
   const [when, setWhen] = useState<string>('');
   const [sender, setSender] = useState<string>('');
@@ -52,7 +54,8 @@ export default function CampaignCreate({ open }: Props) {
     6: false,
   });
 
-  const { loading, createSchedule } = useCreateSchedule();
+  const { loading: createLoading, createSchedule } = useCreateSchedule();
+  const { loading: updateLoading, updateSchedule } = useUpdateSchdule();
 
   const weekToString = useMemo(
     () =>
@@ -69,30 +72,65 @@ export default function CampaignCreate({ open }: Props) {
 
   const handleCreateSchedule = async () => {
     try {
-      const result = await createSchedule({
-        variables: {
-          data: {
-            status,
-            sender,
-            subject,
-            listType,
-            listExtra,
-            templateId,
-            when: pro
-              ? when
-              : `${time?.minute()} ${time?.hour()} * * ${weekToString.length ? weekToString : '*'}`,
-          },
-        },
-      });
+      const data = {
+        status,
+        sender,
+        subject,
+        listType,
+        listExtra,
+        templateId,
+        when: pro
+          ? when
+          : `${time?.minute()} ${time?.hour()} * * ${weekToString.length ? weekToString : '*'}`,
+      };
+      const result = current
+        ? await updateSchedule({
+            variables: { data: { id: current.id, ...data } },
+          })
+        : await createSchedule({
+            variables: {
+              data,
+            },
+          });
 
       if (result.data) {
-        toast.success('Schedule created successfully');
+        toast.success(`Schedule ${current ? 'updated' : 'created'} successfully`);
         open.onFalse();
       }
     } catch (error) {
       toast.error(error.message);
     }
   };
+
+  useEffect(() => {
+    if (current) {
+      setTime(
+        dayjs()
+          .hour(Number(current.when.split('')[1]))
+          .minute(Number(current.when.split('')[0]))
+          .second(0)
+      );
+
+      setWhen(current.when);
+      setSender(current.sender);
+      setSubject(current.subject);
+      setListType(current.listType);
+      setListExtra(current?.listExtra ?? '');
+      setStatus(current.status);
+      setTemplateId(current?.templateId ?? '');
+
+      const whenData = current.when.split(' ')[4]?.split(',');
+      setWeek({
+        0: whenData?.includes('0') || false,
+        1: whenData?.includes('1') || false,
+        2: whenData?.includes('2') || false,
+        3: whenData?.includes('3') || false,
+        4: whenData?.includes('4') || false,
+        5: whenData?.includes('5') || false,
+        6: whenData?.includes('6') || false,
+      });
+    }
+  }, [current]);
 
   return (
     <Dialog fullWidth maxWidth="lg" open={open.value}>
@@ -113,7 +151,11 @@ export default function CampaignCreate({ open }: Props) {
           )}
 
           <Box width="100%">
-            {pro ? <ProContent setWhen={setWhen} /> : <WeekPicker setWeek={setWeek} />}
+            {pro ? (
+              <ProContent when={when} setWhen={setWhen} />
+            ) : (
+              <WeekPicker week={week} setWeek={setWeek} />
+            )}
 
             <MainFields
               sender={sender}
@@ -136,10 +178,10 @@ export default function CampaignCreate({ open }: Props) {
         <LoadingButton
           variant="contained"
           color="primary"
-          loading={loading}
+          loading={current ? updateLoading : createLoading}
           onClick={handleCreateSchedule}
         >
-          Create
+          {current ? 'Edit' : 'Create'}
         </LoadingButton>
         <Button variant="soft" onClick={open.onFalse}>
           Close

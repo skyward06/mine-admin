@@ -15,7 +15,7 @@ export const Schema = zod.object({
   month: zod.string().refine((val) => /^[0-9]{1,2}$|^\*$/.test(val), {
     message: 'Month must be between 1 and 12 or "*"',
   }),
-  dayOfWeek: zod.string().refine((val) => /^[0-6]{1}$|^\*$/.test(val), {
+  dayOfWeek: zod.string().refine((val) => /^[0-6]{1}$|^\*,$/.test(val), {
     message: 'Day of week must be between 0 and 6 (0 = Sunday) or "*"',
   }),
 });
