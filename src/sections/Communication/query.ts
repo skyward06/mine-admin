@@ -150,6 +150,7 @@ export const FETCH_SCHEDULE_QUERY = gql(/* GraphQL */ `
         listType
         listExtra
         createdAt
+        templateId
       }
       total
     }
