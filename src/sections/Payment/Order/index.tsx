@@ -9,8 +9,10 @@ import type {
 import { useMemo, useEffect } from 'react';
 
 import Card from '@mui/material/Card';
+import Typography from '@mui/material/Typography';
 
-import { useAgQuery as useQueryString } from 'src/routes/hooks';
+import { paths } from 'src/routes/paths';
+import { useRouter, useAgQuery as useQueryString } from 'src/routes/hooks';
 
 import { formatDate } from 'src/utils/format-time';
 import { parseFilterModel } from 'src/utils/parseFilter';
@@ -29,6 +31,7 @@ import { StatusRenderer } from './StatusRenderer';
 import type { Order } from './type';
 
 export default function Orders() {
+  const router = useRouter();
   const [{ page = '1,50', sort = 'createdAt', filter }] = useQueryString();
 
   const graphQueryFilter = useMemo(() => parseFilterModel({}, filter), [filter]);
@@ -60,8 +63,16 @@ export default function Orders() {
         editable: false,
         sortable: false,
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellRenderer: ({ data }: CustomCellRendererProps<Order>) =>
-          customizeFullName(data?.member?.fullName ?? ''),
+        cellRenderer: ({ data }: CustomCellRendererProps<Order>) => (
+          <Typography
+            variant="body2"
+            sx={{ cursor: 'pointer', '&:hover': { color: '#00a873' } }}
+            onClick={() => router.push(paths.dashboard.members.edit(data?.member?.id ?? ''))}
+          >
+            {customizeFullName(data?.member?.fullName ?? '')}
+          </Typography>
+        ),
+        cellClass: 'ag-cell-center',
       },
       {
         field: 'package.productName',

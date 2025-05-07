@@ -18,7 +18,7 @@ import { formatDate } from 'src/utils/format-time';
 import { parseFilterModel } from 'src/utils/parseFilter';
 
 import { PaymentType } from 'src/__generated__/graphql';
-import { CHAIN_TYPE, CHAIN_UNIT, ETHEREUM_PATH } from 'src/consts';
+import { CHAIN_TYPE, CHAIN_UNIT, ETH_ADDRESS_PATH, ETH_TRANSACTION_PATH } from 'src/consts';
 
 import { AgGrid } from 'src/components/AgGrid';
 
@@ -54,7 +54,7 @@ export default function Orders() {
           <Typography
             variant="body2"
             sx={{ cursor: 'pointer' }}
-            onClick={() => window.open(`${ETHEREUM_PATH}${data?.hash}`)}
+            onClick={() => window.open(`${ETH_TRANSACTION_PATH}${data?.hash}`)}
           >
             {data?.hash}
           </Typography>
@@ -68,6 +68,16 @@ export default function Orders() {
         resizable: true,
         editable: false,
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
+        cellClass: 'ag-cell-center',
+        cellRenderer: ({ data }: CustomCellRendererProps<Transaction>) => (
+          <Typography
+            variant="body2"
+            sx={{ cursor: 'pointer' }}
+            onClick={() => window.open(`${ETH_ADDRESS_PATH}${data?.from}`)}
+          >
+            {data?.from}
+          </Typography>
+        ),
       },
       {
         field: 'to',
@@ -77,6 +87,16 @@ export default function Orders() {
         resizable: true,
         editable: false,
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
+        cellClass: 'ag-cell-center',
+        cellRenderer: ({ data }: CustomCellRendererProps<Transaction>) => (
+          <Typography
+            variant="body2"
+            sx={{ cursor: 'pointer' }}
+            onClick={() => window.open(`${ETH_ADDRESS_PATH}${data?.to}`)}
+          >
+            {data?.to}
+          </Typography>
+        ),
       },
       {
         field: 'balance',
