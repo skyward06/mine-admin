@@ -29,6 +29,7 @@ import {
   useDuplicateMember,
   useSendWelcomeEmail,
   useVerifyMemberEmail,
+  useFetchMemberOverview,
 } from '../../useApollo';
 
 export const Personal = () => {
@@ -43,6 +44,7 @@ export const Personal = () => {
 
   const { id } = params;
 
+  const { overview } = useFetchMemberOverview(id!);
   const { duplicateMember } = useDuplicateMember();
   const { member, fetchMember } = useFetchMember();
   const { verifyMemberEmail } = useVerifyMemberEmail();
@@ -317,6 +319,17 @@ export const Personal = () => {
               </Stack>
               <Stack width={1}>
                 <Typography variant="body2">{member?.commissionDefault}</Typography>
+              </Stack>
+            </Stack>
+
+            <Stack direction="row" spacing={2} pb={1}>
+              <Stack width={0.5}>
+                <Typography variant="body2" fontWeight="bold">
+                  Order Available:
+                </Typography>
+              </Stack>
+              <Stack width={1}>
+                <Typography variant="body2">{overview?.orderedAvailablePoint}</Typography>
               </Stack>
             </Stack>
 
