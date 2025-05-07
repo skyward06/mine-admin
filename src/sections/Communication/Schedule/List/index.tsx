@@ -38,7 +38,7 @@ export default function ScheduleView() {
       {
         field: 'subject',
         headerName: 'Subject',
-        width: 300,
+        flex: 1,
         filter: 'agTextColumnFilter',
         resizable: true,
         editable: false,
@@ -47,7 +47,7 @@ export default function ScheduleView() {
       {
         field: 'sender',
         headerName: 'Sender',
-        width: 200,
+        width: 250,
         filter: 'agTextColumnFilter',
         resizable: true,
         editable: false,
@@ -67,15 +67,6 @@ export default function ScheduleView() {
         } as ISetFilterParams<Schedule>,
         cellRenderer: ({ data }: CustomCellRendererProps<Schedule>) =>
           data ? CAMPAIGN_LIST_TYPE[data.listType] : '',
-      },
-      {
-        field: 'listExtra',
-        headerName: 'List Extra',
-        flex: 1,
-        filter: 'agTextColumnFilter',
-        resizable: true,
-        editable: false,
-        filterParams: { buttons: ['reset'] } as ITextFilterParams,
       },
       {
         field: 'lastRun',

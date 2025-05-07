@@ -12,5 +12,6 @@ export type Schedule = {
   createdAt?: any | null;
   listExtra?: string | null;
   templateId?: string | null;
+  template?: { __typename?: 'EmailTemplate'; subject: string } | null;
   listType: CampaignListType;
 };
