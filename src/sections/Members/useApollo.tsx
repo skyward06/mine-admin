@@ -1,5 +1,5 @@
 import { useRef, useMemo } from 'react';
-import { useMutation, useLazyQuery } from '@apollo/client';
+import { useMutation, useLazyQuery, useQuery as useGraphQuery } from '@apollo/client';
 
 import {
   LOGOUT_FORCE,
@@ -16,6 +16,7 @@ import {
   FETCH_MEMBERS_QUERY,
   VERIFY_MEMBER_EMAIL,
   REMOVE_MEMBER_QUERY,
+  FETCH_MEMBER_HISTORY,
   UPDATE_PASSWORD_QUERY,
   REMOVE_MEMBER_PLACEMENT,
   FETCH_MEMBER_STATS_QUERY,
@@ -76,6 +77,14 @@ export function useFetchMembersStats() {
   const [fetchMemberStats, { data }] = useLazyQuery(FETCH_MEMBER_STATS_QUERY);
 
   return { data, fetchMemberStats };
+}
+
+export function useFetchMemberOverview(id: string) {
+  const { loading, data, error } = useGraphQuery(FETCH_MEMBER_HISTORY, {
+    variables: { data: { id } },
+  });
+
+  return { loading, overview: data?.memberOverview, error };
 }
 
 export function useUpdateMember() {
