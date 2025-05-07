@@ -3,10 +3,14 @@ import { useMutation, useLazyQuery } from '@apollo/client';
 
 import {
   FETCH_MEMBERS,
+  CREATE_SCHEDULE,
+  UPDATE_SCHEDULE,
+  REMOVE_SCHEDULE,
   CREATE_MEMBER_LIST,
   REMOVE_MEMBER_LIST,
   FETCH_CAMPAIGN_QUERY,
   FETCH_CAMPAIGN_BY_ID,
+  FETCH_SCHEDULE_QUERY,
   FETCH_WEEKLY_MEMBERS,
   CREATE_SEND_CAMPAIGN,
   CREATE_EMAIL_TEMPLATE,
@@ -158,4 +162,49 @@ export function useUpdateTemplate() {
   });
 
   return { loading, data, error, updateEmailTemplate };
+}
+
+export function useFetchSchedule() {
+  const [fetchSchedule, { loading, data }] = useLazyQuery(FETCH_SCHEDULE_QUERY);
+
+  const rowCountRef = useRef(data?.scheduleCampaigns.total ?? 0);
+
+  const rowCount = useMemo(() => {
+    const newTotal = data?.scheduleCampaigns.total ?? undefined;
+
+    if (newTotal !== undefined) {
+      rowCountRef.current = newTotal;
+    }
+
+    return rowCountRef.current;
+  }, [data]);
+
+  return { loading, schedule: data?.scheduleCampaigns.scheduleCampaigns, rowCount, fetchSchedule };
+}
+
+export function useCreateSchedule() {
+  const [createSchedule, { loading, data, error }] = useMutation(CREATE_SCHEDULE, {
+    awaitRefetchQueries: true,
+    refetchQueries: ['ScheduleCampaigns'],
+  });
+
+  return { loading, data, error, createSchedule };
+}
+
+export function useUpdateSchdule() {
+  const [updateSchedule, { loading, data, error }] = useMutation(UPDATE_SCHEDULE, {
+    awaitRefetchQueries: true,
+    refetchQueries: ['ScheduleCampaigns'],
+  });
+
+  return { loading, data, error, updateSchedule };
+}
+
+export function useRemoveSchedule() {
+  const [removeSchedule, { loading, data, error }] = useMutation(REMOVE_SCHEDULE, {
+    awaitRefetchQueries: true,
+    refetchQueries: ['ScheduleCampaigns'],
+  });
+
+  return { loading, data, error, removeSchedule };
 }

@@ -136,6 +136,26 @@ export const FETCH_CAMPAIGN_BY_ID = gql(/* GraphQL */ `
   }
 `);
 
+export const FETCH_SCHEDULE_QUERY = gql(/* GraphQL */ `
+  query ScheduleCampaigns($sort: String, $page: String, $filter: JSONObject) {
+    scheduleCampaigns(sort: $sort, page: $page, filter: $filter) {
+      scheduleCampaigns {
+        id
+        when
+        sender
+        status
+        lastRun
+        nextRun
+        subject
+        listType
+        listExtra
+        createdAt
+      }
+      total
+    }
+  }
+`);
+
 export const CREATE_SEND_CAMPAIGN = gql(/* GraphQL */ `
   mutation CreateAndSendCampaign($data: CreateCampaignInput!) {
     createAndSendCampaign(data: $data) {
@@ -185,6 +205,30 @@ export const REMOVE_MEMBER_LIST = gql(/* GraphQL */ `
       frontActions {
         ...FrontActionFields
       }
+    }
+  }
+`);
+
+export const CREATE_SCHEDULE = gql(/* GraphQL */ `
+  mutation CreateCampaignSchedule($data: CreateScheduleCampaignInput!) {
+    createCampaignSchedule(data: $data) {
+      id
+    }
+  }
+`);
+
+export const UPDATE_SCHEDULE = gql(/* GraphQL */ `
+  mutation UpdateCampaignSchedule($data: UpdateScheduleCampaignInput!) {
+    updateCampaignSchedule(data: $data) {
+      id
+    }
+  }
+`);
+
+export const REMOVE_SCHEDULE = gql(/* GraphQL */ `
+  mutation RemoveCampaignSchedule($data: IDInput!) {
+    removeCampaignSchedule(data: $data) {
+      id
     }
   }
 `);

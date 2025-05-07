@@ -39,11 +39,15 @@ const documents = {
     "\n  query EmailTemplateById($data: IDInput!) {\n    emailTemplateById(data: $data) {\n      id\n      body\n      subject\n      createdAt\n      templateID\n      description\n    }\n  }\n": types.EmailTemplateByIdDocument,
     "\n  query Campaigns($sort: String, $page: String, $filter: JSONObject) {\n    campaigns(sort: $sort, page: $page, filter: $filter) {\n      campaigns {\n        id\n        body\n        subject\n        listType\n        listExtra\n        recipients {\n          open\n          sent\n          email\n          sender\n          sentTime\n          openTime\n        }\n      }\n      total\n    }\n  }\n": types.CampaignsDocument,
     "\n  query CampaignById($data: IDInput!) {\n    campaignById(data: $data) {\n      id\n      body\n      sender\n      subject\n      listType\n      listExtra\n      recipients {\n        open\n        sent\n        body\n        email\n        sender\n        sentTime\n        openTime\n      }\n    }\n  }\n": types.CampaignByIdDocument,
+    "\n  query ScheduleCampaigns($sort: String, $page: String, $filter: JSONObject) {\n    scheduleCampaigns(sort: $sort, page: $page, filter: $filter) {\n      scheduleCampaigns {\n        id\n        when\n        sender\n        status\n        lastRun\n        nextRun\n        subject\n        listType\n        listExtra\n        createdAt\n      }\n      total\n    }\n  }\n": types.ScheduleCampaignsDocument,
     "\n  mutation CreateAndSendCampaign($data: CreateCampaignInput!) {\n    createAndSendCampaign(data: $data) {\n      id\n    }\n  }\n": types.CreateAndSendCampaignDocument,
     "\n  mutation CreateMemberList($data: CreateMemberListInput!) {\n    createMemberList(data: $data) {\n      id\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.CreateMemberListDocument,
     "\n  mutation CreateEmailTemplate($data: CreateEmailTemplateInput!) {\n    createEmailTemplate(data: $data) {\n      id\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.CreateEmailTemplateDocument,
     "\n  mutation UpdateEmailTemplate($data: UpdateEmailTemplateInput!) {\n    updateEmailTemplate(data: $data) {\n      id\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.UpdateEmailTemplateDocument,
     "\n  mutation RemoveMemberList($data: IDInput!) {\n    removeMemberList(data: $data) {\n      message\n      result\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.RemoveMemberListDocument,
+    "\n  mutation CreateCampaignSchedule($data: CreateScheduleCampaignInput!) {\n    createCampaignSchedule(data: $data) {\n      id\n    }\n  }\n": types.CreateCampaignScheduleDocument,
+    "\n  mutation UpdateCampaignSchedule($data: UpdateScheduleCampaignInput!) {\n    updateCampaignSchedule(data: $data) {\n      id\n    }\n  }\n": types.UpdateCampaignScheduleDocument,
+    "\n  mutation RemoveCampaignSchedule($data: IDInput!) {\n    removeCampaignSchedule(data: $data) {\n      id\n    }\n  }\n": types.RemoveCampaignScheduleDocument,
     "\n  query GroupSettings($sort: String, $page: String, $filter: JSONObject) {\n    groupSettings(sort: $sort, page: $page, filter: $filter) {\n      groupSettings {\n        createdAt\n        id\n        name\n        limitDate\n        commissionDefaults\n        sponsorBonusPackageId\n        rollSponsorBonusPackageId\n        groupSettingCommissionBonuses {\n          lPoint\n          rPoint\n          commission\n          qPackageId\n          uPackageId\n        }\n        sponsorBonusPackage {\n          id\n          ID\n          date\n          token\n          point\n          amount\n          status\n          freeShare\n          productName\n          orderVisibility\n          enrollVisibility\n        }\n      }\n      total\n    }\n  }\n": types.GroupSettingsDocument,
     "\n  mutation createGroupSetting($data: CreateGroupSettingInput!) {\n    createGroupSetting(data: $data) {\n      id\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.CreateGroupSettingDocument,
     "\n  mutation updateGroupSetting($data: UpdateGroupSettingInput!) {\n    updateGroupSetting(data: $data) {\n      id\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.UpdateGroupSettingDocument,
@@ -296,6 +300,10 @@ export function gql(source: "\n  query CampaignById($data: IDInput!) {\n    camp
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function gql(source: "\n  query ScheduleCampaigns($sort: String, $page: String, $filter: JSONObject) {\n    scheduleCampaigns(sort: $sort, page: $page, filter: $filter) {\n      scheduleCampaigns {\n        id\n        when\n        sender\n        status\n        lastRun\n        nextRun\n        subject\n        listType\n        listExtra\n        createdAt\n      }\n      total\n    }\n  }\n"): (typeof documents)["\n  query ScheduleCampaigns($sort: String, $page: String, $filter: JSONObject) {\n    scheduleCampaigns(sort: $sort, page: $page, filter: $filter) {\n      scheduleCampaigns {\n        id\n        when\n        sender\n        status\n        lastRun\n        nextRun\n        subject\n        listType\n        listExtra\n        createdAt\n      }\n      total\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(source: "\n  mutation CreateAndSendCampaign($data: CreateCampaignInput!) {\n    createAndSendCampaign(data: $data) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation CreateAndSendCampaign($data: CreateCampaignInput!) {\n    createAndSendCampaign(data: $data) {\n      id\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
@@ -313,6 +321,18 @@ export function gql(source: "\n  mutation UpdateEmailTemplate($data: UpdateEmail
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  mutation RemoveMemberList($data: IDInput!) {\n    removeMemberList(data: $data) {\n      message\n      result\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation RemoveMemberList($data: IDInput!) {\n    removeMemberList(data: $data) {\n      message\n      result\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation CreateCampaignSchedule($data: CreateScheduleCampaignInput!) {\n    createCampaignSchedule(data: $data) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation CreateCampaignSchedule($data: CreateScheduleCampaignInput!) {\n    createCampaignSchedule(data: $data) {\n      id\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation UpdateCampaignSchedule($data: UpdateScheduleCampaignInput!) {\n    updateCampaignSchedule(data: $data) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateCampaignSchedule($data: UpdateScheduleCampaignInput!) {\n    updateCampaignSchedule(data: $data) {\n      id\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation RemoveCampaignSchedule($data: IDInput!) {\n    removeCampaignSchedule(data: $data) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation RemoveCampaignSchedule($data: IDInput!) {\n    removeCampaignSchedule(data: $data) {\n      id\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
