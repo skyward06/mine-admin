@@ -16,9 +16,11 @@ import type { EmailTemplate } from '../../../Template/List/type';
 
 interface Props {
   setTemplateId: Function;
+  pagination?: boolean;
+  [key: string]: unknown;
 }
 
-export function Templates({ setTemplateId }: Props) {
+export function Templates({ setTemplateId, pagination = true, ...other }: Props) {
   const { loading, rowCount, templates, fetchTemplates } = useFetchTemplates();
   const [{ page = '1,50', sort = 'createdAt', filter }] = useQueryString();
 
@@ -66,6 +68,7 @@ export function Templates({ setTemplateId }: Props) {
         display: 'flex',
         overflow: 'hidden',
       }}
+      {...other}
     >
       <AgGrid<EmailTemplate>
         gridKey="campaign-template-list"
@@ -75,6 +78,7 @@ export function Templates({ setTemplateId }: Props) {
         rowData={templates}
         columnDefs={colDefs}
         totalRowCount={rowCount}
+        pagination={pagination}
       />
     </Card>
   );
