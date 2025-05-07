@@ -21,6 +21,7 @@ import { CampaignListType } from 'src/__generated__/graphql';
 import { AgGrid } from 'src/components/AgGrid';
 
 import { ActionRender } from './ActionRender';
+import { StatusRenderer } from './StatusRenderer';
 import { useFetchSchedule } from '../../useApollo';
 import { parseType } from '../../Campaign/List/parseType';
 
@@ -38,6 +39,15 @@ export default function ScheduleView() {
         field: 'subject',
         headerName: 'Subject',
         width: 300,
+        filter: 'agTextColumnFilter',
+        resizable: true,
+        editable: false,
+        filterParams: { buttons: ['reset'] } as ITextFilterParams,
+      },
+      {
+        field: 'sender',
+        headerName: 'Sender',
+        width: 200,
         filter: 'agTextColumnFilter',
         resizable: true,
         editable: false,
@@ -97,6 +107,17 @@ export default function ScheduleView() {
         cellRenderer: ({ data }: CustomCellRendererProps<Schedule>) => formatDate(data?.nextRun),
       },
       {
+        field: 'status',
+        headerName: 'Status',
+        width: 120,
+        filter: 'agMultiColumnFilter',
+        filterParams: {
+          values: ['true', 'false'],
+          valueFormatter: BooleanFormatter,
+        } as ISetFilterParams<Schedule>,
+        cellRenderer: StatusRenderer,
+      },
+      {
         field: 'createdAt',
         headerName: 'Created At',
         width: 200,
@@ -146,3 +167,5 @@ export default function ScheduleView() {
     </Card>
   );
 }
+
+const BooleanFormatter = (params: any) => (params.value === 'true' ? 'Enabled' : 'Diabled');

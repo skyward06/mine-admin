@@ -15,13 +15,17 @@ import { Iconify } from 'src/components/Iconify';
 import { ConfirmDialog } from 'src/components/Dialog';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
+import Detail from './Detail';
+import CreateSchedule from '../Create';
 import { useRemoveSchedule } from '../../useApollo';
 
 import type { Schedule } from './type';
 
 export const ActionRender = memo(
   ({ data }: CustomCellRendererProps<Schedule>) => {
+    const detail = useBoolean();
     const confirm = useBoolean();
+    const schedule = useBoolean();
     const popover = usePopover();
 
     const { loading, removeSchedule } = useRemoveSchedule();
@@ -39,6 +43,24 @@ export const ActionRender = memo(
           slotProps={{ arrow: { placement: 'right-top' } }}
         >
           <MenuList>
+            <MenuItem
+              onClick={() => {
+                popover.onClose();
+                detail.onTrue();
+              }}
+            >
+              <Iconify icon="eva:eye-fill" />
+              View
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                popover.onClose();
+                schedule.onTrue();
+              }}
+            >
+              <Iconify icon="gravity-ui:pencil-to-square" color="green" />
+              Edit
+            </MenuItem>
             <MenuItem
               onClick={() => {
                 popover.onClose();
@@ -84,6 +106,10 @@ export const ActionRender = memo(
             </LoadingButton>
           }
         />
+
+        <Detail open={detail} current={data} />
+
+        <CreateSchedule open={schedule} current={data} />
       </>
     );
   },

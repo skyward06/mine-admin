@@ -11,5 +11,6 @@ export type Schedule = {
   nextRun?: any | null;
   createdAt?: any | null;
   listExtra?: string | null;
+  templateId?: string | null;
   listType: CampaignListType;
 };
