@@ -1024,7 +1024,7 @@ export type MemberList = {
   emails: Array<Scalars['String']['output']>;
   frontActions?: Maybe<Array<FrontAction>>;
   id: Scalars['ID']['output'];
-  members: Array<BasicListMember>;
+  members?: Maybe<Array<BasicListMember>>;
   name: Scalars['String']['output'];
   updatedAt?: Maybe<Scalars['DateTimeISO']['output']>;
 };
@@ -3567,14 +3567,14 @@ export type MemberlistsQueryVariables = Exact<{
 }>;
 
 
-export type MemberlistsQuery = { __typename?: 'Query', memberlists: { __typename?: 'MemberListResponse', total?: number | null, memberLists?: Array<{ __typename?: 'MemberList', id: string, name: string, emails: Array<string>, createdAt?: any | null, members: Array<{ __typename?: 'BasicListMember', id: string, email: string, mobile: string, username: string, fullName: string }> }> | null } };
+export type MemberlistsQuery = { __typename?: 'Query', memberlists: { __typename?: 'MemberListResponse', total?: number | null, memberLists?: Array<{ __typename?: 'MemberList', id: string, name: string, emails: Array<string>, createdAt?: any | null, members?: Array<{ __typename?: 'BasicListMember', id: string, email: string, mobile: string, username: string, fullName: string }> | null }> | null } };
 
 export type MemberListByIdQueryVariables = Exact<{
   data: IdInput;
 }>;
 
 
-export type MemberListByIdQuery = { __typename?: 'Query', memberListById: { __typename?: 'MemberList', id: string, name: string, emails: Array<string>, members: Array<{ __typename?: 'BasicListMember', id: string, email: string, mobile: string, username: string, fullName: string }> } };
+export type MemberListByIdQuery = { __typename?: 'Query', memberListById: { __typename?: 'MemberList', id: string, name: string, emails: Array<string>, members?: Array<{ __typename?: 'BasicListMember', id: string, email: string, mobile: string, username: string, fullName: string }> | null } };
 
 export type EmailTemplatesQueryVariables = Exact<{
   sort?: InputMaybe<Scalars['String']['input']>;
