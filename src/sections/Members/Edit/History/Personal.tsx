@@ -325,7 +325,7 @@ export const Personal = () => {
             <Stack direction="row" spacing={2} pb={1}>
               <Stack width={0.5}>
                 <Typography variant="body2" fontWeight="bold">
-                  Order Available:
+                  Purchase Limit:
                 </Typography>
               </Stack>
               <Stack width={1}>
