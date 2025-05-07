@@ -13,10 +13,12 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { Iconify } from 'src/components/Iconify';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 
+import Schedule from './Schedule/List';
 import { MemberListView } from './List';
 import CreateCampaign from './Campaign/Send';
 import { CampaignListView } from './Campaign';
 import { TemplateListView } from './Template';
+import CreateSchedule from './Schedule/Create';
 
 const TABS = [
   { value: 'Member List', label: 'Member List', icon: <Iconify icon="majesticons:users-line" /> },
@@ -30,10 +32,16 @@ const TABS = [
     label: 'Campaigns',
     icon: <Iconify icon="tabler:brand-campaignmonitor" />,
   },
+  {
+    value: 'Schedule',
+    label: 'Schedule',
+    icon: <Iconify icon="gg:alarm" />,
+  },
 ];
 
 export default function CommunicationView() {
-  const open = useBoolean();
+  const campaignOpen = useBoolean();
+  const scheduleOpen = useBoolean();
   const router = useRouter();
   const tabs = useTabs('Member List');
 
@@ -61,7 +69,7 @@ export default function CommunicationView() {
                   variant="contained"
                   color="primary"
                   onClick={() => {
-                    open.onTrue();
+                    campaignOpen.onTrue();
                     setQuery({});
                   }}
                 >
@@ -79,6 +87,12 @@ export default function CommunicationView() {
                   <Iconify icon="gridicons:add-outline" sx={{ mr: 0.5 }} /> Add Email Template
                 </Button>
               )}
+              {tabs.value === 'Schedule' && (
+                <Button variant="contained" color="primary" onClick={scheduleOpen.onTrue}>
+                  <Iconify icon="gridicons:add-outline" sx={{ mr: 0.5 }} />
+                  Create Schedule
+                </Button>
+              )}
             </>
           }
         />
@@ -92,9 +106,12 @@ export default function CommunicationView() {
         {tabs.value === 'Member List' && <MemberListView />}
         {tabs.value === 'Email Templates' && <TemplateListView />}
         {tabs.value === 'Campaigns' && <CampaignListView />}
+        {tabs.value === 'Schedule' && <Schedule />}
       </DashboardContent>
 
-      <CreateCampaign open={open} />
+      <CreateCampaign open={campaignOpen} />
+
+      <CreateSchedule open={scheduleOpen} />
     </>
   );
 }
