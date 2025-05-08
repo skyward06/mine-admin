@@ -81,7 +81,7 @@ export default function MemberListView() {
     () => [
       { id: 'ID', label: 'ID', width: 120, sortable: true },
       { id: 'username', label: 'Username', sortable: true },
-      { id: 'fullName', label: 'Full Name', sortable: true },
+      { id: 'fullName', label: 'Full Name', width: 120, sortable: true },
       { id: 'mobile', label: 'Mobile', sortable: true },
       { id: 'assetId', label: 'AssetID', width: 80, sortable: true },
       ...(filter.allowState === 'PENDING'

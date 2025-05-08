@@ -18,8 +18,8 @@ import { useRouter } from 'src/routes/hooks';
 
 import { useBoolean, type UseBooleanReturn } from 'src/hooks/useBoolean';
 
-import { formatID, cutString } from 'src/utils/helper';
 import { formatDate, formatTime } from 'src/utils/format-time';
+import { formatID, cutString, customizeFullName } from 'src/utils/helper';
 
 import { Label } from 'src/components/Label';
 import UserItem from 'src/components/UserItem';
@@ -256,21 +256,25 @@ export default function MemberTableRow({
           <UserItem user={{ username, email, avatar }} />
         </TableCell>
 
-        <TableCell>{fullName}</TableCell>
+        <TableCell>{customizeFullName(fullName)}</TableCell>
 
         <TableCell>{mobile}</TableCell>
 
         <TableCell>{cutString(assetId ?? '', 6)}</TableCell>
 
-        <TableCell
-          sx={{
-            cursor: 'pointer',
-            '&:hover': { bgcolor: (theme) => theme.vars.palette.action.hover },
-          }}
-          onClick={() => handleSponsors()}
-        >
-          {tabs === 'PENDING' ? signupFormRequest?.paymentMethod : totalIntroducers}
-        </TableCell>
+        {tabs === 'PENDING' ? (
+          <TableCell>{signupFormRequest?.paymentMethod}</TableCell>
+        ) : (
+          <TableCell
+            sx={{
+              cursor: 'pointer',
+              '&:hover': { bgcolor: (theme) => theme.vars.palette.action.hover },
+            }}
+            onClick={() => handleSponsors()}
+          >
+            {totalIntroducers}
+          </TableCell>
+        )}
 
         <TableCell>
           <Switch defaultChecked={placementRequested} onChange={handlePRChange} />
