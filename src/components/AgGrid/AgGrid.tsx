@@ -171,7 +171,6 @@ export const AgGrid = <TData,>(props: Props<TData>) => {
     <Box flexGrow={1} display="flex" flexDirection="column">
       <Box flexGrow={1} ref={gridWrapperRef}>
         <AgGridReact<TData>
-          {...restProps}
           ref={gridRef}
           modules={[...(modules ?? []), ClientSideRowModelModule, SetFilterModule]}
           theme={agGridTheme}
@@ -183,6 +182,7 @@ export const AgGrid = <TData,>(props: Props<TData>) => {
           pagination={false} // Explicitly disable pagination
           loadingOverlayComponent={SkeletonLoader}
           loadingOverlayComponentParams={loadingOverlayComponentParams}
+          {...restProps}
         />
       </Box>
       {pagination && (

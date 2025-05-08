@@ -1,6 +1,6 @@
-import type { ColDef, RowSelectedEvent, ITextFilterParams } from '@ag-grid-community/core';
+import type { ColDef, GridApi, RowSelectedEvent, ITextFilterParams } from '@ag-grid-community/core';
 
-import { useMemo, useEffect } from 'react';
+import { useRef, useMemo, useEffect, useCallback } from 'react';
 
 import Card from '@mui/material/Card';
 
@@ -15,16 +15,19 @@ import { useFetchTemplates } from '../../../useApollo';
 import type { EmailTemplate } from '../../../Template/List/type';
 
 interface Props {
+  templateId?: string;
   setTemplateId: Function;
   pagination?: boolean;
   [key: string]: unknown;
 }
 
-export function Templates({ setTemplateId, pagination = true, ...other }: Props) {
+export function Templates({ templateId, setTemplateId, pagination = true, ...other }: Props) {
   const { loading, rowCount, templates, fetchTemplates } = useFetchTemplates();
   const [{ page = '1,50', sort = 'createdAt', filter }] = useQueryString();
 
   const graphQueryFilter = useMemo(() => parseFilterModel({}, filter), [filter]);
+
+  const gridApiRef = useRef<GridApi | null>(null);
 
   const handleRowSelected = (event: RowSelectedEvent<EmailTemplate, any>) => {
     if (event.node.isSelected()) {
@@ -32,6 +35,24 @@ export function Templates({ setTemplateId, pagination = true, ...other }: Props)
     }
   };
 
+  const handleGridReady = useCallback((params: { api: GridApi }) => {
+    gridApiRef.current = params.api;
+  }, []);
+
+  // Select the row with the matching templateId when templates or templateId changes
+  useEffect(() => {
+    if (gridApiRef.current && templates && templateId) {
+      const rowNode = gridApiRef.current.getRowNode(templateId);
+
+      if (rowNode) {
+        rowNode.setSelected(true);
+      } else {
+        console.warn('Row not found for Template ID:', templateId);
+      }
+    }
+  }, [templates, templateId]);
+
+  // Fetch templates when dependencies change
   useEffect(() => {
     fetchTemplates({ variables: { filter: graphQueryFilter, page, sort } });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -74,6 +95,8 @@ export function Templates({ setTemplateId, pagination = true, ...other }: Props)
         gridKey="campaign-template-list"
         rowSelection={{ mode: 'singleRow', enableClickSelection: 'enableSelection' }}
         onRowSelected={handleRowSelected}
+        onGridReady={handleGridReady}
+        getRowId={({ data }) => data.id}
         loading={loading}
         rowData={templates}
         columnDefs={colDefs}
