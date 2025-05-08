@@ -134,6 +134,11 @@ const TemplateCreatePage = lazy(() => import('src/pages/Template/Create'));
 const TemplateEditPage = lazy(() => import('src/pages/Template/Edit'));
 // ----------------------------------------------------------------------
 
+// ----------------------------------------------------------------------
+const AutoCampaignCreatePage = lazy(() => import('src/pages/AutoCampaign/Create'));
+const AutoCampaignEditPage = lazy(() => import('src/pages/AutoCampaign/Edit'));
+// ----------------------------------------------------------------------
+
 export const dashboardRoutes = [
   {
     path: '',
@@ -290,6 +295,13 @@ export const dashboardRoutes = [
       {
         path: 'campaign',
         children: [{ path: ':id', element: <CampaignPage /> }],
+      },
+      {
+        path: 'auto-campaign',
+        children: [
+          { path: 'new', element: <AutoCampaignCreatePage /> },
+          { path: ':id', element: <AutoCampaignEditPage /> },
+        ],
       },
       {
         path: 'users',

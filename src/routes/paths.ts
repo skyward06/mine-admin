@@ -24,6 +24,7 @@ const ROOTS = {
   COMMISSION: '/commission',
   CALCULATOR: '/calculator',
   STATISTICS: '/statistics',
+  AUTO_CAMPAIGN: '/auto-campaign',
   COMMUNICATION: '/communication',
   NOTIFICATIONS: '/notifications',
   WEEKLYREPORTS: '/weekly-reports',
@@ -122,6 +123,10 @@ export const paths = {
       root: ROOTS.TMEPLATE,
       new: `${ROOTS.TMEPLATE}/new`,
       edit: (id: string) => `${ROOTS.TMEPLATE}/${id}`,
+    },
+    autoCampaign: {
+      new: `${ROOTS.AUTO_CAMPAIGN}/new`,
+      edit: (id: string) => `${ROOTS.AUTO_CAMPAIGN}/${id}`,
     },
     campaign: { edit: (id: string) => `${ROOTS.CAMPAIGN}/${id}` },
     invoice: { root: ROOTS.INVOICE },
