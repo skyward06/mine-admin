@@ -40,6 +40,8 @@ const documents = {
     "\n  query Campaigns($sort: String, $page: String, $filter: JSONObject) {\n    campaigns(sort: $sort, page: $page, filter: $filter) {\n      campaigns {\n        id\n        body\n        subject\n        listType\n        listExtra\n        recipients {\n          open\n          sent\n          email\n          sender\n          sentTime\n          openTime\n        }\n      }\n      total\n    }\n  }\n": types.CampaignsDocument,
     "\n  query CampaignById($data: IDInput!) {\n    campaignById(data: $data) {\n      id\n      body\n      sender\n      subject\n      listType\n      listExtra\n      recipients {\n        open\n        sent\n        body\n        email\n        sender\n        sentTime\n        openTime\n      }\n    }\n  }\n": types.CampaignByIdDocument,
     "\n  query ScheduleCampaigns($sort: String, $page: String, $filter: JSONObject) {\n    scheduleCampaigns(sort: $sort, page: $page, filter: $filter) {\n      scheduleCampaigns {\n        id\n        when\n        sender\n        status\n        lastRun\n        nextRun\n        subject\n        listType\n        listExtra\n        createdAt\n        templateId\n        template {\n          subject\n        }\n      }\n      total\n    }\n  }\n": types.ScheduleCampaignsDocument,
+    "\n  query AutoCampaigns($sort: String, $page: String, $filter: JSONObject) {\n    autoCampaigns(sort: $sort, page: $page, filter: $filter) {\n      autoCampaigns {\n        id\n        sender\n        subject\n        createdAt\n        templateId\n        approvedCommission\n      }\n      total\n    }\n  }\n": types.AutoCampaignsDocument,
+    "\n  query AutoCampaignById($data: IDInput!) {\n    autoCampaignById(data: $data) {\n      id\n      sender\n      subject\n      createdAt\n      templateId\n      approvedCommission\n    }\n  }\n": types.AutoCampaignByIdDocument,
     "\n  mutation CreateAndSendCampaign($data: CreateCampaignInput!) {\n    createAndSendCampaign(data: $data) {\n      id\n    }\n  }\n": types.CreateAndSendCampaignDocument,
     "\n  mutation CreateMemberList($data: CreateMemberListInput!) {\n    createMemberList(data: $data) {\n      id\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.CreateMemberListDocument,
     "\n  mutation CreateEmailTemplate($data: CreateEmailTemplateInput!) {\n    createEmailTemplate(data: $data) {\n      id\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.CreateEmailTemplateDocument,
@@ -48,6 +50,9 @@ const documents = {
     "\n  mutation CreateCampaignSchedule($data: CreateScheduleCampaignInput!) {\n    createCampaignSchedule(data: $data) {\n      id\n    }\n  }\n": types.CreateCampaignScheduleDocument,
     "\n  mutation UpdateCampaignSchedule($data: UpdateScheduleCampaignInput!) {\n    updateCampaignSchedule(data: $data) {\n      id\n    }\n  }\n": types.UpdateCampaignScheduleDocument,
     "\n  mutation RemoveCampaignSchedule($data: IDInput!) {\n    removeCampaignSchedule(data: $data) {\n      id\n    }\n  }\n": types.RemoveCampaignScheduleDocument,
+    "\n  mutation CreateAutoCampaign($data: CreateAutoCampaignInput!) {\n    createAutoCampaign(data: $data) {\n      id\n    }\n  }\n": types.CreateAutoCampaignDocument,
+    "\n  mutation UpdateAutoCampaign($data: UpdateAutoCampaignInput!) {\n    updateAutoCampaign(data: $data) {\n      id\n    }\n  }\n": types.UpdateAutoCampaignDocument,
+    "\n  mutation RemoveAutoCampaign($data: IDInput!) {\n    removeAutoCampaign(data: $data) {\n      id\n    }\n  }\n": types.RemoveAutoCampaignDocument,
     "\n  query GroupSettings($sort: String, $page: String, $filter: JSONObject) {\n    groupSettings(sort: $sort, page: $page, filter: $filter) {\n      groupSettings {\n        createdAt\n        id\n        name\n        limitDate\n        commissionDefaults\n        sponsorBonusPackageId\n        rollSponsorBonusPackageId\n        groupSettingCommissionBonuses {\n          lPoint\n          rPoint\n          commission\n          qPackageId\n          uPackageId\n        }\n        sponsorBonusPackage {\n          id\n          ID\n          date\n          token\n          point\n          amount\n          status\n          freeShare\n          productName\n          orderVisibility\n          enrollVisibility\n        }\n      }\n      total\n    }\n  }\n": types.GroupSettingsDocument,
     "\n  mutation createGroupSetting($data: CreateGroupSettingInput!) {\n    createGroupSetting(data: $data) {\n      id\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.CreateGroupSettingDocument,
     "\n  mutation updateGroupSetting($data: UpdateGroupSettingInput!) {\n    updateGroupSetting(data: $data) {\n      id\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.UpdateGroupSettingDocument,
@@ -304,6 +309,14 @@ export function gql(source: "\n  query ScheduleCampaigns($sort: String, $page: S
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function gql(source: "\n  query AutoCampaigns($sort: String, $page: String, $filter: JSONObject) {\n    autoCampaigns(sort: $sort, page: $page, filter: $filter) {\n      autoCampaigns {\n        id\n        sender\n        subject\n        createdAt\n        templateId\n        approvedCommission\n      }\n      total\n    }\n  }\n"): (typeof documents)["\n  query AutoCampaigns($sort: String, $page: String, $filter: JSONObject) {\n    autoCampaigns(sort: $sort, page: $page, filter: $filter) {\n      autoCampaigns {\n        id\n        sender\n        subject\n        createdAt\n        templateId\n        approvedCommission\n      }\n      total\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  query AutoCampaignById($data: IDInput!) {\n    autoCampaignById(data: $data) {\n      id\n      sender\n      subject\n      createdAt\n      templateId\n      approvedCommission\n    }\n  }\n"): (typeof documents)["\n  query AutoCampaignById($data: IDInput!) {\n    autoCampaignById(data: $data) {\n      id\n      sender\n      subject\n      createdAt\n      templateId\n      approvedCommission\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(source: "\n  mutation CreateAndSendCampaign($data: CreateCampaignInput!) {\n    createAndSendCampaign(data: $data) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation CreateAndSendCampaign($data: CreateCampaignInput!) {\n    createAndSendCampaign(data: $data) {\n      id\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
@@ -333,6 +346,18 @@ export function gql(source: "\n  mutation UpdateCampaignSchedule($data: UpdateSc
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  mutation RemoveCampaignSchedule($data: IDInput!) {\n    removeCampaignSchedule(data: $data) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation RemoveCampaignSchedule($data: IDInput!) {\n    removeCampaignSchedule(data: $data) {\n      id\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation CreateAutoCampaign($data: CreateAutoCampaignInput!) {\n    createAutoCampaign(data: $data) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation CreateAutoCampaign($data: CreateAutoCampaignInput!) {\n    createAutoCampaign(data: $data) {\n      id\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation UpdateAutoCampaign($data: UpdateAutoCampaignInput!) {\n    updateAutoCampaign(data: $data) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateAutoCampaign($data: UpdateAutoCampaignInput!) {\n    updateAutoCampaign(data: $data) {\n      id\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation RemoveAutoCampaign($data: IDInput!) {\n    removeAutoCampaign(data: $data) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation RemoveAutoCampaign($data: IDInput!) {\n    removeAutoCampaign(data: $data) {\n      id\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

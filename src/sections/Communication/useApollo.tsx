@@ -13,11 +13,16 @@ import {
   FETCH_SCHEDULE_QUERY,
   FETCH_WEEKLY_MEMBERS,
   CREATE_SEND_CAMPAIGN,
+  CREATE_AUTO_CAMPAIGN,
+  UPDATE_AUTO_CAMPAIGN,
+  REMOVE_AUTO_CAMPAITN,
   CREATE_EMAIL_TEMPLATE,
   UPDATE_EMAIL_TEMPLATE,
   FETCH_EMAIL_TEMPLATES,
   FETCH_MEMBER_LIST_QUERY,
   FETCH_MEMBER_LIST_BY_ID,
+  FETCH_AUTO_CAMPAIGN_QUERY,
+  FETCH_AUTO_CAMPAIGN_BY_ID,
   FETCH_EMAIL_TEMPLATE_BY_ID,
 } from './query';
 
@@ -98,10 +103,39 @@ export function useFetchCampaigns() {
   return { loading, campaigns: data?.campaigns.campaigns ?? [], rowCount, fetchCampaigns };
 }
 
+export function useFetchAutoCampaigns() {
+  const [fetchAutoCampaigns, { loading, data }] = useLazyQuery(FETCH_AUTO_CAMPAIGN_QUERY);
+
+  const rowCountRef = useRef(data?.autoCampaigns.total ?? 0);
+
+  const rowCount = useMemo(() => {
+    const newTotal = data?.autoCampaigns.total ?? undefined;
+
+    if (newTotal !== undefined) {
+      rowCountRef.current = newTotal;
+    }
+
+    return rowCountRef.current;
+  }, [data]);
+
+  return {
+    loading,
+    rowCount,
+    autoCampaigns: data?.autoCampaigns.autoCampaigns ?? [],
+    fetchAutoCampaigns,
+  };
+}
+
 export function useFetchCampaignById() {
   const [fetchCampaign, { loading, data }] = useLazyQuery(FETCH_CAMPAIGN_BY_ID);
 
   return { loading, campaign: data?.campaignById, fetchCampaign };
+}
+
+export function useFetchAutoCampaignById() {
+  const [fetchAutoCampaignById, { loading, data, error }] = useLazyQuery(FETCH_AUTO_CAMPAIGN_BY_ID);
+
+  return { loading, autoCampaign: data?.autoCampaignById, error, fetchAutoCampaignById };
 }
 
 export function useCreateCampaign() {
@@ -207,4 +241,31 @@ export function useRemoveSchedule() {
   });
 
   return { loading, data, error, removeSchedule };
+}
+
+export function useCreateAutoCampaign() {
+  const [createAutoCampaign, { loading, data, error }] = useMutation(CREATE_AUTO_CAMPAIGN, {
+    awaitRefetchQueries: true,
+    refetchQueries: ['AutoCampaigns'],
+  });
+
+  return { loading, data, error, createAutoCampaign };
+}
+
+export function useUpdateAutoCampaign() {
+  const [updateAutoCampaign, { loading, data, error }] = useMutation(UPDATE_AUTO_CAMPAIGN, {
+    awaitRefetchQueries: true,
+    refetchQueries: ['AutoCampaigns'],
+  });
+
+  return { loading, data, error, updateAutoCampaign };
+}
+
+export function useRemoveAutoCampaign() {
+  const [removeAutoCampaign, { loading, data, error }] = useMutation(REMOVE_AUTO_CAMPAITN, {
+    awaitRefetchQueries: true,
+    refetchQueries: ['AutoCampaigns'],
+  });
+
+  return { loading, data, error, removeAutoCampaign };
 }

@@ -160,6 +160,35 @@ export const FETCH_SCHEDULE_QUERY = gql(/* GraphQL */ `
   }
 `);
 
+export const FETCH_AUTO_CAMPAIGN_QUERY = gql(/* GraphQL */ `
+  query AutoCampaigns($sort: String, $page: String, $filter: JSONObject) {
+    autoCampaigns(sort: $sort, page: $page, filter: $filter) {
+      autoCampaigns {
+        id
+        sender
+        subject
+        createdAt
+        templateId
+        approvedCommission
+      }
+      total
+    }
+  }
+`);
+
+export const FETCH_AUTO_CAMPAIGN_BY_ID = gql(/* GraphQL */ `
+  query AutoCampaignById($data: IDInput!) {
+    autoCampaignById(data: $data) {
+      id
+      sender
+      subject
+      createdAt
+      templateId
+      approvedCommission
+    }
+  }
+`);
+
 export const CREATE_SEND_CAMPAIGN = gql(/* GraphQL */ `
   mutation CreateAndSendCampaign($data: CreateCampaignInput!) {
     createAndSendCampaign(data: $data) {
@@ -232,6 +261,30 @@ export const UPDATE_SCHEDULE = gql(/* GraphQL */ `
 export const REMOVE_SCHEDULE = gql(/* GraphQL */ `
   mutation RemoveCampaignSchedule($data: IDInput!) {
     removeCampaignSchedule(data: $data) {
+      id
+    }
+  }
+`);
+
+export const CREATE_AUTO_CAMPAIGN = gql(/* GraphQL */ `
+  mutation CreateAutoCampaign($data: CreateAutoCampaignInput!) {
+    createAutoCampaign(data: $data) {
+      id
+    }
+  }
+`);
+
+export const UPDATE_AUTO_CAMPAIGN = gql(/* GraphQL */ `
+  mutation UpdateAutoCampaign($data: UpdateAutoCampaignInput!) {
+    updateAutoCampaign(data: $data) {
+      id
+    }
+  }
+`);
+
+export const REMOVE_AUTO_CAMPAITN = gql(/* GraphQL */ `
+  mutation RemoveAutoCampaign($data: IDInput!) {
+    removeAutoCampaign(data: $data) {
       id
     }
   }
