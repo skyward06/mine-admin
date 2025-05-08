@@ -81,6 +81,21 @@ export default function CampaignCreate({ open, current }: Props) {
 
   const handleCreateSchedule = async () => {
     try {
+      if (sender === '') {
+        toast.error('Sender is required');
+        return;
+      }
+
+      if (subject === '') {
+        toast.error('Subject is required');
+        return;
+      }
+
+      if (templateId === '') {
+        toast.error('Template is required');
+        return;
+      }
+
       const data = {
         status,
         sender,
@@ -187,7 +202,12 @@ export default function CampaignCreate({ open, current }: Props) {
               setListExtra={setListExtra}
             />
 
-            <Templates setTemplateId={setTemplateId} pagination={false} sx={{ borderRadius: 1 }} />
+            <Templates
+              templateId={templateId}
+              setTemplateId={setTemplateId}
+              pagination={false}
+              sx={{ borderRadius: 1 }}
+            />
           </Box>
         </Stack>
       </DialogContent>
