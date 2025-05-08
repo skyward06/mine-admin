@@ -8,6 +8,7 @@ export const EXPLORER_PATH = 'https://explorer.texitcoin.org/tx/';
 
 export const ETH_TRANSACTION_PATH = 'https://etherscan.io/tx/';
 export const ETH_ADDRESS_PATH = 'https://etherscan.io/address/';
+export const BLOCK_SACN_TRANSACTION_PATH = 'https://blockscan.com/tx/';
 
 // ASSET INFO URL
 export const ASSET_INFO_PATH = 'https://api.blockchainmint.com/api/v2/asset-info?public_key=';

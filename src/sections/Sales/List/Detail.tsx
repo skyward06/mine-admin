@@ -12,7 +12,10 @@ import Typography from '@mui/material/Typography';
 import ListItemText from '@mui/material/ListItemText';
 
 import { formatDateTime } from 'src/utils/format-time';
-import { formatID, customizeFullName } from 'src/utils/helper';
+import { formatID, isValidUrl, customizeFullName } from 'src/utils/helper';
+
+import { CONFIG } from 'src/config';
+import { PREPAID_TYPE, EXPLORER_PATH, BLOCK_SACN_TRANSACTION_PATH } from 'src/consts';
 
 import { Iconify } from 'src/components/Iconify';
 import { ScrollBar } from 'src/components/ScrollBar';
@@ -180,7 +183,18 @@ export default function Detail({ open, id }: Props) {
                   <Typography
                     sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
                   >
-                    <Link to={link?.link ?? ''} target="_blank">
+                    <Link
+                      to={
+                        (isValidUrl(link?.link ?? '')
+                          ? link?.link
+                          : link?.linkType === PREPAID_TYPE[2]
+                            ? `${EXPLORER_PATH}${link.link}`
+                            : link.linkType === PREPAID_TYPE[0]
+                              ? `${CONFIG.SITE_PATH}/sales/${link?.link}`
+                              : `${BLOCK_SACN_TRANSACTION_PATH}${link.link}`) ?? ''
+                      }
+                      target="_blank"
+                    >
                       {link?.link}
                     </Link>
                   </Typography>
