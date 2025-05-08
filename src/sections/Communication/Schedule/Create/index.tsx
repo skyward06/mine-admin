@@ -27,8 +27,8 @@ import WeekPicker from './WeekPicker';
 import { Templates } from '../../Campaign/Send/Templates';
 import { useUpdateSchdule, useCreateSchedule } from '../../useApollo';
 
-import type { WeekType } from './type';
 import type { Schedule } from '../List/type';
+import type { WeekType, WhenType } from './type';
 
 dayjs.extend(utcPlugin);
 
@@ -39,7 +39,6 @@ interface Props {
 
 export default function CampaignCreate({ open, current }: Props) {
   const [pro, setPro] = useState<boolean>(false);
-  const [when, setWhen] = useState<string>('');
   const [sender, setSender] = useState<string>('');
   const [subject, setSubject] = useState<string>('');
   const [status, setStatus] = useState<boolean>(true);
@@ -47,6 +46,13 @@ export default function CampaignCreate({ open, current }: Props) {
   const [templateId, setTemplateId] = useState<string>('');
   const [time, setTime] = useState<IDatePickerControl>(dayjs(new Date()));
   const [listType, setListType] = useState<CampaignListType>(CampaignListType.All);
+  const [when, setWhen] = useState<WhenType>({
+    minute: '',
+    hour: '',
+    dayOfMonth: '',
+    month: '',
+    dayOfWeek: '',
+  });
   const [week, setWeek] = useState<WeekType>({
     0: false,
     1: false,
@@ -83,9 +89,10 @@ export default function CampaignCreate({ open, current }: Props) {
         listExtra,
         templateId,
         when: pro
-          ? when
+          ? Object.values(when).join(' ')
           : `${time?.minute()} ${time?.hour()} * * ${weekToString.length ? weekToString : '*'}`,
       };
+
       const result = current
         ? await updateSchedule({
             variables: { data: { id: current.id, ...data } },
@@ -107,10 +114,6 @@ export default function CampaignCreate({ open, current }: Props) {
 
   useEffect(() => {
     if (current) {
-      console.log('when => ', current.when);
-      console.log('minute => ', Number(current.when.split(' ')[1]));
-      console.log('hour => ', Number(current.when.split('')[0]));
-
       setTime(
         dayjs()
           .hour(Number(current.when.split(' ')[1]))
@@ -118,7 +121,14 @@ export default function CampaignCreate({ open, current }: Props) {
           .second(0)
       );
 
-      setWhen(current.when);
+      setWhen({
+        minute: current.when.split(' ')[0],
+        hour: current.when.split(' ')[1],
+        dayOfMonth: current.when.split(' ')[2],
+        month: current.when.split(' ')[3],
+        dayOfWeek: current.when.split(' ')[4],
+      });
+
       setSender(current.sender);
       setSubject(current.subject);
       setListType(current.listType);

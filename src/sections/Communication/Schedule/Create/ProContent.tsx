@@ -1,63 +1,55 @@
-import { useMemo } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-
 import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
 
-import { Form, Field } from 'src/components/Form';
-
-import { Schema, type SchemaType } from './schema';
+import type { WhenType } from './type';
 
 interface Props {
-  when: string;
+  when: WhenType;
   setWhen: Function;
 }
 
 export default function ProContent({ when, setWhen }: Props) {
-  const defaultValues = useMemo<SchemaType>(
-    () =>
-      when
-        ? {
-            minute: `${when.split(' ')[0]}`,
-            hour: `${when.split(' ')[1]}`,
-            dayOfMonth: `${when.split(' ')[2]}`,
-            month: `${when.split(' ')[3]}`,
-            dayOfWeek: `${when.split(' ')[4]}`,
-          }
-        : {
-            minute: '*',
-            hour: '*',
-            dayOfMonth: '*',
-            month: '*',
-            dayOfWeek: '*',
-          },
-    [when]
-  );
-
-  const methods = useForm<SchemaType>({
-    resolver: zodResolver(Schema),
-    defaultValues,
-  });
-
-  const { handleSubmit } = methods;
-
-  const onSubmit = handleSubmit(async (newData) => {
-    setWhen(
-      `${newData.minute} ${newData.hour} ${newData.dayOfMonth} ${newData.month} ${newData.dayOfWeek}`
-    );
-  });
-
   return (
-    <Stack mb={2}>
-      <Form methods={methods} onSubmit={onSubmit}>
-        <Stack direction="row" spacing={2}>
-          <Field.Text name="minute" sx={{ width: 80 }} size="small" />
-          <Field.Text name="hour" sx={{ width: 80 }} size="small" />
-          <Field.Text name="dayOfMonth" sx={{ width: 80 }} size="small" />
-          <Field.Text name="month" sx={{ width: 80 }} size="small" />
-          <Field.Text name="dayOfWeek" sx={{ width: 80 }} size="small" />
-        </Stack>
-      </Form>
+    <Stack direction="row" spacing={2} mb={2}>
+      <TextField
+        name="minute"
+        sx={{ width: 80 }}
+        size="small"
+        value={when.minute}
+        onChange={(event) => setWhen((prev: WhenType) => ({ ...prev, minute: event.target.value }))}
+      />
+      <TextField
+        name="hour"
+        sx={{ width: 80 }}
+        size="small"
+        value={when.hour}
+        onChange={(event) => setWhen((prev: WhenType) => ({ ...prev, hour: event.target.value }))}
+      />
+      <TextField
+        name="dayOfMonth"
+        sx={{ width: 80 }}
+        size="small"
+        value={when.dayOfMonth}
+        onChange={(event) =>
+          setWhen((prev: WhenType) => ({ ...prev, dayOfMonth: event.target.value }))
+        }
+      />
+      <TextField
+        name="month"
+        sx={{ width: 80 }}
+        size="small"
+        value={when.month}
+        onChange={(event) => setWhen((prev: WhenType) => ({ ...prev, month: event.target.value }))}
+      />
+      <TextField
+        name="dayOfWeek"
+        sx={{ width: 80 }}
+        size="small"
+        value={when.dayOfWeek}
+        onChange={(event) =>
+          setWhen((prev: WhenType) => ({ ...prev, dayOfWeek: event.target.value }))
+        }
+      />
     </Stack>
   );
 }
