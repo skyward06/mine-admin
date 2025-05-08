@@ -55,20 +55,6 @@ const STATUS_OPTIONS: { value: AllowState; label: string; color: LabelColor }[] 
   { value: 'BLOCKED', label: 'Blocked', color: 'error' },
 ];
 
-const TABLE_HEAD = [
-  { id: 'ID', label: 'ID', width: 120, sortable: true },
-  { id: 'username', label: 'Username', sortable: true },
-  { id: 'fullName', label: 'Full Name', sortable: true },
-  { id: 'mobile', label: 'Mobile', sortable: true },
-  { id: 'assetId', label: 'AssetID', width: 80, sortable: true },
-  { id: 'totalIntroducers', label: 'Sponsor', width: 100, sortable: true },
-  { id: 'placementRequested', label: 'PR', width: 150, sortable: true },
-  { id: 'emailVerified', label: 'Status', width: 150, sortable: true },
-  { id: 'adminNotes', label: 'Admin Notes', width: 200, sortable: true },
-  { id: 'createdAt', label: 'Joined At', width: 120, sortable: true },
-  { id: 'action', label: '', width: 60, align: 'center' },
-];
-
 const defaultFilter: IMemberTableFilters = {
   search: '',
   allowState: 'APPROVED',
@@ -90,6 +76,25 @@ export default function MemberListView() {
     sort = { createdAt: 'asc' },
     filter = defaultFilter,
   } = query;
+
+  const TABLE_HEAD = useMemo(
+    () => [
+      { id: 'ID', label: 'ID', width: 120, sortable: true },
+      { id: 'username', label: 'Username', sortable: true },
+      { id: 'fullName', label: 'Full Name', sortable: true },
+      { id: 'mobile', label: 'Mobile', sortable: true },
+      { id: 'assetId', label: 'AssetID', width: 80, sortable: true },
+      ...(filter.allowState === 'PENDING'
+        ? [{ id: 'paymentType', label: 'Payment Type', width: 100, sortable: false }]
+        : [{ id: 'totalIntroducers', label: 'Sponsor', width: 100, sortable: true }]),
+      { id: 'placementRequested', label: 'PR', width: 150, sortable: true },
+      { id: 'emailVerified', label: 'Status', width: 150, sortable: true },
+      { id: 'adminNotes', label: 'Admin Notes', width: 200, sortable: true },
+      { id: 'createdAt', label: 'Joined At', width: 120, sortable: true },
+      { id: 'action', label: '', width: 60, align: 'center' },
+    ],
+    [filter]
+  );
 
   const graphQueryFilter = useMemo(() => {
     const filterObj: IMemberPrismaFilter = {};
@@ -255,7 +260,7 @@ export default function MemberListView() {
               headLabel={TABLE_HEAD}
               rowCount={loading ? 0 : members!.length}
               onSort={(id) => {
-                if (id !== 'action') {
+                if (id !== ('action' && 'paymentType')) {
                   const isAsc = sort && sort[id] === 'asc';
                   const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
                   setQuery({ ...query, sort: newSort });
@@ -284,6 +289,7 @@ export default function MemberListView() {
                     selected={table.selected.includes(row!.id)}
                     confirm={confirm}
                     setSelected={setSelected}
+                    tabs={filter.allowState}
                   />
                 ))}
 

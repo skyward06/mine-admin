@@ -49,6 +49,7 @@ type Props = {
   selected: boolean;
   /* Todo: Update type as Member */
   row: any;
+  tabs: any;
   action?: boolean;
   confirm: UseBooleanReturn;
   setSelected: Function;
@@ -56,6 +57,7 @@ type Props = {
 
 export default function MemberTableRow({
   row,
+  tabs,
   selected,
   action = true,
   confirm: removeConfirm,
@@ -89,6 +91,7 @@ export default function MemberTableRow({
     primaryAddress,
     totalIntroducers,
     secondaryAddress,
+    signupFormRequest,
     placementRequested,
   } = row;
 
@@ -266,7 +269,7 @@ export default function MemberTableRow({
           }}
           onClick={() => handleSponsors()}
         >
-          {totalIntroducers}
+          {tabs === 'PENDING' ? signupFormRequest?.paymentMethod : totalIntroducers}
         </TableCell>
 
         <TableCell>
