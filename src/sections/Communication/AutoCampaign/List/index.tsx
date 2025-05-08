@@ -1,10 +1,5 @@
 import type { CustomCellRendererProps } from '@ag-grid-community/react';
-import type {
-  ColDef,
-  ISetFilterParams,
-  IDateFilterParams,
-  ITextFilterParams,
-} from '@ag-grid-community/core';
+import type { ColDef, IDateFilterParams, ITextFilterParams } from '@ag-grid-community/core';
 
 import { useMemo, useEffect } from 'react';
 
@@ -16,9 +11,9 @@ import { formatDate } from 'src/utils/format-time';
 import { parseFilterModel } from 'src/utils/parseFilter';
 
 import { AgGrid } from 'src/components/AgGrid';
+import { Iconify } from 'src/components/Iconify';
 
 import { ActionRender } from './ActionRender';
-import { StatusRenderer } from './StatusRenderer';
 import { useFetchAutoCampaigns } from '../../useApollo';
 
 import type { AutoCampaign } from './type';
@@ -50,17 +45,6 @@ export default function AutoCampaignListView() {
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
       },
       {
-        field: 'approvedCommission',
-        headerName: 'Status',
-        width: 200,
-        filter: 'agMultiColumnFilter',
-        filterParams: {
-          values: ['true', 'false'],
-          valueFormatter: BooleanFormatter,
-        } as ISetFilterParams<AutoCampaign>,
-        cellRenderer: StatusRenderer,
-      },
-      {
         field: 'createdAt',
         headerName: 'Created At',
         width: 300,
@@ -74,6 +58,15 @@ export default function AutoCampaignListView() {
         editable: false,
         cellRenderer: ({ data }: CustomCellRendererProps<AutoCampaign>) =>
           formatDate(data?.createdAt),
+      },
+      {
+        field: 'approvedCommission',
+        headerName: '',
+        width: 50,
+        sortable: false,
+        cellRenderer: ({ data }: CustomCellRendererProps<AutoCampaign>) =>
+          data?.approvedCommission && <Iconify icon="ic:twotone-check-box" color="green" />,
+        cellClass: 'ag-cell-center',
       },
       {
         colId: 'action',
@@ -111,5 +104,3 @@ export default function AutoCampaignListView() {
     </Card>
   );
 }
-
-const BooleanFormatter = (params: any) => (params.value === 'true' ? 'Approved' : 'Pending');
