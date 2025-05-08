@@ -106,7 +106,12 @@ export default function EditForm({ current }: Props) {
           <Field.Text name="subject" label="Subject" />
         </Box>
 
-        <Templates setTemplateId={setTemplateId} pagination={false} sx={{ borderRadius: 1 }} />
+        <Templates
+          templateId={current?.templateId}
+          setTemplateId={setTemplateId}
+          pagination={false}
+          sx={{ borderRadius: 1 }}
+        />
 
         <Stack alignItems="flex-end" sx={{ mt: 3 }}>
           <LoadingButton
