@@ -18,6 +18,7 @@ import { MemberListView } from './List';
 import CreateCampaign from './Campaign/Send';
 import { CampaignListView } from './Campaign';
 import { TemplateListView } from './Template';
+import AutoCampaign from './AutoCampaign/List';
 import CreateSchedule from './Schedule/Create';
 
 const TABS = [
@@ -36,6 +37,11 @@ const TABS = [
     value: 'Schedule',
     label: 'Schedule',
     icon: <Iconify icon="gg:alarm" />,
+  },
+  {
+    value: 'Auto Campaign',
+    label: 'Auto Campaign',
+    icon: <Iconify icon="carbon:workflow-automation" />,
   },
 ];
 
@@ -93,6 +99,16 @@ export default function CommunicationView() {
                   Create Schedule
                 </Button>
               )}
+              {tabs.value === 'Auto Campaign' && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => router.push(paths.dashboard.autoCampaign.new)}
+                >
+                  <Iconify icon="gridicons:add-outline" sx={{ mr: 0.5 }} />
+                  Create Auto Campaign
+                </Button>
+              )}
             </>
           }
         />
@@ -107,6 +123,7 @@ export default function CommunicationView() {
         {tabs.value === 'Email Templates' && <TemplateListView />}
         {tabs.value === 'Campaigns' && <CampaignListView />}
         {tabs.value === 'Schedule' && <Schedule />}
+        {tabs.value === 'Auto Campaign' && <AutoCampaign />}
       </DashboardContent>
 
       <CreateCampaign open={campaignOpen} />

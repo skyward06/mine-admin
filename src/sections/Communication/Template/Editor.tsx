@@ -120,8 +120,8 @@ export default function EditorView({ current }: Props) {
       <Breadcrumbs
         heading="Communication"
         links={[
-          { name: 'Communication' },
-          { name: 'Email Templates', href: paths.dashboard.communication.root },
+          { name: 'Communication', href: paths.dashboard.communication.root },
+          { name: 'Email Templates' },
           { name: current?.subject ?? 'New' },
         ]}
         sx={{
