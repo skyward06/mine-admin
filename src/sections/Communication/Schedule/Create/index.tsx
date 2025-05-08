@@ -96,6 +96,11 @@ export default function CampaignCreate({ open, current }: Props) {
         return;
       }
 
+      if (Number.isNaN(time?.minute() ?? 0) || Number.isNaN(time?.hour() ?? 0)) {
+        toast.error('Please select Pro-Edit mode or set a specific time.');
+        return;
+      }
+
       const data = {
         status,
         sender,
