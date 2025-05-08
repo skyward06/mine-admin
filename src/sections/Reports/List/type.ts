@@ -17,3 +17,8 @@ export type WdmsvegasContestWinner = {
   username: string;
   sponsored: number;
 };
+
+export type SpecialReport = {
+  title: string;
+  link: string;
+};

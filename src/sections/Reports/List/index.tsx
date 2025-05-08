@@ -17,8 +17,8 @@ import { useBoolean } from 'src/hooks/useBoolean';
 import { formatDate } from 'src/utils/format-time';
 
 import { CONFIG } from 'src/config';
+import { PERMISSIONS } from 'src/consts';
 import { DashboardContent } from 'src/layouts/dashboard';
-import { PERMISSIONS, WINNER_REPORT_HTML } from 'src/consts';
 
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
@@ -33,7 +33,7 @@ import MetalListView from './Metals';
 import WeeklyReports from './Weekly';
 import SponsorListView from './Sponsor';
 import OnepointMemberListView from './OnePointAway';
-import { useGenerateWinnerReports, useGenerateWeeklyReports } from '../useApollo';
+import { useGenerateWeeklyReports } from '../useApollo';
 
 // ----------------------------------------------------------------------
 export default function ReportView() {
@@ -74,7 +74,6 @@ export default function ReportView() {
 
   const [all, setAll] = useState<boolean>(false);
 
-  const { generateWinnerReport } = useGenerateWinnerReports();
   const { loading: generateLoading, generateWeeklyReport } = useGenerateWeeklyReports();
 
   const handleTabChange = (event: any, newValue: any) => {
@@ -102,18 +101,6 @@ export default function ReportView() {
 
       if (data) {
         toast.success('Successfully generated!');
-      }
-    } catch (error) {
-      toast.error(error.message);
-    }
-  };
-
-  const handleViewReport = async () => {
-    try {
-      const { data } = await generateWinnerReport();
-
-      if (data?.generateWDMSVegasReport.result === 'success') {
-        window.open(WINNER_REPORT_HTML, '_blank');
       }
     } catch (error) {
       toast.error(error.message);
@@ -184,17 +171,6 @@ export default function ReportView() {
                     sx={{ mb: 1 }}
                   />
                 </Stack>
-              )}
-              {tabs.value === 'special-report' && (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  startIcon={<Iconify icon="tabler:eye-filled" />}
-                  onClick={handleViewReport}
-                  sx={{ mb: 1 }}
-                >
-                  View Report
-                </Button>
               )}
             </>
           }

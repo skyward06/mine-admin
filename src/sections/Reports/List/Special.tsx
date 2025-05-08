@@ -1,106 +1,81 @@
 import type { CustomCellRendererProps } from '@ag-grid-community/react';
 import type { ColDef, ITextFilterParams } from '@ag-grid-community/core';
 
-import { useMemo, useEffect } from 'react';
+import { useMemo } from 'react';
+import { Link } from 'react-router-dom';
 
 import Card from '@mui/material/Card';
-import Stack from '@mui/material/Stack';
-
-import { useAgQuery as useQueryString } from 'src/routes/hooks';
-
-import { customizeFullName } from 'src/utils/helper';
-import { parseFilterModel } from 'src/utils/parseFilter';
+import IconButton from '@mui/material/IconButton';
 
 import { AgGrid } from 'src/components/AgGrid';
+import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 
-import { useFetchWinners } from '../useApollo';
+import { SPECIAL_REPORT } from './const';
+import { useGenerateWinnerReports } from '../useApollo';
 
-import type { WdmsvegasContestWinner } from './type';
-
-const sortOrder = {
-  level: 'level,sponsored,points',
-  sponsored: 'sponsored,level,points',
-  points: 'level,points,sponsored',
-};
+import type { SpecialReport } from './type';
 
 export default function Special() {
-  const [{ page = '1,50', sort = 'level', filter }] = useQueryString();
+  const { loading, generateWinnerReport } = useGenerateWinnerReports();
 
-  const graphQueryFilter = useMemo(() => parseFilterModel({}, filter), [filter]);
+  const handleGenerate = async () => {
+    try {
+      const { data } = await generateWinnerReport();
 
-  const { loading, rowCount, winners, fetchWinners } = useFetchWinners();
+      if (data?.generateWDMSVegasReport.result === 'success') {
+        toast.success('Successfully generated report');
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
 
-  useEffect(() => {
-    fetchWinners({
-      variables: {
-        filter: graphQueryFilter,
-        page,
-        sort: sortOrder[sort as keyof typeof sortOrder],
-      },
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [graphQueryFilter, page, sort]);
-
-  const colDefs = useMemo<ColDef<WdmsvegasContestWinner>[]>(
+  const colDefs = useMemo<ColDef<SpecialReport>[]>(
     () => [
       {
-        field: 'username',
-        headerName: 'Username',
+        field: 'title',
+        headerName: 'Title',
         flex: 1,
         filter: 'agTextColumnFilter',
         resizable: true,
         editable: false,
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellClass: 'ag-cell-center',
       },
       {
-        field: 'fullName',
-        headerName: 'FullName',
+        field: 'link',
+        headerName: 'Link',
         flex: 1,
         filter: 'agTextColumnFilter',
         resizable: true,
         editable: false,
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellClass: 'ag-cell-center',
-        cellRenderer: ({ data }: CustomCellRendererProps<WdmsvegasContestWinner>) =>
-          customizeFullName(data?.fullName!),
+        cellRenderer: ({ data }: CustomCellRendererProps<SpecialReport>) => (
+          <Link to={data?.link!} target="_blank">
+            {data?.link}
+          </Link>
+        ),
       },
       {
-        field: 'sponsored',
-        headerName: 'Sponsored',
-        width: 200,
-        filter: 'agNumberColumnFilter',
-        resizable: true,
+        colId: 'action',
+        width: 60,
+        pinned: 'right',
+        resizable: false,
         editable: false,
-        cellClass: 'ag-number-cell ag-cell-center',
-      },
-      {
-        field: 'points',
-        headerName: 'Points',
-        width: 200,
-        filter: 'agNumberColumnFilter',
-        resizable: true,
-        editable: false,
-        cellClass: 'ag-number-cell ag-cell-center',
-      },
-      {
-        field: 'level',
-        headerName: 'Level',
-        width: 200,
-        filter: 'agNumberColumnFilter',
-        resizable: true,
-        editable: false,
-        cellClass: 'ag-number-cell ag-cell-center',
-        cellRenderer: ({ data }: CustomCellRendererProps<WdmsvegasContestWinner>) => (
-          <Stack direction="row" spacing={1}>
-            {new Array(data?.level).fill(<Iconify icon="streamline-emojis:game-dice" />)}
-          </Stack>
+        sortable: false,
+        cellRenderer: () => (
+          <IconButton color="default" onClick={handleGenerate}>
+            <Iconify
+              icon={loading ? 'eos-icons:bubble-loading' : 'streamline:ai-generate-variation-spark'}
+              width={15}
+              height={15}
+            />
+          </IconButton>
         ),
       },
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [loading]
   );
 
   return (
@@ -111,13 +86,11 @@ export default function Special() {
         overflow: 'hidden',
       }}
     >
-      <AgGrid<WdmsvegasContestWinner>
+      <AgGrid<SpecialReport>
         gridKey="report-revenue-list"
-        loading={loading}
-        rowData={winners}
+        rowData={SPECIAL_REPORT}
         columnDefs={colDefs}
-        totalRowCount={rowCount}
-        rowHeight={50}
+        totalRowCount={SPECIAL_REPORT.length}
       />
     </Card>
   );
