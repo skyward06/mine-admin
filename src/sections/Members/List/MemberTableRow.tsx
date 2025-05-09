@@ -256,7 +256,7 @@ export default function MemberTableRow({
           <UserItem user={{ username, email, avatar }} />
         </TableCell>
 
-        <TableCell>{customizeFullName(fullName)}</TableCell>
+        <TableCell>{fullName}</TableCell>
 
         <TableCell>{mobile}</TableCell>
 
