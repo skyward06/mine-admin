@@ -16,7 +16,7 @@ import { useRouter, useAgQuery as useQueryString } from 'src/routes/hooks';
 
 import { formatDate } from 'src/utils/format-time';
 import { parseFilterModel } from 'src/utils/parseFilter';
-import { formatID, makeDecimal, customizeFullName } from 'src/utils/helper';
+import { formatID, makeDecimal } from 'src/utils/helper';
 
 import { CHAIN_UNIT, ORDER_STATUS } from 'src/consts';
 import { OrderStatus } from 'src/__generated__/graphql';
@@ -69,7 +69,7 @@ export default function Orders() {
             sx={{ cursor: 'pointer', '&:hover': { color: '#00a873' } }}
             onClick={() => router.push(paths.dashboard.members.edit(data?.member?.id ?? ''))}
           >
-            {customizeFullName(data?.member?.fullName ?? '')}
+            {data?.member?.fullName}
           </Typography>
         ),
         cellClass: 'ag-cell-center',
