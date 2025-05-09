@@ -144,6 +144,7 @@ export const CHAIN_TYPE = {
   TXC: 'Texitcoin',
   USDT: 'USDT',
   USDC: 'USDC',
+  PYUSD: 'PYUSD',
 };
 
 export const CHAIN_UNIT = {
@@ -151,6 +152,7 @@ export const CHAIN_UNIT = {
   // ETH:  18,
   USDC: 6,
   USDT: 6,
+  PYUSD: 6,
 };
 
 export const ORDER_STATUS = {
