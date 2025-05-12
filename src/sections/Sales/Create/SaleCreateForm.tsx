@@ -31,9 +31,9 @@ import LinkForm from 'src/sections/PrepaidCommission/LinkForm';
 import { useFetchPackages } from 'src/sections/Products/useApollo';
 import { useFetchPayments } from 'src/sections/PaymentMethod/useApollo';
 
-import { useCreateSale } from '../useApollo';
 import { Schema, type SchemaType } from './Schema';
 import { FileManagerNewFolderDialog } from '../Upload';
+import { useCreateSale, useCheckRefduplication } from '../useApollo';
 
 export default function SaleCreateForm() {
   const router = useRouter();
@@ -67,23 +67,32 @@ export default function SaleCreateForm() {
   const { payments } = useFetchPayments();
   const { loading, createSale } = useCreateSale();
   const { packages, fetchPackages } = useFetchPackages();
+  const { checkSaleRefDuplication } = useCheckRefduplication();
 
-  const onSubmit = handleSubmit(async ({ status, orderedAt, ...data }) => {
+  const onSubmit = handleSubmit(async ({ status, orderedAt, ...newData }) => {
     try {
-      await createSale({
-        variables: {
-          data: {
-            ...data,
-            fileIds,
-            status: !!status,
-            orderedAt: customizeDate(orderedAt),
-            memberId,
-            packageId,
-            toMemberId,
-            paymentMethod,
-          },
-        },
+      const { data } = await checkSaleRefDuplication({
+        variables: { data: { links: newData?.reflinks! } },
       });
+
+      if (data?.checkSaleRefDuplication.result === 'success') {
+        await createSale({
+          variables: {
+            data: {
+              ...newData,
+              fileIds,
+              status: !!status,
+              orderedAt: customizeDate(orderedAt),
+              memberId,
+              packageId,
+              toMemberId,
+              paymentMethod,
+            },
+          },
+        });
+      } else {
+        toast.error('Duplicate link found');
+      }
 
       reset();
       toast.success('Sale created successfully!');

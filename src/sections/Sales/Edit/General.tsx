@@ -33,10 +33,10 @@ import LinkForm from 'src/sections/PrepaidCommission/LinkForm';
 import { useFetchPackages } from 'src/sections/Products/useApollo';
 import { useFetchPayments } from 'src/sections/PaymentMethod/useApollo';
 
-import { useUpdateSale } from '../useApollo';
 import { FileRecentItem } from './FileRecentItem';
 import { Schema, type SchemaType } from './Schema';
 import { FileManagerNewFolderDialog } from '../Upload';
+import { useUpdateSale, useCheckRefduplication } from '../useApollo';
 
 // ----------------------------------------------------------------------
 
@@ -60,6 +60,7 @@ export default function SaleGeneral({ currentSale }: Props) {
   const { payments } = useFetchPayments();
   const { loading, updateSale } = useUpdateSale();
   const { packages, fetchPackages } = useFetchPackages();
+  const { checkSaleRefDuplication } = useCheckRefduplication();
 
   const defaultValues = useMemo(() => {
     const { data } = Schema.safeParse(currentSale);
@@ -112,20 +113,28 @@ export default function SaleGeneral({ currentSale }: Props) {
         return;
       }
 
-      await updateSale({
-        variables: {
-          data: {
-            ...newSale,
-            id: currentSale.id,
-            orderedAt: customizeDate(orderedAt),
-            memberId: memberId ?? currentSale.member.id,
-            fileIds: files?.map((file: any) => file.id),
-            status,
-            toMemberId,
-            paymentMethod,
-          },
-        },
+      const { data } = await checkSaleRefDuplication({
+        variables: { data: { ID: currentSale.ID, links: newSale?.reflinks! } },
       });
+
+      if (data?.checkSaleRefDuplication.result === 'success') {
+        await updateSale({
+          variables: {
+            data: {
+              ...newSale,
+              id: currentSale.id,
+              orderedAt: customizeDate(orderedAt),
+              memberId: memberId ?? currentSale.member.id,
+              fileIds: files?.map((file: any) => file.id),
+              status,
+              toMemberId,
+              paymentMethod,
+            },
+          },
+        });
+      } else {
+        toast.error('Duplicate link found');
+      }
 
       toast.success('Update success!');
 
