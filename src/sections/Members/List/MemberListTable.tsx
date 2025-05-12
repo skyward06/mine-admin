@@ -177,7 +177,7 @@ export default function MemberListTable({ filter: customFilter }: Props) {
       {
         field: 'status',
         headerName: 'Status',
-        flex: 1,
+        width: 200,
         resizable: true,
         editable: false,
         sortable: false,
@@ -219,7 +219,7 @@ export default function MemberListTable({ filter: customFilter }: Props) {
       {
         field: 'lastAdminNote',
         headerName: 'Admin Notes',
-        flex: 1,
+        width: 300,
         resizable: true,
         editable: false,
         sortable: false,
