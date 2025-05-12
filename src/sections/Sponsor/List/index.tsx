@@ -58,14 +58,14 @@ function buildPlacementTree(members: any[]) {
   members.forEach((member) => {
     memberMap[member.id] = { ...member, children: [] };
 
-    if (!member.sponsor?.id || member.sponsor?.id === member.id) {
+    if (!member.sponsorId || member.sponsorId === member.id) {
       result.children.push(memberMap[member.id]);
     }
   });
 
   members.forEach((member) => {
-    if (member.sponsor?.id && memberMap[member.sponsor?.id] && member.sponsor?.id !== member.id) {
-      memberMap[member.sponsor?.id!].children.push(memberMap[member.id]);
+    if (member.sponsorId && memberMap[member.sponsorId] && member.sponsorId !== member.id) {
+      memberMap[member.sponsorId!].children.push(memberMap[member.id]);
     }
   });
 
@@ -243,10 +243,10 @@ function PlacementListView() {
   const edges: Edge[] = useMemo(
     () =>
       members
-        .filter((member) => member?.id)
+        .filter((member) => member?.sponsorId)
         .map((member) => ({
-          id: `${member?.id}:${member?.id}`,
-          source: member?.id ?? '',
+          id: `${member?.sponsorId}:${member?.id}`,
+          source: member?.sponsorId ?? '',
           target: member?.id ?? '',
           type: 'customEdge',
         })),
@@ -258,15 +258,15 @@ function PlacementListView() {
       const newVisibleMap: Record<string, number> = { ...visibleMap };
 
       members
-        .filter((mb) => mb?.id === id)
+        .filter((mb) => mb?.sponsorId === id)
         .forEach((mb) => {
           if (!newVisibleMap[mb?.id ?? '']) {
             newVisibleMap[mb?.id ?? ''] =
-              members.findIndex((mber) => mber?.id === mb?.id) === -1 ? 3 : 1;
+              members.findIndex((mber) => mber?.sponsorId === mb?.id) === -1 ? 3 : 1;
           }
         });
 
-      newVisibleMap[id] = members.findIndex((mb) => mb?.id === id) === -1 ? 3 : 2;
+      newVisibleMap[id] = members.findIndex((mb) => mb?.sponsorId === id) === -1 ? 3 : 2;
 
       exSetVisibleMap(newVisibleMap);
     },
@@ -277,7 +277,7 @@ function PlacementListView() {
     async (id: string) => {
       const newVisibleMap: Record<string, number> = { ...visibleMap };
 
-      newVisibleMap[id] = members.findIndex((mb) => mb?.id === id) === -1 ? 3 : 1;
+      newVisibleMap[id] = members.findIndex((mb) => mb?.sponsorId === id) === -1 ? 3 : 1;
 
       exSetVisibleMap(newVisibleMap);
     },
@@ -328,7 +328,7 @@ function PlacementListView() {
 
       while (iMinerId) {
         const currentMinerId: string = iMinerId;
-        const newIMinerId = members.find((mb) => mb?.id === currentMinerId)?.id;
+        const newIMinerId = members.find((mb) => mb?.id === currentMinerId)?.sponsorId;
 
         if (newIMinerId === iMinerId) break;
 
@@ -337,11 +337,11 @@ function PlacementListView() {
         if (iMinerId) {
           newVisibleMap[iMinerId] = 2;
           members
-            .filter((mb) => mb?.id === newIMinerId)
+            .filter((mb) => mb?.sponsorId === newIMinerId)
             .forEach((mb) => {
               if (!newVisibleMap[mb?.id ?? '']) {
                 newVisibleMap[mb?.id ?? ''] =
-                  members.findIndex((mber) => mber?.id === mb?.id) === -1 ? 3 : 1;
+                  members.findIndex((mber) => mber?.sponsorId === mb?.id) === -1 ? 3 : 1;
               }
             });
         }
