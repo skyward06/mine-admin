@@ -117,25 +117,24 @@ export default function SaleGeneral({ currentSale }: Props) {
         variables: { data: { ID: currentSale.ID, links: newSale?.reflinks! } },
       });
 
-      if (data?.checkSaleRefDuplication.result === 'success') {
-        await updateSale({
-          variables: {
-            data: {
-              ...newSale,
-              id: currentSale.id,
-              orderedAt: customizeDate(orderedAt),
-              memberId: memberId ?? currentSale.member.id,
-              fileIds: files?.map((file: any) => file.id),
-              status,
-              toMemberId,
-              paymentMethod,
-            },
-          },
-        });
-      } else {
+      if (data?.checkSaleRefDuplication.result !== 'success') {
         toast.error(data?.checkSaleRefDuplication.message);
-        return;
       }
+
+      await updateSale({
+        variables: {
+          data: {
+            ...newSale,
+            id: currentSale.id,
+            orderedAt: customizeDate(orderedAt),
+            memberId: memberId ?? currentSale.member.id,
+            fileIds: files?.map((file: any) => file.id),
+            status,
+            toMemberId,
+            paymentMethod,
+          },
+        },
+      });
 
       toast.success('Update success!');
 

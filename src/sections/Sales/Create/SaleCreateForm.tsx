@@ -75,25 +75,24 @@ export default function SaleCreateForm() {
         variables: { data: { links: newData?.reflinks! } },
       });
 
-      if (data?.checkSaleRefDuplication.result === 'success') {
-        await createSale({
-          variables: {
-            data: {
-              ...newData,
-              fileIds,
-              status: !!status,
-              orderedAt: customizeDate(orderedAt),
-              memberId,
-              packageId,
-              toMemberId,
-              paymentMethod,
-            },
-          },
-        });
-      } else {
+      if (data?.checkSaleRefDuplication.result !== 'success') {
         toast.error(data?.checkSaleRefDuplication.message);
-        return;
       }
+
+      await createSale({
+        variables: {
+          data: {
+            ...newData,
+            fileIds,
+            status: !!status,
+            orderedAt: customizeDate(orderedAt),
+            memberId,
+            packageId,
+            toMemberId,
+            paymentMethod,
+          },
+        },
+      });
 
       reset();
       toast.success('Sale created successfully!');
