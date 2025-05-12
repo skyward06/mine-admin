@@ -2,6 +2,8 @@ import type { Sale } from 'src/sections/Sales/List/type';
 import type { WeeklyCommission } from 'src/sections/Commission/type';
 import type { Payout, MemberStatisticsWallet } from 'src/sections/MemberStatistics/List/type';
 import type {
+  MemberState,
+  TeamStrategy,
   CommissionStatus,
   MemberStatistics,
   PlacementPosition,
@@ -77,6 +79,7 @@ export type Member = {
   emailVerified: boolean;
   fullName: string;
   id: string;
+  lastAdminNote?: string | null;
   introduceMembers?: Array<Member> | null;
   logs?: Array<EntityLog> | null;
   memberWallets?: Array<MemberWallet> | null;
@@ -85,6 +88,7 @@ export type Member = {
   placementParent?: Member | null;
   placementParentId?: string | null;
   placementPosition?: PlacementPosition | null;
+  placementRequested: Boolean;
   point: number;
   preferredContact?: string | null;
   preferredContactDetail?: string | null;
@@ -102,4 +106,29 @@ export type Member = {
   username: string;
   weeklyCommissions?: WeeklyCommission | null;
   zipCode?: string | null;
+};
+
+export type BasicMember = {
+  __typename?: 'BasicMember';
+  id: string;
+  email: string;
+  mobile: string;
+  status: boolean;
+  username: string;
+  fullName: string;
+  ID?: number | null;
+  city?: string | null;
+  state?: string | null;
+  createdAt?: any | null;
+  emailVerified: boolean;
+  primaryAddress: string;
+  assetId?: string | null;
+  zipCode?: string | null;
+  allowState: MemberState;
+  totalIntroducers: number;
+  teamStrategy: TeamStrategy;
+  placementRequested: Boolean;
+  lastAdminNote?: string | null;
+  secondaryAddress?: string | null;
+  signUpPaymentType?: string | null;
 };
