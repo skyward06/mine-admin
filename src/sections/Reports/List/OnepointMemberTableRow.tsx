@@ -1,5 +1,3 @@
-import type { Member } from 'src/__generated__/graphql';
-
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import ListItemText from '@mui/material/ListItemText';
@@ -9,21 +7,12 @@ import { useRouter } from 'src/routes/hooks';
 
 import { formatDate, formatTime } from 'src/utils/format-time';
 
+import type { OnepointAwayMembers } from './type';
+
 // ----------------------------------------------------------------------
 
 type Props = {
-  row: Pick<
-    Member,
-    | 'id'
-    | 'username'
-    | 'fullName'
-    | 'email'
-    | 'assetId'
-    | 'mobile'
-    | 'totalIntroducers'
-    | 'createdAt'
-  > &
-    Partial<Omit<Member, 'username' | 'createdAt'>>;
+  row: OnepointAwayMembers;
 };
 
 export default function MemberTableRow({ row }: Props) {

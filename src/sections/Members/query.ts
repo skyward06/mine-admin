@@ -27,63 +27,25 @@ export const FETCH_MEMBER_STATS_QUERY = gql(/* GraphQL */ `
 `);
 
 export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
-  query FetchMembers($page: String, $filter: JSONObject, $sort: String) {
-    members(page: $page, filter: $filter, sort: $sort) {
+  query Members($sort: String, $page: String, $filter: JSONObject) {
+    members(sort: $sort, page: $page, filter: $filter) {
       members {
         id
         ID
-        city
         email
-        point
-        state
         status
-        avatar
         mobile
         assetId
-        country
-        zipCode
         username
         fullName
-        sponsorId
-        promoCode
-        allowState
-        OTPEnabled
-        teamReport
-        teamStrategy
-        isTexitRanger
-        emailVerified
-        syncWithSendy
-        primaryAddress
-        preferredContact
-        secondaryAddress
-        totalIntroducers
-        commissionDefault
-        placementPosition
-        placementParentId
-        signupFormRequest
-        cmnCalculatedWeeks
-        placementRequested
-        preferredContactDetail
         createdAt
-        updatedAt
-        deletedAt
-        adminNotes {
-          id
-          adminId
-          memberId
-          createdAt
-          updatedAt
-          description
-          admin {
-            id
-            email
-            avatar
-            roleId
-            username
-            fullName
-            OTPEnabled
-          }
-        }
+        allowState
+        teamStrategy
+        emailVerified
+        lastAdminNote
+        totalIntroducers
+        signUpPaymentType
+        placementRequested
       }
       total
     }

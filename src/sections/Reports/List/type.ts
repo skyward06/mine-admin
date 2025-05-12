@@ -22,3 +22,16 @@ export type SpecialReport = {
   title: string;
   link: string;
 };
+
+export type OnepointAwayMembers = {
+  __typename?: 'ReportMember';
+  id: string;
+  ID: number;
+  email: string;
+  mobile: string;
+  createdAt: any;
+  fullName: string;
+  username: string;
+  assetId?: string | null;
+  totalIntroducers: number;
+};

@@ -224,7 +224,7 @@ function PlacementListView() {
   }, []);
 
   useEffect(() => {
-    fetchSponsors({ variables: { filter: { status: true } } });
+    fetchSponsors();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -243,10 +243,10 @@ function PlacementListView() {
   const edges: Edge[] = useMemo(
     () =>
       members
-        .filter((member) => member?.sponsor?.id)
+        .filter((member) => member?.id)
         .map((member) => ({
-          id: `${member?.sponsor?.id}:${member?.id}`,
-          source: member?.sponsor?.id ?? '',
+          id: `${member?.id}:${member?.id}`,
+          source: member?.id ?? '',
           target: member?.id ?? '',
           type: 'customEdge',
         })),
@@ -258,15 +258,15 @@ function PlacementListView() {
       const newVisibleMap: Record<string, number> = { ...visibleMap };
 
       members
-        .filter((mb) => mb?.sponsor?.id === id)
+        .filter((mb) => mb?.id === id)
         .forEach((mb) => {
           if (!newVisibleMap[mb?.id ?? '']) {
             newVisibleMap[mb?.id ?? ''] =
-              members.findIndex((mber) => mber?.sponsor?.id === mb?.id) === -1 ? 3 : 1;
+              members.findIndex((mber) => mber?.id === mb?.id) === -1 ? 3 : 1;
           }
         });
 
-      newVisibleMap[id] = members.findIndex((mb) => mb?.sponsor?.id === id) === -1 ? 3 : 2;
+      newVisibleMap[id] = members.findIndex((mb) => mb?.id === id) === -1 ? 3 : 2;
 
       exSetVisibleMap(newVisibleMap);
     },
@@ -277,7 +277,7 @@ function PlacementListView() {
     async (id: string) => {
       const newVisibleMap: Record<string, number> = { ...visibleMap };
 
-      newVisibleMap[id] = members.findIndex((mb) => mb?.sponsor?.id === id) === -1 ? 3 : 1;
+      newVisibleMap[id] = members.findIndex((mb) => mb?.id === id) === -1 ? 3 : 1;
 
       exSetVisibleMap(newVisibleMap);
     },
@@ -328,7 +328,7 @@ function PlacementListView() {
 
       while (iMinerId) {
         const currentMinerId: string = iMinerId;
-        const newIMinerId = members.find((mb) => mb?.id === currentMinerId)?.sponsor?.id;
+        const newIMinerId = members.find((mb) => mb?.id === currentMinerId)?.id;
 
         if (newIMinerId === iMinerId) break;
 
@@ -337,11 +337,11 @@ function PlacementListView() {
         if (iMinerId) {
           newVisibleMap[iMinerId] = 2;
           members
-            .filter((mb) => mb?.sponsor?.id === newIMinerId)
+            .filter((mb) => mb?.id === newIMinerId)
             .forEach((mb) => {
               if (!newVisibleMap[mb?.id ?? '']) {
                 newVisibleMap[mb?.id ?? ''] =
-                  members.findIndex((mber) => mber?.sponsor?.id === mb?.id) === -1 ? 3 : 1;
+                  members.findIndex((mber) => mber?.id === mb?.id) === -1 ? 3 : 1;
               }
             });
         }
@@ -376,7 +376,7 @@ function PlacementListView() {
 
   const reset = useCallback(async () => {
     const { data } = await fetchSponsors();
-    const newVisibleMap = getResetVisibleMap(data?.members.members);
+    const newVisibleMap = getResetVisibleMap(data?.sponsorMembers);
 
     exSetVisibleMap(newVisibleMap);
 
@@ -392,7 +392,7 @@ function PlacementListView() {
     const { data } = await fetchSponsors();
     const storageVisibleMap = localStorage.getItem('sponsorVisibleMap');
     const newVisibleMap = storageVisibleMap
-      ? getNewVisibleMap(data?.members.members, JSON.parse(storageVisibleMap))
+      ? getNewVisibleMap(data?.sponsorMembers, JSON.parse(storageVisibleMap))
       : {};
     exSetVisibleMap(newVisibleMap);
 

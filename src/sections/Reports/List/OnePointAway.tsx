@@ -129,7 +129,7 @@ export default function OnepointMemberListView() {
           ) : (
             <TableBody>
               {members!.map((row) => (
-                <OnepointMemberTableRow key={row!.id} row={row!} />
+                <OnepointMemberTableRow key={row!.ID} row={row!} />
               ))}
 
               <TableNoData notFound={notFound} />

@@ -13,56 +13,13 @@ export const REMOVE_MEMBER_FROM_PLACEMENT_TREE = gql(/* GraphQL */ `
 `);
 
 export const FETCH_SPONSOR_TEMP = gql(/* GraphQL */ `
-  query SponsorMembers($page: String, $filter: JSONObject, $sort: String) {
-    members(page: $page, filter: $filter, sort: $sort) {
-      members {
-        id
-        username
-        fullName
-        sponsor {
-          id
-        }
-        createdAt
-      }
-      total
-    }
-  }
-`);
-
-export const FETCH_PLACEMENT_MEMBERS_QUERY = gql(/* GraphQL */ `
-  query FetchPlacementMembers($page: String, $filter: JSONObject, $sort: String) {
-    members(page: $page, filter: $filter, sort: $sort) {
-      members {
-        id
-        email
-        status
-        fullName
-        username
-        sponsorId
-        allowState
-        teamReport
-        OTPEnabled
-        teamStrategy
-        placementParentId
-        placementPosition
-        cmnCalculatedWeeks
-        placementParent {
-          id
-          username
-          fullName
-        }
-        sponsor {
-          username
-        }
-        commission {
-          begL
-          begR
-          newL
-          newR
-        }
-        createdAt
-      }
-      total
+  query SponsorMembers {
+    sponsorMembers {
+      id
+      username
+      fullName
+      sponsorId
+      createdAt
     }
   }
 `);

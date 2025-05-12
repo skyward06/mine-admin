@@ -15,7 +15,7 @@ export const FETCH_WEEKLY_MEMBERS = gql(/* GraphQL */ `
 `);
 
 export const FETCH_MEMBERS = gql(/* GraphQL */ `
-  query Members($filter: JSONObject) {
+  query FetchMembers($filter: JSONObject) {
     members(filter: $filter) {
       members {
         email

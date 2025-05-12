@@ -1,18 +1,17 @@
 import { gql } from 'src/__generated__/gql';
 
 export const FETCH_ONEPOINT_AWAY_MEMBERS_QUERY = gql(/* GraphQL */ `
-  query FetchOnepointAwayMembers($page: String, $sort: String) {
-    onepointAwayMembers(page: $page, sort: $sort) {
+  query OnepointAwayMembers($sort: String, $page: String) {
+    onepointAwayMembers(sort: $sort, page: $page) {
       members {
         id
+        ID
         email
         mobile
         assetId
         username
         fullName
         createdAt
-        updatedAt
-        deletedAt
         totalIntroducers
       }
       total
@@ -59,45 +58,16 @@ export const FETCH_WEEKLY_REPORT = gql(/* GraphQL */ `
 `);
 
 export const FETCH_SPONSORS_QUERY = gql(/* GraphQL */ `
-  query Sponsors($sort: String, $page: String, $filter: JSONObject, $week: Date!) {
-    members(sort: $sort, page: $page, filter: $filter) {
+  query WeekIntroducers($week: Date!, $sort: String, $page: String) {
+    weekIntroducers(week: $week, sort: $sort, page: $page) {
       members {
-        id
         ID
-        email
-        point
-        avatar
         mobile
-        status
+        assetId
         username
         fullName
-        allowState
-        teamReport
-        OTPEnabled
-        teamStrategy
-        syncWithSendy
-        emailVerified
-        primaryAddress
-        weekIntroducers(week: $week)
+        createdAt
         totalIntroducers
-        placementPosition
-        commissionDefault
-        cmnCalculatedWeeks
-      }
-      total
-    }
-  }
-`);
-
-export const FETCH_WINNERS_QUERY = gql(/* GraphQL */ `
-  query Winners($sort: String, $page: String, $filter: JSONObject) {
-    WDMSVegasContestWinners(sort: $sort, page: $page, filter: $filter) {
-      winners {
-        level
-        points
-        username
-        fullName
-        sponsored
       }
       total
     }

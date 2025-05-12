@@ -61,17 +61,6 @@ export default function SponsorListView({ openWeek }: Props) {
   useEffect(() => {
     fetchSponsors({
       variables: {
-        filter: {
-          introduceMembers: {
-            some: {
-              createdAt: {
-                gte: customizeDate(`${dayjs(weekStartDate).utc().startOf('week')}`),
-                lt: customizeDate(`${dayjs(weekStartDate).utc().endOf('week').add(1, 'day')}`),
-              },
-              status: true,
-            },
-          },
-        },
         page: page && `${page.page},${page.pageSize}`,
         sort: graphQuerySort,
         week: formatDate(`${dayjs(weekStartDate).utc()}`, 'YYYY-MM-DD'),
@@ -83,17 +72,6 @@ export default function SponsorListView({ openWeek }: Props) {
   const onPeriodChange = (value: any) => {
     fetchSponsors({
       variables: {
-        filter: {
-          introduceMembers: {
-            some: {
-              createdAt: {
-                gte: customizeDate(`${dayjs(value).utc().startOf('week')}`),
-                lt: customizeDate(`${dayjs(value).utc().endOf('week')}`),
-              },
-              status: true,
-            },
-          },
-        },
         page: page && `${page.page},${page.pageSize}`,
         sort: graphQuerySort,
         week: formatDate(`${dayjs(weekStartDate).utc()}`, 'YYYY-MM-DD'),
