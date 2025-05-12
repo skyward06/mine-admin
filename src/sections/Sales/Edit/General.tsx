@@ -133,7 +133,8 @@ export default function SaleGeneral({ currentSale }: Props) {
           },
         });
       } else {
-        toast.error('Duplicate link found');
+        toast.error(data?.checkSaleRefDuplication.message);
+        return;
       }
 
       toast.success('Update success!');

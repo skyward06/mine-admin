@@ -91,7 +91,8 @@ export default function SaleCreateForm() {
           },
         });
       } else {
-        toast.error('Duplicate link found');
+        toast.error(data?.checkSaleRefDuplication.message);
+        return;
       }
 
       reset();
