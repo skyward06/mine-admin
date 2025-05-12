@@ -29,7 +29,7 @@ export function useFetchNotes() {
 export function useCreateNote() {
   const [createNote, { loading }] = useMutation(CREATE_NOTE, {
     awaitRefetchQueries: true,
-    refetchQueries: ['AdminNotes', 'FetchMembers'],
+    refetchQueries: ['AdminNotes', 'Members'],
   });
 
   return { loading, createNote };
@@ -38,7 +38,7 @@ export function useCreateNote() {
 export function useUpdateNote() {
   const [updateNote, { loading }] = useMutation(UPDATE_NOTE, {
     awaitRefetchQueries: true,
-    refetchQueries: ['AdminNotes', 'FetchMembers'],
+    refetchQueries: ['AdminNotes', 'Members'],
   });
 
   return { loading, updateNote };
@@ -47,7 +47,7 @@ export function useUpdateNote() {
 export function useRemoveNote() {
   const [removeNote, { loading, error }] = useMutation(REMOVE_NOTE, {
     awaitRefetchQueries: true,
-    refetchQueries: ['AdminNotes', 'FetchMembers'],
+    refetchQueries: ['AdminNotes', 'Members'],
   });
 
   return { loading, error, removeNote };

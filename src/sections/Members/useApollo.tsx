@@ -99,7 +99,7 @@ export function useUpdateMember() {
 export function useUpdatePassword() {
   const [updatePassword, { loading }] = useMutation(UPDATE_PASSWORD_QUERY, {
     awaitRefetchQueries: true,
-    refetchQueries: ['FetchMembers'],
+    refetchQueries: ['Members'],
   });
 
   return { loading, updatePassword };
@@ -108,7 +108,7 @@ export function useUpdatePassword() {
 export function useRemoveMember() {
   const [removeMember, { loading, error }] = useMutation(REMOVE_MEMBER_QUERY, {
     awaitRefetchQueries: true,
-    refetchQueries: ['FetchMembers', 'FetchMemberStats'],
+    refetchQueries: ['Members', 'FetchMemberStats'],
   });
 
   return { loading, error, removeMember };
@@ -117,7 +117,7 @@ export function useRemoveMember() {
 export function useRemoveMemberPlacement() {
   const [removeMemberPlacement, { loading, error }] = useMutation(REMOVE_MEMBER_PLACEMENT, {
     awaitRefetchQueries: true,
-    refetchQueries: ['FetchMembers'],
+    refetchQueries: ['Members'],
   });
 
   return { loading, error, removeMemberPlacement };
@@ -126,7 +126,7 @@ export function useRemoveMemberPlacement() {
 export function useApproveMember() {
   const [approveMember, { loading, error }] = useMutation(APPROVE_MEMBER, {
     awaitRefetchQueries: true,
-    refetchQueries: ['FetchMembers', 'FetchMemberStats'],
+    refetchQueries: ['Members', 'FetchMemberStats'],
   });
 
   return { loading, error, approveMember };
@@ -141,7 +141,7 @@ export function useSendWelcomeEmail() {
 export function useMoveToGraveyard() {
   const [moveToGraveyard, { loading, data, error }] = useMutation(MOVE_TO_GRAVEYARD, {
     awaitRefetchQueries: true,
-    refetchQueries: ['FetchMembers', 'FetchMemberStats'],
+    refetchQueries: ['Members', 'FetchMemberStats'],
   });
 
   return { loading, data, error, moveToGraveyard };
@@ -150,7 +150,7 @@ export function useMoveToGraveyard() {
 export function useMoveToPaid() {
   const [moveToPaid, { loading, data, error }] = useMutation(MOVE_TO_PAID, {
     awaitRefetchQueries: true,
-    refetchQueries: ['FetchMembers', 'FetchMemberStats'],
+    refetchQueries: ['Members', 'FetchMemberStats'],
   });
 
   return { loading, data, error, moveToPaid };
@@ -159,7 +159,7 @@ export function useMoveToPaid() {
 export function useMoveToPending() {
   const [moveToPending, { loading, data, error }] = useMutation(MOVE_TO_PENDING, {
     awaitRefetchQueries: true,
-    refetchQueries: ['FetchMembers', 'FetchMemberStats'],
+    refetchQueries: ['Members', 'FetchMemberStats'],
   });
 
   return { loading, data, error, moveToPending };
@@ -168,7 +168,7 @@ export function useMoveToPending() {
 export function useVerifyMemberEmail() {
   const [verifyMemberEmail, { loading, data, error }] = useMutation(VERIFY_MEMBER_EMAIL, {
     awaitRefetchQueries: true,
-    refetchQueries: ['FetchMembers', 'FetchMemberStats'],
+    refetchQueries: ['Members', 'FetchMemberStats'],
   });
 
   return { loading, data, error, verifyMemberEmail };
@@ -177,7 +177,7 @@ export function useVerifyMemberEmail() {
 export function useDuplicateMember() {
   const [duplicateMember, { loading, data, error }] = useMutation(DUPLICATE_MEMBER, {
     awaitRefetchQueries: true,
-    refetchQueries: ['FetchMembers', 'FetchMemberStats'],
+    refetchQueries: ['Members', 'FetchMemberStats'],
   });
 
   return { loading, data, error, duplicateMember };
@@ -186,7 +186,7 @@ export function useDuplicateMember() {
 export function useResetBonusClock() {
   const [resetBonusClock, { loading, data, error }] = useMutation(RESET_BONUS_CLOCK, {
     awaitRefetchQueries: true,
-    refetchQueries: ['FetchMembers', 'FetchMemberStats'],
+    refetchQueries: ['Members', 'FetchMemberStats'],
   });
 
   return { loading, data, error, resetBonusClock };
@@ -195,7 +195,7 @@ export function useResetBonusClock() {
 export function useMoveToBlocked() {
   const [moveToBlocked, { loading, data, error }] = useMutation(MOVE_TO_BLOCKED, {
     awaitRefetchQueries: true,
-    refetchQueries: ['FetchMembers', 'FetchMemberStats'],
+    refetchQueries: ['Members', 'FetchMemberStats'],
   });
 
   return { loading, data, error, moveToBlocked };

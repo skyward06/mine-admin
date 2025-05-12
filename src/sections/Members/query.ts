@@ -32,9 +32,12 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
       members {
         id
         ID
+        city
+        state
         email
         status
         mobile
+        zipCode
         assetId
         username
         fullName
@@ -43,6 +46,8 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         teamStrategy
         emailVerified
         lastAdminNote
+        primaryAddress
+        secondaryAddress
         totalIntroducers
         signUpPaymentType
         placementRequested
