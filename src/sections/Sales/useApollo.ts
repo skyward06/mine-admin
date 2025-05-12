@@ -13,6 +13,7 @@ import {
   FETCH_SALE_BY_ID,
   FETCH_SALES_QUERY,
   FETCH_SALES_STATS_QUERY,
+  CHECK_SALE_REF_DUPLICATION,
 } from './query';
 
 export function useFetchSales() {
@@ -89,4 +90,12 @@ export function useRemoveSale() {
   });
 
   return { loading, error, removeSale };
+}
+
+export function useCheckRefduplication() {
+  const [checkSaleRefDuplication, { loading, data, error }] = useMutation(
+    CHECK_SALE_REF_DUPLICATION
+  );
+
+  return { loading, data, error, checkSaleRefDuplication };
 }

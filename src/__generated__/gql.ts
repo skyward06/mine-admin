@@ -151,6 +151,7 @@ const documents = {
     "\n  mutation createSale($data: CreateSaleInput!) {\n    createSale(data: $data) {\n      id\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.CreateSaleDocument,
     "\n  mutation updateSale($data: UpdateSaleInput!) {\n    updateSale(data: $data) {\n      id\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.UpdateSaleDocument,
     "\n  mutation removeSale($data: IDInput!) {\n    removeSale(data: $data) {\n      result\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.RemoveSaleDocument,
+    "\n  mutation CheckSaleRefDuplication($data: SaleRefDuplicationInput!) {\n    checkSaleRefDuplication(data: $data) {\n      result\n      message\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.CheckSaleRefDuplicationDocument,
     "\n  mutation Login($data: AdminLoginInput!) {\n    adminLogin(data: $data) {\n      accessToken\n      status\n    }\n  }\n": types.LoginDocument,
     "\n  query Query($data: LiveStatsArgs!) {\n    liveBlockStats(data: $data) {\n      dailyData {\n        count\n        field\n      }\n      meta\n      total\n    }\n    liveMiningStats {\n      dailyData {\n        count\n        field\n      }\n      meta\n      total\n    }\n    liveUserStats(data: $data) {\n      dailyData {\n        count\n        field\n      }\n      meta\n      total\n    }\n  }\n": types.QueryDocument,
     "\n  query Blocks($page: String, $filter: JSONObject, $sort: String) {\n    blocks(page: $page, filter: $filter, sort: $sort) {\n      blocks {\n        id\n        blockNo\n        hashRate\n        difficulty\n        issuedAt\n        createdAt\n        updatedAt\n        deletedAt\n      }\n      total\n    }\n  }\n": types.BlocksDocument,
@@ -748,6 +749,10 @@ export function gql(source: "\n  mutation updateSale($data: UpdateSaleInput!) {\
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  mutation removeSale($data: IDInput!) {\n    removeSale(data: $data) {\n      result\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation removeSale($data: IDInput!) {\n    removeSale(data: $data) {\n      result\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation CheckSaleRefDuplication($data: SaleRefDuplicationInput!) {\n    checkSaleRefDuplication(data: $data) {\n      result\n      message\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation CheckSaleRefDuplication($data: SaleRefDuplicationInput!) {\n    checkSaleRefDuplication(data: $data) {\n      result\n      message\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

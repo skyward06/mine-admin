@@ -331,3 +331,15 @@ export const REMOVE_SALE = gql(/* GraphQL */ `
     }
   }
 `);
+
+export const CHECK_SALE_REF_DUPLICATION = gql(/* GraphQL */ `
+  mutation CheckSaleRefDuplication($data: SaleRefDuplicationInput!) {
+    checkSaleRefDuplication(data: $data) {
+      result
+      message
+      frontActions {
+        ...FrontActionFields
+      }
+    }
+  }
+`);
