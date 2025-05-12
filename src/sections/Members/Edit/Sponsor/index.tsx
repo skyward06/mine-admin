@@ -1,6 +1,6 @@
 import type { Member } from 'src/__generated__/graphql';
 import type { SortOrder } from 'src/routes/hooks/useQuery';
-import type { IMemberPrismaFilter, IMemberTableFilters } from 'src/sections/Members/List/types';
+import type { IMemberPrismaFilter, IMemberTableFilters } from 'src/sections/Members/List/type';
 
 import { useMemo, useEffect, useCallback } from 'react';
 

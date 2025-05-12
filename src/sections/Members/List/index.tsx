@@ -1,53 +1,30 @@
-import type { LabelColor } from 'src/components/Label';
-import type { SortOrder } from 'src/routes/hooks/useQuery';
+import { useState, useEffect } from 'react';
 
-import { useMemo, useState, useEffect, useCallback } from 'react';
-
+import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
-import Table from '@mui/material/Table';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import { alpha } from '@mui/material/styles';
-import TableBody from '@mui/material/TableBody';
-import Typography from '@mui/material/Typography';
-import LoadingButton from '@mui/lab/LoadingButton';
 
 import { paths } from 'src/routes/paths';
+import { useQuery } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
-import { useQuery, useSearchParams } from 'src/routes/hooks';
 
-import { useBoolean } from 'src/hooks/useBoolean';
+import { useTabs } from 'src/hooks/use-tabs';
 
-import { CONFIG } from 'src/config';
 import { DashboardContent } from 'src/layouts/dashboard';
 
-import { Label } from 'src/components/Label';
-import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
-import { ScrollBar } from 'src/components/ScrollBar';
-import { ConfirmDialog } from 'src/components/Dialog';
-import ExportButton from 'src/components/ExportButton';
-import { SearchInput } from 'src/components/SearchInput';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
-import {
-  useTable,
-  TableNoData,
-  TableSkeleton,
-  TableHeadCustom,
-  TablePaginationCustom,
-} from 'src/components/Table';
+import { Label, type LabelColor } from 'src/components/Label';
 
-import MemberTableRow from './MemberTableRow';
-import MemberTableFiltersResult from './MemberTableFiltersResult';
-import { useRemoveMember, useFetchMembers, useFetchMembersStats } from '../useApollo';
+import MemberListTable from './MemberListTable';
+import { useFetchMembersStats } from '../useApollo';
 
-import type { AllowState, IMemberPrismaFilter, IMemberTableFilters } from './types';
+import type { AllowState } from './type';
 
-// ----------------------------------------------------------------------
-
-const STATUS_OPTIONS: { value: AllowState; label: string; color: LabelColor }[] = [
+const TABS: { value: AllowState; label: string; color: LabelColor }[] = [
   { value: 'APPROVED', label: 'Approved', color: 'info' },
   { value: 'PENDING', label: 'Pending', color: 'success' },
   { value: 'PAID', label: 'Paid', color: 'secondary' },
@@ -55,109 +32,23 @@ const STATUS_OPTIONS: { value: AllowState; label: string; color: LabelColor }[] 
   { value: 'BLOCKED', label: 'Blocked', color: 'error' },
 ];
 
-const defaultFilter: IMemberTableFilters = {
-  search: '',
-  allowState: 'APPROVED',
-};
-
 export default function MemberListView() {
-  const table = useTable({ defaultDense: true });
-  const [selected, setSelected] = useState<string>('');
+  const tabs = useTabs('APPROVED');
 
-  const searchParams = useSearchParams();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, { setQueryParams: setQuery }] = useQuery<any>();
 
-  const [query, { setQueryParams: setQuery, setPage, setPageSize }] =
-    useQuery<IMemberTableFilters>();
-
-  const sponsorId = searchParams.get('sponsorId');
-
-  const {
-    page = { page: 1, pageSize: 10 },
-    sort = { createdAt: 'asc' },
-    filter = defaultFilter,
-  } = query;
-
-  const TABLE_HEAD = useMemo(
-    () => [
-      { id: 'ID', label: 'ID', width: 120, sortable: true },
-      { id: 'username', label: 'Username', sortable: true },
-      { id: 'fullName', label: 'Full Name', width: 120, sortable: true },
-      { id: 'mobile', label: 'Mobile', sortable: true },
-      { id: 'assetId', label: 'AssetID', width: 80, sortable: true },
-      ...(filter.allowState === 'PENDING'
-        ? [{ id: 'paymentType', label: 'Payment Type', width: 100, sortable: false }]
-        : [{ id: 'totalIntroducers', label: 'Sponsor', width: 100, sortable: true }]),
-      { id: 'placementRequested', label: 'PR', width: 150, sortable: true },
-      { id: 'emailVerified', label: 'Status', width: 150, sortable: true },
-      { id: 'adminNotes', label: 'Admin Notes', width: 200, sortable: true },
-      { id: 'createdAt', label: 'Joined At', width: 120, sortable: true },
-      { id: 'action', label: '', width: 60, align: 'center' },
-    ],
-    [filter]
-  );
-
-  const graphQueryFilter = useMemo(() => {
-    const filterObj: IMemberPrismaFilter = {};
-    if (filter.search) {
-      filterObj.OR = [
-        { email: { contains: filter.search, mode: 'insensitive' } },
-        { assetId: { contains: filter.search, mode: 'insensitive' } },
-        { mobile: { contains: filter.search, mode: 'insensitive' } },
-        { username: { contains: filter.search, mode: 'insensitive' } },
-        { fullName: { contains: filter.search, mode: 'insensitive' } },
-        { primaryAddress: { contains: filter.search, mode: 'insensitive' } },
-        {
-          memberWallets: {
-            some: { address: { contains: filter.search, mode: 'insensitive' }, deletedAt: null },
-          },
-        },
-      ];
-    }
-
-    if (filter.allowState === 'PENDING') {
-      filterObj.allowState = 'PENDING';
-    } else if (filter.allowState === 'GRAVEYARD') {
-      filterObj.allowState = 'GRAVEYARD';
-    } else if (filter.allowState === 'APPROVED') {
-      filterObj.allowState = 'APPROVED';
-    } else if (filter.allowState === 'PAID') {
-      filterObj.allowState = 'PAID';
-    } else if (filter.allowState === 'BLOCKED') {
-      filterObj.allowState = 'BLOCKED';
-    }
-
-    if (sponsorId) {
-      filterObj.sponsorId = sponsorId;
-    }
-
-    return filterObj;
-  }, [sponsorId, filter]);
-
-  const graphQuerySort = useMemo(() => {
-    if (!sort) return undefined;
-
-    return Object.entries(sort)
-      .map(([key, value]) => `${value === 'asc' ? '' : '-'}${key}`)
-      .join(',');
-  }, [sort]);
-
-  const confirm = useBoolean();
-
-  const canReset = !!filter.search;
-
-  const { loading, members, rowCount, fetchMembers } = useFetchMembers();
+  const [filter, setFilter] = useState<any>({ allowState: 'APPROVED' });
 
   const { data: statsData, fetchMemberStats } = useFetchMembersStats();
 
-  useEffect(() => {
-    fetchMembers({
-      variables: {
-        page: page && `${page.page},${page.pageSize}`,
-        filter: graphQueryFilter,
-        sort: graphQuerySort,
-      },
-    });
+  const handleTabChange = (event: React.SyntheticEvent<Element, Event>, newValue: any) => {
+    tabs.onChange(event, newValue);
+    setFilter({ allowState: newValue });
+    setQuery({});
+  };
 
+  useEffect(() => {
     fetchMemberStats({
       variables: {
         approveFilter: { allowState: 'APPROVED' },
@@ -168,28 +59,7 @@ export default function MemberListView() {
       },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query]);
-
-  const { removeMember, loading: removeLoading } = useRemoveMember();
-
-  const notFound = (canReset && !members?.length) || !members?.length;
-
-  const token = localStorage.getItem(CONFIG.storageTokenKey) ?? '';
-
-  const handleTabChange = (event: React.SyntheticEvent, newValue: AllowState) => {
-    setQuery({
-      ...query,
-      filter: { ...filter, allowState: newValue },
-      page: { page: 1, pageSize: query.page?.pageSize ?? 10 },
-    });
-  };
-
-  const handleSearchChange = useCallback(
-    (value: string) => {
-      setQuery({ ...query, filter: { ...filter, search: value } });
-    },
-    [setQuery, query, filter]
-  );
+  }, [tabs.value]);
 
   return (
     <DashboardContent>
@@ -211,146 +81,53 @@ export default function MemberListView() {
           mb: { xs: 1, md: 2 },
         }}
       />
-
-      <Card>
-        <Tabs
-          value={filter.allowState}
-          onChange={handleTabChange}
-          sx={{
-            px: 2.5,
-            boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
-          }}
-        >
-          {STATUS_OPTIONS.map((tab) => (
-            <Tab
-              key={tab.value}
-              iconPosition="end"
-              value={tab.value}
-              label={tab.label}
-              icon={
-                <Label
-                  variant={(tab.value === filter.allowState && 'filled') || 'soft'}
-                  color={tab.color}
-                >
-                  {statsData ? statsData[tab.value].total! : 0}
-                </Label>
-              }
-            />
-          ))}
-        </Tabs>
-
-        <Stack direction="row">
-          <Stack width={1}>
-            <SearchInput search={filter.search} onSearchChange={handleSearchChange} />
-          </Stack>
-          <Stack width={0.1} sx={{ p: 2.5 }}>
-            <ExportButton target="export-members" token={token} />
-          </Stack>
-        </Stack>
-
-        {canReset && !loading && (
-          <MemberTableFiltersResult results={rowCount} sx={{ p: 2.5, pt: 0 }} />
-        )}
-
-        <ScrollBar>
-          <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 1260 }}>
-            <TableHeadCustom
-              order={sort && sort[Object.keys(sort)[0]]}
-              orderBy={sort && Object.keys(sort)[0]}
-              headLabel={TABLE_HEAD}
-              rowCount={loading ? 0 : members!.length}
-              onSort={(id) => {
-                if (id !== ('action' && 'paymentType')) {
-                  const isAsc = sort && sort[id] === 'asc';
-                  const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
-                  setQuery({ ...query, sort: newSort });
-                }
-              }}
-            />
-            {loading ? (
-              <>
-                <TableSkeleton height={26} />
-                <TableSkeleton height={26} />
-                <TableSkeleton height={26} />
-                <TableSkeleton height={26} />
-                <TableSkeleton height={26} />
-                <TableSkeleton height={26} />
-                <TableSkeleton height={26} />
-                <TableSkeleton height={26} />
-                <TableSkeleton height={26} />
-                <TableSkeleton height={26} />
-              </>
-            ) : (
-              <TableBody>
-                {members!.map((row) => (
-                  <MemberTableRow
-                    key={row!.id}
-                    row={row!}
-                    selected={table.selected.includes(row!.id)}
-                    confirm={confirm}
-                    setSelected={setSelected}
-                    tabs={filter.allowState}
-                  />
-                ))}
-
-                <TableNoData notFound={notFound} />
-              </TableBody>
-            )}
-          </Table>
-        </ScrollBar>
-
-        <TablePaginationCustom
-          count={loading ? 0 : rowCount!}
-          page={loading ? 0 : page!.page - 1}
-          rowsPerPage={page?.pageSize}
-          onPageChange={(_, curPage) => {
-            setPage(curPage + 1);
-          }}
-          onRowsPerPageChange={(event) => {
-            setPageSize(parseInt(event.target.value, 10));
-          }}
-          //
-          dense={table.dense}
-          onChangeDense={table.onChangeDense}
-        />
-      </Card>
-
-      <ConfirmDialog
-        open={confirm.value}
-        onClose={confirm.onFalse}
-        title="Delete"
-        content={
-          <>
-            <Typography>This member will be removed permanently!</Typography>
-            <Typography>Are you sure?</Typography>
-          </>
-        }
-        action={
-          <LoadingButton
-            variant="contained"
-            color="error"
-            loading={removeLoading}
-            onClick={async () => {
-              try {
-                const promise = await removeMember({ variables: { data: { id: selected } } });
-                const result = promise.data?.removeMember.result;
-
-                if (result === 'success') {
-                  toast.success('Miner removed successfully');
-                } else {
-                  toast.error(promise.data?.removeMember.message);
-                }
-
-                confirm.onFalse();
-              } catch (error) {
-                toast.error(error.message);
-              }
+      <Card
+        sx={{
+          flexGrow: 1,
+          display: 'flex',
+          overflow: 'hidden',
+        }}
+      >
+        <Box textAlign="center">
+          <Tabs
+            value={tabs.value}
+            onChange={handleTabChange}
+            orientation="vertical"
+            sx={{
+              minWidth: 180,
+              borderRight: 1,
+              borderColor: 'divider',
+              [`& .MuiTabs-flexContainer`]: { gap: 0 },
+              [`& .MuiTabs-flexContainerVertical`]: {
+                padding: '16px',
+              },
             }}
           >
-            Confirm
-          </LoadingButton>
-        }
-      />
+            {TABS.map((tab) => (
+              <Tab
+                key={tab.value}
+                iconPosition="end"
+                label={
+                  <Stack direction="row" flexGrow={1}>
+                    {tab.label}
+                  </Stack>
+                }
+                value={tab.value}
+                icon={
+                  <Label
+                    variant={(tab.value === filter.allowState && 'filled') || 'soft'}
+                    color={tab.color}
+                  >
+                    {statsData ? statsData[tab.value].total! : 0}
+                  </Label>
+                }
+              />
+            ))}
+          </Tabs>
+        </Box>
+
+        <MemberListTable filter={filter} />
+      </Card>
     </DashboardContent>
   );
 }

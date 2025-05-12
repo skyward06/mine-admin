@@ -1,4 +1,4 @@
-import type { IMemberPrismaFilter, IMemberTableFilters } from 'src/sections/Members/List/types';
+import type { IMemberPrismaFilter, IMemberTableFilters } from 'src/sections/Members/List/type';
 
 import { useMemo, useEffect, useCallback } from 'react';
 
