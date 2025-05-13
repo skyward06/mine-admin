@@ -5,7 +5,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
-import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -16,7 +15,6 @@ import { useRouter } from 'src/routes/hooks';
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
 
-import LinkForm from './LinkForm';
 import { Schema, type SchemaType } from './schema';
 import { useCreatePayment, useUpdatePayment } from './useApollo';
 
@@ -97,7 +95,6 @@ export default function EditForm({ current }: Props) {
         >
           <Field.Text name="name" label="Name" />
 
-          <Field.Text name="defaultLink" label="Default Link" />
           <Field.Select
             name="visible"
             label="Visible"
@@ -108,10 +105,6 @@ export default function EditForm({ current }: Props) {
             <MenuItem value={0}>Hide</MenuItem>
           </Field.Select>
         </Box>
-
-        <Divider flexItem sx={{ borderStyle: 'dashed', my: 2 }} />
-
-        <LinkForm />
 
         <Stack alignItems="flex-end" sx={{ mt: 3 }}>
           <LoadingButton

@@ -1,10 +1,7 @@
 import type { UseBooleanReturn } from 'src/hooks/useBoolean';
 
-import { Link } from 'react-router-dom';
-
 import Stack from '@mui/material/Stack';
 import Drawer from '@mui/material/Drawer';
-import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 
 import { Iconify } from 'src/components/Iconify';
@@ -18,7 +15,7 @@ interface Props {
 }
 
 export default function Detail({ open, row }: Props) {
-  const { name, visible, defaultLink, paymentMethodLinks, createdAt } = row;
+  const { name, visible, createdAt } = row;
 
   return (
     <Drawer
@@ -45,15 +42,6 @@ export default function Detail({ open, row }: Props) {
             <Typography variant="body2">{name}</Typography>
           </Stack>
 
-          {defaultLink && (
-            <Stack direction="row" columnGap={2}>
-              <Typography variant="body2" color="text.disabled">
-                Default Link:
-              </Typography>
-              <Typography variant="body2">{defaultLink}</Typography>
-            </Stack>
-          )}
-
           <Stack direction="row" columnGap={2}>
             <Typography variant="body2" color="text.disabled">
               Visibility:
@@ -66,23 +54,6 @@ export default function Detail({ open, row }: Props) {
               }}
             />
           </Stack>
-
-          <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
-
-          <Typography variant="subtitle1">Links</Typography>
-
-          {paymentMethodLinks?.map((link) => (
-            <Stack direction="row" columnGap={1}>
-              <Typography>{link?.package?.productName}:</Typography>
-              <Typography
-                sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
-              >
-                <Link to={link?.link ?? ''} target="_blank">
-                  {link?.link}
-                </Link>
-              </Typography>
-            </Stack>
-          ))}
         </Stack>
       </ScrollBar>
     </Drawer>
