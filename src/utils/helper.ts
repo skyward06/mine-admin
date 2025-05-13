@@ -234,6 +234,8 @@ export const isTransaction = (link: string, linkType: string) => {
       return link.length === 64; // TRX transactions are 64 characters long
     case 'Hash':
       return link.includes('S');
+    case 'SALE':
+      return link.includes('S');
     case 'OTHER':
       return link.length === 64 || (link.startsWith('0x') && link.length === 66); // Other transactions are 64 characters long
     default:

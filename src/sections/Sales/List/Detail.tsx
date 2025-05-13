@@ -187,8 +187,8 @@ export default function Detail({ open, id }: Props) {
                         isValidUrl(link?.link ?? '')
                           ? link?.link
                           : isTransaction(link?.link ?? '', link.linkType)
-                            ? `${(PREPAID_TYPE as any)[link.linkType].transaction}${link?.link}`
-                            : `${(PREPAID_TYPE as any)[link.linkType].address}${link?.link}`
+                            ? `${(PREPAID_TYPE as any)[link.linkType]?.transaction}/${link?.link}`
+                            : `${(PREPAID_TYPE as any)[link.linkType]?.address}/${link?.link}`
                       }
                       target="_blank"
                     >

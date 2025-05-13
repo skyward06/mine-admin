@@ -1,3 +1,5 @@
+import { CONFIG } from 'src/config';
+
 export * from './resource';
 
 // AUTH TOKEN KEY
@@ -73,32 +75,33 @@ export const PREPAYMRENT_TYPE = [
 ];
 
 export const PREPAID_TYPE = {
-  Hash: { value: 'Hash', transaction: '', address: '' },
-  CASH: { value: 'CASH', transaction: 'https://admin.minetxc.com/sales', address: '' },
+  Hash: { value: 'Hash', transaction: `${CONFIG.SITE_PATH}/sales`, address: '' },
+  SALE: { value: 'SALE', transaction: `${CONFIG.SITE_PATH}/sales`, address: '' },
+  CASH: { value: 'CASH', transaction: '', address: '' },
   TXC: {
     value: 'TXC',
-    transaction: 'https://explorer.texitcoin.org/tx/',
-    address: 'https://explorer.texitcoin.org/address/',
+    transaction: 'https://explorer.texitcoin.org/tx',
+    address: 'https://explorer.texitcoin.org/address',
   },
   BTC: {
     value: 'BTC',
-    transaction: 'https://btcscan.org/tx/',
-    address: 'https://btcscan.org/address/',
+    transaction: 'https://btcscan.org/tx',
+    address: 'https://btcscan.org/address',
   },
   ETH: {
     value: 'ETH',
-    transaction: 'https://etherscan.io/tx/',
-    address: 'https://etherscan.io/address/',
+    transaction: 'https://etherscan.io/tx',
+    address: 'https://etherscan.io/address',
   },
   TRN: {
     value: 'TRN',
-    transaction: 'https://tronscan.io/#/transaction/',
-    address: 'https://tronscan.io/#/address/',
+    transaction: 'https://tronscan.io/#/transaction',
+    address: 'https://tronscan.io/#/address',
   },
   OTHER: {
     value: 'OTHER',
-    transaction: 'https://blockscan.com/tx/',
-    address: 'https://blockscan.com/address/',
+    transaction: 'https://blockscan.com/tx',
+    address: 'https://blockscan.com/address',
   },
 };
 
