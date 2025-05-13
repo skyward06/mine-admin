@@ -5,3 +5,9 @@ export type Sale = {
   amount: number;
   hashPower: number;
 };
+
+export type Prepaid = {
+  value: string;
+  address: string;
+  transaction: string;
+};
