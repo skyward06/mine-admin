@@ -221,3 +221,22 @@ export const makeDecimal = (value: number, length: number): string => {
 
   return value.toString();
 };
+
+export const isTransaction = (link: string, linkType: string) => {
+  switch (linkType) {
+    case 'TXC':
+      return link.length === 64; // TXC transactions are 64 characters long
+    case 'BTC':
+      return link.length === 64; // BTC transactions are 64 characters long
+    case 'ETH':
+      return link.startsWith('0x') && link.length === 66; // ETH transactions are 66 chars, starting with '0x'
+    case 'TRN':
+      return link.length === 64; // TRX transactions are 64 characters long
+    case 'Hash':
+      return link.includes('S');
+    case 'OTHER':
+      return link.length === 64 || (link.startsWith('0x') && link.length === 66); // Other transactions are 64 characters long
+    default:
+      return false; // Default to address for unsupported link types
+  }
+};
