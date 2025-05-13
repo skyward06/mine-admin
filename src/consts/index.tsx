@@ -72,7 +72,35 @@ export const PREPAYMRENT_TYPE = [
   { label: 'TEXITCOIN', value: 'texitcoin' },
 ];
 
-export const PREPAID_TYPE = ['Hash', 'CASH', 'TXC', 'BTC', 'ETH', 'TRN', 'OTHER'];
+export const PREPAID_TYPE = {
+  Hash: { value: 'Hash', transaction: '', address: '' },
+  CASH: { value: 'CASH', transaction: 'https://admin.minetxc.com/sales', address: '' },
+  TXC: {
+    value: 'TXC',
+    transaction: 'https://explorer.texitcoin.org/tx/',
+    address: 'https://explorer.texitcoin.org/address/',
+  },
+  BTC: {
+    value: 'BTC',
+    transaction: 'https://btcscan.org/tx/',
+    address: 'https://btcscan.org/address/',
+  },
+  ETH: {
+    value: 'ETH',
+    transaction: 'https://etherscan.io/tx/',
+    address: 'https://etherscan.io/address/',
+  },
+  TRN: {
+    value: 'TRN',
+    transaction: 'https://tronscan.io/#/transaction/',
+    address: 'https://tronscan.io/#/address/',
+  },
+  OTHER: {
+    value: 'OTHER',
+    transaction: 'https://blockscan.com/tx/',
+    address: 'https://blockscan.com/address/',
+  },
+};
 
 export const TXC_WALLET = [
   { id: 'b3ed0e78-6cc8-465c-9454-0576534f06f2', method: 'TXC-HOT' },
