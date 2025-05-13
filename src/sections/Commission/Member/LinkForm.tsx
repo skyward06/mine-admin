@@ -1,3 +1,4 @@
+import type { Prepaid } from 'src/types';
 import type { RefLink } from 'src/__generated__/graphql';
 
 import { useEffect } from 'react';
@@ -61,7 +62,7 @@ export default function LinkForm({ loading, reflinks, setReflinks }: Props) {
                 name={`reflinks[${index}].linkType`}
                 fullWidth
                 size="small"
-                options={PREPAID_TYPE}
+                options={Object.values(PREPAID_TYPE).map((prepaid: Prepaid) => prepaid.value)}
                 getOptionLabel={(option: any) => option ?? ''}
                 isOptionEqualToValue={(option, value) => option === value}
                 renderOption={(props, option) => (

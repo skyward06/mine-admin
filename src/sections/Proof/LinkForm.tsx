@@ -1,3 +1,5 @@
+import type { Prepaid } from 'src/types';
+
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
 import Box from '@mui/material/Box';
@@ -45,7 +47,7 @@ export default function LinkForm() {
             <Field.Autocomplete
               name={`reflinks[${index}].linkType`}
               fullWidth
-              options={PREPAID_TYPE}
+              options={Object.values(PREPAID_TYPE).map((prepaid: Prepaid) => prepaid.value)}
               getOptionLabel={(option: any) => option ?? ''}
               isOptionEqualToValue={(option, value) => option === value}
               renderOption={(props, option) => (
