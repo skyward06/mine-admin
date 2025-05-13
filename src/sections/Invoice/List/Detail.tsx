@@ -14,11 +14,10 @@ import Typography from '@mui/material/Typography';
 
 import { useBoolean, type UseBooleanReturn } from 'src/hooks/useBoolean';
 
-import { isValidUrl } from 'src/utils/helper';
 import { formatDate } from 'src/utils/format-time';
+import { isValidUrl, isTransaction } from 'src/utils/helper';
 
-import { CONFIG } from 'src/config';
-import { PREPAID_TYPE, EXPLORER_PATH } from 'src/consts';
+import { PREPAID_TYPE } from 'src/consts';
 import { InvoiceStatusEnum } from 'src/__generated__/graphql';
 
 import { Form } from 'src/components/Form';
@@ -222,23 +221,23 @@ export default function Detail({ open, row }: Props) {
             {linkEdit.value ? (
               <LinkForm loading={loading} />
             ) : (
-              proof?.reflinks?.map((item) => (
+              proof?.reflinks?.map((link) => (
                 <Stack direction="row" columnGap={1}>
-                  <Typography>{item?.linkType}:</Typography>
+                  <Typography>{link?.linkType}:</Typography>
                   <Typography
                     sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
                   >
                     <Link
                       to={
-                        (isValidUrl(item?.link ?? '')
-                          ? item?.link
-                          : item?.linkType === PREPAID_TYPE[2]
-                            ? `${EXPLORER_PATH}${item.link}`
-                            : `${CONFIG.SITE_PATH}/sales/${item?.link}`) ?? ''
+                        isValidUrl(link?.link ?? '')
+                          ? link?.link
+                          : isTransaction(link?.link ?? '', link.linkType)
+                            ? `${(PREPAID_TYPE as any)[link.linkType].transaction}${link?.link}`
+                            : `${(PREPAID_TYPE as any)[link.linkType].address}${link?.link}`
                       }
                       target="_blank"
                     >
-                      {item?.link}
+                      {link?.link}
                     </Link>
                   </Typography>
                 </Stack>

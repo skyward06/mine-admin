@@ -12,10 +12,9 @@ import Typography from '@mui/material/Typography';
 import ListItemText from '@mui/material/ListItemText';
 
 import { formatDateTime } from 'src/utils/format-time';
-import { formatID, isValidUrl, customizeFullName } from 'src/utils/helper';
+import { formatID, isValidUrl, isTransaction, customizeFullName } from 'src/utils/helper';
 
-import { CONFIG } from 'src/config';
-import { PREPAID_TYPE, EXPLORER_PATH, BLOCK_SACN_TRANSACTION_PATH } from 'src/consts';
+import { PREPAID_TYPE } from 'src/consts';
 
 import { Iconify } from 'src/components/Iconify';
 import { ScrollBar } from 'src/components/ScrollBar';
@@ -185,13 +184,11 @@ export default function Detail({ open, id }: Props) {
                   >
                     <Link
                       to={
-                        (isValidUrl(link?.link ?? '')
+                        isValidUrl(link?.link ?? '')
                           ? link?.link
-                          : link?.linkType === PREPAID_TYPE[2]
-                            ? `${EXPLORER_PATH}${link.link}`
-                            : link.linkType === PREPAID_TYPE[0]
-                              ? `${CONFIG.SITE_PATH}/sales/${link?.link}`
-                              : `${BLOCK_SACN_TRANSACTION_PATH}${link.link}`) ?? ''
+                          : isTransaction(link?.link ?? '', link.linkType)
+                            ? `${(PREPAID_TYPE as any)[link.linkType].transaction}${link?.link}`
+                            : `${(PREPAID_TYPE as any)[link.linkType].address}${link?.link}`
                       }
                       target="_blank"
                     >
