@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -8,15 +8,18 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 
 import { paths } from 'src/routes/paths';
-import { useQuery } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
+import { useQuery, useAgQuery } from 'src/routes/hooks';
 
 import { useTabs } from 'src/hooks/use-tabs';
 
+import { CONFIG } from 'src/config';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/Iconify';
+import ExportButton from 'src/components/ExportButton';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
+import { SearchInput } from 'src/components/SearchInput';
 import { Label, type LabelColor } from 'src/components/Label';
 
 import MemberListTable from './MemberListTable';
@@ -35,18 +38,42 @@ const TABS: { value: AllowState; label: string; color: LabelColor }[] = [
 export default function MemberListView() {
   const tabs = useTabs('APPROVED');
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, { setQueryParams: setQuery }] = useQuery<any>();
+  const token = localStorage.getItem(CONFIG.storageTokenKey) ?? '';
 
-  const [filter, setFilter] = useState<any>({ allowState: 'APPROVED' });
+  const [query, { setQueryParams: setQuery }] = useQuery<any>();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, { setFilter }] = useAgQuery();
+
+  const [customFilter, setCustomFilter] = useState<any>({ allowState: 'APPROVED' });
 
   const { data: statsData, fetchMemberStats } = useFetchMembersStats();
 
   const handleTabChange = (event: React.SyntheticEvent<Element, Event>, newValue: any) => {
     tabs.onChange(event, newValue);
-    setFilter({ allowState: newValue });
+    setCustomFilter({ allowState: newValue });
     setQuery({});
+    setFilter({});
   };
+
+  const handleSearchChange = useCallback(
+    (value: string) => {
+      setFilter({});
+      setQuery({
+        ...query,
+        filter: {
+          OR: [
+            { email: { contains: value, mode: 'insensitive' } },
+            { assetId: { contains: value, mode: 'insensitive' } },
+            { username: { contains: value, mode: 'insensitive' } },
+            { fullName: { contains: value, mode: 'insensitive' } },
+            { mobile: { contains: value, mode: 'insensitive' } },
+            { primaryAddress: { contains: value, mode: 'insensitive' } },
+          ],
+        },
+      });
+    },
+    [setQuery, setFilter, query]
+  );
 
   useEffect(() => {
     fetchMemberStats({
@@ -81,11 +108,28 @@ export default function MemberListView() {
           mb: { xs: 1, md: 2 },
         }}
       />
+
+      <Card sx={{ borderRadius: '10px 10px 0 0' }}>
+        <Stack direction="row">
+          <Stack width={1}>
+            <SearchInput
+              search={customFilter.search}
+              onSearchChange={handleSearchChange}
+              sx={{ p: 1.5 }}
+            />
+          </Stack>
+          <Stack width={0.1} sx={{ p: 1.5 }}>
+            <ExportButton target="export-members" token={token} />
+          </Stack>
+        </Stack>
+      </Card>
+
       <Card
         sx={{
           flexGrow: 1,
           display: 'flex',
           overflow: 'hidden',
+          borderRadius: '0 0 10px 10px',
         }}
       >
         <Box textAlign="center">
@@ -115,7 +159,7 @@ export default function MemberListView() {
                 value={tab.value}
                 icon={
                   <Label
-                    variant={(tab.value === filter.allowState && 'filled') || 'soft'}
+                    variant={(tab.value === customFilter.allowState && 'filled') || 'soft'}
                     color={tab.color}
                   >
                     {statsData ? statsData[tab.value].total! : 0}
@@ -126,7 +170,7 @@ export default function MemberListView() {
           </Tabs>
         </Box>
 
-        <MemberListTable filter={filter} />
+        <MemberListTable customFilter={customFilter} />
       </Card>
     </DashboardContent>
   );

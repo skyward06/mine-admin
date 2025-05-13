@@ -24,10 +24,10 @@ import { useUpdateMember, useFetchMembers } from '../useApollo';
 import type { BasicMember } from './type';
 
 interface Props {
-  filter: any;
+  customFilter: any;
 }
 
-export default function MemberListTable({ filter: customFilter }: Props) {
+export default function MemberListTable({ customFilter }: Props) {
   const router = useRouter();
 
   const sponsorId = useSearchParams().get('sponsorId');

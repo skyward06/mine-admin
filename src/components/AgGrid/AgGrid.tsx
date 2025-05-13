@@ -20,7 +20,7 @@ import { SetFilterModule } from '@ag-grid-enterprise/set-filter';
 import Box from '@mui/material/Box';
 import { useTheme } from '@mui/material';
 
-import { useAgQuery } from 'src/routes/hooks';
+import { useQuery, useAgQuery } from 'src/routes/hooks';
 
 import { debounce } from 'src/utils/lodash';
 
@@ -44,6 +44,9 @@ export const AgGrid = <TData,>(props: Props<TData>) => {
 
   const gridRef = useRef<AgGridReact<TData>>(null);
   const gridWrapperRef = useRef<HTMLDivElement>(null);
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, { setQueryParams: setQuery }] = useQuery();
 
   const [query, { setPage, setPageSize, setSort, setFilter }] = useAgQuery<FilterModel>();
   const { pageModel = { page: 1, pageSize: 50 }, sortModel, filter } = query;
@@ -124,6 +127,7 @@ export const AgGrid = <TData,>(props: Props<TData>) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedFilterChange = useCallback(
     debounce((value) => {
+      setQuery({});
       setFilter(value);
     }, 500),
     [setFilter]
