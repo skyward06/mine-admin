@@ -1,11 +1,9 @@
-import type { Admin } from 'src/__generated__/graphql';
-
 import axios from 'axios';
 import { z as zod } from 'zod';
 import { useForm } from 'react-hook-form';
+import { ApolloError } from '@apollo/client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMemo, useState, useCallback } from 'react';
-import { ApolloError, useMutation } from '@apollo/client';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -26,8 +24,8 @@ import { fData } from 'src/utils/formatNumber';
 import { fDateTime } from 'src/utils/format-time';
 
 import { CONFIG } from 'src/config';
-import { PERMISSIONS } from 'src/consts';
-import { gql } from 'src/__generated__/gql';
+import { ADMIN_STATUS } from 'src/consts';
+import { type Admin, AdminStatus } from 'src/__generated__/graphql';
 
 import { Label } from 'src/components/Label';
 import { toast } from 'src/components/SnackBar';
@@ -39,6 +37,7 @@ import { useAuthContext } from 'src/auth/hooks';
 import PasswordModal from './PasswordModal';
 import { useDisable2FA } from './useApollo';
 import { useFetchRoles } from '../Role/useApollo';
+import { useUpdateAdmin } from '../UserList/useApollo';
 
 // ----------------------------------------------------------------------
 
@@ -47,24 +46,12 @@ type Props = {
 };
 
 // ----------------------------------------------------------------------
-
-const UPDATE_USER = gql(/* GraphQL */ `
-  mutation updateAdmin($data: UpdateAdminInput!) {
-    updateAdmin(data: $data) {
-      id
-      frontActions {
-        ...FrontActionFields
-      }
-    }
-  }
-`);
-
-// ----------------------------------------------------------------------
 export type UserGeneralSchemaType = zod.infer<typeof UserGeneralSchema>;
 
 const UserGeneralSchema = zod.object({
   username: zod.string({ required_error: 'Username is required' }),
   fullName: zod.string({ required_error: 'Full Name is required' }),
+  status: zod.enum([AdminStatus.Enabled, AdminStatus.Disabled]),
   roleId: zod.string({ required_error: 'Role is required' }),
   email: zod
     .string({ required_error: 'Email is required' })
@@ -82,7 +69,7 @@ export default function UserGeneral({ currentUser }: Props) {
 
   const { user } = useAuthContext();
   const { roles } = useFetchRoles();
-  const [submit, { loading }] = useMutation(UPDATE_USER);
+  const { loading, updateAdmin } = useUpdateAdmin();
   const { loading: disableLoading, disable2FA } = useDisable2FA();
 
   const defaultValues = useMemo(() => {
@@ -99,7 +86,7 @@ export default function UserGeneral({ currentUser }: Props) {
 
   const onSubmit = handleSubmit(async (newUser) => {
     try {
-      await submit({
+      await updateAdmin({
         variables: {
           data: {
             ...newUser,
@@ -240,16 +227,30 @@ export default function UserGeneral({ currentUser }: Props) {
                 <Field.Text name="username" label="Username" />
                 <Field.Text name="fullName" label="Full Name" />
                 <Field.Text name="email" label="Email Address" />
-                {(user?.role?.role === PERMISSIONS.ASSIGN_ROLE_PERMISSION.value ||
-                  user?.role?.role === 7) && (
-                  <Field.Select name="roleId" label="Role">
-                    {roles.map((item) => (
-                      <MenuItem key={item?.id} value={item?.id}>
-                        {item?.name}
-                      </MenuItem>
-                    ))}
-                  </Field.Select>
-                )}
+                {
+                  // eslint-disable-next-line no-bitwise
+                  user?.role?.admin! & 2 ? (
+                    <Field.Select name="roleId" label="Role">
+                      {roles.map((item) => (
+                        <MenuItem key={item?.id} value={item?.id}>
+                          {item?.name}
+                        </MenuItem>
+                      ))}
+                    </Field.Select>
+                  ) : null
+                }
+                {
+                  // eslint-disable-next-line no-bitwise
+                  user?.role?.admin! & 2 ? (
+                    <Field.Select name="status" label="Status">
+                      {Object.values(AdminStatus).map((item) => (
+                        <MenuItem key={item} value={item}>
+                          {ADMIN_STATUS[item as keyof typeof ADMIN_STATUS]}
+                        </MenuItem>
+                      ))}
+                    </Field.Select>
+                  ) : null
+                }
               </Box>
 
               <Stack direction="row" justifyContent="flex-end" spacing={2} sx={{ mt: 3 }}>

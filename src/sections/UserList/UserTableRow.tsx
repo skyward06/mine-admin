@@ -1,11 +1,9 @@
-import type { Admin } from 'src/__generated__/graphql';
-
 import { useState } from 'react';
 
 import Paper from '@mui/material/Paper';
-import Tooltip from '@mui/material/Tooltip';
+import MenuList from '@mui/material/MenuList';
+import MenuItem from '@mui/material/MenuItem';
 import TableRow from '@mui/material/TableRow';
-import Checkbox from '@mui/material/Checkbox';
 import TableCell from '@mui/material/TableCell';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
@@ -18,38 +16,75 @@ import { useRouter } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
-import { formatDate, formatTime, formatDateTime } from 'src/utils/format-time';
+import { formatDate, formatTime } from 'src/utils/format-time';
+
+import { ADMIN_STATUS } from 'src/consts';
+import { type Admin, AdminStatus } from 'src/__generated__/graphql';
 
 import { Label } from 'src/components/Label';
 import UserItem from 'src/components/UserItem';
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 import { ConfirmDialog } from 'src/components/Dialog';
+import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
-import { useUpdatePasswordByAdmin } from './useApollo';
+import { useRemoveAdmin, useUpdateAdmin, useUpdatePasswordByAdmin } from './useApollo';
 
 // ----------------------------------------------------------------------
 
 type Props = {
   selected: boolean;
   row: Admin;
-  onSelectRow: VoidFunction;
 };
 
-export default function UserTableRow({
-  row,
-  selected,
-
-  onSelectRow,
-}: Props) {
+export default function UserTableRow({ row, selected }: Props) {
   const router = useRouter();
+  const popover = usePopover();
+
   const confirm = useBoolean();
   const password = useBoolean();
+  const removeConfirm = useBoolean();
+
   const [newPassword, setNewPassword] = useState<any>();
 
-  const { id, username, email, avatar, role, createdAt, updatedAt, deletedAt } = row;
+  const { id, username, email, status, avatar, role, createdAt, updatedAt } = row;
 
+  const { loading: updateLoading, updateAdmin } = useUpdateAdmin();
+  const { loading: removeLoading, removeAdmin } = useRemoveAdmin();
   const { loading, updatePasswordByAdmin } = useUpdatePasswordByAdmin();
+
+  const handleRemoveAdmin = async () => {
+    try {
+      const { data } = await removeAdmin({ variables: { data: { id } } });
+
+      if (data?.removeAdmin.result === 'success') {
+        toast.error('Successfully removed!');
+        removeConfirm.onFalse();
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const handleChangeStatus = async () => {
+    try {
+      const { data } = await updateAdmin({
+        variables: {
+          data: {
+            id,
+            status: status === AdminStatus.Enabled ? AdminStatus.Disabled : AdminStatus.Enabled,
+          },
+        },
+      });
+
+      if (data) {
+        toast.success('Successfully Changed!');
+        popover.onClose();
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
 
   const resetContent = (
     <Paper sx={{ py: 2 }}>
@@ -85,10 +120,6 @@ export default function UserTableRow({
   return (
     <>
       <TableRow hover selected={selected}>
-        <TableCell padding="checkbox">
-          <Checkbox checked={selected} onClick={onSelectRow} />
-        </TableCell>
-
         <TableCell
           sx={{
             display: 'flex',
@@ -135,37 +166,56 @@ export default function UserTableRow({
         </TableCell>
 
         <TableCell>
-          {deletedAt ? (
-            <Tooltip title={`Deactivated at ${formatDateTime(deletedAt)}`} placement="top" arrow>
-              <Label variant="soft" color="error">
-                Inactive
-              </Label>
-            </Tooltip>
-          ) : (
-            <Label variant="soft" color="success">
-              Active
-            </Label>
-          )}
+          <Label variant="soft" color={status === AdminStatus.Enabled ? 'success' : 'error'}>
+            {ADMIN_STATUS[status]}
+          </Label>
         </TableCell>
 
         <TableCell align="left" sx={{ px: 1, whiteSpace: 'nowrap' }}>
-          <Tooltip title="Edit" placement="top" arrow>
-            <IconButton
-              color="default"
-              onClick={() => {
-                router.push(paths.dashboard.user.edit(id));
-              }}
-            >
-              <Iconify icon="solar:pen-2-bold" />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Reset Password" placement="top" arrow>
-            <IconButton color="default" onClick={confirm.onTrue}>
-              <Iconify icon="basil:unlock-solid" />
-            </IconButton>
-          </Tooltip>
+          <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
+            <Iconify icon="eva:more-horizontal-fill" />
+          </IconButton>
         </TableCell>
       </TableRow>
+
+      <CustomPopover
+        open={popover.open}
+        anchorEl={popover.anchorEl}
+        onClose={popover.onClose}
+        slotProps={{ arrow: { placement: 'right-top' } }}
+      >
+        <MenuList>
+          <MenuItem
+            onClick={() => {
+              router.push(paths.dashboard.user.edit(id));
+            }}
+          >
+            <Iconify icon="solar:pen-2-bold" />
+            Edit
+          </MenuItem>
+
+          <MenuItem onClick={handleChangeStatus}>
+            <Iconify icon="fluent-mdl2:sync-status-solid" />
+            {status === AdminStatus.Enabled ? 'Disable' : 'Enable'}
+            {updateLoading && <Iconify icon="eos-icons:bubble-loading" />}
+          </MenuItem>
+
+          <MenuItem onClick={confirm.onTrue}>
+            <Iconify icon="basil:unlock-solid" />
+            Reset Password
+          </MenuItem>
+
+          <MenuItem
+            onClick={() => {
+              popover.onClose();
+              removeConfirm.onTrue();
+            }}
+          >
+            <Iconify icon="solar:trash-bin-minimalistic-bold" color="red" />
+            Delete
+          </MenuItem>
+        </MenuList>
+      </CustomPopover>
 
       <ConfirmDialog
         open={confirm.value}
@@ -188,6 +238,23 @@ export default function UserTableRow({
                 toast.error(err.message);
               }
             }}
+          >
+            OK
+          </LoadingButton>
+        }
+      />
+
+      <ConfirmDialog
+        open={removeConfirm.value}
+        onClose={removeConfirm.onFalse}
+        title="Delete"
+        content="This admin will be removed permanently! Are you sure?"
+        action={
+          <LoadingButton
+            variant="contained"
+            color="error"
+            loading={removeLoading}
+            onClick={handleRemoveAdmin}
           >
             OK
           </LoadingButton>

@@ -33,6 +33,7 @@ const FETCH_USER = gql(/* GraphQL */ `
           name
           role
           sale
+          admin
           commission
           description
         }

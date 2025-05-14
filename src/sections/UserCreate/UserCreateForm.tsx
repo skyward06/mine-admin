@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { z as zod } from 'zod';
 import { useForm } from 'react-hook-form';
+import { ApolloError } from '@apollo/client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMemo, useState, useCallback } from 'react';
-import { ApolloError, useMutation } from '@apollo/client';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -19,8 +19,7 @@ import { useRouter } from 'src/routes/hooks';
 import { fData } from 'src/utils/formatNumber';
 
 import { CONFIG } from 'src/config';
-import { PERMISSIONS } from 'src/consts';
-import { gql } from 'src/__generated__/gql';
+import { ADMIN_STATUS } from 'src/consts';
 import { AdminStatus } from 'src/__generated__/graphql';
 
 import { toast } from 'src/components/SnackBar';
@@ -30,19 +29,7 @@ import { Form, Field } from 'src/components/Form';
 import { useAuthContext } from 'src/auth/hooks';
 
 import { useFetchRoles } from '../Role/useApollo';
-
-// ----------------------------------------------------------------------
-
-const CREATE_USER = gql(/* GraphQL */ `
-  mutation createAdmin($data: CreateAdminInput!) {
-    createAdmin(data: $data) {
-      id
-      frontActions {
-        ...FrontActionFields
-      }
-    }
-  }
-`);
+import { useCreateAdmin } from '../UserList/useApollo';
 
 // ----------------------------------------------------------------------
 export type NewUserSchemaType = zod.infer<typeof NewUserSchema>;
@@ -50,6 +37,7 @@ export type NewUserSchemaType = zod.infer<typeof NewUserSchema>;
 const NewUserSchema = zod.object({
   username: zod.string({ required_error: 'Username is required' }),
   fullName: zod.string({ required_error: 'Full Name is required' }),
+  status: zod.enum([AdminStatus.Enabled, AdminStatus.Disabled]),
   roleId: zod.string().optional(),
   email: zod
     .string({ required_error: 'Email is required' })
@@ -75,7 +63,7 @@ export default function UserCreateForm() {
 
   const { user } = useAuthContext();
   const { roles } = useFetchRoles();
-  const [submit, { loading }] = useMutation(CREATE_USER);
+  const { loading, createAdmin } = useCreateAdmin();
 
   const methods = useForm<NewUserSchemaType>({
     resolver: zodResolver(NewUserSchema),
@@ -86,11 +74,10 @@ export default function UserCreateForm() {
 
   const onSubmit = handleSubmit(async ({ ...data }) => {
     try {
-      await submit({
+      await createAdmin({
         variables: {
           data: {
             ...data,
-            status: AdminStatus.Enabled,
             avatar,
             password: '',
           },
@@ -197,16 +184,30 @@ export default function UserCreateForm() {
               <Field.Text name="username" label="Username" />
               <Field.Text name="fullName" label="Full Name" />
               <Field.Text name="email" label="Email Address" />
-              {(user?.role?.role === PERMISSIONS.ASSIGN_ROLE_PERMISSION.value ||
-                user?.role?.role === 7) && (
-                <Field.Select name="roleId" label="Role">
-                  {roles.map((item) => (
-                    <MenuItem key={item?.id} value={item?.id}>
-                      {item?.name}
-                    </MenuItem>
-                  ))}
-                </Field.Select>
-              )}
+              {
+                // eslint-disable-next-line no-bitwise
+                user?.role?.admin! & 2 && (
+                  <Field.Select name="roleId" label="Role">
+                    {roles.map((item) => (
+                      <MenuItem key={item?.id} value={item?.id}>
+                        {item?.name}
+                      </MenuItem>
+                    ))}
+                  </Field.Select>
+                )
+              }
+              {
+                // eslint-disable-next-line no-bitwise
+                user?.role?.admin! & 2 && (
+                  <Field.Select name="status" label="Status">
+                    {Object.values(AdminStatus).map((item) => (
+                      <MenuItem key={item} value={item}>
+                        {ADMIN_STATUS[item as keyof typeof ADMIN_STATUS]}
+                      </MenuItem>
+                    ))}
+                  </Field.Select>
+                )
+              }
             </Box>
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>

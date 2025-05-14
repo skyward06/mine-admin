@@ -1,34 +1,26 @@
-import type { Admin } from 'src/__generated__/graphql';
 import type { LabelColor } from 'src/components/Label';
 import type { SortOrder } from 'src/routes/hooks/useQuery';
 
-import { useMemo, useCallback } from 'react';
-import { useMutation, useQuery as useGraphQuery } from '@apollo/client';
+import { useMemo, useEffect, useCallback } from 'react';
 
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
 import { alpha } from '@mui/material/styles';
 import TableBody from '@mui/material/TableBody';
-import IconButton from '@mui/material/IconButton';
 import TableContainer from '@mui/material/TableContainer';
 
 import { paths } from 'src/routes/paths';
+import { useQuery } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
-import { useQuery, useRouter } from 'src/routes/hooks';
 
-import { useBoolean } from 'src/hooks/useBoolean';
-
-import { gql } from 'src/__generated__/gql';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Label } from 'src/components/Label';
 import { Iconify } from 'src/components/Iconify';
 import { ScrollBar } from 'src/components/ScrollBar';
-import { ConfirmDialog } from 'src/components/Dialog';
 import { SearchInput } from 'src/components/SearchInput';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import {
@@ -36,12 +28,12 @@ import {
   TableNoData,
   TableSkeleton,
   TableHeadCustom,
-  TableSelectedAction,
   TablePaginationCustom,
 } from 'src/components/Table';
 
 import UserTableRow from './UserTableRow';
 import UserTableFiltersResult from './UserTableFiltersResult';
+import { useFetchAdmins, useFetchAdminStats } from './useApollo';
 
 import type { UserRole, IUserPrismaFilter, IUserTableFilters } from './types';
 
@@ -66,72 +58,8 @@ const defaultFilter: IUserTableFilters = {
   status: 'all',
 };
 
-// ----------------------------------------------------------------------
-
-const FETCH_USER_STATS_QUERY = gql(/* GraphQL */ `
-  query FetchUserStats(
-    $adminFilter: JSONObject
-    $apFilter: JSONObject
-    $inactiveFilter: JSONObject
-  ) {
-    all: admins {
-      total
-    }
-    admin: admins(filter: $adminFilter) {
-      total
-    }
-    user: admins(filter: $apFilter) {
-      total
-    }
-    inactive: admins(filter: $inactiveFilter) {
-      total
-    }
-  }
-`);
-
-const FETCH_USERS_QUERY = gql(/* GraphQL */ `
-  query FetchUsers($page: String, $filter: JSONObject, $sort: String) {
-    admins(page: $page, filter: $filter, sort: $sort) {
-      admins {
-        id
-        email
-        avatar
-        roleId
-        status
-        username
-        fullName
-        createdAt
-        updatedAt
-        deletedAt
-        OTPEnabled
-        role {
-          id
-          name
-          role
-          sale
-          commission
-          description
-        }
-      }
-      total
-    }
-  }
-`);
-
-const REMOVE_USERS = gql(/* GraphQL */ `
-  mutation RemoveAdmins($data: IDsInput!) {
-    removeAdmins(data: $data) {
-      count
-    }
-  }
-`);
-
-// ----------------------------------------------------------------------
-
 export default function UserListView() {
   const table = useTable({ defaultDense: true });
-
-  const router = useRouter();
 
   const [query, { setQueryParams: setQuery, setPage, setPageSize }] = useQuery<IUserTableFilters>();
 
@@ -161,31 +89,12 @@ export default function UserListView() {
       .join(',');
   }, [sort]);
 
-  const confirm = useBoolean();
-
   const canReset = !!filter.search;
 
-  const { data: statsData } = useGraphQuery(FETCH_USER_STATS_QUERY, {
-    variables: {
-      inactiveFilter: { deletedAt: { not: null } },
-    },
-  });
+  const { data: statsData, fetchAdminStats } = useFetchAdminStats();
+  const { loading, rowCount, admins, fetchAdmins } = useFetchAdmins();
 
-  const { loading, data } = useGraphQuery(FETCH_USERS_QUERY, {
-    variables: {
-      page: page && `${page.page},${page.pageSize}`,
-      filter: graphQueryFilter,
-      sort: graphQuerySort,
-    },
-  });
-
-  const [removeUsers] = useMutation(REMOVE_USERS, {
-    variables: { data: { ids: table.selected } },
-  });
-
-  const tableData = data?.admins;
-
-  const notFound = (canReset && !tableData?.admins?.length) || !tableData?.admins?.length;
+  const notFound = (canReset && !admins?.length) || !admins?.length;
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: UserRole) => {
     setQuery({
@@ -201,6 +110,23 @@ export default function UserListView() {
     },
     [setQuery, query, filter]
   );
+
+  useEffect(() => {
+    fetchAdmins({
+      variables: {
+        page: page && `${page.page},${page.pageSize}`,
+        filter: graphQueryFilter,
+        sort: graphQuerySort,
+      },
+    });
+
+    fetchAdminStats({
+      variables: {
+        inactiveFilter: { deletedAt: { not: null } },
+      },
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query, fetchAdmins, fetchAdminStats]);
 
   return (
     <DashboardContent>
@@ -253,48 +179,22 @@ export default function UserListView() {
         <SearchInput search={filter.search} onSearchChange={handleSearchChange} />
 
         {canReset && !loading && (
-          <UserTableFiltersResult results={tableData!.total!} sx={{ p: 2.5, pt: 0 }} />
+          <UserTableFiltersResult results={rowCount} sx={{ p: 2.5, pt: 0 }} />
         )}
 
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-          <TableSelectedAction
-            dense={table.dense}
-            numSelected={table.selected.length}
-            rowCount={loading ? 0 : tableData!.admins!.length}
-            onSelectAllRows={(checked) =>
-              table.onSelectAllRows(
-                checked,
-                tableData!.admins!.map((row: Admin) => row!.id)
-              )
-            }
-            action={
-              <Tooltip title="Delete">
-                <IconButton color="primary" onClick={confirm.onTrue}>
-                  <Iconify icon="solar:trash-bin-trash-bold" />
-                </IconButton>
-              </Tooltip>
-            }
-          />
-
           <ScrollBar>
             <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
               <TableHeadCustom
                 order={sort && sort[Object.keys(sort)[0]]}
                 orderBy={sort && Object.keys(sort)[0]}
                 headLabel={TABLE_HEAD}
-                rowCount={loading ? 0 : tableData!.admins!.length}
-                numSelected={table.selected.length}
+                rowCount={rowCount}
                 onSort={(id) => {
                   const isAsc = sort && sort[id] === 'asc';
                   const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
                   setQuery({ ...query, sort: newSort });
                 }}
-                onSelectAllRows={(checked) =>
-                  table.onSelectAllRows(
-                    checked,
-                    tableData!.admins!.map((row) => row!.id)
-                  )
-                }
               />
               {loading ? (
                 <>
@@ -306,12 +206,11 @@ export default function UserListView() {
                 </>
               ) : (
                 <TableBody>
-                  {tableData!.admins!.map((row) => (
+                  {admins!.map((row) => (
                     <UserTableRow
                       key={row!.id}
                       row={row!}
                       selected={table.selected.includes(row!.id)}
-                      onSelectRow={() => table.onSelectRow(row!.id)}
                     />
                   ))}
 
@@ -323,7 +222,7 @@ export default function UserListView() {
         </TableContainer>
 
         <TablePaginationCustom
-          count={loading ? 0 : tableData!.total!}
+          count={rowCount}
           page={loading ? 0 : page!.page - 1}
           rowsPerPage={page?.pageSize}
           onPageChange={(_, curPage) => {
@@ -337,28 +236,6 @@ export default function UserListView() {
           onChangeDense={table.onChangeDense}
         />
       </Card>
-
-      <ConfirmDialog
-        title="Delete"
-        content="Are you sure?"
-        open={confirm.value}
-        onClose={confirm.onFalse}
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            onClick={async () => {
-              confirm.onFalse();
-
-              removeUsers();
-
-              router.refresh();
-            }}
-          >
-            Confirm
-          </Button>
-        }
-      />
     </DashboardContent>
   );
 }
