@@ -31,6 +31,7 @@ const FETCH_ME_QUERY = gql(/* GraphQL */ `
         name
         sale
         role
+        admin
         commission
         description
       }
