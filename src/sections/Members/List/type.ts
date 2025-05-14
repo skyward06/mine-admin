@@ -128,6 +128,7 @@ export type BasicMember = {
   totalIntroducers: number;
   teamStrategy: TeamStrategy;
   placementRequested: Boolean;
+  adminUsername?: string | null;
   lastAdminNote?: string | null;
   secondaryAddress?: string | null;
   signUpPaymentType?: string | null;

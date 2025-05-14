@@ -25,6 +25,7 @@ const FETCH_ME_QUERY = gql(/* GraphQL */ `
       email
       avatar
       roleId
+      status
       role {
         id
         name

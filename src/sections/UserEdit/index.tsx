@@ -23,6 +23,7 @@ const FETCH_USER = gql(/* GraphQL */ `
         email
         avatar
         roleId
+        status
         username
         fullName
         deletedAt

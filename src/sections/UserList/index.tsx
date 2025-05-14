@@ -97,6 +97,7 @@ const FETCH_USERS_QUERY = gql(/* GraphQL */ `
         email
         avatar
         roleId
+        status
         username
         fullName
         createdAt

@@ -21,6 +21,7 @@ import { fData } from 'src/utils/formatNumber';
 import { CONFIG } from 'src/config';
 import { PERMISSIONS } from 'src/consts';
 import { gql } from 'src/__generated__/gql';
+import { AdminStatus } from 'src/__generated__/graphql';
 
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
@@ -89,6 +90,7 @@ export default function UserCreateForm() {
         variables: {
           data: {
             ...data,
+            status: AdminStatus.Enabled,
             avatar,
             password: '',
           },
