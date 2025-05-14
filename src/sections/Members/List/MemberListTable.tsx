@@ -215,7 +215,7 @@ export default function MemberListTable({ customFilter }: Props) {
             )}
             {data?.adminUsername && (
               <Label variant="soft" color="primary">
-                {data.adminUsername}
+                {data.fullName.split(' ').filter(Boolean)[0]}
               </Label>
             )}
           </Stack>
