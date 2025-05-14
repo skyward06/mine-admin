@@ -45,6 +45,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         allowState
         teamStrategy
         adminUsername
+        adminFullname
         emailVerified
         lastAdminNote
         primaryAddress

@@ -213,9 +213,9 @@ export default function MemberListTable({ customFilter }: Props) {
                 Unverified
               </Label>
             )}
-            {data?.adminUsername && (
+            {data?.adminFullname && (
               <Label variant="soft" color="primary">
-                {data.fullName.split(' ').filter(Boolean)[0]}
+                {data.adminFullname.split(' ').filter(Boolean)[0]}
               </Label>
             )}
           </Stack>
