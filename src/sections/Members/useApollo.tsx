@@ -2,6 +2,7 @@ import { useRef, useMemo } from 'react';
 import { useMutation, useLazyQuery, useQuery as useGraphQuery } from '@apollo/client';
 
 import {
+  ADMIN_GOT_IT,
   LOGOUT_FORCE,
   MOVE_TO_PAID,
   UPDATE_MEMBER,
@@ -205,4 +206,13 @@ export function useLogoutForce() {
   const [logoutForce, { loading, data, error }] = useMutation(LOGOUT_FORCE);
 
   return { loading, data, error, logoutForce };
+}
+
+export function useAdminGotIt() {
+  const [adminGotIt, { loading, data, error }] = useMutation(ADMIN_GOT_IT, {
+    awaitRefetchQueries: true,
+    refetchQueries: ['Members'],
+  });
+
+  return { loading, data, error, adminGotIt };
 }

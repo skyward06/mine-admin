@@ -44,6 +44,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         createdAt
         allowState
         teamStrategy
+        adminUsername
         emailVerified
         lastAdminNote
         primaryAddress
@@ -240,6 +241,7 @@ export const FETCH_MEMBER_QUERY = gql(/* GraphQL */ `
           id
           email
           avatar
+          status
           roleId
           username
           fullName
@@ -270,6 +272,17 @@ export const FETCH_MEMBER_QUERY = gql(/* GraphQL */ `
         userAgent
         accessToken
         browserVersion
+      }
+      gotAdmin {
+        id
+        email
+        avatar
+        roleId
+        status
+        username
+        fullName
+        createdAt
+        OTPEnabled
       }
       createdAt
       updatedAt
@@ -521,6 +534,15 @@ export const LOGOUT_FORCE = gql(/* GraphQL */ `
       frontActions {
         ...FrontActionFields
       }
+    }
+  }
+`);
+
+export const ADMIN_GOT_IT = gql(/* GraphQL */ `
+  mutation AdminGotIt($data: IDInput!) {
+    adminGotIt(data: $data) {
+      result
+      message
     }
   }
 `);
