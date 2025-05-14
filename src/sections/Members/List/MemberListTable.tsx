@@ -213,6 +213,11 @@ export default function MemberListTable({ customFilter }: Props) {
                 Unverified
               </Label>
             )}
+            {data?.adminUsername && (
+              <Label variant="soft" color="primary">
+                {data.adminUsername}
+              </Label>
+            )}
           </Stack>
         ),
       },

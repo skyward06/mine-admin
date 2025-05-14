@@ -22,6 +22,7 @@ import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
 import Detail from './Detail';
 import {
+  useAdminGotIt,
   useMoveToPaid,
   useLogoutForce,
   useRemoveMember,
@@ -57,6 +58,7 @@ export const ActionRender = memo(
       `${current?.city}, ${current?.state}, ${current?.zipCode}`,
     ];
 
+    const { loading: gotLoading, adminGotIt } = useAdminGotIt();
     const { moveToPaid } = useMoveToPaid();
     const { logoutForce } = useLogoutForce();
     const { moveToPending } = useMoveToPending();
@@ -178,6 +180,18 @@ export const ActionRender = memo(
       }
     };
 
+    const handleAdminGotIt = async () => {
+      try {
+        const { data } = await adminGotIt({ variables: { data: { id: current?.id! } } });
+
+        if (data?.adminGotIt.result) {
+          toast.success('Operation is done successfully');
+        }
+      } catch (error) {
+        toast.error(error.message);
+      }
+    };
+
     return (
       <>
         <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
@@ -193,6 +207,10 @@ export const ActionRender = memo(
           <MenuList>
             {current?.allowState === 'PENDING' && (
               <>
+                <MenuItem onClick={handleAdminGotIt} disabled={!!current?.adminUsername}>
+                  <Iconify icon="mdi:user-check" color="green" />I got it
+                  {gotLoading && <Iconify icon="eos-icons:bubble-loading" />}
+                </MenuItem>
                 <MenuItem
                   onClick={async () => {
                     try {
