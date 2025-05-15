@@ -279,11 +279,22 @@ export const Personal = () => {
             <Stack direction="row" spacing={2} pb={1}>
               <Stack width={0.5}>
                 <Typography variant="body2" fontWeight="bold">
-                  Asset ID:
+                  TXC Coin ID:
                 </Typography>
               </Stack>
               <Stack width={1}>
                 <Typography variant="body2">{member?.assetId}</Typography>
+              </Stack>
+            </Stack>
+
+            <Stack direction="row" spacing={2} pb={1}>
+              <Stack width={0.5}>
+                <Typography variant="body2" fontWeight="bold">
+                  ETH Coin ID:
+                </Typography>
+              </Stack>
+              <Stack width={1}>
+                <Typography variant="body2">{member?.ethAssetId}</Typography>
               </Stack>
             </Stack>
 
