@@ -51,8 +51,6 @@ export default function MemberListView() {
   const handleTabChange = (event: React.SyntheticEvent<Element, Event>, newValue: any) => {
     tabs.onChange(event, newValue);
     setCustomFilter({ allowState: newValue });
-    setQuery({});
-    setFilter({});
   };
 
   const handleSearchChange = useCallback(
