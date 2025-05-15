@@ -20,7 +20,7 @@ export const Schema = zod.object({
   teamReport: zod.array(zod.string({ required_error: 'Team Report is required' })),
   commissionDefault: zod.string({ required_error: 'Commission Default is required' }),
   assetId: zod.string({ required_error: 'TXC Coin ID is required' }),
-  ethAssetId: zod.string({ required_error: 'ETH Coin ID is required' }),
+  ethAssetId: zod.string().optional().nullable(),
   promoCode: zod.string().optional().nullable(),
   preferredContact: zod.string().optional().nullable(),
   preferredContactDetail: zod.string().optional().nullable(),
