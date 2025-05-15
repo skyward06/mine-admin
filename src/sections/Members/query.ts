@@ -72,6 +72,7 @@ export const FETCH_MEMBER_QUERY = gql(/* GraphQL */ `
       avatar
       mobile
       assetId
+      ethAssetId
       country
       zipCode
       username
