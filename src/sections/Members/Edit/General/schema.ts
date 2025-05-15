@@ -19,6 +19,7 @@ export const Schema = zod.object({
   secondaryAddress: zod.string().optional().nullable(),
   sponsorId: zod.string().optional().nullable(),
   assetId: zod.string().optional().nullable(),
+  ethAssetId: zod.string().optional().nullable(),
   promoCode: zod.string().optional().nullable(),
   preferredContact: zod.string().optional().nullable(),
   preferredContactDetail: zod.string().optional().nullable(),

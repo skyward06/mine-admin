@@ -120,7 +120,12 @@ export default function MemberGeneral({ currentMember }: Props) {
       }
 
       if (!newMember.assetId) {
-        toast.error('Coin ID is required');
+        toast.error('TXC Coin ID is required');
+        return;
+      }
+
+      if (!newMember.ethAssetId) {
+        toast.error('ETH Coin ID is required');
         return;
       }
 
@@ -142,6 +147,7 @@ export default function MemberGeneral({ currentMember }: Props) {
               secondaryAddress: newMember.secondaryAddress,
               sponsorId: memberId ?? currentMember.sponsorId,
               assetId: newMember.assetId,
+              ethAssetId: newMember.ethAssetId,
               promoCode: newMember.promoCode,
               city: newMember.city,
               state,
@@ -196,14 +202,6 @@ export default function MemberGeneral({ currentMember }: Props) {
           setError('assetId', { type: 'manual', message: error?.message || '' });
         }
 
-        // error.path?.forEach((item: any, index: number) => {
-        //   if (item.includes('wallets')) {
-        //     setError(`txcWallets.${index}.address`, {
-        //       type: 'manual',
-        //       message: 'Invalid Address',
-        //     });
-        //   }
-        // });
         toast.error(error.message);
       } else {
         toast.error(err);
@@ -334,20 +332,28 @@ export default function MemberGeneral({ currentMember }: Props) {
               />
               <Field.Text name="city" label="City" />
               <Field.Text name="zipCode" label="ZIP Code" />
-              <Field.Text
-                name="assetId"
-                label="Coin ID"
-                InputLabelProps={{ shrink: true }}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton onClick={getAssetId} edge="end">
-                        <Iconify icon="streamline:ai-generate-variation-spark-solid" />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
+              <Stack direction="row" spacing={2}>
+                <Field.Text
+                  name="assetId"
+                  label="TXC Coin ID"
+                  InputLabelProps={{ shrink: true }}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton onClick={getAssetId} edge="end">
+                          <Iconify icon="streamline:ai-generate-variation-spark-solid" />
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+
+                <Field.Text
+                  name="ethAssetId"
+                  label="ETH Coin ID"
+                  InputLabelProps={{ shrink: true }}
+                />
+              </Stack>
               <Field.Select name="promoCode" label="PromoCode">
                 {promos.map((option: Promo) => (
                   <MenuItem key={option.id} value={option.code}>
