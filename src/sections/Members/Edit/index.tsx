@@ -23,6 +23,7 @@ import Log from './Log';
 import Sale from './Sale';
 import Note from './Note';
 import History from './History';
+import Invoice from './Invoice';
 import Sponsor from './Sponsor';
 import Placement from './Placement';
 import Commission from './Commission';
@@ -45,6 +46,7 @@ export default function MemberEditView() {
     },
     { value: 'edit', label: 'Edit', icon: <Iconify icon="solar:pen-2-bold" width={24} /> },
     { value: 'sponsor', label: 'Sponsor', icon: <Iconify icon="bi:diagram-3" /> },
+    { value: 'invoice', label: 'Invoice', icon: <Iconify icon="hugeicons:invoice" /> },
     { value: 'placement', label: 'Placement', icon: <Iconify icon="clarity:flow-chart-line" /> },
     { value: 'log', label: 'Log', icon: <Iconify icon="ri:history-line" /> },
     { value: 'note', label: 'Note', icon: <Iconify icon="mdi:event-note-outline" /> },
@@ -124,6 +126,8 @@ export default function MemberEditView() {
         {tabs.value === 'sale' && <Sale />}
 
         {tabs.value === 'sponsor' && <Sponsor currentMember={member} />}
+
+        {tabs.value === 'invoice' && <Invoice currentMember={member} />}
 
         {tabs.value === 'placement' && <Placement currentMember={member} />}
 
