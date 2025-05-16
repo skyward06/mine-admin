@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 
+import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
@@ -9,7 +10,7 @@ import { useBoolean, type UseBooleanReturn } from 'src/hooks/useBoolean';
 
 import { formatDateTime } from 'src/utils/format-time';
 import { truncateMiddle } from 'src/utils/formatNumber';
-import { formatID, makeDecimal, customizeFullName } from 'src/utils/helper';
+import { makeDecimal, customizeFullName } from 'src/utils/helper';
 
 import { CHAIN_UNIT } from 'src/consts';
 
@@ -20,18 +21,21 @@ import { ScrollBar } from 'src/components/ScrollBar';
 import { useFetchOrder } from '../useApollo';
 
 interface Props {
-  id: number;
+  id: string;
   open: UseBooleanReturn;
 }
 
 export default function Detail({ id, open }: Props) {
   const copy = useBoolean();
+  const toCopy = useBoolean();
+  const fromCopy = useBoolean();
+  const hashCopy = useBoolean();
 
   const { order, fetchOrder } = useFetchOrder();
 
   const copyAddress = async () => {
     try {
-      await navigator.clipboard.writeText(order?.waitAddress?.address ?? '');
+      await navigator.clipboard.writeText(order?.paymentAddress ?? '');
 
       copy.onTrue();
 
@@ -43,9 +47,43 @@ export default function Detail({ id, open }: Props) {
     }
   };
 
+  const copyTransaction = async (field: string, transaction: string) => {
+    try {
+      await navigator.clipboard.writeText(transaction);
+
+      if (field === 'hash') {
+        hashCopy.onTrue();
+      }
+
+      if (field === 'from') {
+        fromCopy.onTrue();
+      }
+
+      if (field === 'to') {
+        toCopy.onTrue();
+      }
+
+      setTimeout(() => {
+        if (field === 'hash') {
+          hashCopy.onFalse();
+        }
+
+        if (field === 'from') {
+          fromCopy.onFalse();
+        }
+
+        if (field === 'to') {
+          toCopy.onFalse();
+        }
+      }, 2000);
+    } catch (error) {
+      toast.error('Failed to copy text: ', error.message);
+    }
+  };
+
   useEffect(() => {
     if (open.value && id) {
-      fetchOrder({ variables: { data: { ID: id } } });
+      fetchOrder({ variables: { data: { id } } });
     }
   }, [id, open, fetchOrder]);
 
@@ -77,7 +115,7 @@ export default function Detail({ id, open }: Props) {
               Type:
             </Stack>
             <Stack width={1} sx={{ fontSize: 14 }}>
-              {order?.waitAddress?.type}
+              {`${order?.paymentToken} (${order?.paymentChain})`}
             </Stack>
           </Stack>
 
@@ -92,7 +130,7 @@ export default function Detail({ id, open }: Props) {
               />
             </Stack>
             <Stack width={1} sx={{ fontSize: 14 }}>
-              {truncateMiddle(order?.waitAddress?.address ?? '', 25)}
+              {truncateMiddle(order?.paymentAddress ?? '', 25)}
             </Stack>
           </Stack>
 
@@ -102,9 +140,8 @@ export default function Detail({ id, open }: Props) {
             </Stack>
             <Stack width={1} sx={{ fontSize: 14 }}>
               {makeDecimal(
-                (order?.waitAddress?.totalBalance ?? 0) /
-                  10 ** CHAIN_UNIT[order?.waitAddress?.type!],
-                CHAIN_UNIT[order?.waitAddress?.type!]
+                (order?.usdBalance ?? 0) / 10 ** CHAIN_UNIT[order?.paymentToken!],
+                CHAIN_UNIT[order?.paymentToken!]
               )}
             </Stack>
           </Stack>
@@ -114,9 +151,7 @@ export default function Detail({ id, open }: Props) {
               Received At:
             </Stack>
             <Stack width={1} sx={{ fontSize: 14 }}>
-              {order?.waitAddress?.receivedAt
-                ? formatDateTime(order.waitAddress.receivedAt!)
-                : 'Not yet'}
+              {order?.paidAt ? formatDateTime(order.paidAt!) : 'Not yet'}
             </Stack>
           </Stack>
 
@@ -125,15 +160,6 @@ export default function Detail({ id, open }: Props) {
           <Typography variant="subtitle1" fontWeight={700}>
             Miner
           </Typography>
-
-          <Stack direction="row" spacing={2}>
-            <Stack width={0.5} sx={{ fontSize: 14, fontWeight: 700 }}>
-              ID:
-            </Stack>
-            <Stack width={1} sx={{ fontSize: 14 }}>
-              {formatID(order?.member?.ID ?? '', 'M')}
-            </Stack>
-          </Stack>
 
           <Stack direction="row" spacing={2}>
             <Stack width={0.5} sx={{ fontSize: 14, fontWeight: 700 }}>
@@ -165,44 +191,64 @@ export default function Detail({ id, open }: Props) {
           <Divider sx={{ borderStyle: 'dashed', borderColor: 'gray' }} />
 
           <Typography variant="subtitle1" fontWeight={700}>
-            Package
+            Transactions
           </Typography>
 
-          <Stack direction="row" spacing={2}>
-            <Stack width={0.5} sx={{ fontSize: 14, fontWeight: 700 }}>
-              Produce Name:
-            </Stack>
-            <Stack width={1} sx={{ fontSize: 14 }}>
-              {order?.package?.productName}
-            </Stack>
-          </Stack>
-
-          <Stack direction="row" spacing={2}>
-            <Stack width={0.5} sx={{ fontSize: 14, fontWeight: 700 }}>
-              Amount:
-            </Stack>
-            <Stack width={1} sx={{ fontSize: 14 }}>
-              {order?.package?.amount}
-            </Stack>
-          </Stack>
-
-          <Stack direction="row" spacing={2}>
-            <Stack width={0.5} sx={{ fontSize: 14, fontWeight: 700 }}>
-              Point:
-            </Stack>
-            <Stack width={1} sx={{ fontSize: 14 }}>
-              {order?.package?.point}
-            </Stack>
-          </Stack>
-
-          <Stack direction="row" spacing={2}>
-            <Stack width={0.5} sx={{ fontSize: 14, fontWeight: 700 }}>
-              Token:
-            </Stack>
-            <Stack width={1} sx={{ fontSize: 14 }}>
-              {order?.package?.token}
-            </Stack>
-          </Stack>
+          {order?.transactions?.map((item: any) => (
+            <Box mb={2}>
+              <Stack direction="row" spacing={2}>
+                <Stack width={0.5} sx={{ fontSize: 14, fontWeight: 700 }}>
+                  Hash:
+                </Stack>
+                <Stack width={1} sx={{ fontSize: 14 }} direction="row">
+                  {truncateMiddle(item.hash, 20, false)}
+                  <Iconify
+                    sx={{ cursor: 'pointer' }}
+                    icon={hashCopy.value ? 'system-uicons:check' : 'stash:copy-light'}
+                    onClick={() => copyTransaction('hash', item.hash)}
+                  />
+                </Stack>
+              </Stack>
+              <Stack direction="row" spacing={2}>
+                <Stack width={0.5} sx={{ fontSize: 14, fontWeight: 700 }}>
+                  From:
+                </Stack>
+                <Stack width={1} sx={{ fontSize: 14 }} direction="row">
+                  {truncateMiddle(item.from, 20)}
+                  <Iconify
+                    sx={{ cursor: 'pointer' }}
+                    icon={fromCopy.value ? 'system-uicons:check' : 'stash:copy-light'}
+                    onClick={() => copyTransaction('from', item.from)}
+                  />
+                </Stack>
+              </Stack>
+              <Stack direction="row" spacing={2}>
+                <Stack width={0.5} sx={{ fontSize: 14, fontWeight: 700 }}>
+                  To:
+                </Stack>
+                <Stack width={1} sx={{ fontSize: 14 }} direction="row">
+                  {truncateMiddle(item.to, 20)}
+                  <Iconify
+                    sx={{ cursor: 'pointer' }}
+                    icon={toCopy.value ? 'system-uicons:check' : 'stash:copy-light'}
+                    onClick={() => copyTransaction('to', item.to)}
+                  />
+                </Stack>
+              </Stack>
+              <Stack direction="row" spacing={2}>
+                <Stack width={0.5} sx={{ fontSize: 14, fontWeight: 700 }}>
+                  Balance:
+                </Stack>
+                <Stack width={1} sx={{ fontSize: 14 }}>
+                  {makeDecimal(
+                    (item?.balance ?? 0) /
+                      10 ** CHAIN_UNIT[item?.tokenType as keyof typeof CHAIN_UNIT],
+                    CHAIN_UNIT[item?.tokenType as keyof typeof CHAIN_UNIT]
+                  )}
+                </Stack>
+              </Stack>
+            </Box>
+          ))}
         </Stack>
       </ScrollBar>
     </Drawer>

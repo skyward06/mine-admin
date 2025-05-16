@@ -28,7 +28,7 @@ export const ActionRender = memo(
 
     const handleCancelOrder = async () => {
       try {
-        const { data: result } = await cancelOrder({ variables: { data: { ID: data?.id! } } });
+        const { data: result } = await cancelOrder({ variables: { data: { id: `${data?.id!}` } } });
 
         if (result) {
           toast.success('Successfully Canceled');
@@ -61,7 +61,7 @@ export const ActionRender = memo(
               <Iconify icon="solar:eye-bold" />
               View
             </MenuItem>
-            <MenuItem onClick={handleCancelOrder} disabled={data?.status === OrderStatus.Success}>
+            <MenuItem onClick={handleCancelOrder} disabled={data?.status === OrderStatus.Completed}>
               <Iconify
                 icon={loading ? 'eos-icons:bubble-loading' : 'ic:round-cancel'}
                 color="red"

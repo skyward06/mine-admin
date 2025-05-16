@@ -26,9 +26,10 @@ import { AgGrid } from 'src/components/AgGrid';
 import { parseType } from './parseType';
 import { useFetchOrders } from '../useApollo';
 import { ActionRender } from './ActionRenderer';
-import { StatusRenderer } from './StatusRenderer';
 
 import type { Order } from './type';
+
+type BasicOrder = Omit<Order, 'expiredAt'>;
 
 export default function Orders() {
   const router = useRouter();
@@ -42,28 +43,29 @@ export default function Orders() {
     fetchOrders({ variables: { filter: graphQueryFilter, page, sort } });
   }, [graphQueryFilter, page, sort, fetchOrders]);
 
-  const colDefs = useMemo<ColDef<Order>[]>(
+  const colDefs = useMemo<ColDef<BasicOrder>[]>(
     () => [
       {
-        field: 'id',
+        field: 'ID',
         headerName: 'Order ID',
-        width: 150,
+        width: 200,
         filter: 'agTextColumnFilter',
         resizable: true,
         editable: false,
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellRenderer: ({ data }: CustomCellRendererProps<Order>) => formatID(data?.id ?? '', 'O'),
+        cellRenderer: ({ data }: CustomCellRendererProps<BasicOrder>) =>
+          formatID(data?.ID ?? '', 'O'),
       },
       {
         field: 'member.fullName',
         headerName: 'Full Name',
-        width: 200,
+        flex: 1,
         filter: 'agTextColumnFilter',
         resizable: true,
         editable: false,
         sortable: false,
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellRenderer: ({ data }: CustomCellRendererProps<Order>) => (
+        cellRenderer: ({ data }: CustomCellRendererProps<BasicOrder>) => (
           <Typography
             variant="body2"
             sx={{ cursor: 'pointer', '&:hover': { color: '#00a873' } }}
@@ -75,19 +77,9 @@ export default function Orders() {
         cellClass: 'ag-cell-center',
       },
       {
-        field: 'package.productName',
-        headerName: 'Produce Name',
-        flex: 1,
-        filter: 'agTextColumnFilter',
-        resizable: true,
-        editable: false,
-        sortable: false,
-        filterParams: { buttons: ['reset'] } as ITextFilterParams,
-      },
-      {
         field: 'status',
         headerName: 'Status',
-        width: 150,
+        width: 200,
         filter: 'agMultiColumnFilter',
         resizable: true,
         editable: false,
@@ -95,55 +87,44 @@ export default function Orders() {
           values: Object.values(OrderStatus),
           valueFormatter: (params: any) => parseType(params.value),
           defaultToNothingSelected: true,
-        } as ISetFilterParams<Order>,
-        cellRenderer: ({ data }: CustomCellRendererProps<Order>) =>
+        } as ISetFilterParams<BasicOrder>,
+        cellRenderer: ({ data }: CustomCellRendererProps<BasicOrder>) =>
           data ? ORDER_STATUS[data.status] : '',
       },
       {
-        field: 'waitAddress.totalBalance',
+        field: 'usdBalance',
         headerName: 'Requested Balance',
-        width: 200,
+        width: 250,
         filter: 'agTextColumnFilter',
         resizable: true,
         editable: false,
         sortable: false,
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellRenderer: ({ data }: CustomCellRendererProps<Order>) =>
+        cellRenderer: ({ data }: CustomCellRendererProps<BasicOrder>) =>
           makeDecimal(
-            (data?.waitAddress?.totalBalance ?? 0) / 10 ** CHAIN_UNIT[data?.waitAddress?.type!],
-            CHAIN_UNIT[data?.waitAddress?.type!]
+            (data?.usdBalance ?? 0) / 10 ** CHAIN_UNIT[data?.paymentToken!],
+            CHAIN_UNIT[data?.paymentToken!]
           ),
       },
       {
-        field: 'waitAddress.receivedBalance',
+        field: 'paidBalance',
         headerName: 'Received Balance',
-        width: 200,
+        width: 250,
         filter: 'agTextColumnFilter',
         resizable: true,
         editable: false,
         sortable: false,
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellRenderer: ({ data }: CustomCellRendererProps<Order>) =>
+        cellRenderer: ({ data }: CustomCellRendererProps<BasicOrder>) =>
           makeDecimal(
-            (data?.waitAddress?.receivedBalance ?? 0) / 10 ** CHAIN_UNIT[data?.waitAddress?.type!],
-            CHAIN_UNIT[data?.waitAddress?.type!]
+            (data?.usdBalance ?? 0) / 10 ** CHAIN_UNIT[data?.paymentToken!],
+            CHAIN_UNIT[data?.paymentToken!]
           ),
-      },
-      {
-        field: 'signUpOrder',
-        headerName: 'Status',
-        width: 120,
-        filter: 'agMultiColumnFilter',
-        filterParams: {
-          values: ['true', 'false'],
-          valueFormatter: BooleanFormatter,
-        } as ISetFilterParams<Order>,
-        cellRenderer: StatusRenderer,
       },
       {
         field: 'createdAt',
         headerName: 'Created At',
-        width: 200,
+        width: 250,
         filter: 'agDateColumnFilter',
         filterParams: {
           buttons: ['reset'],
@@ -153,7 +134,8 @@ export default function Orders() {
         resizable: true,
         editable: false,
         initialSort: 'desc',
-        cellRenderer: ({ data }: CustomCellRendererProps<Order>) => formatDate(data?.createdAt),
+        cellRenderer: ({ data }: CustomCellRendererProps<BasicOrder>) =>
+          formatDate(data?.createdAt),
       },
       {
         colId: 'action',
@@ -177,7 +159,7 @@ export default function Orders() {
         overflow: 'hidden',
       }}
     >
-      <AgGrid<Order>
+      <AgGrid<BasicOrder>
         gridKey="payment-order-list"
         loading={loading}
         rowData={orders}
@@ -188,4 +170,4 @@ export default function Orders() {
   );
 }
 
-const BooleanFormatter = (params: any) => (params.value === 'true' ? 'Sign Up' : 'Add Hash');
+// const BooleanFormatter = (params: any) => (params.value === 'true' ? 'Sign Up' : 'Add Hash');
