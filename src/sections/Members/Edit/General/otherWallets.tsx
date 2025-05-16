@@ -97,7 +97,6 @@ export default function OtherWallets({ wallets }: Props) {
   return (
     <Card sx={{ p: 3, mb: 2 }}>
       <Stack direction="row" justifyContent="space-between" alignItems="cnter" sx={{ pb: 2 }}>
-        FUCK OFF!!
         <Typography sx={{ pb: 2 }} variant="subtitle1">
           Other Wallets
         </Typography>
