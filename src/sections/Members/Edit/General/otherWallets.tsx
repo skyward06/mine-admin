@@ -10,9 +10,12 @@ import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 
-import { OTHER_WALLET } from 'src/consts';
+import { fetchXmlData } from 'src/utils/helper';
+
+import { OTHER_WALLET, ASSET_INFO_PATH } from 'src/consts';
 
 import { Field } from 'src/components/Form';
+import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 
 interface Props {
@@ -27,7 +30,7 @@ interface Wallet {
 }
 
 export default function OtherWallets({ wallets }: Props) {
-  const { control, setValue } = useFormContext();
+  const { watch, control, setValue } = useFormContext();
   const { fields, append, remove } = useFieldArray({ control, name: 'otherWallets' });
 
   const forms = fields as Wallet[];
@@ -70,11 +73,38 @@ export default function OtherWallets({ wallets }: Props) {
     remove(index);
   };
 
+  const handleGenerate = async () => {
+    try {
+      const ethAssetId = watch('ethAssetId');
+
+      const response = await fetchXmlData(`${ASSET_INFO_PATH}${ethAssetId}`);
+
+      if (response) {
+        append({
+          note: '',
+          percent: 0,
+          payoutId: OTHER_WALLET[0].id,
+          address: response.getElementsByTagName('publicKey').item(0)?.textContent,
+        });
+      } else {
+        toast.error("Can't find the address from this Coin ID");
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   return (
     <Card sx={{ p: 3, mb: 2 }}>
-      <Typography sx={{ pb: 2 }} variant="subtitle1">
-        Other Wallets
-      </Typography>
+      <Stack direction="row" justifyContent="space-between" alignItems="cnter" sx={{ pb: 2 }}>
+        FUCK OFF!!
+        <Typography sx={{ pb: 2 }} variant="subtitle1">
+          Other Wallets
+        </Typography>
+        <IconButton color="default" onClick={handleGenerate}>
+          <Iconify icon="streamline:ai-generate-variation-spark-solid" />
+        </IconButton>
+      </Stack>
       {forms?.map((item, index) => (
         <Stack sx={{ mb: 2 }} key={item.id}>
           <Stack sx={{ mb: 2 }}>

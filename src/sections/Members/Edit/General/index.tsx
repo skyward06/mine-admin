@@ -235,6 +235,16 @@ export default function MemberGeneral({ currentMember }: Props) {
     });
   };
 
+  const getEthAssetId = async () => {
+    const wallets = watch('otherWallets');
+
+    wallets.map(async (item: any) => {
+      const response = await fetchXmlData(`${ASSET_INFO_PATH}${item.address}`);
+
+      setValue('ethAssetId', response.getElementsByTagName('assetId').item(0)?.textContent);
+    });
+  };
+
   return (
     <Form methods={methods} onSubmit={onSubmit}>
       <Grid container spacing={3}>
@@ -347,6 +357,15 @@ export default function MemberGeneral({ currentMember }: Props) {
                   name="ethAssetId"
                   label="ETH Coin ID"
                   InputLabelProps={{ shrink: true }}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton onClick={getEthAssetId} edge="end">
+                          <Iconify icon="streamline:ai-generate-variation-spark-solid" />
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
                 />
               </Stack>
               <Field.Select name="promoCode" label="PromoCode">
