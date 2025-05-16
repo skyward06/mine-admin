@@ -171,26 +171,38 @@ export const TRANSACTION_STATUS = {
 };
 
 export const CHAIN_TYPE = {
-  // ETH: 'Ethereum',
+  BNB: 'Bnb',
+  BASE: 'Base',
+  ETH: 'Ethereum',
   TXC: 'Texitcoin',
-  USDT: 'USDT',
+  POLYGON: 'Polygon',
+};
+
+export const TOKEN_TYPE = {
+  ETH: 'ETH',
   USDC: 'USDC',
+  USDT: 'USDT',
   PYUSD: 'PYUSD',
 };
 
 export const CHAIN_UNIT = {
   TXC: 9,
-  // ETH:  18,
+  BNB: 18,
+  ETH: 18,
   USDC: 6,
   USDT: 6,
   PYUSD: 6,
+  BASE: 10,
+  POLYGON: 9,
 };
 
 export const ORDER_STATUS = {
-  SUCCESS: 'Success',
+  COMPLETED: 'Completed',
   PENDING: 'Pending',
   CANCELED: 'Canceled',
-  FAILED: 'Failed',
+  EXPIRED: 'Expired',
+  NEW: 'New',
+  PAID: 'Paid',
 };
 
 export const CAMPAIGN_LIST_TYPE = {
