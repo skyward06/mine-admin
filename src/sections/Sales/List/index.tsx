@@ -16,7 +16,7 @@ import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
-import { useAgQuery as useQueryString } from 'src/routes/hooks';
+import { useRouter, useAgQuery as useQueryString } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
@@ -53,6 +53,7 @@ type Checked = {
 
 export default function SaleListView() {
   const { user } = useAuthContext();
+  const router = useRouter();
 
   const { loading, rowCount, sales } = useFetchSales();
   const { loading: removeLoading, removeSale } = useRemoveSale();
@@ -124,6 +125,19 @@ export default function SaleListView() {
         editable: false,
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
         cellClass: 'ag-cell-center',
+        cellRenderer: ({ data }: CustomCellRendererProps<BasicSale>) => (
+          <Typography
+            variant="body2"
+            onClick={() => router.push(paths.dashboard.members.edit(data?.memberId!))}
+            sx={{
+              mt: 0.7,
+              cursor: 'pointer',
+              '&:hover': { color: (theme) => theme.vars.palette.primary.main },
+            }}
+          >
+            {data?.username}
+          </Typography>
+        ),
       },
       {
         field: 'productName',
