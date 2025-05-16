@@ -8,6 +8,8 @@ import {
   FETCH_ORDERS_QUERY,
   FETCH_ADDRESSES_QUERY,
   FETCH_TRANSACTION_QUERY,
+  FETCH_ADDRESS_BY_ADDRESS,
+  FETCH_TRANSACTION_BY_HASH,
 } from './query';
 
 export function useFetchOrders() {
@@ -52,6 +54,12 @@ export function useFetchAddresses() {
   return { loading, rowCount, called, addresses: data?.addresses.addresses ?? [], fetchAddresses };
 }
 
+export function useFetchAddressByAddress() {
+  const [fetchAddressByAddress, { loading, data, error }] = useLazyQuery(FETCH_ADDRESS_BY_ADDRESS);
+
+  return { loading, address: data?.addressByAddress, error, fetchAddressByAddress };
+}
+
 export function useFetchTransactions() {
   const [fetchTransactions, { loading, data, called }] = useLazyQuery(FETCH_TRANSACTION_QUERY);
 
@@ -74,6 +82,13 @@ export function useFetchTransactions() {
     transactions: data?.transactions.transactions ?? [],
     fetchTransactions,
   };
+}
+
+export function useFetchTransactionByHash() {
+  const [fetchTransactionByHash, { loading, data, error }] =
+    useLazyQuery(FETCH_TRANSACTION_BY_HASH);
+
+  return { loading, transaction: data?.transactionByHash, error, fetchTransactionByHash };
 }
 
 export function useCancelOrder() {

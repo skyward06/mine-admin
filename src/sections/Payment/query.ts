@@ -5,22 +5,17 @@ export const FETCH_ORDERS_QUERY = gql(/* GraphQL */ `
     orders(sort: $sort, page: $page, filter: $filter) {
       orders {
         id
+        ID
         status
         createdAt
-        signUpOrder
+        usdBalance
+        paidBalance
+        paymentChain
+        paymentToken
         member {
           id
           username
           fullName
-        }
-        package {
-          productName
-        }
-        waitAddress {
-          type
-          address
-          totalBalance
-          receivedBalance
         }
       }
       total
@@ -29,31 +24,32 @@ export const FETCH_ORDERS_QUERY = gql(/* GraphQL */ `
 `);
 
 export const FETCH_ORDER_QUERY = gql(/* GraphQL */ `
-  query OrderById($data: IDNInput!) {
+  query OrderById($data: IDInput!) {
     orderById(data: $data) {
       id
+      ID
+      paidAt
       status
       createdAt
+      expiredAt
+      usdBalance
+      completedAt
+      paidBalance
+      paymentToken
+      paymentChain
+      paymentAddress
+      transactions {
+        to
+        from
+        hash
+        balance
+        tokenType
+      }
       member {
-        ID
+        id
         assetId
         username
         fullName
-      }
-      package {
-        token
-        point
-        amount
-        productName
-      }
-      waitAddress {
-        type
-        address
-        receivedAt
-        initBalance
-        totalBalance
-        initUnitPrice
-        receivedBalance
       }
     }
   }
@@ -63,11 +59,29 @@ export const FETCH_ADDRESSES_QUERY = gql(/* GraphQL */ `
   query Addresses($sort: String, $page: String, $filter: JSONObject) {
     addresses(sort: $sort, page: $page, filter: $filter) {
       addresses {
-        type
+        address
+        chain
+        balance
+        isUsed
+      }
+      total
+    }
+  }
+`);
+
+export const FETCH_ADDRESS_BY_ADDRESS = gql(/* GraphQL */ `
+  query AddressByAddress($data: AddressInput!) {
+    addressByAddress(data: $data) {
+      chain
+      isUsed
+      address
+      balance
+      balances {
+        chain
+        token
         address
         balance
       }
-      total
     }
   }
 `);
@@ -77,28 +91,61 @@ export const FETCH_TRANSACTION_QUERY = gql(/* GraphQL */ `
     transactions(sort: $sort, page: $page, filter: $filter) {
       transactions {
         to
-        from
         hash
-        type
+        from
+        chain
         balance
+        tokenType
         createdAt
-        waitAddress {
-          status
-          address
-          receivedAt
-          initBalance
-          totalBalance
-          initUnitPrice
-          receivedBalance
-        }
       }
       total
     }
   }
 `);
 
+export const FETCH_TRANSACTION_BY_HASH = gql(/* GraphQL */ `
+  query TransactionByHash($data: TransactionInput!) {
+    transactionByHash(data: $data) {
+      to
+      from
+      hash
+      chain
+      balance
+      createdAt
+      tokenType
+      order {
+        id
+        ID
+        paidAt
+        status
+        createdAt
+        expiredAt
+        usdBalance
+        completedAt
+        paidBalance
+        paymentToken
+        paymentChain
+        paymentAddress
+        transactions {
+          to
+          from
+          hash
+          balance
+          tokenType
+        }
+        member {
+          id
+          assetId
+          username
+          fullName
+        }
+      }
+    }
+  }
+`);
+
 export const CANCEL_ORDER = gql(/* GraphQL */ `
-  mutation CancelOrder($data: IDNInput!) {
+  mutation CancelOrder($data: IDInput!) {
     cancelOrder(data: $data) {
       frontActions {
         ...FrontActionFields
