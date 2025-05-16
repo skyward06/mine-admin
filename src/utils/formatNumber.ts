@@ -100,8 +100,10 @@ export function fLimitDigits(value: number, decimals: number) {
   return Math.floor(value * factor) / factor;
 }
 
-export const truncateMiddle = (text: string, maxLength: number): string => {
+export const truncateMiddle = (text: string, maxLength: number, middle = true): string => {
   if (text.length <= maxLength) return text;
   const half = Math.floor((maxLength - 3) / 2);
-  return `${text.slice(0, half)}...${text.slice(-half)}`;
+  return middle
+    ? `${text.slice(0, half)}...${text.slice(-half)}`
+    : `${text.slice(0, maxLength)}...`;
 };
