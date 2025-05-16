@@ -43,6 +43,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         fullName
         createdAt
         allowState
+        paymentMade
         teamStrategy
         adminUsername
         adminFullname
