@@ -119,6 +119,7 @@ export type BasicMember = {
   fullName: string;
   ID?: number | null;
   city?: string | null;
+  paymentMade: boolean;
   state?: string | null;
   createdAt?: any | null;
   emailVerified: boolean;

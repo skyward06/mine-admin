@@ -185,7 +185,7 @@ export default function MemberListTable({ customFilter }: Props) {
               cellRenderer: ({ data }: CustomCellRendererProps<BasicMember>) => (
                 <Stack direction="row" spacing={1} mt={0.5} alignItems="center">
                   <Typography variant="body2">{data?.signUpPaymentType}</Typography>
-                  <Iconify icon="ic:twotone-check-box" color="green" />
+                  {data?.paymentMade && <Iconify icon="ic:twotone-check-box" color="green" />}
                 </Stack>
               ),
             },
