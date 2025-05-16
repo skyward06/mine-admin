@@ -1,14 +1,14 @@
-import { PaymentType } from 'src/__generated__/graphql';
+import { PaymentToken } from 'src/__generated__/graphql';
 
-export const parseType = (chainType: PaymentType): string => {
+export const parseType = (chainType: PaymentToken): string => {
   switch (chainType) {
-    // case PaymentType.Eth:
-    //   return 'Ethereum';
-    case PaymentType.Txc:
-      return 'Texitcoin';
-    case PaymentType.Usdc:
+    case PaymentToken.Eth:
+      return 'Ethereum';
+    case PaymentToken.Pyusd:
+      return 'PYUSD';
+    case PaymentToken.Usdc:
       return 'USDC';
-    case PaymentType.Usdt:
+    case PaymentToken.Usdt:
       return 'USDT';
     default:
       return chainType;

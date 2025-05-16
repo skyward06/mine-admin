@@ -18,7 +18,7 @@ import { makeDecimal } from 'src/utils/helper';
 import { parseFilterModel } from 'src/utils/parseFilter';
 
 import { CHAIN_TYPE, CHAIN_UNIT } from 'src/consts';
-import { PaymentType } from 'src/__generated__/graphql';
+import { PaymentToken } from 'src/__generated__/graphql';
 
 import { AgGrid } from 'src/components/AgGrid';
 import { Iconify } from 'src/components/Iconify';
@@ -26,6 +26,7 @@ import { Iconify } from 'src/components/Iconify';
 import { parseType } from './parseType';
 import { ActionRender } from './ActionRenderer';
 import { useFetchAddresses } from '../useApollo';
+import { StatusRenderer } from './StatusRenderer';
 
 import type { Address } from './type';
 
@@ -81,23 +82,23 @@ export default function Addresses() {
         onCellClicked: handleCopy,
       },
       {
-        field: 'type',
-        headerName: 'Type',
+        field: 'chain',
+        headerName: 'Chain',
         width: 300,
         filter: 'agMultiColumnFilter',
         resizable: true,
         editable: false,
         filterParams: {
-          values: Object.values(PaymentType),
+          values: Object.values(PaymentToken),
           valueFormatter: (params: any) => parseType(params.value),
           defaultToNothingSelected: true,
         } as ISetFilterParams<Address>,
         cellRenderer: ({ data }: CustomCellRendererProps<Address>) =>
-          data ? CHAIN_TYPE[data.type] : '',
+          data ? CHAIN_TYPE[data.chain] : '',
       },
       {
         field: 'balance',
-        headerName: 'Balance',
+        headerName: 'Chain Balance',
         flex: 1,
         filter: 'agTextColumnFilter',
         resizable: true,
@@ -105,9 +106,20 @@ export default function Addresses() {
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
         cellRenderer: ({ data }: CustomCellRendererProps<Address>) =>
           makeDecimal(
-            (data?.balance ?? 0) / 10 ** CHAIN_UNIT[data?.type!],
-            CHAIN_UNIT[data?.type!]
+            (data?.balance ?? 0) / 10 ** CHAIN_UNIT[data?.chain!],
+            CHAIN_UNIT[data?.chain!]
           ),
+      },
+      {
+        field: 'isUsed',
+        headerName: 'Status',
+        width: 120,
+        filter: 'agMultiColumnFilter',
+        filterParams: {
+          values: ['true', 'false'],
+          valueFormatter: BooleanFormatter,
+        } as ISetFilterParams<Address>,
+        cellRenderer: StatusRenderer,
       },
       {
         colId: 'action',
@@ -141,3 +153,5 @@ export default function Addresses() {
     </Card>
   );
 }
+
+const BooleanFormatter = (params: any) => (params.value === 'true' ? 'Used' : 'None');

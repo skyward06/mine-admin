@@ -6,16 +6,20 @@ import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 
+import { useBoolean } from 'src/hooks/useBoolean';
+
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
+import Detail from './Detail';
 import { useRefreshBalance } from '../useApollo';
 
 import type { Address } from './type';
 
 export const ActionRender = memo(
   ({ data }: CustomCellRendererProps<Address>) => {
+    const open = useBoolean();
     const popover = usePopover();
 
     const { loading, refreshBalances } = useRefreshBalance();
@@ -23,7 +27,7 @@ export const ActionRender = memo(
     const handleRefresh = async () => {
       try {
         await refreshBalances({
-          variables: { data: { address: data?.address!, type: data?.type! } },
+          variables: { data: { address: data?.address!, chain: data?.chain! } },
         });
       } catch (error) {
         toast.error(error.message);
@@ -42,12 +46,23 @@ export const ActionRender = memo(
           slotProps={{ arrow: { placement: 'right-top' } }}
         >
           <MenuList>
+            <MenuItem
+              onClick={() => {
+                open.onTrue();
+                popover.onClose();
+              }}
+            >
+              <Iconify icon="solar:eye-bold" />
+              View
+            </MenuItem>
             <MenuItem onClick={handleRefresh}>
               <Iconify icon={loading ? 'eos-icons:bubble-loading' : 'mdi:refresh'} />
               Refresh
             </MenuItem>
           </MenuList>
         </CustomPopover>
+
+        <Detail address={data?.address!} chain={data?.chain!} open={open} />
       </>
     );
   },
