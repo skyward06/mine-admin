@@ -1,7 +1,12 @@
 import type { CustomCellRendererProps } from '@ag-grid-community/react';
-import type { ColDef, IDateFilterParams, ITextFilterParams } from '@ag-grid-community/core';
+import type {
+  ColDef,
+  CellClickedEvent,
+  IDateFilterParams,
+  ITextFilterParams,
+} from '@ag-grid-community/core';
 
-import { useMemo, useEffect } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
@@ -17,6 +22,7 @@ import { parseFilterModel } from 'src/utils/parseFilter';
 import { Label } from 'src/components/Label';
 import { AgGrid } from 'src/components/AgGrid';
 import { toast } from 'src/components/SnackBar';
+import { Iconify } from 'src/components/Iconify';
 
 import { ActionRender } from './ActionRender';
 import { useUpdateMember, useFetchMembers } from '../useApollo';
@@ -27,8 +33,17 @@ interface Props {
   customFilter: any;
 }
 
+type Checked = {
+  checked: boolean;
+  id: string;
+  field: string;
+  value: string;
+};
+
 export default function MemberListTable({ customFilter }: Props) {
   const router = useRouter();
+
+  const [checked, setChecked] = useState<Checked>({ checked: false, id: '', field: '', value: '' });
 
   const sponsorId = useSearchParams().get('sponsorId');
 
@@ -41,6 +56,19 @@ export default function MemberListTable({ customFilter }: Props) {
   const { loading, rowCount, members, fetchMembers } = useFetchMembers();
 
   const { updateMember } = useUpdateMember();
+
+  const handleCopy = async (id: string, field: string, data: string) => {
+    try {
+      await navigator.clipboard.writeText(data);
+      setChecked({ id, field, value: data, checked: true });
+
+      setTimeout(() => {
+        setChecked({ checked: false, id: '', field: '', value: '' });
+      }, 3000);
+    } catch (err) {
+      console.error('Failed to copy test: ', err);
+    }
+  };
 
   const handlePRChange = async (event: React.ChangeEvent<HTMLInputElement>, id: string) => {
     try {
@@ -104,6 +132,17 @@ export default function MemberListTable({ customFilter }: Props) {
         editable: false,
         filter: 'agTextColumnFilter',
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
+        cellRenderer: ({ data }: CustomCellRendererProps<BasicMember>) => (
+          <Stack direction="row" columnGap={1} sx={{ alignItems: 'center', cursor: 'pointer' }}>
+            {data?.fullName}
+
+            {checked.id === data?.id && checked.field === 'fullName' && (
+              <Iconify icon="line-md:check-all" color="green" />
+            )}
+          </Stack>
+        ),
+        onCellClicked: ({ data }: CellClickedEvent<BasicMember, any>) =>
+          handleCopy(data?.id ?? '', 'fullName', data?.fullName ?? ''),
       },
       {
         field: 'mobile',
@@ -113,6 +152,17 @@ export default function MemberListTable({ customFilter }: Props) {
         editable: false,
         filter: 'agTextColumnFilter',
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
+        cellRenderer: ({ data }: CustomCellRendererProps<BasicMember>) => (
+          <Stack direction="row" columnGap={1} sx={{ alignItems: 'center', cursor: 'pointer' }}>
+            {data?.mobile}
+
+            {checked.id === data?.id && checked.field === 'mobile' && (
+              <Iconify icon="line-md:check-all" color="green" />
+            )}
+          </Stack>
+        ),
+        onCellClicked: ({ data }: CellClickedEvent<BasicMember, any>) =>
+          handleCopy(data?.id ?? '', 'mobile', data?.mobile ?? ''),
       },
       {
         field: 'assetId',
@@ -132,6 +182,12 @@ export default function MemberListTable({ customFilter }: Props) {
               resizable: true,
               editable: false,
               filter: 'agTextColumnFilter',
+              cellRenderer: ({ data }: CustomCellRendererProps<BasicMember>) => (
+                <Stack direction="row" spacing={1} mt={0.5} alignItems="center">
+                  <Typography variant="body2">{data?.signUpPaymentType}</Typography>
+                  <Iconify icon="ic:twotone-check-box" color="green" />
+                </Stack>
+              ),
             },
           ]
         : [
@@ -255,7 +311,7 @@ export default function MemberListTable({ customFilter }: Props) {
       },
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [customFilter]
+    [checked, customFilter]
   );
 
   return (

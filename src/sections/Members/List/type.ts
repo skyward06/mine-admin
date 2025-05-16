@@ -84,6 +84,7 @@ export type Member = {
   logs?: Array<EntityLog> | null;
   memberWallets?: Array<MemberWallet> | null;
   mobile: string;
+  paymentMade: boolean;
   placementChildren?: Array<Member> | null;
   placementParent?: Member | null;
   placementParentId?: string | null;
