@@ -24,6 +24,7 @@ const ROOTS = {
   COMMISSION: '/commission',
   CALCULATOR: '/calculator',
   STATISTICS: '/statistics',
+  SET_ADDRESS: '/set-address',
   AUTO_CAMPAIGN: '/auto-campaign',
   COMMUNICATION: '/communication',
   NOTIFICATIONS: '/notifications',
@@ -112,6 +113,10 @@ export const paths = {
       root: ROOTS.PROMOS,
       new: `${ROOTS.PROMOS}/new`,
       edit: (id: string) => `${ROOTS.PROMOS}/${id}`,
+    },
+    setAddress: {
+      root: ROOTS.SET_ADDRESS,
+      new: `${ROOTS.SET_ADDRESS}/new`,
     },
     logs: { root: ROOTS.LOGS },
     report: { root: ROOTS.REPORTS },

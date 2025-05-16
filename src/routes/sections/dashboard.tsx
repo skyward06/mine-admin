@@ -46,6 +46,11 @@ const ProductEditPage = lazy(() => import('src/pages/Product/Edit'));
 // ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
+const SetAddressListPage = lazy(() => import('src/pages/SetAddress/List'));
+const SetAddressCreatePage = lazy(() => import('src/pages/SetAddress/Create'));
+// ----------------------------------------------------------------------
+
+// ----------------------------------------------------------------------
 const InvoiceListPage = lazy(() => import('src/pages/Invoice/List'));
 // ----------------------------------------------------------------------
 
@@ -171,6 +176,13 @@ export const dashboardRoutes = [
           { index: true, element: <ProductListPage /> },
           { path: 'new', element: <ProductCreatePage /> },
           { path: ':id', element: <ProductEditPage /> },
+        ],
+      },
+      {
+        path: 'set-address',
+        children: [
+          { index: true, element: <SetAddressListPage /> },
+          { path: 'new', element: <SetAddressCreatePage /> },
         ],
       },
       {

@@ -56,6 +56,7 @@ const ICONS = {
   tour: icon('ic_tour'),
   template: icon('ic_template'),
   user: icon('ic_user'),
+  wallet: icon('ic_wallet'),
   weeklyReport: icon('ic_weekly_report'),
 };
 
@@ -121,6 +122,7 @@ export const navData = [
       { title: 'Resource', path: paths.dashboard.resource.root, icon: ICONS.folder },
       { title: 'Reward', path: paths.dashboard.reward.root, icon: ICONS.reward },
       { title: 'Sponsor', path: paths.dashboard.sponsor.root, icon: ICONS.sponsor },
+      { title: 'Set Address', path: paths.dashboard.setAddress.root, icon: ICONS.wallet },
       { title: 'Bug Report', path: paths.dashboard.bugReport.root, icon: ICONS.bugs },
       { title: 'Logs', path: paths.dashboard.logs.root, icon: ICONS.logs },
       { title: 'Calculator', path: paths.calculator.root, icon: ICONS.calculator },
