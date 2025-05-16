@@ -1,21 +1,13 @@
-import type { PaymentType, WaitTransactionStatus } from 'src/__generated__/graphql';
+import type { Order, PaymentChain, PaymentToken } from 'src/__generated__/graphql';
 
 export type Transaction = {
   __typename?: 'Transaction';
   to: string;
   from: string;
   hash: string;
-  type: PaymentType;
   balance: number;
+  chain: PaymentChain;
   createdAt?: any | null;
-  waitAddress?: {
-    __typename?: 'WaitAddress';
-    address: string;
-    receivedAt?: any | null;
-    initBalance: number;
-    totalBalance: number;
-    initUnitPrice: number;
-    receivedBalance: number;
-    status: WaitTransactionStatus;
-  } | null;
+  tokenType: PaymentToken;
+  order?: Order | null;
 };

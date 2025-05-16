@@ -1,15 +1,19 @@
-import { WaitTransactionStatus } from 'src/__generated__/graphql';
+import { OrderStatus } from 'src/__generated__/graphql';
 
-export const parseType = (transactionStatus: WaitTransactionStatus): string => {
+export const parseType = (transactionStatus: OrderStatus): string => {
   switch (transactionStatus) {
-    case WaitTransactionStatus.Wait:
-      return 'Wait';
-    case WaitTransactionStatus.Expired:
+    case OrderStatus.New:
+      return 'New';
+    case OrderStatus.Paid:
+      return 'Paid';
+    case OrderStatus.Pending:
+      return 'Pending';
+    case OrderStatus.Expired:
       return 'Expired';
-    case WaitTransactionStatus.Received:
-      return 'Received';
-    case WaitTransactionStatus.Canceled:
+    case OrderStatus.Canceled:
       return 'Failed';
+    case OrderStatus.Completed:
+      return 'Completed';
     default:
       return transactionStatus;
   }
