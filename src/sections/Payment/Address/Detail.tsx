@@ -140,7 +140,7 @@ export default function Detail({ address, chain, open }: Props) {
                   Chain:
                 </Stack>
                 <Stack width={1} sx={{ fontSize: 14 }} direction="row">
-                  {item.paymentChain}
+                  {item.chain}
                 </Stack>
               </Stack>
               <Stack direction="row" spacing={2}>
@@ -148,7 +148,7 @@ export default function Detail({ address, chain, open }: Props) {
                   Token:
                 </Stack>
                 <Stack width={1} sx={{ fontSize: 14 }} direction="row">
-                  {item.paymentToken}
+                  {item.token}
                 </Stack>
               </Stack>
               <Stack direction="row" spacing={2}>
@@ -158,9 +158,9 @@ export default function Detail({ address, chain, open }: Props) {
                 <Stack width={1} sx={{ fontSize: 14 }} direction="row">
                   {fCurrency(
                     makeDecimal(
-                      (item.balance ?? 0) /
-                        10 ** CHAIN_UNIT[item.paymentToken as keyof typeof CHAIN_UNIT],
-                      CHAIN_UNIT[item.paymentToken as keyof typeof CHAIN_UNIT]
+                      (item?.balance ?? 0) /
+                        10 ** CHAIN_UNIT[item.token as keyof typeof CHAIN_UNIT],
+                      CHAIN_UNIT[item.token as keyof typeof CHAIN_UNIT]
                     )
                   )}
                 </Stack>

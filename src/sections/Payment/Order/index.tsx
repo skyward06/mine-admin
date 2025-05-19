@@ -20,14 +20,14 @@ import { formatDate } from 'src/utils/format-time';
 import { parseFilterModel } from 'src/utils/parseFilter';
 import { formatID, makeDecimal } from 'src/utils/helper';
 
-import { CHAIN_UNIT, ORDER_STATUS } from 'src/consts';
-import { OrderStatus } from 'src/__generated__/graphql';
+import { CHAIN_UNIT, ORDER_STATUS, REQUEST_TYPE } from 'src/consts';
+import { OrderStatus, OrderRequestType } from 'src/__generated__/graphql';
 
 import { AgGrid } from 'src/components/AgGrid';
 
-import { parseType } from './parseType';
 import { useFetchOrders } from '../useApollo';
 import { ActionRender } from './ActionRenderer';
+import { orderType, parseType } from './parseType';
 
 import type { BasicOrder } from './type';
 
@@ -121,6 +121,21 @@ export default function Orders() {
           ),
       },
       {
+        field: 'status',
+        headerName: 'Request Type',
+        width: 200,
+        filter: 'agMultiColumnFilter',
+        resizable: true,
+        editable: false,
+        filterParams: {
+          values: Object.values(OrderRequestType),
+          valueFormatter: (params: any) => orderType(params.value),
+          defaultToNothingSelected: true,
+        } as ISetFilterParams<Order>,
+        cellRenderer: ({ data }: CustomCellRendererProps<Order>) =>
+          data ? REQUEST_TYPE[data.requestType] : '',
+      },
+      {
         field: 'createdAt',
         headerName: 'Created At',
         width: 250,
@@ -167,5 +182,3 @@ export default function Orders() {
     </Card>
   );
 }
-
-// const BooleanFormatter = (params: any) => (params.value === 'true' ? 'Sign Up' : 'Add Hash');

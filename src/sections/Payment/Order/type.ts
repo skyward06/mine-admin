@@ -1,4 +1,9 @@
-import type { OrderStatus, PaymentChain, PaymentToken } from 'src/__generated__/graphql';
+import type {
+  OrderStatus,
+  PaymentChain,
+  PaymentToken,
+  OrderRequestType,
+} from 'src/__generated__/graphql';
 
 export type BasicOrder = {
   __typename?: 'BasicOrder';
@@ -13,6 +18,7 @@ export type BasicOrder = {
   status: OrderStatus;
   createdAt?: any | null;
   completedAt?: any | null;
+  requestType: OrderRequestType;
   paymentAddress?: string | null;
   paymentChain?: PaymentChain | null;
   paymentToken?: PaymentToken | null;

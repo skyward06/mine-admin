@@ -1,4 +1,4 @@
-import { OrderStatus } from 'src/__generated__/graphql';
+import { OrderStatus, OrderRequestType } from 'src/__generated__/graphql';
 
 export const parseType = (orderStatus: OrderStatus): string => {
   switch (orderStatus) {
@@ -16,5 +16,18 @@ export const parseType = (orderStatus: OrderStatus): string => {
       return 'Completed';
     default:
       return orderStatus;
+  }
+};
+
+export const orderType = (requestType: OrderRequestType): string => {
+  switch (requestType) {
+    case OrderRequestType.AddHash:
+      return 'Add Hash';
+    case OrderRequestType.AddMember:
+      return 'Add Miner';
+    case OrderRequestType.Signup:
+      return 'Signup';
+    default:
+      return requestType;
   }
 };
