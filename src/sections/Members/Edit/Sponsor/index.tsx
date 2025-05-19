@@ -67,6 +67,7 @@ export default function SponsorListView({ currentMember }: Props) {
     }
 
     filterObj.sponsorId = currentMember.id;
+    filterObj.status = true;
 
     return filterObj;
     // eslint-disable-next-line react-hooks/exhaustive-deps
