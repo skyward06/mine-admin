@@ -18,7 +18,7 @@ import {
   TablePaginationCustom,
 } from 'src/components/Table';
 
-import { useFetchMembers } from 'src/sections/Members/useApollo';
+import { useFetchIntroducers } from 'src/sections/Members/useApollo';
 
 import MemberTableRow from './MemberTableRow';
 import MemberTableFiltersResult from './MemberTableFiltersResult';
@@ -31,7 +31,6 @@ const TABLE_HEAD = [
   { id: 'username', label: 'Username', sortable: true },
   { id: 'fullName', label: 'Full Name', sortable: true },
   { id: 'mobile', label: 'Mobile', sortable: true },
-  { id: 'assetId', label: 'AssetID', sortable: true },
   { id: 'point', label: 'Point', sortable: true },
   { id: 'createdAt', label: 'Created At', sortable: true },
 ];
@@ -41,7 +40,7 @@ const defaultFilter: IMemberTableFilters = {
   allowState: 'APPROVED',
 };
 
-export default function PlacementListViewWithReactFlowProvider({ currentMember }: Props) {
+export default function SponsorListView({ currentMember }: Props) {
   const table = useTable({ defaultDense: true });
 
   const [query, { setQueryParams: setQuery, setPage, setPageSize }] =
@@ -68,7 +67,6 @@ export default function PlacementListViewWithReactFlowProvider({ currentMember }
     }
 
     filterObj.sponsorId = currentMember.id;
-    filterObj.allowState = 'APPROVED';
 
     return filterObj;
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -84,10 +82,10 @@ export default function PlacementListViewWithReactFlowProvider({ currentMember }
 
   const canReset = !!filter.search;
 
-  const { loading, members, rowCount, fetchMembers } = useFetchMembers();
+  const { loading, introducers, rowCount, fetchIntroducers } = useFetchIntroducers();
 
   useEffect(() => {
-    fetchMembers({
+    fetchIntroducers({
       variables: {
         page: page && `${page.page},${page.pageSize}`,
         filter: graphQueryFilter,
@@ -97,7 +95,7 @@ export default function PlacementListViewWithReactFlowProvider({ currentMember }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
 
-  const notFound = (canReset && !members?.length) || !members?.length;
+  const notFound = (canReset && !introducers?.length) || !introducers?.length;
 
   const handleSearchChange = useCallback(
     (value: string) => {
@@ -123,7 +121,7 @@ export default function PlacementListViewWithReactFlowProvider({ currentMember }
               order={sort && sort[Object.keys(sort)[0]]}
               orderBy={sort && Object.keys(sort)[0]}
               headLabel={TABLE_HEAD}
-              rowCount={loading ? 0 : members!.length}
+              rowCount={loading ? 0 : introducers!.length}
               onSort={(id) => {
                 if (id !== 'action') {
                   const isAsc = sort && sort[id] === 'asc';
@@ -147,7 +145,7 @@ export default function PlacementListViewWithReactFlowProvider({ currentMember }
               </>
             ) : (
               <TableBody>
-                {members!.map((row) => (
+                {introducers!.map((row) => (
                   <MemberTableRow key={row!.id} row={row!} />
                 ))}
 

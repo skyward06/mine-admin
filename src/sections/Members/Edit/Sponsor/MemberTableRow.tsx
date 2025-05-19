@@ -17,7 +17,7 @@ type Props = {
 export default function MemberTableRow({ row }: Props) {
   const router = useRouter();
 
-  const { id, username, email, mobile, assetId, point, fullName, createdAt } = row;
+  const { id, username, email, mobile, point, fullName, createdAt } = row;
 
   return (
     <TableRow hover>
@@ -47,8 +47,6 @@ export default function MemberTableRow({ row }: Props) {
       <TableCell>{fullName}</TableCell>
 
       <TableCell>{mobile}</TableCell>
-
-      <TableCell>{assetId}</TableCell>
 
       <TableCell>{point}</TableCell>
 
