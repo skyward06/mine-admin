@@ -6,17 +6,19 @@ export const FETCH_ORDERS_QUERY = gql(/* GraphQL */ `
       orders {
         id
         ID
+        paidAt
         status
+        fullName
+        memberId
         createdAt
+        expiredAt
         usdBalance
+        completedAt
         paidBalance
-        paymentChain
         paymentToken
-        member {
-          id
-          username
-          fullName
-        }
+        paymentChain
+        paymentAddress
+        requiredBalance
       }
       total
     }

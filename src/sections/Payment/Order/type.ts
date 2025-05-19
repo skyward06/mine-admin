@@ -1,12 +1,30 @@
 import type { OrderStatus, PaymentChain, PaymentToken } from 'src/__generated__/graphql';
 
+export type BasicOrder = {
+  __typename?: 'BasicOrder';
+  id: string;
+  ID: number;
+  expiredAt: any;
+  fullName: string;
+  memberId: string;
+  usdBalance: number;
+  paidBalance: number;
+  paidAt?: any | null;
+  status: OrderStatus;
+  createdAt?: any | null;
+  completedAt?: any | null;
+  paymentAddress?: string | null;
+  paymentChain?: PaymentChain | null;
+  paymentToken?: PaymentToken | null;
+};
+
 export type Order = {
   __typename?: 'Order';
   id: string;
   ID: number;
+  expiredAt: any;
   usdBalance: number;
   paidBalance: number;
-  expiredAt: any;
   paidAt?: any | null;
   status: OrderStatus;
   createdAt?: any | null;

@@ -9,8 +9,8 @@ import Typography from '@mui/material/Typography';
 import { useBoolean, type UseBooleanReturn } from 'src/hooks/useBoolean';
 
 import { formatDateTime } from 'src/utils/format-time';
-import { truncateMiddle } from 'src/utils/formatNumber';
 import { makeDecimal, customizeFullName } from 'src/utils/helper';
+import { fCurrency, truncateMiddle } from 'src/utils/formatNumber';
 
 import { CHAIN_UNIT } from 'src/consts';
 
@@ -139,10 +139,7 @@ export default function Detail({ id, open }: Props) {
               Balance:
             </Stack>
             <Stack width={1} sx={{ fontSize: 14 }}>
-              {makeDecimal(
-                (order?.usdBalance ?? 0) / 10 ** CHAIN_UNIT[order?.paymentToken!],
-                CHAIN_UNIT[order?.paymentToken!]
-              )}
+              {fCurrency(order?.usdBalance)}
             </Stack>
           </Stack>
 
@@ -240,10 +237,12 @@ export default function Detail({ id, open }: Props) {
                   Balance:
                 </Stack>
                 <Stack width={1} sx={{ fontSize: 14 }}>
-                  {makeDecimal(
-                    (item?.balance ?? 0) /
-                      10 ** CHAIN_UNIT[item?.tokenType as keyof typeof CHAIN_UNIT],
-                    CHAIN_UNIT[item?.tokenType as keyof typeof CHAIN_UNIT]
+                  {fCurrency(
+                    makeDecimal(
+                      (item?.balance ?? 0) /
+                        10 ** CHAIN_UNIT[item?.tokenType as keyof typeof CHAIN_UNIT],
+                      CHAIN_UNIT[item?.tokenType as keyof typeof CHAIN_UNIT]
+                    )
                   )}
                 </Stack>
               </Stack>

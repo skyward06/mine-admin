@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography';
 import { useBoolean, type UseBooleanReturn } from 'src/hooks/useBoolean';
 
 import { makeDecimal } from 'src/utils/helper';
-import { truncateMiddle } from 'src/utils/formatNumber';
+import { fCurrency, truncateMiddle } from 'src/utils/formatNumber';
 
 import { CHAIN_UNIT } from 'src/consts';
 
@@ -99,9 +99,11 @@ export default function Detail({ address, chain, open }: Props) {
               Balance:
             </Stack>
             <Stack width={1} sx={{ fontSize: 14 }}>
-              {makeDecimal(
-                (current?.balance ?? 0) / 10 ** CHAIN_UNIT[current?.chain!],
-                CHAIN_UNIT[current?.chain!]
+              {fCurrency(
+                makeDecimal(
+                  (current?.balance ?? 0) / 10 ** CHAIN_UNIT[current?.chain!],
+                  CHAIN_UNIT[current?.chain!]
+                )
               )}
             </Stack>
           </Stack>
@@ -154,10 +156,12 @@ export default function Detail({ address, chain, open }: Props) {
                   Balance:
                 </Stack>
                 <Stack width={1} sx={{ fontSize: 14 }} direction="row">
-                  {makeDecimal(
-                    (item.balance ?? 0) /
-                      10 ** CHAIN_UNIT[item.paymentToken as keyof typeof CHAIN_UNIT],
-                    CHAIN_UNIT[item.paymentToken as keyof typeof CHAIN_UNIT]
+                  {fCurrency(
+                    makeDecimal(
+                      (item.balance ?? 0) /
+                        10 ** CHAIN_UNIT[item.paymentToken as keyof typeof CHAIN_UNIT],
+                      CHAIN_UNIT[item.paymentToken as keyof typeof CHAIN_UNIT]
+                    )
                   )}
                 </Stack>
               </Stack>

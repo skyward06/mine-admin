@@ -4,6 +4,7 @@ import type {
   ISetFilterParams,
   IDateFilterParams,
   ITextFilterParams,
+  INumberFilterParams,
 } from '@ag-grid-community/core';
 
 import { useMemo, useState, useEffect } from 'react';
@@ -16,8 +17,8 @@ import { useAgQuery as useQueryString } from 'src/routes/hooks';
 
 import { makeDecimal } from 'src/utils/helper';
 import { formatDate } from 'src/utils/format-time';
-import { truncateMiddle } from 'src/utils/formatNumber';
 import { parseFilterModel } from 'src/utils/parseFilter';
+import { fCurrency, truncateMiddle } from 'src/utils/formatNumber';
 
 import { PaymentToken } from 'src/__generated__/graphql';
 import {
@@ -173,11 +174,13 @@ export default function Transactions() {
         filter: 'agNumberColumnFilter',
         resizable: true,
         editable: false,
-        filterParams: { buttons: ['reset'] } as ITextFilterParams,
+        filterParams: { buttons: ['reset'] } as INumberFilterParams,
         cellRenderer: ({ data }: CustomCellRendererProps<BasicTransaction>) =>
-          makeDecimal(
-            (data?.balance ?? 0) / 10 ** CHAIN_UNIT[data?.tokenType!],
-            CHAIN_UNIT[data?.tokenType!]
+          fCurrency(
+            makeDecimal(
+              (data?.balance ?? 0) / 10 ** CHAIN_UNIT[data?.tokenType!],
+              CHAIN_UNIT[data?.tokenType!]
+            )
           ),
       },
       {

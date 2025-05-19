@@ -4,6 +4,7 @@ import type {
   CellClickedEvent,
   ISetFilterParams,
   ITextFilterParams,
+  INumberFilterParams,
 } from '@ag-grid-community/core';
 
 import { useMemo, useState, useEffect } from 'react';
@@ -15,6 +16,7 @@ import Typography from '@mui/material/Typography';
 import { useAgQuery as useQueryString } from 'src/routes/hooks';
 
 import { makeDecimal } from 'src/utils/helper';
+import { fCurrency } from 'src/utils/formatNumber';
 import { parseFilterModel } from 'src/utils/parseFilter';
 
 import { CHAIN_TYPE, CHAIN_UNIT } from 'src/consts';
@@ -100,14 +102,16 @@ export default function Addresses() {
         field: 'balance',
         headerName: 'Chain Balance',
         flex: 1,
-        filter: 'agTextColumnFilter',
+        filter: 'agNumberColumnFilter',
         resizable: true,
         editable: false,
-        filterParams: { buttons: ['reset'] } as ITextFilterParams,
+        filterParams: { buttons: ['reset'] } as INumberFilterParams,
         cellRenderer: ({ data }: CustomCellRendererProps<Address>) =>
-          makeDecimal(
-            (data?.balance ?? 0) / 10 ** CHAIN_UNIT[data?.chain!],
-            CHAIN_UNIT[data?.chain!]
+          fCurrency(
+            makeDecimal(
+              (data?.balance ?? 0) / 10 ** CHAIN_UNIT[data?.chain!],
+              CHAIN_UNIT[data?.chain!]
+            )
           ),
       },
       {
