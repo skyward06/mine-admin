@@ -205,6 +205,12 @@ export const ORDER_STATUS = {
   PAID: 'Paid',
 };
 
+export const REQUEST_TYPE = {
+  ADD_HASH: 'Add Hash',
+  ADD_MEMBER: 'Add Miner',
+  SIGNUP: 'Signup',
+};
+
 export const CAMPAIGN_LIST_TYPE = {
   ALL: 'All',
   GROUP: 'Group',
