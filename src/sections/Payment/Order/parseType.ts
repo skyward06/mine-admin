@@ -3,7 +3,7 @@ import { OrderStatus } from 'src/__generated__/graphql';
 export const parseType = (orderStatus: OrderStatus): string => {
   switch (orderStatus) {
     case OrderStatus.New:
-      return 'Mew';
+      return 'New';
     case OrderStatus.Paid:
       return 'Paid';
     case OrderStatus.Pending:
@@ -13,6 +13,7 @@ export const parseType = (orderStatus: OrderStatus): string => {
     case OrderStatus.Canceled:
       return 'Canceled';
     case OrderStatus.Completed:
+      return 'Completed';
     default:
       return orderStatus;
   }
