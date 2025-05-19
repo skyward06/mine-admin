@@ -14,7 +14,7 @@ import { useQuery } from 'src/routes/hooks';
 import { useTabs } from 'src/hooks/use-tabs';
 import { useBoolean } from 'src/hooks/useBoolean';
 
-import { customizeDate } from 'src/utils/format-time';
+import { formatDate, customizeDate } from 'src/utils/format-time';
 
 import { Iconify } from 'src/components/Iconify';
 import { ConfirmDialog } from 'src/components/Dialog';
@@ -33,6 +33,7 @@ export function MemberListView() {
   const openWeek = useBoolean();
   const tabs = useTabs('general.all');
   const [filter, setFilter] = useState<any>();
+  const [sponsor, setSponsor] = useState<boolean>(false);
   const [listId, setListId] = useState<string>('');
   const [weekly, setWeekly] = useState<boolean>(false);
 
@@ -84,27 +85,20 @@ export function MemberListView() {
       setWeekly(false);
 
       if (suffix === 'all') {
+        setSponsor(false);
         setFilter({});
       }
 
       if (suffix === 'weeklySponsors') {
+        setSponsor(true);
         setFilter({
-          introduceMembers: {
-            some: {
-              createdAt: {
-                gte: customizeDate(`${dayjs(query?.weekStartDate).utc().startOf('week')}`),
-                lt: dayjs(
-                  customizeDate(`${dayjs(query?.weekStartDate).utc().endOf('week').add(1, 'day')}`)
-                ),
-              },
-              status: true,
-            },
-          },
+          week: formatDate(`${dayjs(query?.weekStartDate).utc()}`, 'YYYY-MM-DD'),
         });
       }
 
       if (suffix === 'pending') {
         setWeekly(true);
+        setSponsor(false);
         setFilter({
           status: 'PENDING',
           commissionDefault: 'MANUAL',
@@ -115,12 +109,14 @@ export function MemberListView() {
     if (prefix === 'group') {
       setListId('');
       setWeekly(false);
+      setSponsor(false);
       setFilter({ groupSetting: { name: { contains: suffix, mode: 'insensitive' } } });
     }
 
     if (prefix === 'list') {
       setListId(suffix);
       setWeekly(false);
+      setSponsor(false);
     }
   };
 
@@ -131,15 +127,7 @@ export function MemberListView() {
     });
 
     setFilter({
-      introduceMembers: {
-        some: {
-          createdAt: {
-            gte: customizeDate(`${dayjs(value).utc().startOf('week')}`),
-            lt: dayjs(customizeDate(`${dayjs(value).utc().endOf('week').add(1, 'day')}`)),
-          },
-          status: true,
-        },
-      },
+      week: formatDate(`${dayjs(value).utc()}`, 'YYYY-MM-DD'),
     });
 
     openWeek.onFalse();
@@ -197,7 +185,7 @@ export function MemberListView() {
           </Stack>
         </Box>
 
-        <MemberList filter={filter} listId={listId} weekly={weekly} />
+        <MemberList filter={filter} listId={listId} weekly={weekly} sponsor={sponsor} />
       </Card>
 
       <CreateMemberList open={open} />
