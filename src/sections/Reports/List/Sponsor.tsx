@@ -30,7 +30,7 @@ const TABLE_HEAD = [
   { id: 'ID', label: 'ID', width: 300, sortable: true },
   { id: 'username', label: 'Member', sortable: true },
   { id: 'fullName', label: 'FullName', width: 300, sortable: true },
-  { id: 'weekIntroducers', label: 'Introducers', width: 300, sortable: false },
+  { id: 'totalIntroducers', label: 'Introducers', width: 300, sortable: false },
 ];
 
 interface Props {

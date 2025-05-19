@@ -22,7 +22,7 @@ type Props = {
 
 export default function SponsorTableRow({ row }: Props) {
   const router = useRouter();
-  const { id, ID, username, email, fullName, weekIntroducers } = row;
+  const { id, ID, username, email, fullName, totalIntroducers } = row;
 
   return (
     <TableRow hover>
@@ -44,7 +44,7 @@ export default function SponsorTableRow({ row }: Props) {
         {fullName}
       </TableCell>
       <TableCell sx={{ whiteSpace: 'nowrap' }} align="left">
-        {weekIntroducers}
+        {totalIntroducers}
       </TableCell>
     </TableRow>
   );
