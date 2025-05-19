@@ -14,6 +14,7 @@ export const FETCH_ORDERS_QUERY = gql(/* GraphQL */ `
         expiredAt
         usdBalance
         completedAt
+        requestType
         paidBalance
         paymentToken
         paymentChain

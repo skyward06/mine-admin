@@ -140,7 +140,7 @@ export type BasicMember = {
 // ----------------------------------------------------------------------
 
 export type MemberRole = 'approved' | 'pending' | 'graveyard';
-export type AllowState = 'PENDING' | 'GRAVEYARD' | 'APPROVED' | 'PAID' | 'BLOCKED';
+export type AllowState = 'PENDING' | 'GRAVEYARD' | 'APPROVED' | 'PAID' | 'BLOCKED' | 'ADDED';
 
 export type IMemberTableFilters = {
   search: string;

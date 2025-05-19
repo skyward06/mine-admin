@@ -32,6 +32,7 @@ const TABS: { value: AllowState; label: string; color: LabelColor }[] = [
   { value: 'PENDING', label: 'Pending', color: 'success' },
   { value: 'PAID', label: 'Paid', color: 'secondary' },
   { value: 'GRAVEYARD', label: 'Graveyard', color: 'warning' },
+  { value: 'ADDED', label: 'Added', color: 'warning' },
   { value: 'BLOCKED', label: 'Blocked', color: 'error' },
 ];
 
@@ -79,6 +80,7 @@ export default function MemberListView() {
         approveFilter: { allowState: 'APPROVED' },
         pendingFilter: { allowState: 'PENDING' },
         graveyardFilter: { allowState: 'GRAVEYARD' },
+        addedFilter: { allowState: 'ADDED' },
         paidFilter: { allowState: 'PAID' },
         blockFilter: { allowState: 'BLOCKED' },
       },
