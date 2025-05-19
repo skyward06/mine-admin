@@ -12,6 +12,7 @@ import { parseFilterModel } from 'src/utils/parseFilter';
 
 import { AgGrid } from 'src/components/AgGrid';
 
+import { useFetchSponsors } from 'src/sections/Reports/useApollo';
 import { useFetchMemberSearch } from 'src/sections/Members/useApollo';
 
 import { useFetchWeeklyMembers, useFetchMemberListById } from '../../../useApollo';
@@ -22,6 +23,7 @@ interface Props {
   filter: any;
   listId: string;
   weekly: boolean;
+  sponsor: boolean;
   setEmails: Function;
 }
 
@@ -29,6 +31,7 @@ export default function MemberListView({
   filter: categoryFilter,
   listId,
   weekly,
+  sponsor,
   setEmails,
 }: Props) {
   const [{ filter }] = useQueryString();
@@ -40,6 +43,7 @@ export default function MemberListView({
   const { loading, members, fetchMemberSearch } = useFetchMemberSearch();
   const { loading: listLoading, memberList, fetchMemberListById } = useFetchMemberListById();
   const { loading: weeklyLoading, weeklyMembers, fetchWeeklyMembers } = useFetchWeeklyMembers();
+  const { loading: sponsorLoading, sponsors, fetchSponsors } = useFetchSponsors();
 
   const pendingMembers = useMemo(
     () =>
@@ -53,7 +57,9 @@ export default function MemberListView({
   );
 
   useEffect(() => {
-    if (weekly) {
+    if (sponsor) {
+      fetchSponsors({ variables: { week: categoryFilter.week } });
+    } else if (weekly) {
       fetchWeeklyMembers({ variables: { filter: categoryFilter } });
     } else if (listId) {
       fetchMemberListById({ variables: { data: { id: listId } } });
@@ -64,7 +70,10 @@ export default function MemberListView({
   }, [graphQueryFilter, listId, categoryFilter]);
 
   useEffect(() => {
-    if (weekly) {
+    console.log('sponsor => ', sponsor);
+    if (sponsor) {
+      setEmails(sponsors?.map((item) => item.email));
+    } else if (weekly) {
       setEmails(pendingMembers?.map((item) => item.email));
     } else if (listId) {
       setEmails(memberList?.members?.map((item) => item.email));
@@ -72,7 +81,7 @@ export default function MemberListView({
       setEmails(members.map((item) => item.email));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [members, memberList, pendingMembers, listId]);
+  }, [members, memberList, sponsors, pendingMembers, listId]);
 
   const colDefs = useMemo<ColDef<MemberSearch | BasicListMember | WeeklyMember>[]>(
     () => [
@@ -114,8 +123,10 @@ export default function MemberListView({
   return (
     <AgGrid<MemberSearch | BasicListMember | WeeklyMember>
       gridKey="campaign-members-list"
-      loading={weekly ? weeklyLoading : listId ? listLoading : loading}
-      rowData={weekly ? pendingMembers : listId ? memberList?.members ?? [] : members}
+      loading={sponsor ? sponsorLoading : weekly ? weeklyLoading : listId ? listLoading : loading}
+      rowData={
+        sponsor ? sponsors : weekly ? pendingMembers : listId ? memberList?.members ?? [] : members
+      }
       columnDefs={colDefs}
       pagination={false}
     />

@@ -16,7 +16,7 @@ import { useQuery } from 'src/routes/hooks';
 import { useTabs } from 'src/hooks/use-tabs';
 import { useBoolean } from 'src/hooks/useBoolean';
 
-import { customizeDate } from 'src/utils/format-time';
+import { formatDate, customizeDate } from 'src/utils/format-time';
 
 import { CampaignListType } from 'src/__generated__/graphql';
 
@@ -39,6 +39,7 @@ export function MemberListView({ setEmails, setListType, setListExtra }: Props) 
   const tabs = useTabs('general.all');
   const [filter, setFilter] = useState<any>();
   const [listId, setListId] = useState<string>('');
+  const [sponsor, setSponsor] = useState<boolean>(false);
   const [weekly, setWeekly] = useState<boolean>(false);
   const [selectedTab, setSelectedTab] = useState<string>('general.all');
 
@@ -94,29 +95,22 @@ export function MemberListView({ setEmails, setListType, setListExtra }: Props) 
       setWeekly(false);
 
       if (suffix === 'all') {
+        setSponsor(false);
         setFilter({});
         setListType(CampaignListType.All);
       }
 
       if (suffix === 'weeklySponsors') {
+        setSponsor(true);
         setListType(CampaignListType.WeeklySponsor);
         setFilter({
-          introduceMembers: {
-            some: {
-              createdAt: {
-                gte: customizeDate(`${dayjs(query?.weekStartDate).utc().startOf('week')}`),
-                lt: dayjs(
-                  customizeDate(`${dayjs(query?.weekStartDate).utc().endOf('week').add(1, 'day')}`)
-                ),
-              },
-              status: true,
-            },
-          },
+          week: formatDate(`${dayjs(query?.weekStartDate).utc()}`, 'YYYY-MM-DD'),
         });
       }
 
       if (suffix === 'pending') {
         setWeekly(true);
+        setSponsor(false);
         setListType(CampaignListType.PendingManualCommission);
         setFilter({
           status: 'PENDING',
@@ -128,6 +122,7 @@ export function MemberListView({ setEmails, setListType, setListExtra }: Props) 
     if (prefix === 'group') {
       setListId('');
       setWeekly(false);
+      setSponsor(false);
       setListExtra(suffix);
       setListType(CampaignListType.Group);
       setFilter({ groupSetting: { id: suffix } });
@@ -135,6 +130,7 @@ export function MemberListView({ setEmails, setListType, setListExtra }: Props) 
 
     if (prefix === 'list') {
       setWeekly(false);
+      setSponsor(false);
       setListId(suffix);
       setListExtra(suffix);
       setListType(CampaignListType.Custom);
@@ -148,15 +144,7 @@ export function MemberListView({ setEmails, setListType, setListExtra }: Props) 
     });
 
     setFilter({
-      introduceMembers: {
-        some: {
-          createdAt: {
-            gte: customizeDate(`${dayjs(value).utc().startOf('week')}`),
-            lt: dayjs(customizeDate(`${dayjs(value).utc().endOf('week').add(1, 'day')}`)),
-          },
-          status: true,
-        },
-      },
+      week: formatDate(`${dayjs(value).utc()}`, 'YYYY-MM-DD'),
     });
 
     openWeek.onFalse();
@@ -215,7 +203,13 @@ export function MemberListView({ setEmails, setListType, setListExtra }: Props) 
           </Tabs>
         </Box>
 
-        <MemberList filter={filter} listId={listId} setEmails={setEmails} weekly={weekly} />
+        <MemberList
+          filter={filter}
+          listId={listId}
+          setEmails={setEmails}
+          weekly={weekly}
+          sponsor={sponsor}
+        />
       </Card>
 
       <ConfirmDialog
