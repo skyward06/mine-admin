@@ -5,6 +5,7 @@ export const FETCH_MEMBER_STATS_QUERY = gql(/* GraphQL */ `
     $approveFilter: JSONObject
     $pendingFilter: JSONObject
     $graveyardFilter: JSONObject
+    $addedFilter: JSONObject
     $paidFilter: JSONObject
     $blockFilter: JSONObject
   ) {
@@ -15,6 +16,9 @@ export const FETCH_MEMBER_STATS_QUERY = gql(/* GraphQL */ `
       total
     }
     GRAVEYARD: members(filter: $graveyardFilter) {
+      total
+    }
+    ADDED: members(filter: $addedFilter) {
       total
     }
     PAID: members(filter: $paidFilter) {
@@ -408,6 +412,16 @@ export const FETCH_PAYOUTS_QUERY = gql(/* GraphQL */ `
   }
 `);
 
+export const FETCH_ADDRESS_BY_MEMBER = gql(/* GraphQL */ `
+  query AddressByMemberId($data: IDInput!) {
+    addressByMemberId(data: $data) {
+      chain
+      address
+      balance
+    }
+  }
+`);
+
 export const UPDATE_PASSWORD_QUERY = gql(/* GraphQL */ `
   mutation updatePasswordMemberById($data: UpdateMemberPasswordInputById!) {
     updatePasswordMemberById(data: $data) {
@@ -562,6 +576,15 @@ export const LOGOUT_FORCE = gql(/* GraphQL */ `
 export const ADMIN_GOT_IT = gql(/* GraphQL */ `
   mutation AdminGotIt($data: IDInput!) {
     adminGotIt(data: $data) {
+      result
+      message
+    }
+  }
+`);
+
+export const GENERATE_ADDRESS = gql(/* GraphQL */ `
+  mutation GenerateAddress($data: IDInput!) {
+    generateAddress(data: $data) {
       result
       message
     }

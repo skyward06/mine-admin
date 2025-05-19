@@ -9,6 +9,7 @@ import {
   APPROVE_MEMBER,
   MOVE_TO_BLOCKED,
   MOVE_TO_PENDING,
+  GENERATE_ADDRESS,
   DUPLICATE_MEMBER,
   MOVE_TO_GRAVEYARD,
   RESET_BONUS_CLOCK,
@@ -19,6 +20,7 @@ import {
   REMOVE_MEMBER_QUERY,
   FETCH_MEMBER_HISTORY,
   UPDATE_PASSWORD_QUERY,
+  FETCH_ADDRESS_BY_MEMBER,
   FETCH_INTRODUCERS_QUERY,
   REMOVE_MEMBER_PLACEMENT,
   FETCH_MEMBER_STATS_QUERY,
@@ -111,6 +113,12 @@ export function useFetchMemberOverview(id: string) {
   });
 
   return { loading, overview: data?.memberOverview, error };
+}
+
+export function useFetchAddressByMember() {
+  const [fetchAddressByMember, { loading, data, error }] = useLazyQuery(FETCH_ADDRESS_BY_MEMBER);
+
+  return { loading, addresses: data?.addressByMemberId ?? [], error, fetchAddressByMember };
 }
 
 export function useUpdateMember() {
@@ -240,4 +248,13 @@ export function useAdminGotIt() {
   });
 
   return { loading, data, error, adminGotIt };
+}
+
+export function useGenerateAddres() {
+  const [generateAddress, { loading, data, error }] = useMutation(GENERATE_ADDRESS, {
+    awaitRefetchQueries: true,
+    refetchQueries: ['Members', 'MemberById'],
+  });
+
+  return { loading, data, error, generateAddress };
 }
