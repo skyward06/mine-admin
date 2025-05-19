@@ -19,6 +19,7 @@ import {
   REMOVE_MEMBER_QUERY,
   FETCH_MEMBER_HISTORY,
   UPDATE_PASSWORD_QUERY,
+  FETCH_INTRODUCERS_QUERY,
   REMOVE_MEMBER_PLACEMENT,
   FETCH_MEMBER_STATS_QUERY,
   FETCH_MEMBER_SEARCH_QUERY,
@@ -46,6 +47,30 @@ export function useFetchMembers() {
     rowCount,
     members: data?.members.members ?? [],
     fetchMembers,
+  };
+}
+
+export function useFetchIntroducers() {
+  const [fetchIntroducers, { loading, data, called }] = useLazyQuery(FETCH_INTRODUCERS_QUERY);
+
+  const rowCountRef = useRef(data?.introducers.total ?? 0);
+
+  const rowCount = useMemo(() => {
+    const newTotal = data?.introducers.total ?? undefined;
+
+    if (newTotal !== undefined) {
+      rowCountRef.current = newTotal;
+    }
+
+    return rowCountRef.current;
+  }, [data]);
+
+  return {
+    called,
+    loading,
+    rowCount,
+    introducers: data?.introducers.introducers ?? [],
+    fetchIntroducers,
   };
 }
 

@@ -61,7 +61,9 @@ export const FETCH_SPONSORS_QUERY = gql(/* GraphQL */ `
   query WeekIntroducers($week: Date!, $sort: String, $page: String) {
     weekIntroducers(week: $week, sort: $sort, page: $page) {
       members {
+        id
         ID
+        email
         mobile
         assetId
         username
