@@ -79,7 +79,7 @@ const documents = {
     "\n  query MemberOverview($data: IDInput!) {\n    memberOverview(data: $data) {\n      point\n      joinDate\n      isTexitRanger\n      totalTXCShared\n      currentHashPower\n      orderedAvailablePoint\n      cashCommissionPotential\n    }\n  }\n": types.MemberOverviewDocument,
     "\n  query MemberStatistics($sort: String, $page: String, $filter: JSONObject) {\n    memberStatistics(sort: $sort, page: $page, filter: $filter) {\n      memberStatistics {\n        issuedAt\n        hashPower\n        txcShared\n      }\n      total\n    }\n  }\n": types.MemberStatisticsDocument,
     "\n  query Payouts($filter: JSONObject, $page: String, $sort: String) {\n    payouts(filter: $filter, page: $page, sort: $sort) {\n      payouts {\n        id\n        method\n        display\n        name\n        status\n        createdAt\n        updatedAt\n        deletedAt\n      }\n      total\n    }\n  }\n": types.PayoutsDocument,
-    "\n  query AddressByMemberId($data: IDInput!) {\n    addressByMemberId(data: $data) {\n      chain\n      address\n      balance\n    }\n  }\n": types.AddressByMemberIdDocument,
+    "\n  query AddressByMemberId($data: IDInput!) {\n    addressByMemberId(data: $data) {\n      chain\n      address\n      balances {\n        chain\n        token\n        balance\n      }\n    }\n  }\n": types.AddressByMemberIdDocument,
     "\n  mutation updatePasswordMemberById($data: UpdateMemberPasswordInputById!) {\n    updatePasswordMemberById(data: $data) {\n      id\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.UpdatePasswordMemberByIdDocument,
     "\n  mutation removeMember($data: IDInput!) {\n    removeMember(data: $data) {\n      message\n      result\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.RemoveMemberDocument,
     "\n  mutation removeCompleteMemberPlacement($data: IDInput!) {\n    removeCompleteMemberPlacement(data: $data) {\n      message\n      result\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.RemoveCompleteMemberPlacementDocument,
@@ -472,7 +472,7 @@ export function gql(source: "\n  query Payouts($filter: JSONObject, $page: Strin
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query AddressByMemberId($data: IDInput!) {\n    addressByMemberId(data: $data) {\n      chain\n      address\n      balance\n    }\n  }\n"): (typeof documents)["\n  query AddressByMemberId($data: IDInput!) {\n    addressByMemberId(data: $data) {\n      chain\n      address\n      balance\n    }\n  }\n"];
+export function gql(source: "\n  query AddressByMemberId($data: IDInput!) {\n    addressByMemberId(data: $data) {\n      chain\n      address\n      balances {\n        chain\n        token\n        balance\n      }\n    }\n  }\n"): (typeof documents)["\n  query AddressByMemberId($data: IDInput!) {\n    addressByMemberId(data: $data) {\n      chain\n      address\n      balances {\n        chain\n        token\n        balance\n      }\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

@@ -478,7 +478,7 @@ export const Personal = () => {
           <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
 
           {/* Setting info */}
-          <Typography variant="body1" fontWeight="bold" mt={2}>
+          <Typography variant="body1" fontWeight="bold" my={2}>
             Setting
           </Typography>
 
@@ -504,7 +504,7 @@ export const Personal = () => {
 
           {/* Address info */}
 
-          <Typography variant="body1" fontWeight="bold" mt={2}>
+          <Typography variant="body1" fontWeight="bold" my={2}>
             Wallet
           </Typography>
 
@@ -538,23 +538,25 @@ export const Personal = () => {
                     </Stack>
                   </Stack>
 
-                  <Stack direction="row" spacing={2} pb={1}>
-                    <Stack width={0.5}>
-                      <Typography variant="body2" fontWeight="bold">
-                        Balance:
-                      </Typography>
+                  {item?.balances?.map((balance) => (
+                    <Stack direction="row" spacing={2} pb={1}>
+                      <Stack width={0.5}>
+                        <Typography variant="body2" fontWeight="bold">
+                          {balance.token}:
+                        </Typography>
+                      </Stack>
+                      <Stack width={1}>
+                        <Typography variant="body2">
+                          {balance?.balance
+                            ? makeDecimal(
+                                balance.balance / 10 ** CHAIN_UNIT[balance?.chain!],
+                                CHAIN_UNIT[balance?.chain!]
+                              )
+                            : 0}
+                        </Typography>
+                      </Stack>
                     </Stack>
-                    <Stack width={1}>
-                      <Typography variant="body2">
-                        {item?.balance
-                          ? makeDecimal(
-                              item.balance / 10 ** CHAIN_UNIT[item?.chain!],
-                              CHAIN_UNIT[item?.chain!]
-                            )
-                          : 0}
-                      </Typography>
-                    </Stack>
-                  </Stack>
+                  ))}
                 </>
               ))
             : 'You have not address yet'}

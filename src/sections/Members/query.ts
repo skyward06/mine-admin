@@ -417,7 +417,11 @@ export const FETCH_ADDRESS_BY_MEMBER = gql(/* GraphQL */ `
     addressByMemberId(data: $data) {
       chain
       address
-      balance
+      balances {
+        chain
+        token
+        balance
+      }
     }
   }
 `);
