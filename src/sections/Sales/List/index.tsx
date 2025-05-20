@@ -218,7 +218,7 @@ export default function SaleListView() {
       {
         colId: 'action',
         pinned: 'right',
-        width: 60,
+        width: 50,
         resizable: false,
         editable: false,
         sortable: false,

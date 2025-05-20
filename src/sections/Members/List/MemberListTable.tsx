@@ -303,10 +303,11 @@ export default function MemberListTable({ customFilter }: Props) {
       {
         colId: 'action',
         pinned: 'right',
-        width: 60,
+        width: 50,
         resizable: false,
         editable: false,
         sortable: false,
+        cellClass: 'ag-action-cell',
         cellRenderer: ActionRender,
       },
     ],
