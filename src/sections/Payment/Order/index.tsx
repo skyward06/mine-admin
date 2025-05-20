@@ -107,17 +107,17 @@ export default function Orders() {
         field: 'paidBalance',
         headerName: 'Received Balance',
         width: 250,
-        // filter: 'agNumberColumnFilter',
         resizable: true,
         editable: false,
         sortable: false,
-        // filterParams: { buttons: ['reset'] } as INumberFilterParams,
         cellRenderer: ({ data }: CustomCellRendererProps<Order>) =>
           fCurrency(
-            makeDecimal(
-              (data?.paidBalance ?? 0) / 10 ** CHAIN_UNIT[data?.paymentToken!],
-              CHAIN_UNIT[data?.paymentToken!]
-            )
+            data?.paymentToken
+              ? makeDecimal(
+                  (data?.paidBalance ?? 0) / 10 ** CHAIN_UNIT[data?.paymentToken!],
+                  CHAIN_UNIT[data?.paymentToken!]
+                )
+              : 0
           ),
       },
       {
