@@ -103,7 +103,10 @@ export default function Detail({ address, chain, open }: Props) {
                 makeDecimal(
                   (current?.balance ?? 0) / 10 ** CHAIN_UNIT[current?.chain!],
                   CHAIN_UNIT[current?.chain!]
-                )
+                ),
+                {
+                  maximumFractionDigits: CHAIN_UNIT[current?.chain!],
+                }
               )}
             </Stack>
           </Stack>

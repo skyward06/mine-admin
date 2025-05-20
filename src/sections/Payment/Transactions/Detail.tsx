@@ -143,7 +143,11 @@ export default function Detail({ hash, chain, open }: Props) {
                   (transaction?.balance ?? 0) /
                     10 ** CHAIN_UNIT[transaction?.tokenType ?? ('' as keyof typeof CHAIN_UNIT)],
                   CHAIN_UNIT[transaction?.tokenType ?? ('' as keyof typeof CHAIN_UNIT)]
-                )
+                ),
+                {
+                  maximumFractionDigits:
+                    CHAIN_UNIT[transaction?.tokenType ?? ('' as keyof typeof CHAIN_UNIT)],
+                }
               )}
             </Stack>
           </Stack>

@@ -180,7 +180,10 @@ export default function Transactions() {
             makeDecimal(
               (data?.balance ?? 0) / 10 ** CHAIN_UNIT[data?.tokenType!],
               CHAIN_UNIT[data?.tokenType!]
-            )
+            ),
+            {
+              maximumFractionDigits: CHAIN_UNIT[data?.tokenType!],
+            }
           ),
       },
       {

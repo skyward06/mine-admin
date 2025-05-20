@@ -242,7 +242,10 @@ export default function Detail({ id, open }: Props) {
                       (item?.balance ?? 0) /
                         10 ** CHAIN_UNIT[item?.tokenType as keyof typeof CHAIN_UNIT],
                       CHAIN_UNIT[item?.tokenType as keyof typeof CHAIN_UNIT]
-                    )
+                    ),
+                    {
+                      maximumFractionDigits: CHAIN_UNIT[item?.tokenType as keyof typeof CHAIN_UNIT],
+                    }
                   )}
                 </Stack>
               </Stack>

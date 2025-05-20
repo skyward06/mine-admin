@@ -117,7 +117,10 @@ export default function Orders() {
                   (data?.paidBalance ?? 0) / 10 ** CHAIN_UNIT[data?.paymentToken!],
                   CHAIN_UNIT[data?.paymentToken!]
                 )
-              : 0
+              : 0,
+            {
+              maximumFractionDigits: CHAIN_UNIT[data?.paymentToken!],
+            }
           ),
       },
       {
