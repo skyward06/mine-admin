@@ -156,6 +156,7 @@ export default function Orders() {
         resizable: false,
         editable: false,
         sortable: false,
+        pinned: 'right',
         cellClass: 'ag-action-cell',
         cellRenderer: ActionRender,
       },
