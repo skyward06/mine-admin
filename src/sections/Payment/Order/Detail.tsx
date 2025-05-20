@@ -87,6 +87,8 @@ export default function Detail({ id, open }: Props) {
     }
   }, [id, open, fetchOrder]);
 
+  console.log('order => ', order);
+
   return (
     <Drawer
       open={open.value}
@@ -115,7 +117,7 @@ export default function Detail({ id, open }: Props) {
               Type:
             </Stack>
             <Stack width={1} sx={{ fontSize: 14 }}>
-              {`${order?.paymentToken} (${order?.paymentChain})`}
+              {order?.paymentToken ? `${order?.paymentToken} (${order?.paymentChain})` : 'Not yet'}
             </Stack>
           </Stack>
 
