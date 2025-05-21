@@ -4,12 +4,14 @@ import { useState, useEffect } from 'react';
 
 import Stack from '@mui/material/Stack';
 
+import { CommissionPaymentType } from 'src/__generated__/graphql';
+
 import { Iconify } from 'src/components/Iconify';
 import { ConfirmView } from 'src/components/Reward';
 import { EmptyContent } from 'src/components/EmptyContent';
 import ComponentBlock from 'src/components/Component-Block';
 
-import { useGenerateSendmany } from '../useApollo';
+import { useGenerateTXCSendmany } from '../useApollo';
 
 interface Props {
   txcPrice: number;
@@ -21,7 +23,7 @@ export default function Sendmany({ disabled, txcPrice, setTxData }: Props) {
   const [tId, setTId] = useState<any>([]);
   const [copy, setCopy] = useState<any>();
 
-  const { loading, sendmany, generateSendmany } = useGenerateSendmany();
+  const { loading, sendmany, generateTXCSendmany } = useGenerateTXCSendmany();
 
   const handleCopy = async (result: any) => {
     try {
@@ -32,14 +34,20 @@ export default function Sendmany({ disabled, txcPrice, setTxData }: Props) {
   };
 
   useEffect(() => {
-    generateSendmany({ variables: { data: { txcPrice } } });
+    generateTXCSendmany({ variables: { data: { txcPrice } } });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [txcPrice]);
 
   useEffect(() => {
     if (sendmany) {
       sendmany?.map((_, index) => setCopy({ ...copy, [index]: false }));
-      setTxData(sendmany?.map((item, index) => ({ ids: item.ids, txID: tId[index] || '' })));
+      setTxData(
+        sendmany?.map((item, index) => ({
+          ids: item.ids,
+          txID: tId[index] || '',
+          type: CommissionPaymentType.Txc,
+        }))
+      );
 
       if (!sendmany.length) {
         disabled.onTrue();

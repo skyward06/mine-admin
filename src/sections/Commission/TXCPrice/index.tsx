@@ -1,3 +1,5 @@
+import type { ApproveCommissionWithTxId } from 'src/__generated__/graphql';
+
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 
@@ -23,15 +25,10 @@ interface Props {
   open: UseBooleanReturn;
 }
 
-type TxData = {
-  txID: string;
-  ids: string[];
-};
-
 export default function TXCPrice({ open }: Props) {
   const [step, setStep] = useState<number>(0);
   const [price, setPrice] = useState<number>(0);
-  const [txData, setTxData] = useState<TxData[]>([]);
+  const [txData, setTxData] = useState<ApproveCommissionWithTxId[]>([]);
 
   const disabled = useBoolean();
 
