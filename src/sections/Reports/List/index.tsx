@@ -27,6 +27,7 @@ import { Breadcrumbs } from 'src/components/Breadcrumbs';
 
 import { useAuthContext } from 'src/auth/hooks';
 
+import PeerList from './Peer';
 import Revenue from './Revenue';
 import Special from './Special';
 import MetalListView from './Metals';
@@ -58,6 +59,11 @@ export default function ReportView() {
     {
       value: 'special-report',
       label: 'Special Report',
+      icon: <Iconify icon="uil:window-restore" />,
+    },
+    {
+      value: 'peer-acceptable',
+      label: 'Peer Acceptable',
       icon: <Iconify icon="uil:window-restore" />,
     },
   ];
@@ -193,6 +199,8 @@ export default function ReportView() {
         {tabs.value === 'metals' && <MetalListView />}
 
         {tabs.value === 'sponsors' && <SponsorListView openWeek={openWeek} />}
+
+        {tabs.value === 'peer-acceptable' && <PeerList />}
       </DashboardContent>
     </>
   );
