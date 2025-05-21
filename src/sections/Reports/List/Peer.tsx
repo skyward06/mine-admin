@@ -1,4 +1,3 @@
-import type { BasicMember } from 'src/sections/Members/List/type';
 import type { CustomCellRendererProps } from '@ag-grid-community/react';
 import type {
   ColDef,
@@ -14,7 +13,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
-import { useRouter, useSearchParams, useAgQuery as useQueryString } from 'src/routes/hooks';
+import { useRouter, useAgQuery as useQueryString } from 'src/routes/hooks';
 
 import { formatID } from 'src/utils/helper';
 import { formatDate } from 'src/utils/format-time';
@@ -23,7 +22,9 @@ import { parseFilterModel } from 'src/utils/parseFilter';
 import { AgGrid } from 'src/components/AgGrid';
 import { Iconify } from 'src/components/Iconify';
 
-import { useFetchMembers } from 'src/sections/Members/useApollo';
+import { useFetchPeerAcceptable } from '../useApollo';
+
+import type { ReportMember } from './type';
 
 type Checked = {
   checked: boolean;
@@ -37,15 +38,10 @@ export default function PeerList() {
 
   const [checked, setChecked] = useState<Checked>({ checked: false, id: '', field: '', value: '' });
 
-  const sponsorId = useSearchParams().get('sponsorId');
-
   const [{ page = '1,50', sort = 'createdAt', filter }] = useQueryString();
-  const graphQueryFilter = useMemo(
-    () => parseFilterModel({ ...(sponsorId && { sponsorId }) }, filter),
-    [filter, sponsorId]
-  );
+  const graphQueryFilter = useMemo(() => parseFilterModel({}, filter), [filter]);
 
-  const { loading, rowCount, members, fetchMembers } = useFetchMembers();
+  const { loading, rowCount, members, fetchPeerAcceptable } = useFetchPeerAcceptable();
 
   const handleCopy = async (id: string, field: string, data: string) => {
     try {
@@ -61,7 +57,7 @@ export default function PeerList() {
   };
 
   useEffect(() => {
-    fetchMembers({ variables: { filter: graphQueryFilter, page, sort } });
+    fetchPeerAcceptable({ variables: { page, sort } });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [graphQueryFilter, page, sort]);
 
@@ -74,7 +70,7 @@ export default function PeerList() {
         filter: 'agNumberColumnFilter',
         resizable: true,
         editable: false,
-        cellRenderer: ({ data }: CustomCellRendererProps<BasicMember>) =>
+        cellRenderer: ({ data }: CustomCellRendererProps<ReportMember>) =>
           formatID(data?.ID ?? '', 'M'),
       },
       {
@@ -85,7 +81,7 @@ export default function PeerList() {
         editable: false,
         filter: 'agTextColumnFilter',
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellRenderer: ({ data }: CustomCellRendererProps<BasicMember>) => (
+        cellRenderer: ({ data }: CustomCellRendererProps<ReportMember>) => (
           <Typography
             variant="body2"
             onClick={() => router.push(paths.dashboard.members.edit(data?.id!))}
@@ -107,7 +103,7 @@ export default function PeerList() {
         editable: false,
         filter: 'agTextColumnFilter',
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellRenderer: ({ data }: CustomCellRendererProps<BasicMember>) => (
+        cellRenderer: ({ data }: CustomCellRendererProps<ReportMember>) => (
           <Stack direction="row" columnGap={1} sx={{ alignItems: 'center', cursor: 'pointer' }}>
             {data?.fullName}
 
@@ -116,7 +112,7 @@ export default function PeerList() {
             )}
           </Stack>
         ),
-        onCellClicked: ({ data }: CellClickedEvent<BasicMember, any>) =>
+        onCellClicked: ({ data }: CellClickedEvent<ReportMember, any>) =>
           handleCopy(data?.id ?? '', 'fullName', data?.fullName ?? ''),
       },
       {
@@ -127,7 +123,7 @@ export default function PeerList() {
         editable: false,
         filter: 'agTextColumnFilter',
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellRenderer: ({ data }: CustomCellRendererProps<BasicMember>) => (
+        cellRenderer: ({ data }: CustomCellRendererProps<ReportMember>) => (
           <Stack direction="row" columnGap={1} sx={{ alignItems: 'center', cursor: 'pointer' }}>
             {data?.mobile}
 
@@ -136,7 +132,7 @@ export default function PeerList() {
             )}
           </Stack>
         ),
-        onCellClicked: ({ data }: CellClickedEvent<BasicMember, any>) =>
+        onCellClicked: ({ data }: CellClickedEvent<ReportMember, any>) =>
           handleCopy(data?.id ?? '', 'mobile', data?.mobile ?? ''),
       },
       {
@@ -160,7 +156,7 @@ export default function PeerList() {
         } as IDateFilterParams,
         resizable: true,
         editable: false,
-        cellRenderer: ({ data }: CustomCellRendererProps<BasicMember>) =>
+        cellRenderer: ({ data }: CustomCellRendererProps<ReportMember>) =>
           formatDate(data?.createdAt),
       },
     ],
@@ -176,7 +172,7 @@ export default function PeerList() {
         overflow: 'hidden',
       }}
     >
-      <AgGrid<BasicMember>
+      <AgGrid<ReportMember>
         gridKey="report-member-list"
         loading={loading}
         rowData={members}

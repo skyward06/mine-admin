@@ -64,7 +64,7 @@ export default function ReportView() {
     {
       value: 'peer-acceptable',
       label: 'Peer Acceptable',
-      icon: <Iconify icon="uil:window-restore" />,
+      icon: <Iconify icon="healthicons:i-documents-accepted-outline-24px" />,
     },
   ];
 
