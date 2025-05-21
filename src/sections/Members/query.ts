@@ -77,7 +77,6 @@ export const FETCH_MEMBER_QUERY = gql(/* GraphQL */ `
       avatar
       mobile
       assetId
-      ethAssetId
       country
       zipCode
       username
@@ -87,10 +86,12 @@ export const FETCH_MEMBER_QUERY = gql(/* GraphQL */ `
       allowState
       OTPEnabled
       teamReport
+      ethAssetId
       teamStrategy
       isTexitRanger
       emailVerified
       syncWithSendy
+      peerAcceptable
       primaryAddress
       preferredContact
       secondaryAddress
@@ -127,6 +128,7 @@ export const FETCH_MEMBER_QUERY = gql(/* GraphQL */ `
         isTexitRanger
         syncWithSendy
         emailVerified
+        peerAcceptable
         primaryAddress
         totalIntroducers
         placementPosition
@@ -151,6 +153,7 @@ export const FETCH_MEMBER_QUERY = gql(/* GraphQL */ `
         isTexitRanger
         syncWithSendy
         emailVerified
+        peerAcceptable
         primaryAddress
         totalIntroducers
         placementPosition
@@ -173,6 +176,7 @@ export const FETCH_MEMBER_QUERY = gql(/* GraphQL */ `
         isTexitRanger
         syncWithSendy
         emailVerified
+        peerAcceptable
         primaryAddress
         totalIntroducers
         placementPosition

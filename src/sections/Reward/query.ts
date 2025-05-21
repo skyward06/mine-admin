@@ -54,6 +54,7 @@ export const FETCH_MEMBERSTATISTICS_QUERY = gql(/* GraphQL */ `
           isTexitRanger
           syncWithSendy
           emailVerified
+          peerAcceptable
           primaryAddress
           totalIntroducers
           placementPosition
