@@ -85,6 +85,7 @@ export type Member = {
   memberWallets?: Array<MemberWallet> | null;
   mobile: string;
   paymentMade: boolean;
+  peerAcceptable: boolean;
   placementChildren?: Array<Member> | null;
   placementParent?: Member | null;
   placementParentId?: string | null;
