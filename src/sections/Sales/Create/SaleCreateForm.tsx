@@ -195,7 +195,11 @@ export default function SaleCreateForm() {
 
               {isShow.value && (
                 <>
-                  <SearchMiner setMemberId={setToMemberId} label="Peer to Peer Miner" />
+                  <SearchMiner
+                    setMemberId={setToMemberId}
+                    filter={{ peerAcceptable: true }}
+                    label="Peer to Peer Miner"
+                  />
                   <Field.Switch name="isMetal" label="Metal Peer Payment" sx={{ mt: { md: 1 } }} />
                 </>
               )}

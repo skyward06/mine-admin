@@ -229,6 +229,7 @@ export default function SaleGeneral({ currentSale }: Props) {
                   <SearchMiner
                     currentMember={currentSale.toMember}
                     setMemberId={setToMemberId}
+                    filter={{ peerAcceptable: true }}
                     label="Peer to Peer Miner"
                   />
                   <Field.Switch name="isMetal" label="Metal Peer Payment" sx={{ mt: { md: 1 } }} />
