@@ -28,9 +28,10 @@ import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import { useAuthContext } from 'src/auth/hooks';
 
 import Week from './Week';
-import Price from './Price';
 import Member from './Member';
 import Preview from './Preview';
+import TXCPrice from './TXCPrice';
+import USDCPrice from './USDCPrice';
 import { useCalculateCommission } from './useApollo';
 
 const TABS = [
@@ -62,8 +63,9 @@ export default function CommissionListView() {
   const { user } = useAuthContext();
   const { loading: calculationLoading, calculateCommission } = useCalculateCommission();
 
+  const openTXC = useBoolean();
+  const openUSDC = useBoolean();
   const openWeek = useBoolean();
-  const openPrice = useBoolean();
 
   const token = localStorage.getItem(CONFIG.storageTokenKey) ?? '';
 
@@ -131,15 +133,27 @@ export default function CommissionListView() {
                   Calculate
                 </LoadingButton>
                 {tabs.value === 'member' && (
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    sx={{ mb: 1 }}
-                    onClick={openPrice.onTrue}
-                  >
-                    <Iconify icon="solar:tag-price-outline" sx={{ mr: 0.5 }} />
-                    Pay TXC
-                  </Button>
+                  <>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      sx={{ mb: 1 }}
+                      onClick={openTXC.onTrue}
+                    >
+                      <Iconify icon="solar:tag-price-outline" sx={{ mr: 0.5 }} />
+                      Pay TXC
+                    </Button>
+
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      sx={{ mb: 1 }}
+                      onClick={openUSDC.onTrue}
+                    >
+                      <Iconify icon="solar:tag-price-outline" sx={{ mr: 0.5 }} />
+                      Pay USDC
+                    </Button>
+                  </>
                 )}
               </>
             )}
@@ -162,7 +176,9 @@ export default function CommissionListView() {
 
       {tabs.value === 'preview' && <Preview />}
 
-      <Price open={openPrice} />
+      <TXCPrice open={openTXC} />
+
+      <USDCPrice open={openUSDC} />
     </DashboardContent>
   );
 }
