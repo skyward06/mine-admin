@@ -25,6 +25,7 @@ export const Schema = zod.object({
   preferredContactDetail: zod.string().optional().nullable(),
   syncWithSendy: zod.boolean().default(true),
   isTexitRanger: zod.boolean().default(false),
+  peerAcceptable: zod.boolean().default(false),
   txcWallets: zod.array(
     zod.object({
       payoutId: zod.string({ required_error: 'Payout is required' }),
