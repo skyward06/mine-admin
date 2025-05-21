@@ -451,7 +451,9 @@ export default function MemberGeneral({ currentMember }: Props) {
           Save Changes
         </LoadingButton>
         {!currentMember.status &&
-          (currentMember.allowState === 'PENDING' || currentMember.allowState === 'PAID') && (
+          (currentMember.allowState === 'PENDING' ||
+            currentMember.allowState === 'PAID' ||
+            currentMember.allowState === 'ADDED') && (
             <LoadingButton
               variant="contained"
               loading={loading && ref.current}
