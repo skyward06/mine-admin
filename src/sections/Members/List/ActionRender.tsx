@@ -192,6 +192,46 @@ export const ActionRender = memo(
       }
     };
 
+    const handleApproveMember = async () => {
+      try {
+        await approveMember({ variables: { data: { id: current?.id! } } });
+
+        toast.success('Successfully approved');
+      } catch (error) {
+        toast.error('Something went wrong!');
+      }
+    };
+
+    const handleMoveToGraveyard = async () => {
+      try {
+        await moveToGraveyard({ variables: { data: { id: current?.id! } } });
+
+        toast.success('Successfully moved');
+      } catch (error) {
+        toast.error('Something went wrong!');
+      }
+    };
+
+    const handleMoveToPaid = async () => {
+      try {
+        await moveToPaid({ variables: { data: { id: current?.id! } } });
+
+        toast.success('Successfully moved');
+      } catch (error) {
+        toast.error('Something went wrong!');
+      }
+    };
+
+    const handleMoveToPending = async () => {
+      try {
+        await moveToPending({ variables: { data: { id: current?.id! } } });
+
+        toast.success('Successfully moved');
+      } catch (error) {
+        toast.error('Something went wrong!');
+      }
+    };
+
     return (
       <>
         <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
@@ -205,100 +245,40 @@ export const ActionRender = memo(
           slotProps={{ arrow: { placement: 'right-top' } }}
         >
           <MenuList>
-            {current?.allowState === 'PENDING' && (
+            {(current?.allowState === 'PENDING' || 'ADDED') && (
               <>
                 <MenuItem onClick={handleAdminGotIt} disabled={!!current?.adminUsername}>
                   <Iconify icon="mdi:user-check" color="green" />I got it
                   {gotLoading && <Iconify icon="eos-icons:bubble-loading" />}
                 </MenuItem>
-                <MenuItem
-                  onClick={async () => {
-                    try {
-                      await approveMember({ variables: { data: { id: current?.id! } } });
-
-                      toast.success('Successfully approved');
-                    } catch (error) {
-                      toast.error('Something went wrong!');
-                    }
-                  }}
-                >
+                <MenuItem onClick={handleApproveMember}>
                   <Iconify icon="fa6-solid:circle-check" color="green" />
                   Approve
                   {approveLoading && <Iconify icon="eos-icons:bubble-loading" />}
                 </MenuItem>
-                <MenuItem
-                  onClick={async () => {
-                    try {
-                      await moveToGraveyard({ variables: { data: { id: current?.id! } } });
-
-                      toast.success('Successfully moved');
-                    } catch (error) {
-                      toast.error('Something went wrong!');
-                    }
-                  }}
-                >
+                <MenuItem onClick={handleMoveToGraveyard}>
                   <Iconify icon="mdi:graveyard" color="Tomato" />
                   Move to Graveyard
                 </MenuItem>
-                <MenuItem
-                  onClick={async () => {
-                    try {
-                      await moveToPaid({ variables: { data: { id: current?.id! } } });
-
-                      toast.success('Successfully moved');
-                    } catch (error) {
-                      toast.error('Something went wrong!');
-                    }
-                  }}
-                >
+                <MenuItem onClick={handleMoveToPaid}>
                   <Iconify icon="ic:baseline-paid" color="green" />
                   Move to Paid
                 </MenuItem>
               </>
             )}
             {current?.allowState === 'GRAVEYARD' && (
-              <MenuItem
-                onClick={async () => {
-                  try {
-                    await moveToPending({ variables: { data: { id: current?.id! } } });
-
-                    toast.success('Successfully moved');
-                  } catch (error) {
-                    toast.error('Something went wrong!');
-                  }
-                }}
-              >
+              <MenuItem onClick={handleMoveToPending}>
                 <Iconify icon="mdi:account-pending" color="#B76E00" />
                 Move to Pending
               </MenuItem>
             )}
             {current?.allowState === 'PAID' && (
               <>
-                <MenuItem
-                  onClick={async () => {
-                    try {
-                      await approveMember({ variables: { data: { id: current?.id! } } });
-
-                      toast.success('Successfully approved');
-                    } catch (error) {
-                      toast.error('Something went wrong!');
-                    }
-                  }}
-                >
+                <MenuItem onClick={handleApproveMember}>
                   <Iconify icon="fa6-solid:circle-check" color="green" />
                   Approve
                 </MenuItem>
-                <MenuItem
-                  onClick={async () => {
-                    try {
-                      await moveToPending({ variables: { data: { id: current?.id! } } });
-
-                      toast.success('Successfully moved');
-                    } catch (error) {
-                      toast.error('Something went wrong!');
-                    }
-                  }}
-                >
+                <MenuItem onClick={handleMoveToPending}>
                   <Iconify icon="mdi:account-pending" color="#B76E00" />
                   Move to Pending
                 </MenuItem>
