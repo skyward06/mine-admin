@@ -7,12 +7,12 @@ import { useRouter } from 'src/routes/hooks';
 
 import { formatDate, formatTime } from 'src/utils/format-time';
 
-import type { OnepointAwayMembers } from './type';
+import type { ReportMember } from './type';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  row: OnepointAwayMembers;
+  row: ReportMember;
 };
 
 export default function MemberTableRow({ row }: Props) {

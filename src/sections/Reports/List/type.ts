@@ -23,7 +23,7 @@ export type SpecialReport = {
   link: string;
 };
 
-export type OnepointAwayMembers = {
+export type ReportMember = {
   __typename?: 'ReportMember';
   id: string;
   ID: number;
