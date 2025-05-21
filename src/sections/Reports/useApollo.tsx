@@ -7,6 +7,7 @@ import {
   FETCH_SPONSORS_QUERY,
   GENERATE_WEEKLY_REPORT,
   GENERATE_WINNER_REPORT,
+  FETCH_PEER_ACCEPTABLE_QUERY,
   FETCH_ONEPOINT_AWAY_MEMBERS_QUERY,
 } from './query';
 
@@ -99,6 +100,29 @@ export function useFetchSponsors() {
   }, [data]);
 
   return { loading, rowCount, sponsors: data?.weekIntroducers.members ?? [], fetchSponsors };
+}
+
+export function useFetchPeerAcceptable() {
+  const [fetchPeerAcceptable, { loading, data }] = useLazyQuery(FETCH_PEER_ACCEPTABLE_QUERY);
+
+  const rowCountRef = useRef(data?.peerAcceptableMembers.total ?? 0);
+
+  const rowCount = useMemo(() => {
+    const newTotal = data?.peerAcceptableMembers.total ?? undefined;
+
+    if (newTotal !== undefined) {
+      rowCountRef.current = newTotal;
+    }
+
+    return rowCountRef.current;
+  }, [data]);
+
+  return {
+    loading,
+    rowCount,
+    members: data?.peerAcceptableMembers.members ?? [],
+    fetchPeerAcceptable,
+  };
 }
 
 export function useGenerateWeeklyReports() {
