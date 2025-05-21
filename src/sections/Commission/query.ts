@@ -130,9 +130,18 @@ export const FETCH_COMMISSION_BY_WEEK = gql(/* GraphQL */ `
   }
 `);
 
-export const GENERATE_COMMISSION_SENDMANY = gql(/* GraphQL */ `
-  query GenerateCommissionSendmany($data: TXCPriceInput!) {
-    generateCommissionSendmany(data: $data) {
+export const GENERATE_COMMISSION_TXC_SENDMANY = gql(/* GraphQL */ `
+  query GenerateCommissionTXCSendmany($data: TXCPriceInput!) {
+    generateCommissionTXCSendmany(data: $data) {
+      ids
+      command
+    }
+  }
+`);
+
+export const GENERATE_COMMISSION_USDC_SENDMANY = gql(/* GraphQL */ `
+  query GenerateCommissionUSDCSendmany {
+    generateCommissionUSDCSendmany {
       ids
       command
     }
@@ -142,8 +151,8 @@ export const GENERATE_COMMISSION_SENDMANY = gql(/* GraphQL */ `
 export const APPROVE_COMMISSION_TRANSACTION = gql(/* GraphQL */ `
   mutation ApproveCommissionWithTransactionIds($data: ApproveCommissionWithTxIDInput!) {
     approveCommissionWithTransactionIds(data: $data) {
-      message
       result
+      message
       frontActions {
         ...FrontActionFields
       }

@@ -11,8 +11,9 @@ import {
   UPDATE_COMMISSION_STATUS,
   FETCH_COMMISSION_STATS_QUERY,
   CALCULATE_PREVIEW_COMMISSION,
-  GENERATE_COMMISSION_SENDMANY,
   APPROVE_COMMISSION_TRANSACTION,
+  GENERATE_COMMISSION_TXC_SENDMANY,
+  GENERATE_COMMISSION_USDC_SENDMANY,
 } from './query';
 
 export function useFetchCommissions() {
@@ -73,10 +74,20 @@ export function useFetchCommissionsByWeek() {
   };
 }
 
-export function useGenerateSendmany() {
-  const [generateSendmany, { loading, data, error }] = useLazyQuery(GENERATE_COMMISSION_SENDMANY);
+export function useGenerateTXCSendmany() {
+  const [generateTXCSendmany, { loading, data, error }] = useLazyQuery(
+    GENERATE_COMMISSION_TXC_SENDMANY
+  );
 
-  return { loading, sendmany: data?.generateCommissionSendmany, error, generateSendmany };
+  return { loading, sendmany: data?.generateCommissionTXCSendmany, error, generateTXCSendmany };
+}
+
+export function useGenerateUSDCSendmany() {
+  const [generateUSDCSendmany, { loading, data, error }] = useLazyQuery(
+    GENERATE_COMMISSION_USDC_SENDMANY
+  );
+
+  return { loading, sendmany: data?.generateCommissionUSDCSendmany, error, generateUSDCSendmany };
 }
 
 export function useApproveCommissionTransaction() {
