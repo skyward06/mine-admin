@@ -72,7 +72,6 @@ export default function Sendmany({ disabled, txcPrice, setTxData }: Props) {
                   display: 'block',
                   alignItems: 'unset',
                   overflow: 'auto',
-                  maxHeight: 800,
                   backgroundColor: '#f2f2f2',
                   p: 2,
                 }}

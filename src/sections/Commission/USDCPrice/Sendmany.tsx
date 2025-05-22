@@ -3,6 +3,7 @@ import type { UseBooleanReturn } from 'src/hooks/useBoolean';
 import { useState, useEffect } from 'react';
 
 import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 
 import { CommissionPaymentType } from 'src/__generated__/graphql';
 
@@ -62,7 +63,7 @@ export default function Sendmany({ disabled, setTxData }: Props) {
             display: 'block',
             alignItems: 'unset',
             overflow: 'auto',
-            maxHeight: 800,
+            // maxHeight: 800,
             backgroundColor: '#f2f2f2',
             p: 2,
           }}
@@ -84,7 +85,15 @@ export default function Sendmany({ disabled, setTxData }: Props) {
             />
           </Stack>
 
-          {sendmany && sendmany.command ? sendmany.command : <EmptyContent />}
+          {sendmany && sendmany.command ? (
+            sendmany.command.split('\n').map((item) => (
+              <Typography variant="body2" fontFamily="monospace">
+                {item}
+              </Typography>
+            ))
+          ) : (
+            <EmptyContent />
+          )}
         </ComponentBlock>
       )}
     </>
