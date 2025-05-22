@@ -99,10 +99,6 @@ export function MemberListView() {
       if (suffix === 'pending') {
         setWeekly(true);
         setSponsor(false);
-        setFilter({
-          status: 'PENDING',
-          commissionDefault: 'MANUAL',
-        });
       }
     }
 

@@ -139,6 +139,11 @@ export default function CreateCampaign({ open }: Props) {
                 return;
               }
 
+              if (!emails?.length) {
+                toast.error('You must select the member list!');
+                return;
+              }
+
               setStep(step + 1);
               setQuery({});
             }}

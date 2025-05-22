@@ -15,7 +15,7 @@ import { AgGrid } from 'src/components/AgGrid';
 import { useFetchMembers } from 'src/sections/Members/useApollo';
 import { useFetchSponsors } from 'src/sections/Reports/useApollo';
 
-import { useFetchWeeklyMembers, useFetchMemberListById } from '../useApollo';
+import { useFetchMemberListById } from '../useApollo';
 
 import type { WeeklyMember } from './type';
 
@@ -44,36 +44,15 @@ export default function MemberListView({ filter: categoryFilter, listId, weekly,
     sponsors,
     fetchSponsors,
   } = useFetchSponsors();
-  const {
-    loading: weeklyLoading,
-    weeklyMembers,
-    rowCount: pendingCount,
-    fetchWeeklyMembers,
-  } = useFetchWeeklyMembers();
-
-  const pendingMembers = useMemo(
-    () =>
-      weeklyMembers?.map((item) => ({
-        id: item?.memberId!,
-        email: item?.email!,
-        username: item?.username!,
-        fullName: item?.fullName!,
-      })),
-    [weeklyMembers]
-  );
 
   useEffect(() => {
     if (sponsor) {
       fetchSponsors({
         variables: { week: categoryFilter.week, page, sort },
       });
-    } else if (weekly) {
-      fetchWeeklyMembers({
-        variables: { filter: categoryFilter, page, sort },
-      });
     } else if (listId) {
       fetchMemberListById({ variables: { data: { id: listId } } });
-    } else {
+    } else if (!weekly) {
       fetchMembers({ variables: { filter: graphQueryFilter, page, sort } });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -119,19 +98,11 @@ export default function MemberListView({ filter: categoryFilter, listId, weekly,
   return (
     <AgGrid<Member | BasicListMember | WeeklyMember>
       gridKey="communication-members-list"
-      loading={sponsor ? sponsorLoading : weekly ? weeklyLoading : listId ? listLoading : loading}
-      rowData={
-        sponsor ? sponsors : weekly ? pendingMembers : listId ? memberList?.members ?? [] : members
-      }
+      loading={sponsor ? sponsorLoading : listId ? listLoading : loading}
+      rowData={sponsor ? sponsors : weekly ? [] : listId ? memberList?.members ?? [] : members}
       columnDefs={colDefs}
       totalRowCount={
-        sponsor
-          ? sponsorCount
-          : weekly
-            ? pendingCount
-            : listId
-              ? memberList?.members?.length ?? 0
-              : rowCount
+        sponsor ? sponsorCount : weekly ? 0 : listId ? memberList?.members?.length ?? 0 : rowCount
       }
     />
   );

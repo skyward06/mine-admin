@@ -112,10 +112,6 @@ export function MemberListView({ setEmails, setListType, setListExtra }: Props) 
         setWeekly(true);
         setSponsor(false);
         setListType(CampaignListType.PendingManualCommission);
-        setFilter({
-          status: 'PENDING',
-          commissionDefault: 'MANUAL',
-        });
       }
     }
 

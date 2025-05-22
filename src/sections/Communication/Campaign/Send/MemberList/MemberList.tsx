@@ -15,7 +15,7 @@ import { AgGrid } from 'src/components/AgGrid';
 import { useFetchSponsors } from 'src/sections/Reports/useApollo';
 import { useFetchMemberSearch } from 'src/sections/Members/useApollo';
 
-import { useFetchWeeklyMembers, useFetchMemberListById } from '../../../useApollo';
+import { useFetchMemberListById } from '../../../useApollo';
 
 import type { MemberSearch } from './type';
 
@@ -42,46 +42,31 @@ export default function MemberListView({
 
   const { loading, members, fetchMemberSearch } = useFetchMemberSearch();
   const { loading: listLoading, memberList, fetchMemberListById } = useFetchMemberListById();
-  const { loading: weeklyLoading, weeklyMembers, fetchWeeklyMembers } = useFetchWeeklyMembers();
   const { loading: sponsorLoading, sponsors, fetchSponsors } = useFetchSponsors();
-
-  const pendingMembers = useMemo(
-    () =>
-      weeklyMembers?.map((item) => ({
-        id: item?.memberId!,
-        email: item?.email!,
-        username: item?.username!,
-        fullName: item?.fullName!,
-      })),
-    [weeklyMembers]
-  );
 
   useEffect(() => {
     if (sponsor) {
       fetchSponsors({ variables: { week: categoryFilter.week } });
-    } else if (weekly) {
-      fetchWeeklyMembers({ variables: { filter: categoryFilter } });
     } else if (listId) {
       fetchMemberListById({ variables: { data: { id: listId } } });
-    } else {
+    } else if (!weekly) {
       fetchMemberSearch({ variables: { filter: graphQueryFilter } });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [graphQueryFilter, listId, categoryFilter]);
 
   useEffect(() => {
-    console.log('sponsor => ', sponsor);
     if (sponsor) {
       setEmails(sponsors?.map((item) => item.email));
     } else if (weekly) {
-      setEmails(pendingMembers?.map((item) => item.email));
+      setEmails([]);
     } else if (listId) {
       setEmails(memberList?.members?.map((item) => item.email));
     } else {
       setEmails(members.map((item) => item.email));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [members, memberList, sponsors, pendingMembers, listId]);
+  }, [members, memberList, sponsors, listId]);
 
   const colDefs = useMemo<ColDef<MemberSearch | BasicListMember | WeeklyMember>[]>(
     () => [
@@ -123,10 +108,8 @@ export default function MemberListView({
   return (
     <AgGrid<MemberSearch | BasicListMember | WeeklyMember>
       gridKey="campaign-members-list"
-      loading={sponsor ? sponsorLoading : weekly ? weeklyLoading : listId ? listLoading : loading}
-      rowData={
-        sponsor ? sponsors : weekly ? pendingMembers : listId ? memberList?.members ?? [] : members
-      }
+      loading={sponsor ? sponsorLoading : listId ? listLoading : loading}
+      rowData={sponsor ? sponsors : weekly ? [] : listId ? memberList?.members ?? [] : members}
       columnDefs={colDefs}
       pagination={false}
     />
