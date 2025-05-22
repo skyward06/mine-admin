@@ -231,9 +231,9 @@ export default function Detail({ open, row }: Props) {
                       to={
                         isValidUrl(link?.link ?? '')
                           ? link?.link
-                          : isTransaction(link?.link ?? '', link.linkType)
-                            ? `${(PREPAID_TYPE as any)[link.linkType]?.transaction}/${link?.link}`
-                            : `${(PREPAID_TYPE as any)[link.linkType]?.address}/${link?.link}`
+                          : isTransaction(link?.link ?? '', link.linkType.toUpperCase())
+                            ? `${(PREPAID_TYPE as any)[link.linkType.toUpperCase()]?.transaction}/${link?.link}`
+                            : `${(PREPAID_TYPE as any)[link.linkType.toUpperCase()]?.address}/${link?.link}`
                       }
                       target="_blank"
                     >

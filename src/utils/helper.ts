@@ -232,7 +232,8 @@ export const isTransaction = (link: string, linkType: string) => {
       return link.startsWith('0x') && link.length === 66; // ETH transactions are 66 chars, starting with '0x'
     case 'TRN':
       return link.length === 64; // TRX transactions are 64 characters long
-    case 'Hash':
+    case 'HASH':
+      console.log('link => ', link.includes('S'));
       return link.includes('S');
     case 'SALE':
       return link.includes('S');

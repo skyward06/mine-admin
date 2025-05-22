@@ -75,7 +75,7 @@ export const PREPAYMRENT_TYPE = [
 ];
 
 export const PREPAID_TYPE = {
-  Hash: { value: 'Hash', transaction: `${CONFIG.SITE_PATH}/sales`, address: '' },
+  HASH: { value: 'Hash', transaction: `${CONFIG.SITE_PATH}/sales`, address: '' },
   SALE: { value: 'SALE', transaction: `${CONFIG.SITE_PATH}/sales`, address: '' },
   CASH: { value: 'CASH', transaction: '', address: '' },
   TXC: {
