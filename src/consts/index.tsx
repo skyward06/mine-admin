@@ -98,6 +98,11 @@ export const PREPAID_TYPE = {
     transaction: 'https://tronscan.io/#/transaction',
     address: 'https://tronscan.io/#/address',
   },
+  USDC: {
+    value: 'USDC',
+    transaction: 'https://blockscan.com/tx',
+    address: 'https://blockscan.com/address',
+  },
   OTHER: {
     value: 'OTHER',
     transaction: 'https://blockscan.com/tx',
