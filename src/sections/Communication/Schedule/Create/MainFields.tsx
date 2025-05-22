@@ -26,6 +26,8 @@ interface Props {
   setListExtra: Function;
 }
 
+const CampaignList = ['All', 'Group', 'Custom', 'WeeklySponsor'];
+
 export default function MainFields({
   sender,
   status,
@@ -45,8 +47,7 @@ export default function MainFields({
     setListType(event.target.value);
     if (
       event.target.value === CampaignListType.All ||
-      event.target.value === CampaignListType.WeeklySponsor ||
-      event.target.value === CampaignListType.PendingManualCommission
+      event.target.value === CampaignListType.WeeklySponsor
     ) {
       setListExtra('');
     }
@@ -87,7 +88,7 @@ export default function MainFields({
         value={listType}
         onChange={handleListTypeChange}
       >
-        {Object.keys(CampaignListType).map((key) => (
+        {CampaignList.map((key) => (
           <MenuItem key={key} value={CampaignListType[key as keyof typeof CampaignListType]}>
             {key}
           </MenuItem>
@@ -113,9 +114,7 @@ export default function MainFields({
               {list.name}
             </MenuItem>
           ))}
-        {(listType === CampaignListType.PendingManualCommission ||
-          listType === CampaignListType.WeeklySponsor ||
-          listType === CampaignListType.All) && (
+        {(listType === CampaignListType.WeeklySponsor || listType === CampaignListType.All) && (
           <MenuItem key="none" value="">
             None
           </MenuItem>

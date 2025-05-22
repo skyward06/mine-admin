@@ -64,8 +64,7 @@ export function MemberListView({ setEmails, setListType, setListExtra }: Props) 
           </Stack>
         ),
       },
-      { value: 'general.pending', label: 'Pending Manual Commission' },
-
+      // { value: 'general.pending', label: 'Pending Manual Commission' },
       ...(groupSettings && groupSettings.length > 0
         ? groupSettings.map((group) => ({
             value: `group.${group.id.toLocaleLowerCase()}`,

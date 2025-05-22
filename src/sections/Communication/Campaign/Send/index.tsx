@@ -139,7 +139,7 @@ export default function CreateCampaign({ open }: Props) {
                 return;
               }
 
-              if (!emails?.length) {
+              if (step === 1 && !emails?.length) {
                 toast.error('You must select the member list!');
                 return;
               }
