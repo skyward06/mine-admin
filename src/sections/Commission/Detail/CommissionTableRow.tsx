@@ -1,4 +1,4 @@
-import type { WeeklyCommission } from 'src/__generated__/graphql';
+import type { BasicWeeklyCommission } from 'src/__generated__/graphql';
 
 import Tooltip from '@mui/material/Tooltip';
 import TableRow from '@mui/material/TableRow';
@@ -9,6 +9,8 @@ import ListItemText from '@mui/material/ListItemText';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { customizeFullName } from 'src/utils/helper';
+
 import { COMMISSION_TYPE } from 'src/consts';
 
 import { Iconify } from 'src/components/Iconify';
@@ -16,15 +18,13 @@ import { Iconify } from 'src/components/Iconify';
 // ----------------------------------------------------------------------
 
 type Props = {
-  row: WeeklyCommission;
+  row: BasicWeeklyCommission;
 };
 
 export default function CommissionTableRow({ row }: Props) {
   const router = useRouter();
 
   const {
-    member,
-    memberId,
     begL,
     begR,
     newL,
@@ -35,19 +35,20 @@ export default function CommissionTableRow({ row }: Props) {
     endR,
     pkgL,
     pkgR,
-    commission,
+    email,
     status,
+    username,
+    fullName,
+    memberId,
+    commission,
   } = row;
 
   return (
     <TableRow hover>
-      <TableCell
-        align="left"
-        onClick={() => router.push(paths.dashboard.members.edit(member?.id ?? ''))}
-      >
+      <TableCell align="left" onClick={() => router.push(paths.dashboard.members.edit(memberId))}>
         <ListItemText
-          primary={member?.username}
-          secondary={member?.email}
+          primary={username}
+          secondary={email}
           primaryTypographyProps={{ typography: 'body2' }}
           secondaryTypographyProps={{
             component: 'span',
@@ -55,7 +56,7 @@ export default function CommissionTableRow({ row }: Props) {
           }}
         />
       </TableCell>
-      <TableCell align="left">{member?.assetId}</TableCell>
+      <TableCell align="left">{customizeFullName(fullName)}</TableCell>
       <TableCell align="left">{`L${begL}, R${begR}`}</TableCell>
       <TableCell align="left">{`L${newL}, R${newR}`}</TableCell>
       <TableCell align="left">{`L${maxL}, R${maxR}`}</TableCell>

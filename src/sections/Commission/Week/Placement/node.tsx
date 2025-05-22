@@ -1,3 +1,5 @@
+import type { BasicWeeklyCommission } from 'src/__generated__/graphql';
+
 import { useContext } from 'react';
 
 import Card from '@mui/material/Card';
@@ -30,10 +32,7 @@ export function StandardNode({
 
   const { visibleMap, expandTree, collapseTree } = useContext(NodeContext);
 
-  const commission = commissions.reduce(
-    (prev: any, save: any) => ({ ...prev, [save.memberId]: save }),
-    {}
-  );
+  const commission = commissions.find((item: BasicWeeklyCommission) => item.id === id);
 
   return (
     <Card
@@ -45,7 +44,7 @@ export function StandardNode({
         position: 'relative',
         display: 'inline-flex',
         flexDirection: 'column',
-        border: `3px solid ${commission[id]?.commission && 'red'}`,
+        border: `3px solid ${commission?.commission && 'red'}`,
       }}
     >
       <Stack direction="row" justifyContent="space-between" sx={{ background: 'translation' }}>
@@ -86,7 +85,7 @@ export function StandardNode({
       <Stack direction="row" justifyContent="space-between" columnGap={1}>
         <Stack>
           <Typography variant="caption" color="gray" component="div" noWrap sx={{ mt: 1 }}>
-            L {Math.min(commission[id]?.maxL || 0, 9)}/{commission[id]?.pkgL || 0}
+            L {Math.min(commission?.maxL || 0, 9)}/{commission?.pkgL || 0}
           </Typography>
         </Stack>
         <Stack>
@@ -103,7 +102,7 @@ export function StandardNode({
         </Stack>
         <Stack>
           <Typography variant="caption" color="gray" component="div" noWrap sx={{ mt: 1 }}>
-            {Math.min(commission[id]?.maxR || 0, 9)}/{commission[id]?.pkgR || 0} R
+            {Math.min(commission?.maxR || 0, 9)}/{commission?.pkgR || 0} R
           </Typography>
         </Stack>
       </Stack>

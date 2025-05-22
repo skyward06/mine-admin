@@ -83,7 +83,7 @@ export default function CommissionTableRow({ row }: Props) {
         </TableCell>
       </TableRow>
 
-      <Dialog fullWidth maxWidth={false} open={open.value} onClose={() => open.onFalse()}>
+      <Dialog fullWidth maxWidth={false} open={open.value} onClose={open.onFalse}>
         <PlacementTreeView weekStartDate={weekStartDate} />
       </Dialog>
     </>
