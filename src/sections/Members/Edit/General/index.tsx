@@ -403,7 +403,7 @@ export default function MemberGeneral({ currentMember }: Props) {
               <Field.Select
                 name="commissionDefault"
                 label="Commission Default"
-                defaultValue="MANUAL"
+                defaultValue={CommissionDefaultEnum.Usdc}
                 required
               >
                 {Object.values(

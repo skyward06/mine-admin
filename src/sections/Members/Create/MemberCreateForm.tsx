@@ -325,7 +325,7 @@ export default function MemberCreateForm() {
               <Field.Select
                 name="teamStrategy"
                 label="Team Strategy"
-                defaultValue="MANUAL"
+                defaultValue={TeamStrategy.Manual}
                 required
               >
                 {Object.values(TeamStrategy).map((option) => (
@@ -346,7 +346,7 @@ export default function MemberCreateForm() {
               <Field.Select
                 name="commissionDefault"
                 label="Commission Default"
-                defaultValue="MANUAL"
+                defaultValue={CommissionDefaultEnum.Usdc}
                 required
               >
                 {Object.values(CommissionDefaultEnum).map((option) => (
