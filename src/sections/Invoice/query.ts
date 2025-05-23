@@ -48,6 +48,9 @@ export const FETCH_INVOICE_BY_ID = gql(/* GraphQL */ `
       createdAt
       description
       amountInCents
+      member {
+        peerETHAddress
+      }
       proof {
         id
         type

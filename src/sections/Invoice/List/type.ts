@@ -9,6 +9,10 @@ export type Invoice = {
   dueDate: any;
   description: string;
   proof?: Proof | null;
+  member?: {
+    __typename?: 'Member';
+    peerETHAddress?: string | null;
+  } | null;
   amountInCents: number;
   status: InvoiceStatusEnum;
   createdAt?: any | null;

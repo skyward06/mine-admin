@@ -15,6 +15,7 @@ import Typography from '@mui/material/Typography';
 import { useBoolean, type UseBooleanReturn } from 'src/hooks/useBoolean';
 
 import { formatDate } from 'src/utils/format-time';
+import { truncateMiddle } from 'src/utils/formatNumber';
 import { isValidUrl, isTransaction } from 'src/utils/helper';
 
 import { PREPAID_TYPE } from 'src/consts';
@@ -42,7 +43,7 @@ interface Props {
 }
 
 export default function Detail({ open, row }: Props) {
-  const { id, name, status, description, proof, createdAt } = row;
+  const { id, name, status, description, proof, member, createdAt } = row;
 
   const noteEdit = useBoolean();
   const fileEdit = useBoolean();
@@ -154,6 +155,15 @@ export default function Detail({ open, row }: Props) {
           <Typography variant="subtitle1">Info</Typography>
 
           <Typography variant="body2">{description}</Typography>
+
+          <Stack direction="row" columnGap={2}>
+            <Typography variant="body2" color="text.disabled">
+              Peer Address:
+            </Typography>
+            <Typography variant="body2">
+              {truncateMiddle(member?.peerETHAddress ?? '', 30)}
+            </Typography>
+          </Stack>
 
           <Stack direction="row" columnGap={2}>
             <Typography variant="body2" color="text.disabled">
