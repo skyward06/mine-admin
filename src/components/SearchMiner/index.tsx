@@ -30,21 +30,19 @@ export default function SearchMiner({
   const { loading, members, fetchMemberSearch } = useFetchMemberSearch();
 
   useEffect(() => {
-    if (debouncedUsername !== undefined) {
-      fetchMemberSearch({
-        variables: {
-          filter: {
-            ...filter,
-            status: true,
-            OR: [
-              { username: { contains: debouncedUsername ?? '', mode: 'insensitive' } },
-              { fullName: { contains: debouncedUsername ?? '', mode: 'insensitive' } },
-            ],
-          },
+    fetchMemberSearch({
+      variables: {
+        filter: {
+          ...filter,
+          status: true,
+          OR: [
+            { username: { contains: debouncedUsername ?? '', mode: 'insensitive' } },
+            { fullName: { contains: debouncedUsername ?? '', mode: 'insensitive' } },
+          ],
         },
-      });
-    }
-  }, [debouncedUsername, fetchMemberSearch, filter]);
+      },
+    });
+  }, [debouncedUsername, fetchMemberSearch, username, filter]);
 
   useEffect(() => {
     if (setMemberId) {
