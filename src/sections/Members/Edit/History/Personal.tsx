@@ -364,19 +364,21 @@ export const Personal = () => {
             <Stack direction="row" spacing={2} pb={1}>
               <Stack width={0.5}>
                 <Typography variant="body2" fontWeight="bold">
-                  Address:
+                  Peer Address:
                 </Typography>
               </Stack>
-              <Stack width={1} direction="row" spacing={1} alignItems="center">
-                <Typography variant="body2">
-                  {truncateMiddle(member?.peerETHAddress ?? '', 30)}
-                </Typography>
-                <Iconify
-                  sx={{ cursor: 'pointer' }}
-                  icon={checked.value ? 'system-uicons:check' : 'stash:copy-light'}
-                  onClick={() => handleCopy(member?.peerETHAddress ?? '')}
-                />
-              </Stack>
+              {member?.peerETHAddress && (
+                <Stack width={1} direction="row" spacing={1} alignItems="center">
+                  <Typography variant="body2">
+                    {truncateMiddle(member?.peerETHAddress ?? '', 30)}
+                  </Typography>
+                  <Iconify
+                    sx={{ cursor: 'pointer' }}
+                    icon={checked.value ? 'system-uicons:check' : 'stash:copy-light'}
+                    onClick={() => handleCopy(member?.peerETHAddress ?? '')}
+                  />
+                </Stack>
+              )}
             </Stack>
 
             <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
