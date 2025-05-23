@@ -29,7 +29,7 @@ export const FETCH_COMMISSION_QUERY = gql(/* GraphQL */ `
         commission
         isTexitRanger
         weekStartDate
-        commissionDefault
+        paymentMethod
         invoice {
           id
           proof {
