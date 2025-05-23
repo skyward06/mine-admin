@@ -229,8 +229,8 @@ export default function CommissionTable({ status, customFilter }: Props) {
         filter: 'agNumberColumnFilter',
       },
       {
-        field: 'commissionDefault',
-        headerName: 'Default',
+        field: 'paymentMethod',
+        headerName: 'Method',
         width: 120,
         resizable: true,
         editable: false,

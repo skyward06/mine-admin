@@ -31,7 +31,7 @@ export type WeeklyCommission = {
   isTexitRanger: boolean;
   shortNote?: string | null;
   status: ConfirmationStatus;
-  commissionDefault: CommissionDefaultEnum;
+  paymentMethod: CommissionDefaultEnum;
   invoice?: {
     __typename?: 'Invoice';
     id: number;
