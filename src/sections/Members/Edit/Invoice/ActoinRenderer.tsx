@@ -1,3 +1,4 @@
+import type { Invoice } from 'src/sections/Invoice/List/type';
 import type { CustomCellRendererProps } from '@ag-grid-community/react';
 
 import { memo } from 'react';
@@ -18,19 +19,8 @@ import { useMoveToPaid, useRegenerateInvoice } from 'src/sections/Invoice/useApo
 
 import Detail from './Detail';
 
-import type { Invoice } from './type';
-
 export const ActionRender = memo(
   ({ data }: CustomCellRendererProps<Invoice>) => {
-    const defaultValue = {
-      id: 0,
-      name: '',
-      dueDate: new Date(),
-      description: '',
-      amountInCents: 0,
-      status: InvoiceStatusEnum.Pending,
-    };
-
     const open = useBoolean();
     const popover = usePopover();
 
@@ -39,7 +29,7 @@ export const ActionRender = memo(
 
     const handlePaid = async () => {
       try {
-        const { data: result } = await moveToPaid({ variables: { data: { ID: data?.id ?? 0 } } });
+        const { data: result } = await moveToPaid({ variables: { data: { id: data?.id! } } });
 
         if (result) {
           toast.success('Successfully moved!');
@@ -53,7 +43,7 @@ export const ActionRender = memo(
     const handleGenerate = async () => {
       try {
         const { data: result } = await regenerateInvoice({
-          variables: { data: { ID: data?.id! } },
+          variables: { data: { id: data?.id! } },
         });
 
         if (result) {
@@ -102,7 +92,7 @@ export const ActionRender = memo(
           </MenuList>
         </CustomPopover>
 
-        <Detail open={open} row={data ?? defaultValue} />
+        <Detail open={open} row={data as Invoice} />
       </>
     );
   },

@@ -1,3 +1,5 @@
+import type { Invoice } from 'src/sections/Invoice/List/type';
+
 import { isEmpty } from 'lodash';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -33,8 +35,6 @@ import { FileRecentItem } from 'src/sections/Sales/List/FileRecentItem';
 import { FileRecentItem as EditFileItem } from 'src/sections/Sales/Edit/FileRecentItem';
 
 import { Schema, type SchemaType } from './schema';
-
-import type { Invoice } from './type';
 
 interface Props {
   open: UseBooleanReturn;

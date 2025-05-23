@@ -34,7 +34,7 @@ export type WeeklyCommission = {
   paymentMethod: CommissionDefaultEnum;
   invoice?: {
     __typename?: 'Invoice';
-    id: number;
+    id: string;
     proof?: {
       __typename?: 'Proof';
       files?: Array<PFile> | null;

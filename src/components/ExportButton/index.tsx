@@ -23,32 +23,36 @@ export default function ExportButton({ target, token, params, type = 'xlsx', ...
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleExport = async () => {
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    const { data } = await axios.get(`${CONFIG.SITE_URL}/api/${target}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      params,
-      responseType: 'arraybuffer',
-    });
+      const { data } = await axios.get(`${CONFIG.SITE_URL}/api/${target}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params,
+        responseType: 'arraybuffer',
+      });
 
-    const blob = new Blob([data], {
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    });
-    const url = URL.createObjectURL(blob);
+      const blob = new Blob([data], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      });
+      const url = URL.createObjectURL(blob);
 
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${target}-${formatDate(new Date(), 'YYYYMMDD')}${fTime(new Date(), 'hhmmss')}.${type}`;
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${target}-${formatDate(new Date(), 'YYYYMMDD')}${fTime(new Date(), 'hhmmss')}.${type}`;
 
-    document.body.appendChild(a);
-    a.click();
+      document.body.appendChild(a);
+      a.click();
 
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
 
-    setLoading(false);
+      setLoading(false);
+    } catch (error) {
+      console.log('error => ', error);
+    }
   };
 
   return (

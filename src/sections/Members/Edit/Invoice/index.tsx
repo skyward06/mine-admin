@@ -1,3 +1,4 @@
+import type { Invoice } from 'src/sections/Invoice/List/type';
 import type { CustomCellRendererProps } from '@ag-grid-community/react';
 import type {
   ColDef,
@@ -24,8 +25,6 @@ import { parseType } from 'src/sections/Invoice/parseType';
 import { useFetchInvoices } from 'src/sections/Invoice/useApollo';
 import { FileRenderer } from 'src/sections/Invoice/List/FileRenderer';
 import { ActionRender } from 'src/sections/Invoice/List/ActoinRenderer';
-
-import type { Invoice } from './type';
 
 interface Props {
   currentMember: Member;

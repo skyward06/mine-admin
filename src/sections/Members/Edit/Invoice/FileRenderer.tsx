@@ -1,3 +1,4 @@
+import type { Invoice } from 'src/sections/Invoice/List/type';
 import type { CustomCellRendererProps } from '@ag-grid-community/react';
 
 import axios from 'axios';
@@ -9,8 +10,6 @@ import { CONFIG } from 'src/config';
 
 import { Iconify } from 'src/components/Iconify';
 import { FileThumbnail } from 'src/components/FileThumbnail';
-
-import type { Invoice } from './type';
 
 export const FileRenderer = memo(
   ({ data }: CustomCellRendererProps<Invoice>) => {
