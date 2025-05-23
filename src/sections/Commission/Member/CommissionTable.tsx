@@ -2,6 +2,7 @@ import type { CustomCellRendererProps } from '@ag-grid-community/react';
 import type {
   ColDef,
   CellClickedEvent,
+  ISetFilterParams,
   ITextFilterParams,
   SelectionChangedEvent,
 } from '@ag-grid-community/core';
@@ -21,7 +22,7 @@ import { formatWeekNumber } from 'src/utils/format-time';
 import { formatID, customizeFullName } from 'src/utils/helper';
 
 import { COMMISSION_TYPE } from 'src/consts';
-import { ConfirmationStatus } from 'src/__generated__/graphql';
+import { ConfirmationStatus, CommissionDefaultEnum } from 'src/__generated__/graphql';
 
 import { AgGrid } from 'src/components/AgGrid';
 import { Iconify } from 'src/components/Iconify';
@@ -29,6 +30,7 @@ import { Iconify } from 'src/components/Iconify';
 import SelectedBar from './SelectedBar';
 import StatusRenderer from './StatusRenderer';
 import { ActionRender } from './ActionRenderer';
+import { parseType } from '../Preview/parseType';
 import { useFetchCommissions } from '../useApollo';
 
 import type { WeeklyCommission } from '../type';
@@ -231,12 +233,17 @@ export default function CommissionTable({ status, customFilter }: Props) {
       {
         field: 'paymentMethod',
         headerName: 'Method',
-        width: 120,
+        width: 180,
+        filter: 'agMultiColumnFilter',
         resizable: true,
         editable: false,
         cellClass: 'ag-cell-center',
-        filter: 'agTextColumnFilter',
-        filterParams: { buttons: ['reset'] } as ITextFilterParams,
+        filterParams: {
+          values: Object.values(CommissionDefaultEnum),
+          valueFormatter: (params: any) => parseType(params.value),
+          defaultToNothingSelected: true,
+        } as ISetFilterParams<WeeklyCommission>,
+        cellRenderer: ({ data }: CustomCellRendererProps<WeeklyCommission>) => data?.paymentMethod,
       },
       {
         field: 'note',
@@ -263,7 +270,7 @@ export default function CommissionTable({ status, customFilter }: Props) {
     if (status === ConfirmationStatus.Pending.toLowerCase()) {
       baseColDef.push({
         headerName: 'Status',
-        width: 180,
+        width: 200,
         sortable: false,
         cellClass: 'ag-cell-center',
         cellRenderer: StatusRenderer,

@@ -50,7 +50,7 @@ export default function Orders() {
       {
         field: 'ID',
         headerName: 'Order ID',
-        width: 200,
+        width: 180,
         filter: 'agNumberColumnFilter',
         resizable: true,
         editable: false,
@@ -80,7 +80,7 @@ export default function Orders() {
       {
         field: 'status',
         headerName: 'Status',
-        width: 200,
+        width: 180,
         filter: 'agMultiColumnFilter',
         resizable: true,
         editable: false,
@@ -124,7 +124,7 @@ export default function Orders() {
           ),
       },
       {
-        field: 'status',
+        field: 'requestType',
         headerName: 'Request Type',
         width: 200,
         filter: 'agMultiColumnFilter',
@@ -141,7 +141,7 @@ export default function Orders() {
       {
         field: 'createdAt',
         headerName: 'Created At',
-        width: 250,
+        width: 200,
         filter: 'agDateColumnFilter',
         filterParams: {
           buttons: ['reset'],

@@ -1,5 +1,5 @@
 import type { CustomCellRendererProps } from '@ag-grid-community/react';
-import type { ColDef, ITextFilterParams } from '@ag-grid-community/core';
+import type { ColDef, ISetFilterParams, ITextFilterParams } from '@ag-grid-community/core';
 
 import dayjs from 'dayjs';
 import { useMemo, useEffect } from 'react';
@@ -14,10 +14,11 @@ import { parseFilterModel } from 'src/utils/parseFilter';
 import { formatWeekNumber } from 'src/utils/format-time';
 
 import { COMMISSION_TYPE } from 'src/consts';
-import { ConfirmationStatus } from 'src/__generated__/graphql';
+import { ConfirmationStatus, CommissionDefaultEnum } from 'src/__generated__/graphql';
 
 import { AgGrid } from 'src/components/AgGrid';
 
+import { parseType } from './parseType';
 import { ActionRender } from './ActionRenderer';
 import { useFetchCommissions } from '../useApollo';
 
@@ -157,7 +158,7 @@ export default function CommissionMemberListView() {
       {
         field: 'commission',
         headerName: 'Commissions',
-        width: 130,
+        width: 150,
         resizable: true,
         editable: false,
         initialSort: 'asc',
@@ -167,12 +168,17 @@ export default function CommissionMemberListView() {
       {
         field: 'paymentMethod',
         headerName: 'Method',
-        width: 120,
+        width: 180,
+        filter: 'agMultiColumnFilter',
         resizable: true,
         editable: false,
         cellClass: 'ag-cell-center',
-        filter: 'agTextColumnFilter',
-        filterParams: { buttons: ['reset'] } as ITextFilterParams,
+        filterParams: {
+          values: Object.values(CommissionDefaultEnum),
+          valueFormatter: (params: any) => parseType(params.value),
+          defaultToNothingSelected: true,
+        } as ISetFilterParams<WeeklyCommission>,
+        cellRenderer: ({ data }: CustomCellRendererProps<WeeklyCommission>) => data?.paymentMethod,
       },
       {
         field: 'shortNote',
