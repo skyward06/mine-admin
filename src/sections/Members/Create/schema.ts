@@ -22,6 +22,7 @@ export const Schema = zod.object({
   assetId: zod.string({ required_error: 'TXC Coin ID is required' }),
   ethAssetId: zod.string().optional().nullable(),
   promoCode: zod.string().optional().nullable(),
+  peerETHAddress: zod.string().optional().nullable(),
   preferredContact: zod.string().optional().nullable(),
   preferredContactDetail: zod.string().optional().nullable(),
   syncWithSendy: zod.boolean().default(true),

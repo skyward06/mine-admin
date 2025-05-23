@@ -152,6 +152,7 @@ export default function MemberGeneral({ currentMember }: Props) {
               peerAcceptable: newMember.peerAcceptable,
               preferredContact: newMember.preferredContact,
               preferredContactDetail: newMember.preferredContactDetail,
+              peerETHAddress: watch('peerETHAddress') ? newMember.peerETHAddress : '',
               zipCode: newMember.zipCode,
               teamReport: newMember.teamReport as TeamReport[],
               teamStrategy: newMember.teamStrategy as TeamStrategy,
@@ -424,7 +425,11 @@ export default function MemberGeneral({ currentMember }: Props) {
                 ))}
               </Field.Select>
 
-              <Stack />
+              <Stack>
+                {watch('peerAcceptable') && (
+                  <Field.Text name="peerETHAddress" label="Peer Address" />
+                )}
+              </Stack>
 
               <Stack direction="row" justifyContent="space-between">
                 <Field.Switch name="syncWithSendy" label="Subscribe to Sendy" sx={{ py: 1 }} />

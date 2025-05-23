@@ -16,11 +16,9 @@ import { useRouter } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
+import { formatID } from 'src/utils/helper';
 import { formatDate } from 'src/utils/format-time';
 import { truncateMiddle } from 'src/utils/formatNumber';
-import { formatID, makeDecimal } from 'src/utils/helper';
-
-import { CHAIN_UNIT } from 'src/consts';
 
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
@@ -29,12 +27,10 @@ import { usePopover, CustomPopover } from 'src/components/custom-popover';
 import SignUpInfo from './SignUpInfo';
 import {
   useFetchMember,
-  useGenerateAddres,
   useDuplicateMember,
   useSendWelcomeEmail,
   useVerifyMemberEmail,
   useFetchMemberOverview,
-  useFetchAddressByMember,
 } from '../../useApollo';
 
 export const Personal = () => {
@@ -55,8 +51,7 @@ export const Personal = () => {
   const { member, fetchMember } = useFetchMember();
   const { verifyMemberEmail } = useVerifyMemberEmail();
   const { loading, sendWelcomeEmail } = useSendWelcomeEmail();
-  const { addresses, fetchAddressByMember } = useFetchAddressByMember();
-  const { loading: generateLoading, generateAddress } = useGenerateAddres();
+  // const { addresses, fetchAddressByMember } = useFetchAddressByMember();
 
   const address = [
     member?.fullName,
@@ -109,19 +104,6 @@ export const Personal = () => {
     }
   };
 
-  const handleGenerateAddress = async () => {
-    try {
-      const { data } = await generateAddress({ variables: { data: { id: member?.id! } } });
-
-      if (data?.generateAddress.result === 'success') {
-        toast.success('Successfully generated!');
-        popover.onClose();
-      }
-    } catch (error) {
-      console.error('Error: ', error);
-    }
-  };
-
   const handleVerifyEmail = async () => {
     try {
       const { data } = await verifyMemberEmail({ variables: { data: { id: member?.id! } } });
@@ -158,7 +140,6 @@ export const Personal = () => {
   }, [member]);
 
   useEffect(() => {
-    fetchAddressByMember({ variables: { data: { id: id! } } });
     fetchMember({ variables: { data: { id: id! }, logsize: 1 } });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
@@ -380,6 +361,24 @@ export const Personal = () => {
               </Stack>
             </Stack>
 
+            <Stack direction="row" spacing={2} pb={1}>
+              <Stack width={0.5}>
+                <Typography variant="body2" fontWeight="bold">
+                  Address:
+                </Typography>
+              </Stack>
+              <Stack width={1} direction="row" spacing={1} alignItems="center">
+                <Typography variant="body2">
+                  {truncateMiddle(member?.peerETHAddress ?? '', 30)}
+                </Typography>
+                <Iconify
+                  sx={{ cursor: 'pointer' }}
+                  icon={checked.value ? 'system-uicons:check' : 'stash:copy-light'}
+                  onClick={() => handleCopy(member?.peerETHAddress ?? '')}
+                />
+              </Stack>
+            </Stack>
+
             <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
 
             {/* Team info */}
@@ -502,67 +501,6 @@ export const Personal = () => {
 
           <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
 
-          {/* Address info */}
-
-          <Typography variant="body1" fontWeight="bold" my={2}>
-            Wallet
-          </Typography>
-
-          {addresses.length
-            ? addresses?.map((item) => (
-                <>
-                  <Stack direction="row" spacing={2} pb={1}>
-                    <Stack width={0.5}>
-                      <Typography variant="body2" fontWeight="bold">
-                        Address:
-                      </Typography>
-                    </Stack>
-                    <Stack width={1} direction="row" spacing={1} alignItems="center">
-                      <Typography variant="body2">{truncateMiddle(item?.address, 30)} </Typography>
-                      <Iconify
-                        sx={{ cursor: 'pointer' }}
-                        icon={checked.value ? 'system-uicons:check' : 'stash:copy-light'}
-                        onClick={() => handleCopy(item.address)}
-                      />
-                    </Stack>
-                  </Stack>
-
-                  <Stack direction="row" spacing={2} pb={1}>
-                    <Stack width={0.5}>
-                      <Typography variant="body2" fontWeight="bold">
-                        Chain:
-                      </Typography>
-                    </Stack>
-                    <Stack width={1}>
-                      <Typography variant="body2">{item?.chain}</Typography>
-                    </Stack>
-                  </Stack>
-
-                  {item?.balances?.map((balance) => (
-                    <Stack direction="row" spacing={2} pb={1}>
-                      <Stack width={0.5}>
-                        <Typography variant="body2" fontWeight="bold">
-                          {balance.token}:
-                        </Typography>
-                      </Stack>
-                      <Stack width={1}>
-                        <Typography variant="body2">
-                          {balance?.balance
-                            ? makeDecimal(
-                                balance.balance / 10 ** CHAIN_UNIT[balance?.chain!],
-                                CHAIN_UNIT[balance?.chain!]
-                              )
-                            : 0}
-                        </Typography>
-                      </Stack>
-                    </Stack>
-                  ))}
-                </>
-              ))
-            : 'You have not address yet'}
-
-          <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
-
           {/* Session info */}
           <Typography variant="body1" fontWeight="bold" mt={2}>
             Session
@@ -664,13 +602,6 @@ export const Personal = () => {
               color="#00cca4"
             />
             Welcom Email
-          </MenuItem>
-          <MenuItem onClick={handleGenerateAddress}>
-            <Iconify
-              icon={generateLoading ? 'line-md:loading-loop' : 'ri:ai-generate'}
-              color="#00cca4"
-            />
-            Generate Address
           </MenuItem>
           <MenuItem
             onClick={() => {

@@ -21,6 +21,7 @@ export const Schema = zod.object({
   assetId: zod.string().optional().nullable(),
   ethAssetId: zod.string().optional().nullable(),
   promoCode: zod.string().optional().nullable(),
+  peerETHAddress: zod.string().optional().nullable(),
   preferredContact: zod.string().optional().nullable(),
   preferredContactDetail: zod.string().optional().nullable(),
   syncWithSendy: zod.boolean().default(true),

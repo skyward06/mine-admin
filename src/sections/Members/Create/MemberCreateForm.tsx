@@ -146,6 +146,7 @@ export default function MemberCreateForm() {
                 teamReport: teamReport as TeamReport[],
                 teamStrategy: teamStrategy as TeamStrategy,
                 commissionDefault: commissionDefault as CommissionDefaultEnum,
+                peerETHAddress: watch('peerETHAddress') ? data.peerETHAddress : '',
                 wallets: [...txcWallets, ...otherWallets].map(({ percent, ...rest }) => ({
                   percent: percent * 100,
                   ...rest,
@@ -356,7 +357,11 @@ export default function MemberCreateForm() {
                 ))}
               </Field.Select>
 
-              <Stack />
+              <Stack>
+                {watch('peerAcceptable') && (
+                  <Field.Text name="peerETHAddress" label="Peer Address" />
+                )}
+              </Stack>
 
               <Stack direction="row" justifyContent="space-between">
                 <Field.Switch name="syncWithSendy" label="Subscribe to Sendy" sx={{ py: 1 }} />
