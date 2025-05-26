@@ -1,4 +1,5 @@
 import { useForm } from 'react-hook-form';
+import { useLocation } from 'react-router';
 import { ApolloError } from '@apollo/client';
 import { useMemo, useState, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -38,6 +39,7 @@ import { useCreateSale, useCheckRefduplication } from '../useApollo';
 export default function SaleCreateForm() {
   const router = useRouter();
   const isShow = useBoolean();
+  const { state } = useLocation();
 
   const [fileIds, setFileIds] = useState<string[]>();
   const [memberId, setMemberId] = useState<string>('');
@@ -86,7 +88,7 @@ export default function SaleCreateForm() {
             fileIds,
             status: !!status,
             orderedAt: customizeDate(orderedAt),
-            memberId,
+            memberId: state.id || memberId,
             packageId,
             toMemberId,
             paymentMethod,
@@ -144,7 +146,10 @@ export default function SaleCreateForm() {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <SearchMiner setMemberId={setMemberId} />
+              <SearchMiner
+                setMemberId={setMemberId}
+                currentMember={{ id: state.id, username: state.username, fullName: state.fullName }}
+              />
 
               <Autocomplete
                 fullWidth
@@ -171,6 +176,7 @@ export default function SaleCreateForm() {
               <Autocomplete
                 freeSolo
                 fullWidth
+                defaultValue={state.username ? { name: 'Crypto' } : ''}
                 options={payments}
                 getOptionLabel={(option: any) => option.name}
                 renderInput={(params) => (
