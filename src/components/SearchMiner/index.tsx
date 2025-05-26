@@ -1,5 +1,3 @@
-import type { Member } from 'src/__generated__/graphql';
-
 import { useState, useEffect } from 'react';
 
 import TextField from '@mui/material/TextField';
@@ -10,7 +8,7 @@ import { useFetchMemberSearch } from 'src/sections/Members/useApollo';
 import { Iconify } from '../Iconify';
 
 interface Props {
-  currentMember?: Member | null;
+  currentMember?: { __typename?: 'Member'; id: string; username: string; fullName: string } | null;
   setMemberId?: Function;
   setTeamStrategy?: Function;
   filter?: any;
