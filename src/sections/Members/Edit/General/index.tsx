@@ -18,6 +18,9 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import Autocomplete from '@mui/material/Autocomplete';
 import InputAdornment from '@mui/material/InputAdornment';
 
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
+
 import { useBoolean } from 'src/hooks/useBoolean';
 
 import { fData } from 'src/utils/formatNumber';
@@ -55,6 +58,7 @@ type Props = {
 
 export default function MemberGeneral({ currentMember }: Props) {
   const open = useBoolean();
+  const router = useRouter();
 
   const { fullName, memberWallets } = currentMember;
 
@@ -178,7 +182,15 @@ export default function MemberGeneral({ currentMember }: Props) {
             });
           }
 
-          open.onTrue();
+          if (
+            (currentMember.allowState === 'PENDING' || currentMember.allowState === 'PAID') &&
+            !currentMember.signupFormRequest.saleID
+          ) {
+            open.onTrue();
+          } else {
+            toast.success('Updated successfully!');
+            router.push(paths.dashboard.members.root);
+          }
         }
       } else {
         toast.warning('Sum of percent muse be 100%');

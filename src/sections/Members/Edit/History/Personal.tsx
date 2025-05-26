@@ -605,7 +605,7 @@ export const Personal = ({ currentMember }: Props) => {
               icon={loading ? 'line-md:loading-loop' : 'mingcute:send-plane-fill'}
               color="#00cca4"
             />
-            Welcom Email
+            Welcome Email
           </MenuItem>
           <MenuItem
             onClick={() => {

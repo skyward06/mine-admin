@@ -148,7 +148,13 @@ export default function SaleCreateForm() {
             >
               <SearchMiner
                 setMemberId={setMemberId}
-                currentMember={{ id: state.id, username: state.username, fullName: state.fullName }}
+                {...(state?.id && {
+                  currentMember: {
+                    id: state.id,
+                    username: state.username,
+                    fullName: state.fullName,
+                  },
+                })}
               />
 
               <Autocomplete
@@ -176,7 +182,7 @@ export default function SaleCreateForm() {
               <Autocomplete
                 freeSolo
                 fullWidth
-                defaultValue={state.username ? { name: 'Crypto' } : ''}
+                defaultValue={state?.username ? { name: 'Crypto' } : null}
                 options={payments}
                 getOptionLabel={(option: any) => option.name}
                 renderInput={(params) => (
