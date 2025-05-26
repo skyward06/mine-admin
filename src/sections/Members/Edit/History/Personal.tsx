@@ -1,3 +1,5 @@
+import type { Member } from 'src/__generated__/graphql';
+
 import { useState, useEffect } from 'react';
 import { ApolloError } from '@apollo/client';
 import { useParams } from 'react-router-dom';
@@ -26,14 +28,17 @@ import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
 import SignUpInfo from './SignUpInfo';
 import {
-  useFetchMember,
   useDuplicateMember,
   useSendWelcomeEmail,
   useVerifyMemberEmail,
   useFetchMemberOverview,
 } from '../../useApollo';
 
-export const Personal = () => {
+interface Props {
+  currentMember: Member;
+}
+
+export const Personal = ({ currentMember }: Props) => {
   const copy = useBoolean();
   const sign = useBoolean();
   const checked = useBoolean();
@@ -48,16 +53,14 @@ export const Personal = () => {
 
   const { overview } = useFetchMemberOverview(id!);
   const { duplicateMember } = useDuplicateMember();
-  const { member, fetchMember } = useFetchMember();
   const { verifyMemberEmail } = useVerifyMemberEmail();
   const { loading, sendWelcomeEmail } = useSendWelcomeEmail();
-  // const { addresses, fetchAddressByMember } = useFetchAddressByMember();
 
   const address = [
-    member?.fullName,
-    member?.primaryAddress,
-    member?.secondaryAddress,
-    `${member?.city}, ${member?.state}, ${member?.zipCode}`,
+    currentMember?.fullName,
+    currentMember?.primaryAddress,
+    currentMember?.secondaryAddress,
+    `${currentMember?.city}, ${currentMember?.state}, ${currentMember?.zipCode}`,
   ];
 
   const copyAddress = async () => {
@@ -89,7 +92,9 @@ export const Personal = () => {
 
   const sendEmail = async () => {
     try {
-      const { data } = await sendWelcomeEmail({ variables: { data: { email: member?.email! } } });
+      const { data } = await sendWelcomeEmail({
+        variables: { data: { email: currentMember?.email! } },
+      });
 
       if (data) {
         toast.success('Successfully sent welcome email');
@@ -106,7 +111,7 @@ export const Personal = () => {
 
   const handleVerifyEmail = async () => {
     try {
-      const { data } = await verifyMemberEmail({ variables: { data: { id: member?.id! } } });
+      const { data } = await verifyMemberEmail({ variables: { data: { id: currentMember?.id! } } });
 
       if (data) {
         toast.success('Successfully verified!');
@@ -119,7 +124,7 @@ export const Personal = () => {
 
   const handleDuplicateMember = async () => {
     try {
-      const { data } = await duplicateMember({ variables: { data: { id: member?.id! } } });
+      const { data } = await duplicateMember({ variables: { data: { id: currentMember?.id! } } });
 
       if (data) {
         toast.success('Successfully duplicated!');
@@ -132,17 +137,12 @@ export const Personal = () => {
 
   useEffect(() => {
     setChildren(
-      member?.placementChildren?.reduce(
+      currentMember?.placementChildren?.reduce(
         (prev, save) => ({ ...prev, [save.placementPosition]: save?.fullName }),
         {}
       )
     );
-  }, [member]);
-
-  useEffect(() => {
-    fetchMember({ variables: { data: { id: id! }, logsize: 1 } });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+  }, [currentMember]);
 
   return (
     <>
@@ -156,14 +156,14 @@ export const Personal = () => {
             alignItems="center"
           >
             <Stack direction="row" spacing={1}>
-              <Typography variant="subtitle1">{member?.fullName}</Typography>
-              {member?.emailVerified && (
+              <Typography variant="subtitle1">{currentMember?.fullName}</Typography>
+              {currentMember?.emailVerified && (
                 <Iconify icon="pajamas:partner-verified" color="green" sx={{ mt: 0.1 }} />
               )}
             </Stack>
             <Stack direction="row">
               <Typography variant="body2" sx={{ pt: 0.9 }}>
-                {formatID(member?.ID ?? '')}
+                {formatID(currentMember?.ID ?? '')}
               </Typography>
 
               <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
@@ -181,7 +181,7 @@ export const Personal = () => {
                 </Typography>
               </Stack>
               <Stack width={1}>
-                <Typography variant="body2">{member?.username}</Typography>
+                <Typography variant="body2">{currentMember?.username}</Typography>
               </Stack>
             </Stack>
 
@@ -196,11 +196,11 @@ export const Personal = () => {
                   variant="body2"
                   sx={{ color: '#00c869', cursor: 'pointer' }}
                   onClick={() => {
-                    router.push(paths.dashboard.members.edit(member?.sponsor?.id ?? ''));
+                    router.push(paths.dashboard.members.edit(currentMember?.sponsor?.id ?? ''));
                     router.refresh();
                   }}
                 >
-                  {member?.sponsor?.fullName}
+                  {currentMember?.sponsor?.fullName}
                 </Typography>
               </Stack>
             </Stack>
@@ -212,7 +212,7 @@ export const Personal = () => {
                 </Typography>
               </Stack>
               <Stack width={1}>
-                <Typography variant="body2">{member?.email}</Typography>
+                <Typography variant="body2">{currentMember?.email}</Typography>
               </Stack>
             </Stack>
 
@@ -223,7 +223,7 @@ export const Personal = () => {
                 </Typography>
               </Stack>
               <Stack width={1}>
-                <Typography variant="body2">{member?.mobile}</Typography>
+                <Typography variant="body2">{currentMember?.mobile}</Typography>
               </Stack>
             </Stack>
 
@@ -234,7 +234,7 @@ export const Personal = () => {
                 </Typography>
               </Stack>
               <Stack width={1}>
-                <Typography variant="body2">{member?.primaryAddress}</Typography>
+                <Typography variant="body2">{currentMember?.primaryAddress}</Typography>
               </Stack>
             </Stack>
 
@@ -245,7 +245,7 @@ export const Personal = () => {
                 </Typography>
               </Stack>
               <Stack width={1}>
-                <Typography variant="body2">{member?.secondaryAddress}</Typography>
+                <Typography variant="body2">{currentMember?.secondaryAddress}</Typography>
               </Stack>
             </Stack>
 
@@ -256,7 +256,7 @@ export const Personal = () => {
                 </Typography>
               </Stack>
               <Stack width={1}>
-                <Typography variant="body2">{member?.city}</Typography>
+                <Typography variant="body2">{currentMember?.city}</Typography>
               </Stack>
             </Stack>
 
@@ -267,7 +267,7 @@ export const Personal = () => {
                 </Typography>
               </Stack>
               <Stack width={1}>
-                <Typography variant="body2">{member?.zipCode}</Typography>
+                <Typography variant="body2">{currentMember?.zipCode}</Typography>
               </Stack>
             </Stack>
 
@@ -278,7 +278,7 @@ export const Personal = () => {
                 </Typography>
               </Stack>
               <Stack width={1}>
-                <Typography variant="body2">{member?.country}</Typography>
+                <Typography variant="body2">{currentMember?.country}</Typography>
               </Stack>
             </Stack>
 
@@ -289,7 +289,7 @@ export const Personal = () => {
                 </Typography>
               </Stack>
               <Stack width={1}>
-                <Typography variant="body2">{member?.state}</Typography>
+                <Typography variant="body2">{currentMember?.state}</Typography>
               </Stack>
             </Stack>
 
@@ -300,7 +300,7 @@ export const Personal = () => {
                 </Typography>
               </Stack>
               <Stack width={1}>
-                <Typography variant="body2">{member?.assetId}</Typography>
+                <Typography variant="body2">{currentMember?.assetId}</Typography>
               </Stack>
             </Stack>
 
@@ -311,7 +311,7 @@ export const Personal = () => {
                 </Typography>
               </Stack>
               <Stack width={1}>
-                <Typography variant="body2">{member?.ethAssetId}</Typography>
+                <Typography variant="body2">{currentMember?.ethAssetId}</Typography>
               </Stack>
             </Stack>
 
@@ -322,7 +322,7 @@ export const Personal = () => {
                 </Typography>
               </Stack>
               <Stack width={1}>
-                <Typography variant="body2">{member?.promoCode}</Typography>
+                <Typography variant="body2">{currentMember?.promoCode}</Typography>
               </Stack>
             </Stack>
 
@@ -334,7 +334,7 @@ export const Personal = () => {
               </Stack>
               <Stack width={1}>
                 <Typography variant="body2">
-                  {member?.createdAt ? formatDate(member.createdAt) : ''}
+                  {currentMember?.createdAt ? formatDate(currentMember.createdAt) : ''}
                 </Typography>
               </Stack>
             </Stack>
@@ -346,7 +346,7 @@ export const Personal = () => {
                 </Typography>
               </Stack>
               <Stack width={1}>
-                <Typography variant="body2">{member?.commissionDefault}</Typography>
+                <Typography variant="body2">{currentMember?.commissionDefault}</Typography>
               </Stack>
             </Stack>
 
@@ -367,15 +367,15 @@ export const Personal = () => {
                   Peer Address:
                 </Typography>
               </Stack>
-              {member?.peerETHAddress && (
+              {currentMember?.peerETHAddress && (
                 <Stack width={1} direction="row" spacing={1} alignItems="center">
                   <Typography variant="body2">
-                    {truncateMiddle(member?.peerETHAddress ?? '', 30)}
+                    {truncateMiddle(currentMember?.peerETHAddress ?? '', 30)}
                   </Typography>
                   <Iconify
                     sx={{ cursor: 'pointer' }}
                     icon={checked.value ? 'system-uicons:check' : 'stash:copy-light'}
-                    onClick={() => handleCopy(member?.peerETHAddress ?? '')}
+                    onClick={() => handleCopy(currentMember?.peerETHAddress ?? '')}
                   />
                 </Stack>
               )}
@@ -391,7 +391,7 @@ export const Personal = () => {
                 </Typography>
               </Stack>
               <Stack width={1}>
-                <Typography variant="body2">{member?.groupSetting?.name}</Typography>
+                <Typography variant="body2">{currentMember?.groupSetting?.name}</Typography>
               </Stack>
             </Stack>
 
@@ -402,7 +402,7 @@ export const Personal = () => {
                 </Typography>
               </Stack>
               <Stack width={1}>
-                <Typography variant="body2">{member?.teamStrategy}</Typography>
+                <Typography variant="body2">{currentMember?.teamStrategy}</Typography>
               </Stack>
             </Stack>
 
@@ -413,7 +413,7 @@ export const Personal = () => {
                 </Typography>
               </Stack>
               <Stack width={1}>
-                <Typography variant="body2">{`L${member?.commission?.begL ?? 0}, R${member?.commission?.begR ?? 0}`}</Typography>
+                <Typography variant="body2">{`L${currentMember?.commission?.begL ?? 0}, R${currentMember?.commission?.begR ?? 0}`}</Typography>
               </Stack>
             </Stack>
 
@@ -424,7 +424,7 @@ export const Personal = () => {
                 </Typography>
               </Stack>
               <Stack width={1}>
-                <Typography variant="body2">{`L${member?.commission?.newL ?? 0}, R${member?.commission?.newR ?? 0}`}</Typography>
+                <Typography variant="body2">{`L${currentMember?.commission?.newL ?? 0}, R${currentMember?.commission?.newR ?? 0}`}</Typography>
               </Stack>
             </Stack>
 
@@ -435,7 +435,7 @@ export const Personal = () => {
                 </Typography>
               </Stack>
               <Stack width={1}>
-                <Typography variant="body2">{member?.placementParent?.fullName}</Typography>
+                <Typography variant="body2">{currentMember?.placementParent?.fullName}</Typography>
               </Stack>
             </Stack>
 
@@ -466,7 +466,7 @@ export const Personal = () => {
 
           {/* Wallet info */}
           <Stack sx={{ mt: 2 }}>
-            {member?.memberWallets?.map((item) => (
+            {currentMember?.memberWallets?.map((item) => (
               <Stack pb={1}>
                 <Typography variant="body2" fontWeight="bold">
                   {item?.payout?.method}
@@ -492,11 +492,13 @@ export const Personal = () => {
             <Stack width={1}>
               <Iconify
                 icon={
-                  !member?.setting || member?.setting?.communication
+                  !currentMember?.setting || currentMember?.setting?.communication
                     ? 'ic:twotone-check-box'
                     : 'iconamoon:sign-times-square-duotone'
                 }
-                color={!member?.setting || member?.setting?.communication ? 'green' : 'red'}
+                color={
+                  !currentMember?.setting || currentMember?.setting?.communication ? 'green' : 'red'
+                }
               />
             </Stack>
           </Stack>
@@ -515,7 +517,7 @@ export const Personal = () => {
               </Typography>
             </Stack>
             <Stack width={1}>
-              <Typography variant="body2">{member?.session?.ipAddress}</Typography>
+              <Typography variant="body2">{currentMember?.session?.ipAddress}</Typography>
             </Stack>
           </Stack>
 
@@ -526,7 +528,7 @@ export const Personal = () => {
               </Typography>
             </Stack>
             <Stack width={1}>
-              <Typography variant="body2">{member?.session?.device}</Typography>
+              <Typography variant="body2">{currentMember?.session?.device}</Typography>
             </Stack>
           </Stack>
 
@@ -537,7 +539,7 @@ export const Personal = () => {
               </Typography>
             </Stack>
             <Stack width={1}>
-              <Typography variant="body2">{member?.session?.platform}</Typography>
+              <Typography variant="body2">{currentMember?.session?.platform}</Typography>
             </Stack>
           </Stack>
 
@@ -548,7 +550,7 @@ export const Personal = () => {
               </Typography>
             </Stack>
             <Stack width={1}>
-              <Typography variant="body2">{member?.session?.os}</Typography>
+              <Typography variant="body2">{currentMember?.session?.os}</Typography>
             </Stack>
           </Stack>
 
@@ -560,7 +562,7 @@ export const Personal = () => {
             </Stack>
             <Stack width={1}>
               <Typography variant="body2">
-                {member?.session?.browser} {member?.session?.browserVersion}
+                {currentMember?.session?.browser} {currentMember?.session?.browserVersion}
               </Typography>
             </Stack>
           </Stack>
@@ -572,7 +574,7 @@ export const Personal = () => {
               </Typography>
             </Stack>
             <Stack width={1}>
-              <Typography variant="body2">{member?.session?.userAgent}</Typography>
+              <Typography variant="body2">{currentMember?.session?.userAgent}</Typography>
             </Stack>
           </Stack>
         </Card>
@@ -610,7 +612,7 @@ export const Personal = () => {
               sign.onTrue();
               popover.onClose();
 
-              if (!member?.signupFormRequest) {
+              if (!currentMember?.signupFormRequest) {
                 toast.warning('He has been added by the admin');
               }
             }}
@@ -629,7 +631,7 @@ export const Personal = () => {
         </MenuList>
       </CustomPopover>
 
-      {member?.signupFormRequest && <SignUpInfo open={sign} member={member} />}
+      {currentMember?.signupFormRequest && <SignUpInfo open={sign} member={currentMember} />}
     </>
   );
 };

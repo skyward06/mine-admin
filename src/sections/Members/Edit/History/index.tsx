@@ -20,7 +20,7 @@ export default function HistoryView({ currentMember }: Props) {
       </Grid>
       <Grid md={12} xl={4}>
         <OverView currentMember={currentMember} />
-        <Personal />
+        <Personal currentMember={currentMember} />
       </Grid>
     </Grid>
   );
