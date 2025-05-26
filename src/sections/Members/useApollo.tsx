@@ -1,6 +1,8 @@
 import { useRef, useMemo } from 'react';
 import { useMutation, useLazyQuery, useQuery as useGraphQuery } from '@apollo/client';
 
+import { useQuery } from 'src/routes/hooks';
+
 import {
   ADMIN_GOT_IT,
   LOGOUT_FORCE,
@@ -19,6 +21,7 @@ import {
   REMOVE_MEMBER_QUERY,
   FETCH_MEMBER_HISTORY,
   UPDATE_PASSWORD_QUERY,
+  FETCH_MEMBER_STATISTICS,
   FETCH_INTRODUCERS_QUERY,
   REMOVE_MEMBER_PLACEMENT,
   FETCH_MEMBER_STATS_QUERY,
@@ -111,6 +114,25 @@ export function useFetchMemberOverview(id: string) {
   });
 
   return { loading, overview: data?.memberOverview, error };
+}
+
+export function useFetchMemberStatistics(filter: any) {
+  const [query] = useQuery();
+  const { page = { page: 1, pageSize: 10 } } = query;
+
+  const { loading, data } = useGraphQuery(FETCH_MEMBER_STATISTICS, {
+    variables: {
+      page: page && `${page.page},${page.pageSize}`,
+      filter,
+      sort: 'issuedAt',
+    },
+  });
+
+  return {
+    loading,
+    rowCount: data?.memberStatistics.total ?? 0,
+    statistics: data?.memberStatistics.memberStatistics ?? [],
+  };
 }
 
 export function useUpdateMember() {
