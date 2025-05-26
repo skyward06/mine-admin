@@ -18,8 +18,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import Autocomplete from '@mui/material/Autocomplete';
 import InputAdornment from '@mui/material/InputAdornment';
 
-import { paths } from 'src/routes/paths';
-import { useRouter } from 'src/routes/hooks';
+import { useBoolean } from 'src/hooks/useBoolean';
 
 import { fData } from 'src/utils/formatNumber';
 import { fetchXmlData } from 'src/utils/helper';
@@ -43,6 +42,7 @@ import { useFetchPromos } from 'src/sections/Promos/useApollo';
 
 import TXCWallets from './txcWallets';
 import OtherWallets from './otherWallets';
+import ConfirmCreateSale from './Confirm';
 import { Schema, type SchemaType } from './schema';
 import { getWallets, hasDuplicates } from './helper';
 import { UPDATE_MEMBER, APPROVE_MEMBER, FETCH_MEMBER_HISTORY } from '../../query';
@@ -54,7 +54,7 @@ type Props = {
 };
 
 export default function MemberGeneral({ currentMember }: Props) {
-  const router = useRouter();
+  const open = useBoolean();
 
   const { fullName, memberWallets } = currentMember;
 
@@ -70,9 +70,9 @@ export default function MemberGeneral({ currentMember }: Props) {
   const [firstName, setFirstName] = useState<string>(first);
   const [avatarUrl, setAvatarUrl] = useState<File | string | null>(null);
 
-  const [submit, { loading }] = useMutation(UPDATE_MEMBER);
   const [approve] = useMutation(APPROVE_MEMBER);
   const { promos, fetchPromos } = useFetchPromos();
+  const [submit, { loading }] = useMutation(UPDATE_MEMBER);
   const { data: overview } = useGraphQuery(FETCH_MEMBER_HISTORY, {
     variables: { data: { id: currentMember.id } },
   });
@@ -129,7 +129,7 @@ export default function MemberGeneral({ currentMember }: Props) {
       }
 
       if (total === 100) {
-        await submit({
+        const { data: result } = await submit({
           variables: {
             data: {
               id: currentMember.id,
@@ -167,19 +167,19 @@ export default function MemberGeneral({ currentMember }: Props) {
           },
         });
 
-        if (ref.current) {
-          await approve({
-            variables: {
-              data: {
-                id: currentMember.id,
+        if (result) {
+          if (ref.current) {
+            await approve({
+              variables: {
+                data: {
+                  id: currentMember.id,
+                },
               },
-            },
-          });
+            });
+          }
+
+          open.onTrue();
         }
-
-        toast.success('Update success!');
-
-        router.push(paths.dashboard.members.root);
       } else {
         toast.warning('Sum of percent muse be 100%');
       }
@@ -247,231 +247,246 @@ export default function MemberGeneral({ currentMember }: Props) {
     });
   };
 
+  const handleClickApprove = async () => {
+    try {
+      ref.current = true;
+      await onSubmit();
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   return (
-    <Form methods={methods} onSubmit={onSubmit}>
-      <Grid container spacing={3}>
-        <Grid md={12} xl={6}>
-          <Card sx={{ p: 3 }}>
-            <Box
-              rowGap={3}
-              columnGap={2}
-              display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(2, 1fr)',
-              }}
-            >
-              <Field.UploadAvatar
-                name="avatar"
-                value={avatarUrl}
-                current={currentMember?.avatar ?? ''}
-                validator={(fileData) => {
-                  if (fileData.size > 1000000) {
-                    return {
-                      code: 'file-too-large',
-                      message: `File is larger than ${fData(1000000)}`,
-                    };
-                  }
-                  return null;
+    <>
+      <Form methods={methods} onSubmit={onSubmit}>
+        <Grid container spacing={3}>
+          <Grid md={12} xl={6}>
+            <Card sx={{ p: 3 }}>
+              <Box
+                rowGap={3}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(2, 1fr)',
                 }}
-                sx={{ width: 120, height: 120 }}
-                onDrop={handleDrop}
-              />
-              <Stack spacing={3}>
-                <Field.Text
-                  name="firstName"
-                  label="First Name"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  required
-                />
-                <Field.Text
-                  name="lastName"
-                  label="Last Name"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  required
-                />
-              </Stack>
-              <Field.Text name="username" label="Username" required />
-              <Field.Text name="email" label="Email" defaultValue={currentMember.email} required />
-              <Field.Phone name="mobile" label="Mobile" />
-              <SearchMiner
-                label="Sponsor"
-                setMemberId={setMemberId}
-                currentMember={currentMember.sponsor}
-              />
-              <Field.Text name="primaryAddress" label="Address" />
-              <Field.Text name="secondaryAddress" label="Address Line 2" />
-              <Autocomplete
-                freeSolo
-                fullWidth
-                options={countries.getNames()}
-                getOptionLabel={(option: any) => option}
-                value={country ?? currentMember.country}
-                renderInput={(params) => (
-                  <TextField {...params} name="country" label="Country" margin="none" />
-                )}
-                renderOption={(props, option) => (
-                  <li {...props} key={option}>
-                    {option}
-                  </li>
-                )}
-                onChange={(_, value: any) => setCountry(value)}
-                onInputChange={(_, value: any) => setCountry(value)}
-              />
-              <Autocomplete
-                freeSolo
-                fullWidth
-                options={states}
-                getOptionLabel={(option: any) => option.name}
-                value={{ name: state ?? currentMember.state }}
-                renderInput={(params) => (
-                  <TextField {...params} name="state" label="State" margin="none" />
-                )}
-                renderOption={(props, option) => (
-                  <li {...props} key={option!.name}>
-                    {option.name}
-                  </li>
-                )}
-                onChange={(_, value: any) => setState(value.name)}
-                onInputChange={(_, value: any) => setState(value)}
-              />
-              <Field.Text name="city" label="City" />
-              <Field.Text name="zipCode" label="ZIP Code" />
-              <Stack direction="row" spacing={2}>
-                <Field.Text
-                  name="assetId"
-                  label="TXC Coin ID"
-                  InputLabelProps={{ shrink: true }}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton onClick={getAssetId} edge="end">
-                          <Iconify icon="streamline:ai-generate-variation-spark-solid" />
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-
-                <Field.Text
-                  name="ethAssetId"
-                  label="ETH Coin ID"
-                  InputLabelProps={{ shrink: true }}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton onClick={getEthAssetId} edge="end">
-                          <Iconify icon="streamline:ai-generate-variation-spark-solid" />
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </Stack>
-              <Field.Select name="promoCode" label="PromoCode">
-                {promos.map((option: Promo) => (
-                  <MenuItem key={option.id} value={option.code}>
-                    {option.description}
-                  </MenuItem>
-                ))}
-              </Field.Select>
-              <Field.Select name="preferredContact" label="Preferred Contact">
-                {CONTACT.map((option) => (
-                  <MenuItem key={option.label} value={option.value}>
-                    {option.value}
-                  </MenuItem>
-                ))}
-              </Field.Select>
-              <Field.Text name="preferredContactDetail" label="Preferred Contact Detail" />
-              <Field.Select name="teamStrategy" label="Team Strategy" required>
-                {Object.values(TeamStrategy).map((option) => (
-                  <MenuItem key={option} value={option}>
-                    {option}
-                  </MenuItem>
-                ))}
-              </Field.Select>
-              <Field.MultiSelect
-                name="teamReport"
-                label="Team Report"
-                checkbox
-                options={Object.values(TeamReport).map((option) => ({
-                  label: option,
-                  value: option,
-                }))}
-              />
-              <Field.Select
-                name="commissionDefault"
-                label="Commission Default"
-                defaultValue={CommissionDefaultEnum.Usdc}
-                required
               >
-                {Object.values(
-                  currentMember.groupSetting?.commissionDefaults.length
-                    ? currentMember.groupSetting.commissionDefaults
-                    : CommissionDefaultEnum
-                ).map((option) => (
-                  <MenuItem
-                    key={option}
-                    value={option}
-                    disabled={
-                      option === CommissionDefaultEnum.Usdc &&
-                      (overview?.memberOverview.cashCommissionPotential ?? 0) < 0
+                <Field.UploadAvatar
+                  name="avatar"
+                  value={avatarUrl}
+                  current={currentMember?.avatar ?? ''}
+                  validator={(fileData) => {
+                    if (fileData.size > 1000000) {
+                      return {
+                        code: 'file-too-large',
+                        message: `File is larger than ${fData(1000000)}`,
+                      };
                     }
-                  >
-                    {option}
-                  </MenuItem>
-                ))}
-              </Field.Select>
+                    return null;
+                  }}
+                  sx={{ width: 120, height: 120 }}
+                  onDrop={handleDrop}
+                />
+                <Stack spacing={3}>
+                  <Field.Text
+                    name="firstName"
+                    label="First Name"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    required
+                  />
+                  <Field.Text
+                    name="lastName"
+                    label="Last Name"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    required
+                  />
+                </Stack>
+                <Field.Text name="username" label="Username" required />
+                <Field.Text
+                  name="email"
+                  label="Email"
+                  defaultValue={currentMember.email}
+                  required
+                />
+                <Field.Phone name="mobile" label="Mobile" />
+                <SearchMiner
+                  label="Sponsor"
+                  setMemberId={setMemberId}
+                  currentMember={currentMember.sponsor}
+                />
+                <Field.Text name="primaryAddress" label="Address" />
+                <Field.Text name="secondaryAddress" label="Address Line 2" />
+                <Autocomplete
+                  freeSolo
+                  fullWidth
+                  options={countries.getNames()}
+                  getOptionLabel={(option: any) => option}
+                  value={country ?? currentMember.country}
+                  renderInput={(params) => (
+                    <TextField {...params} name="country" label="Country" margin="none" />
+                  )}
+                  renderOption={(props, option) => (
+                    <li {...props} key={option}>
+                      {option}
+                    </li>
+                  )}
+                  onChange={(_, value: any) => setCountry(value)}
+                  onInputChange={(_, value: any) => setCountry(value)}
+                />
+                <Autocomplete
+                  freeSolo
+                  fullWidth
+                  options={states}
+                  getOptionLabel={(option: any) => option.name}
+                  value={{ name: state ?? currentMember.state }}
+                  renderInput={(params) => (
+                    <TextField {...params} name="state" label="State" margin="none" />
+                  )}
+                  renderOption={(props, option) => (
+                    <li {...props} key={option!.name}>
+                      {option.name}
+                    </li>
+                  )}
+                  onChange={(_, value: any) => setState(value.name)}
+                  onInputChange={(_, value: any) => setState(value)}
+                />
+                <Field.Text name="city" label="City" />
+                <Field.Text name="zipCode" label="ZIP Code" />
+                <Stack direction="row" spacing={2}>
+                  <Field.Text
+                    name="assetId"
+                    label="TXC Coin ID"
+                    InputLabelProps={{ shrink: true }}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton onClick={getAssetId} edge="end">
+                            <Iconify icon="streamline:ai-generate-variation-spark-solid" />
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
 
-              <Stack>
-                {watch('peerAcceptable') && (
-                  <Field.Text name="peerETHAddress" label="Peer Address" />
-                )}
-              </Stack>
+                  <Field.Text
+                    name="ethAssetId"
+                    label="ETH Coin ID"
+                    InputLabelProps={{ shrink: true }}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton onClick={getEthAssetId} edge="end">
+                            <Iconify icon="streamline:ai-generate-variation-spark-solid" />
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </Stack>
+                <Field.Select name="promoCode" label="PromoCode">
+                  {promos.map((option: Promo) => (
+                    <MenuItem key={option.id} value={option.code}>
+                      {option.description}
+                    </MenuItem>
+                  ))}
+                </Field.Select>
+                <Field.Select name="preferredContact" label="Preferred Contact">
+                  {CONTACT.map((option) => (
+                    <MenuItem key={option.label} value={option.value}>
+                      {option.value}
+                    </MenuItem>
+                  ))}
+                </Field.Select>
+                <Field.Text name="preferredContactDetail" label="Preferred Contact Detail" />
+                <Field.Select name="teamStrategy" label="Team Strategy" required>
+                  {Object.values(TeamStrategy).map((option) => (
+                    <MenuItem key={option} value={option}>
+                      {option}
+                    </MenuItem>
+                  ))}
+                </Field.Select>
+                <Field.MultiSelect
+                  name="teamReport"
+                  label="Team Report"
+                  checkbox
+                  options={Object.values(TeamReport).map((option) => ({
+                    label: option,
+                    value: option,
+                  }))}
+                />
+                <Field.Select
+                  name="commissionDefault"
+                  label="Commission Default"
+                  defaultValue={CommissionDefaultEnum.Usdc}
+                  required
+                >
+                  {Object.values(
+                    currentMember.groupSetting?.commissionDefaults.length
+                      ? currentMember.groupSetting.commissionDefaults
+                      : CommissionDefaultEnum
+                  ).map((option) => (
+                    <MenuItem
+                      key={option}
+                      value={option}
+                      disabled={
+                        option === CommissionDefaultEnum.Usdc &&
+                        (overview?.memberOverview.cashCommissionPotential ?? 0) < 0
+                      }
+                    >
+                      {option}
+                    </MenuItem>
+                  ))}
+                </Field.Select>
 
-              <Stack direction="row" justifyContent="space-between">
-                <Field.Switch name="syncWithSendy" label="Subscribe to Sendy" sx={{ py: 1 }} />
-                <Field.Switch name="isTexitRanger" label="Texit Ranger" sx={{ py: 1 }} />
-              </Stack>
+                <Stack>
+                  {watch('peerAcceptable') && (
+                    <Field.Text name="peerETHAddress" label="Peer Address" />
+                  )}
+                </Stack>
 
-              <Field.Switch name="peerAcceptable" label="Peer Acceptable" sx={{ py: 1 }} />
-            </Box>
-          </Card>
+                <Stack direction="row" justifyContent="space-between">
+                  <Field.Switch name="syncWithSendy" label="Subscribe to Sendy" sx={{ py: 1 }} />
+                  <Field.Switch name="isTexitRanger" label="Texit Ranger" sx={{ py: 1 }} />
+                </Stack>
+
+                <Field.Switch name="peerAcceptable" label="Peer Acceptable" sx={{ py: 1 }} />
+              </Box>
+            </Card>
+          </Grid>
+          <Grid md={12} xl={6}>
+            <TXCWallets wallets={txcWallets} />
+            <OtherWallets wallets={otherWallets} />
+          </Grid>
         </Grid>
-        <Grid md={12} xl={6}>
-          <TXCWallets wallets={txcWallets} />
-          <OtherWallets wallets={otherWallets} />
-        </Grid>
-      </Grid>
 
-      <Stack alignItems="flex-start" flexDirection="row" spacing={2} sx={{ mt: 2 }}>
-        <LoadingButton
-          type="submit"
-          variant="contained"
-          loading={loading && !ref.current}
-          disabled={loading && ref.current}
-        >
-          Save Changes
-        </LoadingButton>
-        {!currentMember.status &&
-          (currentMember.allowState === 'PENDING' ||
-            currentMember.allowState === 'PAID' ||
-            currentMember.allowState === 'ADDED') && (
-            <LoadingButton
-              variant="contained"
-              loading={loading && ref.current}
-              onClick={async () => {
-                ref.current = true;
-                await onSubmit();
-              }}
-              disabled={loading && !ref.current}
-            >
-              Save and Approve
-            </LoadingButton>
-          )}
-      </Stack>
-    </Form>
+        <Stack alignItems="flex-start" flexDirection="row" spacing={2} sx={{ mt: 2 }}>
+          <LoadingButton
+            type="submit"
+            variant="contained"
+            loading={loading && !ref.current}
+            disabled={loading && ref.current}
+          >
+            Save Changes
+          </LoadingButton>
+          {!currentMember.status &&
+            (currentMember.allowState === 'PENDING' ||
+              currentMember.allowState === 'PAID' ||
+              currentMember.allowState === 'ADDED') && (
+              <LoadingButton
+                variant="contained"
+                loading={loading && ref.current}
+                onClick={handleClickApprove}
+                disabled={loading && !ref.current}
+              >
+                Save and Approve
+              </LoadingButton>
+            )}
+        </Stack>
+      </Form>
+
+      <ConfirmCreateSale open={open} member={currentMember} />
+    </>
   );
 }
