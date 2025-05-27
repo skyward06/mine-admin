@@ -77,7 +77,7 @@ const documents = {
     "\n  query Introducers($sort: String, $page: String, $filter: JSONObject) {\n    introducers(sort: $sort, page: $page, filter: $filter) {\n      introducers {\n        id\n        ID\n        email\n        point\n        mobile\n        username\n        fullName\n        createdAt\n      }\n      total\n    }\n  }\n": types.IntroducersDocument,
     "\n  mutation createMember($data: CreateMemberInput!) {\n    createMember(data: $data) {\n      id\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.CreateMemberDocument,
     "\n  mutation updateMember($data: UpdateMemberInput!) {\n    updateMember(data: $data) {\n      id\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.UpdateMemberDocument,
-    "\n  query MemberOverview($data: IDInput!) {\n    memberOverview(data: $data) {\n      point\n      joinDate\n      isTexitRanger\n      totalTXCShared\n      currentHashPower\n      orderedAvailablePoint\n      cashCommissionPotential\n    }\n  }\n": types.MemberOverviewDocument,
+    "\n  query MemberOverview($data: IDInput!) {\n    memberOverview(data: $data) {\n      point\n      joinDate\n      totalTXCShared\n      currentHashPower\n      orderedAvailablePoint\n      cashCommissionPotential\n    }\n  }\n": types.MemberOverviewDocument,
     "\n  query MemberStatistics($sort: String, $page: String, $filter: JSONObject) {\n    memberStatistics(sort: $sort, page: $page, filter: $filter) {\n      memberStatistics {\n        issuedAt\n        hashPower\n        txcShared\n      }\n      total\n    }\n  }\n": types.MemberStatisticsDocument,
     "\n  query Payouts($filter: JSONObject, $page: String, $sort: String) {\n    payouts(filter: $filter, page: $page, sort: $sort) {\n      payouts {\n        id\n        method\n        display\n        name\n        status\n        createdAt\n        updatedAt\n        deletedAt\n      }\n      total\n    }\n  }\n": types.PayoutsDocument,
     "\n  mutation updatePasswordMemberById($data: UpdateMemberPasswordInputById!) {\n    updatePasswordMemberById(data: $data) {\n      id\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.UpdatePasswordMemberByIdDocument,
@@ -94,6 +94,7 @@ const documents = {
     "\n  mutation MoveToBlocked($data: IDInput!) {\n    moveToBlocked(data: $data) {\n      message\n      result\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.MoveToBlockedDocument,
     "\n  mutation ForceMemberLogout($data: IDInput!) {\n    forceMemberLogout(data: $data) {\n      message\n      result\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.ForceMemberLogoutDocument,
     "\n  mutation AdminGotIt($data: IDInput!) {\n    adminGotIt(data: $data) {\n      result\n      message\n    }\n  }\n": types.AdminGotItDocument,
+    "\n  mutation ShareWithMemberId($data: ShareMemberInput!) {\n    shareWithMemberId(data: $data) {\n      result\n      message\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.ShareWithMemberIdDocument,
     "\n  query Notifications($sort: String, $page: String, $filter: JSONObject) {\n    notifications(sort: $sort, page: $page, filter: $filter) {\n      notifications {\n        id\n        read\n        level\n        message\n        createdAt\n        updatedAt\n      }\n      total\n    }\n  }\n": types.NotificationsDocument,
     "\n  mutation setReadNotification($data: IDInput!) {\n    setReadNotification(data: $data) {\n      message\n      result\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.SetReadNotificationDocument,
     "\n  mutation setReadAllNotifications {\n    setReadAllNotifications {\n      count\n    }\n  }\n": types.SetReadAllNotificationsDocument,
@@ -464,7 +465,7 @@ export function gql(source: "\n  mutation updateMember($data: UpdateMemberInput!
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query MemberOverview($data: IDInput!) {\n    memberOverview(data: $data) {\n      point\n      joinDate\n      isTexitRanger\n      totalTXCShared\n      currentHashPower\n      orderedAvailablePoint\n      cashCommissionPotential\n    }\n  }\n"): (typeof documents)["\n  query MemberOverview($data: IDInput!) {\n    memberOverview(data: $data) {\n      point\n      joinDate\n      isTexitRanger\n      totalTXCShared\n      currentHashPower\n      orderedAvailablePoint\n      cashCommissionPotential\n    }\n  }\n"];
+export function gql(source: "\n  query MemberOverview($data: IDInput!) {\n    memberOverview(data: $data) {\n      point\n      joinDate\n      totalTXCShared\n      currentHashPower\n      orderedAvailablePoint\n      cashCommissionPotential\n    }\n  }\n"): (typeof documents)["\n  query MemberOverview($data: IDInput!) {\n    memberOverview(data: $data) {\n      point\n      joinDate\n      totalTXCShared\n      currentHashPower\n      orderedAvailablePoint\n      cashCommissionPotential\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -529,6 +530,10 @@ export function gql(source: "\n  mutation ForceMemberLogout($data: IDInput!) {\n
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  mutation AdminGotIt($data: IDInput!) {\n    adminGotIt(data: $data) {\n      result\n      message\n    }\n  }\n"): (typeof documents)["\n  mutation AdminGotIt($data: IDInput!) {\n    adminGotIt(data: $data) {\n      result\n      message\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation ShareWithMemberId($data: ShareMemberInput!) {\n    shareWithMemberId(data: $data) {\n      result\n      message\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation ShareWithMemberId($data: ShareMemberInput!) {\n    shareWithMemberId(data: $data) {\n      result\n      message\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

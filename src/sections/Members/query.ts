@@ -377,7 +377,6 @@ export const FETCH_MEMBER_HISTORY = gql(/* GraphQL */ `
     memberOverview(data: $data) {
       point
       joinDate
-      isTexitRanger
       totalTXCShared
       currentHashPower
       orderedAvailablePoint
@@ -573,6 +572,18 @@ export const ADMIN_GOT_IT = gql(/* GraphQL */ `
     adminGotIt(data: $data) {
       result
       message
+    }
+  }
+`);
+
+export const SHARE_WITH_MEMBER = gql(/* GraphQL */ `
+  mutation ShareWithMemberId($data: ShareMemberInput!) {
+    shareWithMemberId(data: $data) {
+      result
+      message
+      frontActions {
+        ...FrontActionFields
+      }
     }
   }
 `);
