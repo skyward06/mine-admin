@@ -1,14 +1,11 @@
 import type { Member } from 'src/__generated__/graphql';
 
 import { useState, useEffect } from 'react';
-import { ApolloError } from '@apollo/client';
 import { useParams } from 'react-router-dom';
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
-import MenuList from '@mui/material/MenuList';
-import MenuItem from '@mui/material/MenuItem';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
@@ -22,25 +19,17 @@ import { formatID } from 'src/utils/helper';
 import { formatDate } from 'src/utils/format-time';
 import { truncateMiddle } from 'src/utils/formatNumber';
 
-import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
-import { usePopover, CustomPopover } from 'src/components/custom-popover';
+import { usePopover } from 'src/components/custom-popover';
 
-import SignUpInfo from './SignUpInfo';
-import {
-  useDuplicateMember,
-  useSendWelcomeEmail,
-  useVerifyMemberEmail,
-  useFetchMemberOverview,
-} from '../../useApollo';
+import Settings from './Settings';
+import { useFetchMemberOverview } from '../../useApollo';
 
 interface Props {
   currentMember: Member;
 }
 
 export const Personal = ({ currentMember }: Props) => {
-  const copy = useBoolean();
-  const sign = useBoolean();
   const checked = useBoolean();
 
   const params = useParams();
@@ -52,30 +41,6 @@ export const Personal = ({ currentMember }: Props) => {
   const { id } = params;
 
   const { overview } = useFetchMemberOverview(id!);
-  const { duplicateMember } = useDuplicateMember();
-  const { verifyMemberEmail } = useVerifyMemberEmail();
-  const { loading, sendWelcomeEmail } = useSendWelcomeEmail();
-
-  const address = [
-    currentMember?.fullName,
-    currentMember?.primaryAddress,
-    currentMember?.secondaryAddress,
-    `${currentMember?.city}, ${currentMember?.state}, ${currentMember?.zipCode}`,
-  ];
-
-  const copyAddress = async () => {
-    try {
-      await navigator.clipboard.writeText(address.join('\n'));
-
-      copy.onTrue();
-
-      setTimeout(() => {
-        copy.onFalse();
-      }, 3000);
-    } catch (error) {
-      toast.error('Failed to copy text: ', error.message);
-    }
-  };
 
   const handleCopy = async (addressValue: string) => {
     try {
@@ -87,51 +52,6 @@ export const Personal = ({ currentMember }: Props) => {
       }, 3000);
     } catch (err) {
       console.error('Failed to copy test: ', err);
-    }
-  };
-
-  const sendEmail = async () => {
-    try {
-      const { data } = await sendWelcomeEmail({
-        variables: { data: { email: currentMember?.email! } },
-      });
-
-      if (data) {
-        toast.success('Successfully sent welcome email');
-        popover.onClose();
-      }
-    } catch (error) {
-      if (error instanceof ApolloError) {
-        const [err] = error.graphQLErrors;
-
-        toast.error(err.message);
-      }
-    }
-  };
-
-  const handleVerifyEmail = async () => {
-    try {
-      const { data } = await verifyMemberEmail({ variables: { data: { id: currentMember?.id! } } });
-
-      if (data) {
-        toast.success('Successfully verified!');
-        popover.onClose();
-      }
-    } catch (error) {
-      console.error('Error: ', error);
-    }
-  };
-
-  const handleDuplicateMember = async () => {
-    try {
-      const { data } = await duplicateMember({ variables: { data: { id: currentMember?.id! } } });
-
-      if (data) {
-        toast.success('Successfully duplicated!');
-        popover.onClose();
-      }
-    } catch (error) {
-      toast.error('Error: ', error.message);
     }
   };
 
@@ -172,8 +92,8 @@ export const Personal = ({ currentMember }: Props) => {
             </Stack>
           </Stack>
 
+          {/* Basic info */}
           <Stack>
-            {/* Basic info */}
             <Stack direction="row" spacing={2} pb={1}>
               <Stack width={0.5}>
                 <Typography variant="body2" fontWeight="bold">
@@ -479,159 +399,114 @@ export const Personal = ({ currentMember }: Props) => {
           <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
 
           {/* Setting info */}
-          <Typography variant="body1" fontWeight="bold" my={2}>
-            Setting
-          </Typography>
+          <Stack>
+            <Typography variant="body1" fontWeight="bold" my={2}>
+              Setting
+            </Typography>
 
-          <Stack direction="row" spacing={2} pb={1}>
-            <Stack width={0.5}>
-              <Typography variant="body2" fontWeight="bold">
-                Communication:
-              </Typography>
-            </Stack>
-            <Stack width={1}>
-              <Iconify
-                icon={
-                  !currentMember?.setting || currentMember?.setting?.communication
-                    ? 'ic:twotone-check-box'
-                    : 'iconamoon:sign-times-square-duotone'
-                }
-                color={
-                  !currentMember?.setting || currentMember?.setting?.communication ? 'green' : 'red'
-                }
-              />
+            <Stack direction="row" spacing={2} pb={1}>
+              <Stack width={0.5}>
+                <Typography variant="body2" fontWeight="bold">
+                  Communication:
+                </Typography>
+              </Stack>
+              <Stack width={1}>
+                <Iconify
+                  icon={
+                    !currentMember?.setting || currentMember?.setting?.communication
+                      ? 'ic:twotone-check-box'
+                      : 'iconamoon:sign-times-square-duotone'
+                  }
+                  color={
+                    !currentMember?.setting || currentMember?.setting?.communication
+                      ? 'green'
+                      : 'red'
+                  }
+                />
+              </Stack>
             </Stack>
           </Stack>
 
           <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
 
           {/* Session info */}
-          <Typography variant="body1" fontWeight="bold" mt={2}>
-            Session
-          </Typography>
+          <Stack>
+            <Typography variant="body1" fontWeight="bold" mt={2}>
+              Session
+            </Typography>
 
-          <Stack direction="row" spacing={2} pb={1}>
-            <Stack width={0.5}>
-              <Typography variant="body2" fontWeight="bold">
-                IP Address:
-              </Typography>
+            <Stack direction="row" spacing={2} pb={1}>
+              <Stack width={0.5}>
+                <Typography variant="body2" fontWeight="bold">
+                  IP Address:
+                </Typography>
+              </Stack>
+              <Stack width={1}>
+                <Typography variant="body2">{currentMember?.session?.ipAddress}</Typography>
+              </Stack>
             </Stack>
-            <Stack width={1}>
-              <Typography variant="body2">{currentMember?.session?.ipAddress}</Typography>
-            </Stack>
-          </Stack>
 
-          <Stack direction="row" spacing={2} pb={1}>
-            <Stack width={0.5}>
-              <Typography variant="body2" fontWeight="bold">
-                Device:
-              </Typography>
+            <Stack direction="row" spacing={2} pb={1}>
+              <Stack width={0.5}>
+                <Typography variant="body2" fontWeight="bold">
+                  Device:
+                </Typography>
+              </Stack>
+              <Stack width={1}>
+                <Typography variant="body2">{currentMember?.session?.device}</Typography>
+              </Stack>
             </Stack>
-            <Stack width={1}>
-              <Typography variant="body2">{currentMember?.session?.device}</Typography>
-            </Stack>
-          </Stack>
 
-          <Stack direction="row" spacing={2} pb={1}>
-            <Stack width={0.5}>
-              <Typography variant="body2" fontWeight="bold">
-                Platform:
-              </Typography>
+            <Stack direction="row" spacing={2} pb={1}>
+              <Stack width={0.5}>
+                <Typography variant="body2" fontWeight="bold">
+                  Platform:
+                </Typography>
+              </Stack>
+              <Stack width={1}>
+                <Typography variant="body2">{currentMember?.session?.platform}</Typography>
+              </Stack>
             </Stack>
-            <Stack width={1}>
-              <Typography variant="body2">{currentMember?.session?.platform}</Typography>
-            </Stack>
-          </Stack>
 
-          <Stack direction="row" spacing={2} pb={1}>
-            <Stack width={0.5}>
-              <Typography variant="body2" fontWeight="bold">
-                OS:
-              </Typography>
+            <Stack direction="row" spacing={2} pb={1}>
+              <Stack width={0.5}>
+                <Typography variant="body2" fontWeight="bold">
+                  OS:
+                </Typography>
+              </Stack>
+              <Stack width={1}>
+                <Typography variant="body2">{currentMember?.session?.os}</Typography>
+              </Stack>
             </Stack>
-            <Stack width={1}>
-              <Typography variant="body2">{currentMember?.session?.os}</Typography>
-            </Stack>
-          </Stack>
 
-          <Stack direction="row" spacing={2} pb={1}>
-            <Stack width={0.5}>
-              <Typography variant="body2" fontWeight="bold">
-                Browser:
-              </Typography>
+            <Stack direction="row" spacing={2} pb={1}>
+              <Stack width={0.5}>
+                <Typography variant="body2" fontWeight="bold">
+                  Browser:
+                </Typography>
+              </Stack>
+              <Stack width={1}>
+                <Typography variant="body2">
+                  {currentMember?.session?.browser} {currentMember?.session?.browserVersion}
+                </Typography>
+              </Stack>
             </Stack>
-            <Stack width={1}>
-              <Typography variant="body2">
-                {currentMember?.session?.browser} {currentMember?.session?.browserVersion}
-              </Typography>
-            </Stack>
-          </Stack>
 
-          <Stack direction="row" spacing={2} pb={1}>
-            <Stack width={0.5}>
-              <Typography variant="body2" fontWeight="bold">
-                Fingerprint:
-              </Typography>
-            </Stack>
-            <Stack width={1}>
-              <Typography variant="body2">{currentMember?.session?.userAgent}</Typography>
+            <Stack direction="row" spacing={2} pb={1}>
+              <Stack width={0.5}>
+                <Typography variant="body2" fontWeight="bold">
+                  Fingerprint:
+                </Typography>
+              </Stack>
+              <Stack width={1}>
+                <Typography variant="body2">{currentMember?.session?.userAgent}</Typography>
+              </Stack>
             </Stack>
           </Stack>
         </Card>
       </Grid>
 
-      <CustomPopover
-        open={popover.open}
-        anchorEl={popover.anchorEl}
-        onClose={popover.onClose}
-        slotProps={{ arrow: { placement: 'right-top' } }}
-      >
-        <MenuList>
-          <MenuItem
-            onClick={() => {
-              const searchParams = new URLSearchParams({ memberId: id ?? '' }).toString();
-              router.push(`${paths.dashboard.placement.root}?${searchParams}`);
-            }}
-          >
-            <Iconify icon="solar:eye-bold" color="#00cca4" />
-            Placement
-          </MenuItem>
-          <MenuItem onClick={copyAddress}>
-            <Iconify icon={copy.value ? 'ci:check' : 'bxs:copy'} color="#00cca4" />
-            Copy Address
-          </MenuItem>
-          <MenuItem onClick={sendEmail}>
-            <Iconify
-              icon={loading ? 'line-md:loading-loop' : 'mingcute:send-plane-fill'}
-              color="#00cca4"
-            />
-            Welcome Email
-          </MenuItem>
-          <MenuItem
-            onClick={() => {
-              sign.onTrue();
-              popover.onClose();
-
-              if (!currentMember?.signupFormRequest) {
-                toast.warning('He has been added by the admin');
-              }
-            }}
-          >
-            <Iconify icon="heroicons:user-solid" color="#00cca4" />
-            Sign Up Info
-          </MenuItem>
-          <MenuItem onClick={handleVerifyEmail}>
-            <Iconify icon="mdi:email-verified" color="#00cca4" />
-            Verify Email
-          </MenuItem>
-          <MenuItem onClick={handleDuplicateMember}>
-            <Iconify icon="heroicons-solid:document-duplicate" color="#00cca4" />
-            Duplicate
-          </MenuItem>
-        </MenuList>
-      </CustomPopover>
-
-      {currentMember?.signupFormRequest && <SignUpInfo open={sign} member={currentMember} />}
+      <Settings memberId={id!} popover={popover} currentMember={currentMember} />
     </>
   );
 };
