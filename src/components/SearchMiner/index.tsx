@@ -38,6 +38,7 @@ export default function SearchMiner({
             { fullName: { contains: debouncedUsername ?? '', mode: 'insensitive' } },
           ],
         },
+        page: '1,10',
       },
     });
   }, [debouncedUsername, fetchMemberSearch, username, filter]);
