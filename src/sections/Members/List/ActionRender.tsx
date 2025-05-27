@@ -147,7 +147,7 @@ export const ActionRender = memo(
         const { data } = await resetBonusClock({ variables: { data: { id: current?.id! } } });
 
         if (data) {
-          toast.success('Successfully reseted!');
+          toast.success('Successfully reset!');
           popover.onClose();
         }
       } catch (error) {
@@ -245,7 +245,7 @@ export const ActionRender = memo(
           slotProps={{ arrow: { placement: 'right-top' } }}
         >
           <MenuList>
-            {(current?.allowState === 'PENDING' || 'ADDED') && (
+            {(current?.allowState === 'PENDING' || current?.allowState === 'ADDED') && (
               <>
                 <MenuItem onClick={handleAdminGotIt} disabled={!!current?.adminUsername}>
                   <Iconify icon="mdi:user-check" color="green" />I got it
