@@ -364,7 +364,7 @@ export default function EditForm({ current }: Props) {
                 disabled={disabled.commission}
               />
             }
-            label={PERMISSIONS.COMMISSOIN_CALCULATION_PERMISSION.label}
+            label={PERMISSIONS.COMMISSION_CALCULATION_PERMISSION.label}
           />
         </Stack>
       </Box>

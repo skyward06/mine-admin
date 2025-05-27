@@ -119,7 +119,7 @@ export default function CommissionListView() {
             >
               <Iconify icon="tabler:calendar-week" sx={{ mr: 0.5 }} /> Select Week
             </Button>
-            {(user?.role?.commission === PERMISSIONS.COMMISSOIN_CALCULATION_PERMISSION.value ||
+            {(user?.role?.commission === PERMISSIONS.COMMISSION_CALCULATION_PERMISSION.value ||
               user?.role?.commission === 7) && (
               <>
                 <LoadingButton

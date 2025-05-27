@@ -10,19 +10,18 @@ export const EXPLORER_PATH = 'https://explorer.texitcoin.org/tx/';
 
 export const ETH_TRANSACTION_PATH = 'https://etherscan.io/tx/';
 export const ETH_ADDRESS_PATH = 'https://etherscan.io/address/';
-export const BLOCK_SACN_TRANSACTION_PATH = 'https://blockscan.com/tx/';
 
 // ASSET INFO URL
 export const ASSET_INFO_PATH = 'https://api.blockchainmint.com/api/v2/asset-info?public_key=';
 
-export const PLACEMENTTREE_NODE_WIDTH = 200;
-export const PLACEMENTTREE_NODE_HEIGHT = 135;
-export const PLACEMENTTREE_NODE_X_SPACE = 15;
-export const PLACEMENTTREE_NODE_Y_SPACE = 60;
+export const PLACEMENT_TREE_NODE_WIDTH = 200;
+export const PLACEMENT_TREE_NODE_HEIGHT = 135;
+export const PLACEMENT_TREE_NODE_X_SPACE = 15;
+export const PLACEMENT_TREE_NODE_Y_SPACE = 60;
 
 export const COMMISSION_NODE_HEIGHT = 105;
 
-export const SPONSORTREE_NODE_HEIGHT = 98;
+export const SPONSOR_TREE_NODE_HEIGHT = 98;
 export const WEEKLY_PLACEMENT_INITIAL_DEPTH = 3;
 
 export const FREE_SHARE_ID_1 = '1176da92-477a-46c3-8a63-e8e22042197f';
@@ -59,19 +58,13 @@ export const CONTACT = [
 export const PAYMENT_TYPE = [
   { label: 'CREDIT_CARD', value: 'Credit Card' },
   { label: 'ZELLE', value: 'Zelle' },
-  { label: 'CASH_APP', value: 'CsahApp' },
+  { label: 'CASH_APP', value: 'CashApp' },
   { label: 'VENMO', value: 'Venmo' },
   { label: 'PAPER_CHECK', value: 'Paper Check' },
   { label: 'CASH', value: 'Cash' },
   { label: 'KILO_OF_SILVER', value: 'Kilo of Silver' },
   { label: 'CRYPTO', value: 'Crypto' },
   { label: 'COMMISSION', value: 'Commission' },
-];
-
-export const PREPAYMRENT_TYPE = [
-  { label: 'BTC', value: 'btc' },
-  { label: 'CASH', value: 'cash' },
-  { label: 'TEXITCOIN', value: 'texitcoin' },
 ];
 
 export const PREPAID_TYPE = {
@@ -157,7 +150,7 @@ export const PROOF_TYPE = {
   INFRASTRUCTURE: 'Infrastructure',
   DEVELOPERSAPPS: 'Developers Apps',
   MINEELECTRICITY: 'Mine Electricity',
-  MINEMAINTAINANCE: 'Mine maintainance',
+  MINEMAINTAINANCE: 'Mine maintenance',
   MINENEWEQUIPMENT: 'Mine New Equipment',
   DEVELOPERSPROTOCOL: 'Developers Protocol',
   ADMINISTRATIONSALARY: 'Administration Salary',
@@ -275,7 +268,7 @@ export const PERMISSIONS = {
   EDITOR_PERMISSION: { label: 'Editor', value: 3, hex: 0x2 },
   VIEWER_PERMISSION: { label: 'View Only', value: 1, hex: 0x1 },
   PAST_EDIT_PERMISSION: { label: 'Past Editor', value: 5, hex: 0x4 },
-  COMMISSOIN_CALCULATION_PERMISSION: {
+  COMMISSION_CALCULATION_PERMISSION: {
     label: 'Commission Calculation',
     value: 4,
     hex: 0x4,

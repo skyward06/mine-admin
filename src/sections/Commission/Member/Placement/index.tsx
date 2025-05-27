@@ -22,9 +22,9 @@ import { formatDate, formatWeekNumber } from 'src/utils/format-time';
 import {
   ROOT_ID,
   COMMISSION_NODE_HEIGHT,
-  PLACEMENTTREE_NODE_WIDTH,
-  PLACEMENTTREE_NODE_X_SPACE,
-  PLACEMENTTREE_NODE_Y_SPACE,
+  PLACEMENT_TREE_NODE_WIDTH,
+  PLACEMENT_TREE_NODE_X_SPACE,
+  PLACEMENT_TREE_NODE_Y_SPACE,
 } from 'src/consts';
 
 import ComponentBlock from 'src/components/Component-Block';
@@ -104,16 +104,16 @@ function buildTree(
     const element = {
       id: node.id,
       data: { label: <StandardNode commissions={commissions} {...node} /> },
-      position: { x: baseX, y: depth * (COMMISSION_NODE_HEIGHT + PLACEMENTTREE_NODE_Y_SPACE) },
+      position: { x: baseX, y: depth * (COMMISSION_NODE_HEIGHT + PLACEMENT_TREE_NODE_Y_SPACE) },
       draggable: true,
       style: {
         padding: 0,
         border: 'none',
         borderRadius: '12px',
-        width: PLACEMENTTREE_NODE_WIDTH,
+        width: PLACEMENT_TREE_NODE_WIDTH,
         height: COMMISSION_NODE_HEIGHT,
       },
-      maxX: baseX + PLACEMENTTREE_NODE_WIDTH,
+      maxX: baseX + PLACEMENT_TREE_NODE_WIDTH,
     };
 
     tree.push(element);
@@ -129,7 +129,7 @@ function buildTree(
       .forEach((child: any, idx: number) => {
         const { maxX: tempX } = buildTree(
           child,
-          maxX + (idx === 0 ? 0 : PLACEMENTTREE_NODE_X_SPACE),
+          maxX + (idx === 0 ? 0 : PLACEMENT_TREE_NODE_X_SPACE),
           depth + 1,
           tree,
           commissions,
@@ -143,20 +143,20 @@ function buildTree(
     id: node.id,
     data: { label: <StandardNode commissions={commissions} {...node} /> },
     position: {
-      x: Math.max(baseX, maxX - (PLACEMENTTREE_NODE_WIDTH - PLACEMENTTREE_NODE_X_SPACE) / 2),
-      y: depth * (COMMISSION_NODE_HEIGHT + PLACEMENTTREE_NODE_Y_SPACE),
+      x: Math.max(baseX, maxX - (PLACEMENT_TREE_NODE_WIDTH - PLACEMENT_TREE_NODE_X_SPACE) / 2),
+      y: depth * (COMMISSION_NODE_HEIGHT + PLACEMENT_TREE_NODE_Y_SPACE),
     },
     draggable: true,
     style: {
       padding: 0,
       border: 'none',
       borderRadius: '12px',
-      width: PLACEMENTTREE_NODE_WIDTH,
+      width: PLACEMENT_TREE_NODE_WIDTH,
       height: COMMISSION_NODE_HEIGHT,
     },
   };
 
-  maxX = res.position.x + (PLACEMENTTREE_NODE_WIDTH - PLACEMENTTREE_NODE_X_SPACE) / 2;
+  maxX = res.position.x + (PLACEMENT_TREE_NODE_WIDTH - PLACEMENT_TREE_NODE_X_SPACE) / 2;
 
   if (!visibleMap || visibleMap[node.id] === 2) {
     children
@@ -164,7 +164,7 @@ function buildTree(
       .forEach((child: any) => {
         const { maxX: tempX } = buildTree(
           child,
-          maxX + PLACEMENTTREE_NODE_X_SPACE,
+          maxX + PLACEMENT_TREE_NODE_X_SPACE,
           depth + 1,
           tree,
           commissions,
@@ -176,7 +176,7 @@ function buildTree(
 
   const element = {
     ...res,
-    maxX: Math.max(maxX, res.position.x + PLACEMENTTREE_NODE_WIDTH),
+    maxX: Math.max(maxX, res.position.x + PLACEMENT_TREE_NODE_WIDTH),
   };
 
   tree.push(element);
