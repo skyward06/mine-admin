@@ -23,6 +23,7 @@ export const FETCH_COMMISSION_QUERY = gql(/* GraphQL */ `
         username
         fullName
         memberId
+        hasUSDC
         createdAt
         qualified
         shortNote
