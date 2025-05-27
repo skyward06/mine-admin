@@ -1,7 +1,6 @@
 import type { CustomCellRendererProps } from '@ag-grid-community/react';
 import type {
   ColDef,
-  CellClickedEvent,
   ISetFilterParams,
   ITextFilterParams,
   INumberFilterParams,
@@ -18,8 +17,8 @@ import { useAgQuery as useQueryString } from 'src/routes/hooks';
 import { makeDecimal } from 'src/utils/helper';
 import { parseFilterModel } from 'src/utils/parseFilter';
 
-import { CHAIN_TYPE, CHAIN_UNIT } from 'src/consts';
 import { PaymentToken } from 'src/__generated__/graphql';
+import { CHAIN_TYPE, CHAIN_UNIT, ETH_ADDRESS_PATH } from 'src/consts';
 
 import { AgGrid } from 'src/components/AgGrid';
 import { Iconify } from 'src/components/Iconify';
@@ -32,12 +31,13 @@ import { StatusRenderer } from './StatusRenderer';
 import type { Address } from './type';
 
 type Checked = {
-  checked: boolean;
+  id: string;
   value: string;
+  checked: boolean;
 };
 
 export default function Addresses() {
-  const [checked, setChecked] = useState<Checked>({ checked: false, value: '' });
+  const [checked, setChecked] = useState<Checked>({ checked: false, id: '', value: '' });
 
   const [{ page = '1,50', sort = 'createdAt', filter }] = useQueryString();
 
@@ -45,16 +45,17 @@ export default function Addresses() {
 
   const { loading, rowCount, addresses, fetchAddresses } = useFetchAddresses();
 
-  const handleCopy = async ({ data }: CellClickedEvent<Address, any>) => {
+  const handleCopy = async (id: string, data: string) => {
     try {
-      await navigator.clipboard.writeText(data?.address ?? '');
-      setChecked({ value: data?.address!, checked: true });
+      await navigator.clipboard.writeText(data);
+
+      setChecked({ id, value: data, checked: true });
 
       setTimeout(() => {
-        setChecked({ checked: false, value: '' });
+        setChecked({ checked: false, id: '', value: '' });
       }, 3000);
-    } catch (err) {
-      console.error('Failed to copy test: ', err);
+    } catch (error) {
+      console.error('Failed to copy test: ', error);
     }
   };
 
@@ -74,13 +75,22 @@ export default function Addresses() {
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
         cellClass: 'ag-cell-center',
         cellRenderer: ({ data }: CustomCellRendererProps<Address>) => (
-          <Stack direction="row" justifyContent="space-between" sx={{ cursor: 'pointer' }}>
-            <Typography variant="body2">{data?.address}</Typography>
+          <Stack direction="row" columnGap={1} sx={{ alignItems: 'center', cursor: 'pointer' }}>
+            <Typography
+              variant="body2"
+              sx={{ cursor: 'pointer' }}
+              onClick={() => window.open(`${ETH_ADDRESS_PATH}${data?.address}`)}
+            >
+              {data?.address}
+            </Typography>
 
-            {checked.value === data?.address && <Iconify icon="ci:check" color="#00cca4" />}
+            <Iconify
+              icon={checked.id === data?.address ? 'system-uicons:check' : 'stash:copy-light'}
+              sx={{ cursor: 'pointer' }}
+              onClick={() => handleCopy(data?.address ?? '', data?.address ?? '')}
+            />
           </Stack>
         ),
-        onCellClicked: handleCopy,
       },
       {
         field: 'chain',

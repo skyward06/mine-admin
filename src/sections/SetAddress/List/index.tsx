@@ -6,23 +6,27 @@ import type {
   ITextFilterParams,
 } from '@ag-grid-community/core';
 
-import { useMemo, useEffect } from 'react';
+import dayjs from 'dayjs';
+import { useMemo, useState, useEffect } from 'react';
 
 import Card from '@mui/material/Card';
+import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 import { useAgQuery as useQueryString } from 'src/routes/hooks';
 
-import { formatDate } from 'src/utils/format-time';
+import { formatWeekNumber } from 'src/utils/format-time';
 import { parseFilterModel } from 'src/utils/parseFilter';
 
-import { CHAIN_TYPE } from 'src/consts';
 import { PaymentToken } from 'src/__generated__/graphql';
 import { DashboardContent } from 'src/layouts/dashboard';
+import { CHAIN_TYPE, ETH_ADDRESS_PATH } from 'src/consts';
 
 import { AgGrid } from 'src/components/AgGrid';
+import { Iconify } from 'src/components/Iconify';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 
 import { parseType } from 'src/sections/Payment/Address/parseType';
@@ -31,12 +35,34 @@ import { useFetchCollectAddress } from '../useApollo';
 
 import type { CollectAddress } from './type';
 
-export default function ProofListView() {
-  const [{ page = '1,50', sort = 'createdAt', filter }] = useQueryString();
+type Checked = {
+  id: string;
+  value: string;
+  checked: boolean;
+};
+
+export default function CollectAddressListView() {
+  const [checked, setChecked] = useState<Checked>({ checked: false, id: '', value: '' });
+
+  const [{ page = '1,50', sort = 'weekStartDate', filter }] = useQueryString();
 
   const graphQueryFilter = useMemo(() => parseFilterModel({}, filter), [filter]);
 
   const { loading, addresses, rowCount, fetchCollectAddress } = useFetchCollectAddress();
+
+  const handleCopy = async (id: string, data: string) => {
+    try {
+      await navigator.clipboard.writeText(data);
+
+      setChecked({ id, value: data, checked: true });
+
+      setTimeout(() => {
+        setChecked({ checked: false, id: '', value: '' });
+      }, 3000);
+    } catch (error) {
+      console.error('Failed to copy test: ', error);
+    }
+  };
 
   useEffect(() => {
     fetchCollectAddress({ variables: { filter: graphQueryFilter, page, sort } });
@@ -53,6 +79,24 @@ export default function ProofListView() {
         resizable: true,
         editable: false,
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
+        cellClass: 'ag-cell-center',
+        cellRenderer: ({ data }: CustomCellRendererProps<CollectAddress>) => (
+          <Stack direction="row" columnGap={1} sx={{ alignItems: 'center', cursor: 'pointer' }}>
+            <Typography
+              variant="body2"
+              sx={{ cursor: 'pointer' }}
+              onClick={() => window.open(`${ETH_ADDRESS_PATH}${data?.address}`)}
+            >
+              {data?.address}
+            </Typography>
+
+            <Iconify
+              icon={checked.id === data?.id ? 'system-uicons:check' : 'stash:copy-light'}
+              sx={{ cursor: 'pointer' }}
+              onClick={() => handleCopy(data?.id ?? '', data?.address ?? '')}
+            />
+          </Stack>
+        ),
       },
       {
         field: 'chain',
@@ -72,7 +116,7 @@ export default function ProofListView() {
       {
         field: 'weekStartDate',
         headerName: 'Week',
-        width: 300,
+        width: 400,
         filter: 'agDateColumnFilter',
         filterParams: {
           buttons: ['reset'],
@@ -83,11 +127,11 @@ export default function ProofListView() {
         editable: false,
         initialSort: 'desc',
         cellRenderer: ({ data }: CustomCellRendererProps<CollectAddress>) =>
-          formatDate(data?.weekStartDate),
+          `${dayjs(data?.weekStartDate).startOf('week').format('MM/DD/YYYY')} - ${dayjs(data?.weekStartDate).endOf('week').format('MM/DD/YYYY')} (Week - ${formatWeekNumber(data?.weekStartDate)})`,
       },
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [checked]
   );
 
   return (
