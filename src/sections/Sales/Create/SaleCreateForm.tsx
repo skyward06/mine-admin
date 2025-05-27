@@ -88,7 +88,7 @@ export default function SaleCreateForm() {
             fileIds,
             status: !!status,
             orderedAt: customizeDate(orderedAt),
-            memberId: state.id || memberId,
+            memberId: state?.id || memberId,
             packageId,
             toMemberId,
             paymentMethod,
@@ -100,6 +100,7 @@ export default function SaleCreateForm() {
       toast.success('Sale created successfully!');
       router.push(paths.dashboard.sales.root);
     } catch (err) {
+      console.log('err => ', err);
       if (err instanceof ApolloError) {
         const [error] = err.graphQLErrors;
         if (error.path?.includes('email')) {
