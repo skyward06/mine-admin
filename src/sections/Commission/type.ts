@@ -21,6 +21,7 @@ export type WeeklyCommission = {
   memberId: string;
   username: string;
   fullName: string;
+  hasUSDC: boolean;
   commission: number;
   qualified: boolean;
   weekStartDate: any;

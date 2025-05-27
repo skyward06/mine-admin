@@ -35,6 +35,8 @@ import { useFetchCommissions } from '../useApollo';
 
 import type { WeeklyCommission } from '../type';
 
+type BasicWeeklyCommission = Omit<WeeklyCommission, 'hasUSDC'>;
+
 interface Props {
   status: string;
   customFilter: any;
@@ -60,7 +62,7 @@ export default function CommissionTable({ status, customFilter }: Props) {
 
   const { loading, rowCount, weeklyCommissions, fetchCommissions } = useFetchCommissions();
 
-  const handleCopy = async ({ data }: CellClickedEvent<WeeklyCommission, any>) => {
+  const handleCopy = async ({ data }: CellClickedEvent<BasicWeeklyCommission, any>) => {
     try {
       await navigator.clipboard.writeText(formatID(data?.ID ?? '', 'C'));
       setChecked({ value: formatID(data?.ID ?? '', 'C'), checked: true });
@@ -80,8 +82,8 @@ export default function CommissionTable({ status, customFilter }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [graphQueryFilter, page, sort]);
 
-  const colDefs = useMemo<ColDef<WeeklyCommission>[]>(() => {
-    const baseColDef: ColDef<WeeklyCommission>[] = [
+  const colDefs = useMemo<ColDef<BasicWeeklyCommission>[]>(() => {
+    const baseColDef: ColDef<BasicWeeklyCommission>[] = [
       {
         field: 'ID',
         headerName: 'ID',
@@ -91,7 +93,7 @@ export default function CommissionTable({ status, customFilter }: Props) {
         initialSort: 'asc',
         cellClass: 'ag-cell-center',
         filter: 'agNumberColumnFilter',
-        cellRenderer: ({ data }: CustomCellRendererProps<WeeklyCommission>) => (
+        cellRenderer: ({ data }: CustomCellRendererProps<BasicWeeklyCommission>) => (
           <Stack direction="row" columnGap={1} sx={{ alignItems: 'center', cursor: 'pointer' }}>
             {formatID(data?.ID ?? '', 'C')}
 
@@ -110,7 +112,7 @@ export default function CommissionTable({ status, customFilter }: Props) {
         editable: false,
         sortable: false,
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellRenderer: ({ data }: CustomCellRendererProps<WeeklyCommission>) => (
+        cellRenderer: ({ data }: CustomCellRendererProps<BasicWeeklyCommission>) => (
           <>
             <Typography
               variant="body2"
@@ -129,7 +131,7 @@ export default function CommissionTable({ status, customFilter }: Props) {
         cellClass: 'ag-cell-center',
         filter: 'agTextColumnFilter',
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellRenderer: ({ data }: CustomCellRendererProps<WeeklyCommission>) => (
+        cellRenderer: ({ data }: CustomCellRendererProps<BasicWeeklyCommission>) => (
           <Box
             sx={{
               cursor: 'pointer',
@@ -149,7 +151,7 @@ export default function CommissionTable({ status, customFilter }: Props) {
         editable: false,
         filter: 'agTextColumnFilter',
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellRenderer: ({ data }: CustomCellRendererProps<WeeklyCommission>) => (
+        cellRenderer: ({ data }: CustomCellRendererProps<BasicWeeklyCommission>) => (
           <Stack
             direction="row"
             justifyContent="space-between"
@@ -174,7 +176,7 @@ export default function CommissionTable({ status, customFilter }: Props) {
         sortable: false,
         cellClass: 'ag-cell-center',
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellRenderer: ({ data }: CustomCellRendererProps<WeeklyCommission>) =>
+        cellRenderer: ({ data }: CustomCellRendererProps<BasicWeeklyCommission>) =>
           `L${data?.begL}, R${data?.begR}`,
       },
       {
@@ -185,7 +187,7 @@ export default function CommissionTable({ status, customFilter }: Props) {
         sortable: false,
         cellClass: 'ag-cell-center',
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellRenderer: ({ data }: CustomCellRendererProps<WeeklyCommission>) =>
+        cellRenderer: ({ data }: CustomCellRendererProps<BasicWeeklyCommission>) =>
           `L${data?.newL}, R${data?.newR}`,
       },
       {
@@ -196,7 +198,7 @@ export default function CommissionTable({ status, customFilter }: Props) {
         sortable: false,
         cellClass: 'ag-cell-center',
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellRenderer: ({ data }: CustomCellRendererProps<WeeklyCommission>) =>
+        cellRenderer: ({ data }: CustomCellRendererProps<BasicWeeklyCommission>) =>
           `L${data?.maxL}, R${data?.maxR}`,
       },
       {
@@ -207,7 +209,7 @@ export default function CommissionTable({ status, customFilter }: Props) {
         sortable: false,
         cellClass: 'ag-cell-center',
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellRenderer: ({ data }: CustomCellRendererProps<WeeklyCommission>) =>
+        cellRenderer: ({ data }: CustomCellRendererProps<BasicWeeklyCommission>) =>
           data?.status !== COMMISSION_TYPE.NONE.label ? `L${data?.pkgL}, R${data?.pkgR}` : 'None',
       },
       {
@@ -218,7 +220,7 @@ export default function CommissionTable({ status, customFilter }: Props) {
         sortable: false,
         cellClass: 'ag-cell-center',
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellRenderer: ({ data }: CustomCellRendererProps<WeeklyCommission>) =>
+        cellRenderer: ({ data }: CustomCellRendererProps<BasicWeeklyCommission>) =>
           `L${data?.endL}, R${data?.endR}`,
       },
       {
@@ -243,7 +245,15 @@ export default function CommissionTable({ status, customFilter }: Props) {
           valueFormatter: (params: any) => parseType(params.value),
           defaultToNothingSelected: true,
         } as ISetFilterParams<WeeklyCommission>,
-        cellRenderer: ({ data }: CustomCellRendererProps<WeeklyCommission>) => data?.paymentMethod,
+        cellRenderer: ({ data }: CustomCellRendererProps<WeeklyCommission>) => (
+          <Stack direction="row" alignItems="center" spacing={2}>
+            {data?.paymentMethod}
+
+            {data?.hasUSDC && data.paymentMethod === CommissionDefaultEnum.Usdc && (
+              <Iconify icon="ic:twotone-check-box" color="green" />
+            )}
+          </Stack>
+        ),
       },
       {
         field: 'note',
@@ -280,14 +290,15 @@ export default function CommissionTable({ status, customFilter }: Props) {
     return baseColDef;
   }, [router, status, checked]);
 
-  const handleSelectionChange = (event: SelectionChangedEvent<WeeklyCommission, any>) => {
+  const handleSelectionChange = (event: SelectionChangedEvent<BasicWeeklyCommission, any>) => {
     setIds(event.api.getSelectedRows().map((item) => item.id));
   };
 
   return (
     <Box width="100%">
       {ids.length ? <SelectedBar ids={ids} status={status.toLowerCase()} /> : null}
-      <AgGrid<WeeklyCommission>
+
+      <AgGrid<BasicWeeklyCommission>
         gridKey="commission-member-list"
         loading={loading}
         rowData={weeklyCommissions}

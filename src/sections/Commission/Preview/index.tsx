@@ -24,6 +24,8 @@ import { useFetchCommissions } from '../useApollo';
 
 import type { WeeklyCommission } from '../type';
 
+type BasicWeeklyCommission = Omit<WeeklyCommission, 'hasUSDC'>;
+
 export default function CommissionMemberListView() {
   const [{ page = '1,50', sort = 'commission', filter }] = useQueryString();
   const graphQueryFilter = useMemo(
@@ -58,7 +60,7 @@ export default function CommissionMemberListView() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [graphQueryFilter, page, sort]);
 
-  const colDefs = useMemo<ColDef<WeeklyCommission>[]>(
+  const colDefs = useMemo<ColDef<BasicWeeklyCommission>[]>(
     () => [
       {
         field: 'weekStartDate',
@@ -68,7 +70,7 @@ export default function CommissionMemberListView() {
         editable: false,
         sortable: false,
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellRenderer: ({ data }: CustomCellRendererProps<WeeklyCommission>) => (
+        cellRenderer: ({ data }: CustomCellRendererProps<BasicWeeklyCommission>) => (
           <>
             <Typography
               variant="body2"
@@ -87,7 +89,7 @@ export default function CommissionMemberListView() {
         cellClass: 'ag-cell-center',
         filter: 'agTextColumnFilter',
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellRenderer: ({ data }: CustomCellRendererProps<WeeklyCommission>) =>
+        cellRenderer: ({ data }: CustomCellRendererProps<BasicWeeklyCommission>) =>
           customizeFullName(data?.fullName ?? ''),
       },
       {
@@ -108,7 +110,7 @@ export default function CommissionMemberListView() {
         sortable: false,
         cellClass: 'ag-cell-center',
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellRenderer: ({ data }: CustomCellRendererProps<WeeklyCommission>) =>
+        cellRenderer: ({ data }: CustomCellRendererProps<BasicWeeklyCommission>) =>
           `L${data?.begL}, R${data?.begR}`,
       },
       {
@@ -119,7 +121,7 @@ export default function CommissionMemberListView() {
         sortable: false,
         cellClass: 'ag-cell-center',
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellRenderer: ({ data }: CustomCellRendererProps<WeeklyCommission>) =>
+        cellRenderer: ({ data }: CustomCellRendererProps<BasicWeeklyCommission>) =>
           `L${data?.newL}, R${data?.newR}`,
       },
       {
@@ -130,7 +132,7 @@ export default function CommissionMemberListView() {
         sortable: false,
         cellClass: 'ag-cell-center',
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellRenderer: ({ data }: CustomCellRendererProps<WeeklyCommission>) =>
+        cellRenderer: ({ data }: CustomCellRendererProps<BasicWeeklyCommission>) =>
           `L${data?.maxL}, R${data?.maxR}`,
       },
       {
@@ -141,7 +143,7 @@ export default function CommissionMemberListView() {
         sortable: false,
         cellClass: 'ag-cell-center',
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellRenderer: ({ data }: CustomCellRendererProps<WeeklyCommission>) =>
+        cellRenderer: ({ data }: CustomCellRendererProps<BasicWeeklyCommission>) =>
           data?.status !== COMMISSION_TYPE.NONE.label ? `L${data?.pkgL}, R${data?.pkgR}` : 'None',
       },
       {
@@ -152,7 +154,7 @@ export default function CommissionMemberListView() {
         sortable: false,
         cellClass: 'ag-cell-center',
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellRenderer: ({ data }: CustomCellRendererProps<WeeklyCommission>) =>
+        cellRenderer: ({ data }: CustomCellRendererProps<BasicWeeklyCommission>) =>
           `L${data?.endL}, R${data?.endR}`,
       },
       {
@@ -177,8 +179,9 @@ export default function CommissionMemberListView() {
           values: Object.values(CommissionDefaultEnum),
           valueFormatter: (params: any) => parseType(params.value),
           defaultToNothingSelected: true,
-        } as ISetFilterParams<WeeklyCommission>,
-        cellRenderer: ({ data }: CustomCellRendererProps<WeeklyCommission>) => data?.paymentMethod,
+        } as ISetFilterParams<BasicWeeklyCommission>,
+        cellRenderer: ({ data }: CustomCellRendererProps<BasicWeeklyCommission>) =>
+          data?.paymentMethod,
       },
       {
         field: 'shortNote',
@@ -212,7 +215,7 @@ export default function CommissionMemberListView() {
         overflow: 'hidden',
       }}
     >
-      <AgGrid<WeeklyCommission>
+      <AgGrid<BasicWeeklyCommission>
         gridKey="commission-preview-list"
         loading={loading}
         rowData={weeklyCommissions}
