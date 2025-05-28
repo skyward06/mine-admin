@@ -87,6 +87,12 @@ const GroupSettingsEditPage = lazy(() => import('src/pages/GroupSettings/Edit'))
 // ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
+const SharedListPage = lazy(() => import('src/pages/Shared/List'));
+const SharedCreatePage = lazy(() => import('src/pages/Shared/Create'));
+const SharedEditPage = lazy(() => import('src/pages/Shared/Edit'));
+// ----------------------------------------------------------------------
+
+// ----------------------------------------------------------------------
 const PaymentListPage = lazy(() => import('src/pages/PaymentMethod/List'));
 const PaymentCreatePage = lazy(() => import('src/pages/PaymentMethod/Create'));
 const PaymentEditPage = lazy(() => import('src/pages/PaymentMethod/Edit'));
@@ -160,7 +166,7 @@ export const dashboardRoutes = [
       { element: <Navigate to={paths.dashboard.history.root} replace />, index: true },
       {
         path: 'dashboard',
-        children: [{ index: true, element: <DashboardPage /> }],
+        element: <DashboardPage />,
       },
       {
         path: 'miners',
@@ -204,11 +210,11 @@ export const dashboardRoutes = [
       },
       {
         path: 'sponsor',
-        children: [{ index: true, element: <SponsorListPage /> }],
+        element: <SponsorListPage />,
       },
       {
         path: 'placement',
-        children: [{ index: true, element: <PlacementListPage /> }],
+        element: <PlacementListPage />,
       },
       {
         path: 'commission',
@@ -249,16 +255,24 @@ export const dashboardRoutes = [
         ],
       },
       {
+        path: 'shared',
+        children: [
+          { index: true, element: <SharedListPage /> },
+          { path: 'new', element: <SharedCreatePage /> },
+          { path: ':id', element: <SharedEditPage /> },
+        ],
+      },
+      {
         path: 'payment',
-        children: [{ index: true, element: <PaymentPage /> }],
+        element: <PaymentPage />,
       },
       {
         path: 'bug-report',
-        children: [{ index: true, element: <BugPage /> }],
+        element: <BugPage />,
       },
       {
         path: 'logs',
-        children: [{ index: true, element: <LogPage /> }],
+        element: <LogPage />,
       },
       {
         path: 'method',
@@ -287,15 +301,15 @@ export const dashboardRoutes = [
       },
       {
         path: 'communication',
-        children: [{ index: true, element: <CommunicationListPage /> }],
+        element: <CommunicationListPage />,
       },
       {
         path: 'reports',
-        children: [{ index: true, element: <ReportListPage /> }],
+        element: <ReportListPage />,
       },
       {
         path: 'invoices',
-        children: [{ index: true, element: <InvoiceListPage /> }],
+        element: <InvoiceListPage />,
       },
       {
         path: 'template',
