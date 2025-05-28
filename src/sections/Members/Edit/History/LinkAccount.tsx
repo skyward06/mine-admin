@@ -13,6 +13,7 @@ import DialogActions from '@mui/material/DialogActions';
 
 import { toast } from 'src/components/SnackBar';
 import SearchMiner from 'src/components/SearchMiner';
+
 import { useShareWithMember } from '../../useApollo';
 
 interface Props {
