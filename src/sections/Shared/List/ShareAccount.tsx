@@ -1,9 +1,8 @@
-import type { Member } from 'src/__generated__/graphql';
 import type { UseBooleanReturn } from 'src/hooks/useBoolean';
 
 import { useState } from 'react';
 
-import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -14,22 +13,22 @@ import DialogActions from '@mui/material/DialogActions';
 import { toast } from 'src/components/SnackBar';
 import SearchMiner from 'src/components/SearchMiner';
 
-import { useShareWithMember } from 'src/sections/Shared/useApollo';
+import { useShareWithMember } from '../useApollo';
 
 interface Props {
-  currentMember: Member;
   open: UseBooleanReturn;
 }
 
-export default function LinkAccount({ open, currentMember }: Props) {
-  const [memberId, setMemberId] = useState<string>('');
+export default function ShareAccount({ open }: Props) {
+  const [childId, setChildId] = useState<string>('');
+  const [parentId, setParentId] = useState<string>('');
 
   const { loading, shareWithMember } = useShareWithMember();
 
   const handleShareMember = async () => {
     try {
       const { data } = await shareWithMember({
-        variables: { data: { parentId: memberId, childId: currentMember.id } },
+        variables: { data: { parentId, childId } },
       });
 
       if (data) {
@@ -45,9 +44,10 @@ export default function LinkAccount({ open, currentMember }: Props) {
     <Dialog open={open.value} fullWidth maxWidth="xs" onClose={open.onFalse}>
       <DialogTitle>Link account</DialogTitle>
       <DialogContent>
-        <Paper sx={{ py: 2 }}>
-          <SearchMiner setMemberId={setMemberId} />
-        </Paper>
+        <Box sx={{ py: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <SearchMiner setMemberId={setParentId} />
+          <SearchMiner setMemberId={setChildId} />
+        </Box>
       </DialogContent>
       <DialogActions>
         <LoadingButton
