@@ -49,7 +49,9 @@ export default function SearchMiner({ currentMembers, setMemberIds }: Props) {
   }, [username]);
 
   useEffect(() => {
-    setCurrent(currentMembers.map((item) => `${item?.id}()${item?.username}()${item?.fullName}`));
+    if (currentMembers.length) {
+      setCurrent(currentMembers.map((item) => `${item?.id}()${item?.username}()${item?.fullName}`));
+    }
   }, [currentMembers]);
 
   return (
