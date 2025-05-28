@@ -2,6 +2,7 @@ import { useRef, useMemo } from 'react';
 import { useMutation, useLazyQuery } from '@apollo/client';
 
 import {
+  SHARE_WITH_MEMBER,
   FETCH_SHARE_ACCOUNTS,
   CREATE_SHARE_ACCOUNT,
   UPDATE_SHARE_ACCOUNT,
@@ -47,4 +48,13 @@ export function useUpdateShareAccount() {
   const [updateShareAccount, { loading, data, error }] = useMutation(UPDATE_SHARE_ACCOUNT);
 
   return { loading, data, error, updateShareAccount };
+}
+
+export function useShareWithMember() {
+  const [shareWithMember, { loading, data, error }] = useMutation(SHARE_WITH_MEMBER, {
+    awaitRefetchQueries: true,
+    refetchQueries: ['ShareAccounts'],
+  });
+
+  return { loading, data, error, shareWithMember };
 }

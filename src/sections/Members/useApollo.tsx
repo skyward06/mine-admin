@@ -13,7 +13,6 @@ import {
   MOVE_TO_PENDING,
   DUPLICATE_MEMBER,
   MOVE_TO_GRAVEYARD,
-  SHARE_WITH_MEMBER,
   RESET_BONUS_CLOCK,
   SEND_WELCOME_EMAIL,
   FETCH_MEMBER_QUERY,
@@ -263,10 +262,4 @@ export function useAdminGotIt() {
   });
 
   return { loading, data, error, adminGotIt };
-}
-
-export function useShareWithMember() {
-  const [shareWithMember, { loading, data, error }] = useMutation(SHARE_WITH_MEMBER);
-
-  return { loading, data, error, shareWithMember };
 }

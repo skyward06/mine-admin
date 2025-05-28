@@ -37,10 +37,25 @@ export const FETCH_SHARE_ACCOUNT_BY_ID = gql(/* GraphQL */ `
   }
 `);
 
+export const SHARE_WITH_MEMBER = gql(/* GraphQL */ `
+  mutation ShareWithMemberId($data: ShareMemberInput!) {
+    shareWithMemberId(data: $data) {
+      result
+      message
+      frontActions {
+        ...FrontActionFields
+      }
+    }
+  }
+`);
+
 export const CREATE_SHARE_ACCOUNT = gql(/* GraphQL */ `
   mutation CreateShareAccount($data: CreateShareAccountInput!) {
     createShareAccount(data: $data) {
       id
+      frontActions {
+        ...FrontActionFields
+      }
     }
   }
 `);
@@ -49,6 +64,9 @@ export const UPDATE_SHARE_ACCOUNT = gql(/* GraphQL */ `
   mutation UpdateShareAccount($data: UpdateShareAccountInput!) {
     updateShareAccount(data: $data) {
       id
+      frontActions {
+        ...FrontActionFields
+      }
     }
   }
 `);

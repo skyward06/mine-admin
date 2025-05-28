@@ -575,15 +575,3 @@ export const ADMIN_GOT_IT = gql(/* GraphQL */ `
     }
   }
 `);
-
-export const SHARE_WITH_MEMBER = gql(/* GraphQL */ `
-  mutation ShareWithMemberId($data: ShareMemberInput!) {
-    shareWithMemberId(data: $data) {
-      result
-      message
-      frontActions {
-        ...FrontActionFields
-      }
-    }
-  }
-`);
