@@ -184,7 +184,7 @@ export default function MemberGeneral({ currentMember }: Props) {
 
           if (
             (currentMember.allowState === 'PENDING' || currentMember.allowState === 'PAID') &&
-            !currentMember.signupFormRequest.saleID
+            !currentMember?.signupFormRequest?.saleID
           ) {
             open.onTrue();
           } else {
