@@ -161,6 +161,10 @@ const documents = {
     "\n  mutation CheckSaleRefDuplication($data: SaleRefDuplicationInput!) {\n    checkSaleRefDuplication(data: $data) {\n      result\n      message\n      frontActions {\n        ...FrontActionFields\n      }\n    }\n  }\n": types.CheckSaleRefDuplicationDocument,
     "\n  query CollectAddresses($sort: String, $page: String, $filter: JSONObject) {\n    collectAddresses(sort: $sort, page: $page, filter: $filter) {\n      collectAddresses {\n        id\n        chain\n        address\n        weekStartDate\n      }\n      total\n    }\n  }\n": types.CollectAddressesDocument,
     "\n  mutation SetCollectAddress($data: CollectAddressInput!) {\n    setCollectAddress(data: $data) {\n      result\n      message\n    }\n  }\n": types.SetCollectAddressDocument,
+    "\n  query ShareAccounts($sort: String, $page: String, $filter: JSONObject) {\n    shareAccounts(sort: $sort, page: $page, filter: $filter) {\n      shareAccounts {\n        id\n        note\n        createdAt\n        cashPotential\n        isTexitRanger\n        members {\n          id\n          username\n          fullName\n        }\n      }\n      total\n    }\n  }\n": types.ShareAccountsDocument,
+    "\n  query ShareAccountById($data: IDInput!) {\n    shareAccountById(data: $data) {\n      id\n      note\n      createdAt\n      cashPotential\n      isTexitRanger\n      members {\n        id\n        username\n        fullName\n      }\n    }\n  }\n": types.ShareAccountByIdDocument,
+    "\n  mutation CreateShareAccount($data: CreateShareAccountInput!) {\n    createShareAccount(data: $data) {\n      id\n    }\n  }\n": types.CreateShareAccountDocument,
+    "\n  mutation UpdateShareAccount($data: UpdateShareAccountInput!) {\n    updateShareAccount(data: $data) {\n      id\n    }\n  }\n": types.UpdateShareAccountDocument,
     "\n  mutation Login($data: AdminLoginInput!) {\n    adminLogin(data: $data) {\n      accessToken\n      status\n    }\n  }\n": types.LoginDocument,
     "\n  query Query($data: LiveStatsArgs!) {\n    liveBlockStats(data: $data) {\n      dailyData {\n        count\n        field\n      }\n      meta\n      total\n    }\n    liveMiningStats {\n      dailyData {\n        count\n        field\n      }\n      meta\n      total\n    }\n    liveUserStats(data: $data) {\n      dailyData {\n        count\n        field\n      }\n      meta\n      total\n    }\n  }\n": types.QueryDocument,
     "\n  query Blocks($page: String, $filter: JSONObject, $sort: String) {\n    blocks(page: $page, filter: $filter, sort: $sort) {\n      blocks {\n        id\n        blockNo\n        hashRate\n        difficulty\n        issuedAt\n        createdAt\n        updatedAt\n        deletedAt\n      }\n      total\n    }\n  }\n": types.BlocksDocument,
@@ -798,6 +802,22 @@ export function gql(source: "\n  query CollectAddresses($sort: String, $page: St
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  mutation SetCollectAddress($data: CollectAddressInput!) {\n    setCollectAddress(data: $data) {\n      result\n      message\n    }\n  }\n"): (typeof documents)["\n  mutation SetCollectAddress($data: CollectAddressInput!) {\n    setCollectAddress(data: $data) {\n      result\n      message\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  query ShareAccounts($sort: String, $page: String, $filter: JSONObject) {\n    shareAccounts(sort: $sort, page: $page, filter: $filter) {\n      shareAccounts {\n        id\n        note\n        createdAt\n        cashPotential\n        isTexitRanger\n        members {\n          id\n          username\n          fullName\n        }\n      }\n      total\n    }\n  }\n"): (typeof documents)["\n  query ShareAccounts($sort: String, $page: String, $filter: JSONObject) {\n    shareAccounts(sort: $sort, page: $page, filter: $filter) {\n      shareAccounts {\n        id\n        note\n        createdAt\n        cashPotential\n        isTexitRanger\n        members {\n          id\n          username\n          fullName\n        }\n      }\n      total\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  query ShareAccountById($data: IDInput!) {\n    shareAccountById(data: $data) {\n      id\n      note\n      createdAt\n      cashPotential\n      isTexitRanger\n      members {\n        id\n        username\n        fullName\n      }\n    }\n  }\n"): (typeof documents)["\n  query ShareAccountById($data: IDInput!) {\n    shareAccountById(data: $data) {\n      id\n      note\n      createdAt\n      cashPotential\n      isTexitRanger\n      members {\n        id\n        username\n        fullName\n      }\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation CreateShareAccount($data: CreateShareAccountInput!) {\n    createShareAccount(data: $data) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation CreateShareAccount($data: CreateShareAccountInput!) {\n    createShareAccount(data: $data) {\n      id\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation UpdateShareAccount($data: UpdateShareAccountInput!) {\n    updateShareAccount(data: $data) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateShareAccount($data: UpdateShareAccountInput!) {\n    updateShareAccount(data: $data) {\n      id\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
