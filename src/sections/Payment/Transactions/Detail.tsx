@@ -4,7 +4,6 @@ import { useEffect } from 'react';
 
 import Stack from '@mui/material/Stack';
 import Drawer from '@mui/material/Drawer';
-import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 
 import { useBoolean, type UseBooleanReturn } from 'src/hooks/useBoolean';
@@ -107,58 +106,9 @@ export default function Detail({ hash, chain, open }: Props) {
               />
             </Stack>
           </Stack>
-          <Stack direction="row" spacing={2}>
-            <Stack width={0.5} sx={{ fontSize: 14, fontWeight: 700 }}>
-              From:
-            </Stack>
-            <Stack width={1} sx={{ fontSize: 14 }} direction="row">
-              {truncateMiddle(transaction?.from ?? '', 20)}
-              <Iconify
-                sx={{ cursor: 'pointer' }}
-                icon={fromCopy.value ? 'system-uicons:check' : 'stash:copy-light'}
-                onClick={() => copyAddress('from')}
-              />
-            </Stack>
-          </Stack>
-          <Stack direction="row" spacing={2}>
-            <Stack width={0.5} sx={{ fontSize: 14, fontWeight: 700 }}>
-              To:
-            </Stack>
-            <Stack width={1} sx={{ fontSize: 14 }} direction="row">
-              {truncateMiddle(transaction?.to ?? '', 20)}
-              <Iconify
-                sx={{ cursor: 'pointer' }}
-                icon={toCopy.value ? 'system-uicons:check' : 'stash:copy-light'}
-                onClick={() => copyAddress('to')}
-              />
-            </Stack>
-          </Stack>
-          <Stack direction="row" spacing={2}>
-            <Stack width={0.5} sx={{ fontSize: 14, fontWeight: 700 }}>
-              Balance:
-            </Stack>
-            <Stack width={1} sx={{ fontSize: 14 }}>
-              {fCurrency(
-                makeDecimal(
-                  (transaction?.balance ?? 0) /
-                    10 ** CHAIN_UNIT[transaction?.tokenType ?? ('' as keyof typeof CHAIN_UNIT)],
-                  CHAIN_UNIT[transaction?.tokenType ?? ('' as keyof typeof CHAIN_UNIT)]
-                ),
-                {
-                  maximumFractionDigits:
-                    CHAIN_UNIT[transaction?.tokenType ?? ('' as keyof typeof CHAIN_UNIT)],
-                }
-              )}
-            </Stack>
-          </Stack>
+
           {transaction?.order && (
             <>
-              <Divider sx={{ borderStyle: 'dashed', borderColor: 'gray' }} />
-
-              <Typography variant="subtitle1" fontWeight={700}>
-                Order
-              </Typography>
-
               <Stack direction="row" spacing={2}>
                 <Stack width={0.5} sx={{ fontSize: 14, fontWeight: 700 }}>
                   ID:
@@ -179,16 +129,29 @@ export default function Detail({ hash, chain, open }: Props) {
 
               <Stack direction="row" spacing={2}>
                 <Stack width={0.5} sx={{ fontSize: 14, fontWeight: 700 }}>
-                  Requested Balance:
+                  USD Balance:
                 </Stack>
                 <Stack width={1} sx={{ fontSize: 14 }}>
-                  {transaction?.order?.usdBalance ?? 0}
+                  {fCurrency(transaction?.order?.usdBalance ?? 0)}
                 </Stack>
               </Stack>
 
               <Stack direction="row" spacing={2}>
                 <Stack width={0.5} sx={{ fontSize: 14, fontWeight: 700 }}>
-                  Received Balance:
+                  Required Balance:
+                </Stack>
+                <Stack width={1} sx={{ fontSize: 14 }}>
+                  {makeDecimal(
+                    (transaction?.order.requiredBalance ?? 0) /
+                      10 ** CHAIN_UNIT[transaction?.tokenType ?? ('' as keyof typeof CHAIN_UNIT)],
+                    CHAIN_UNIT[transaction?.tokenType ?? ('' as keyof typeof CHAIN_UNIT)]
+                  )}
+                </Stack>
+              </Stack>
+
+              <Stack direction="row" spacing={2}>
+                <Stack width={0.5} sx={{ fontSize: 14, fontWeight: 700 }}>
+                  Paid Balance:
                 </Stack>
                 <Stack width={1} sx={{ fontSize: 14 }}>
                   {makeDecimal(
