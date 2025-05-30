@@ -10,19 +10,21 @@ import type {
 import { useMemo, useEffect } from 'react';
 
 import Card from '@mui/material/Card';
+import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
 import { useRouter, useAgQuery as useQueryString } from 'src/routes/hooks';
 
+import { formatID } from 'src/utils/helper';
 import { fCurrency } from 'src/utils/formatNumber';
 import { formatDate } from 'src/utils/format-time';
 import { parseFilterModel } from 'src/utils/parseFilter';
-import { formatID, makeDecimal } from 'src/utils/helper';
 
 import { CHAIN_UNIT, ORDER_STATUS, REQUEST_TYPE } from 'src/consts';
 import { OrderStatus, OrderRequestType } from 'src/__generated__/graphql';
 
+import { Label } from 'src/components/Label';
 import { AgGrid } from 'src/components/AgGrid';
 
 import { useFetchOrders } from '../useApollo';
@@ -50,7 +52,7 @@ export default function Orders() {
       {
         field: 'ID',
         headerName: 'Order ID',
-        width: 180,
+        width: 150,
         filter: 'agNumberColumnFilter',
         resizable: true,
         editable: false,
@@ -90,13 +92,21 @@ export default function Orders() {
           valueFormatter: (params: any) => parseType(params.value),
           defaultToNothingSelected: true,
         } as ISetFilterParams<Order>,
-        cellRenderer: ({ data }: CustomCellRendererProps<Order>) =>
-          data ? ORDER_STATUS[data.status] : '',
+        cellRenderer: ({ data }: CustomCellRendererProps<Order>) => (
+          <Stack direction="row" justifyContent="space-between">
+            {data ? ORDER_STATUS[data.status] : ''}
+            {data?.paymentChain && (
+              <Label variant="soft" mt={0.5}>
+                {data.paymentChain}
+              </Label>
+            )}
+          </Stack>
+        ),
       },
       {
         field: 'usdBalance',
-        headerName: 'Requested Balance',
-        width: 250,
+        headerName: 'USD Balance',
+        width: 150,
         filter: 'agNumberColumnFilter',
         resizable: true,
         editable: false,
@@ -105,24 +115,25 @@ export default function Orders() {
         cellRenderer: ({ data }: CustomCellRendererProps<Order>) => fCurrency(data?.usdBalance),
       },
       {
-        field: 'paidBalance',
-        headerName: 'Received Balance',
-        width: 250,
+        field: 'requiredBalance',
+        headerName: 'Required Balance',
+        width: 150,
         resizable: true,
         editable: false,
         sortable: false,
         cellRenderer: ({ data }: CustomCellRendererProps<Order>) =>
-          fCurrency(
-            data?.paymentToken
-              ? makeDecimal(
-                  (data?.paidBalance ?? 0) / 10 ** CHAIN_UNIT[data?.paymentToken!],
-                  CHAIN_UNIT[data?.paymentToken!]
-                )
-              : 0,
-            {
-              maximumFractionDigits: CHAIN_UNIT[data?.paymentToken!],
-            }
-          ),
+          data?.paymentToken &&
+          (data?.requiredBalance ?? 0) / 10 ** CHAIN_UNIT[data?.paymentToken!],
+      },
+      {
+        field: 'paidBalance',
+        headerName: 'Paid Balance',
+        width: 150,
+        resizable: true,
+        editable: false,
+        sortable: false,
+        cellRenderer: ({ data }: CustomCellRendererProps<Order>) =>
+          data?.paymentToken && (data?.paidBalance ?? 0) / 10 ** CHAIN_UNIT[data?.paymentToken!],
       },
       {
         field: 'requestType',

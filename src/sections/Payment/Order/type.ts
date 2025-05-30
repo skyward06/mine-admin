@@ -20,6 +20,7 @@ export type BasicOrder = {
   completedAt?: any | null;
   requestType: OrderRequestType;
   paymentAddress?: string | null;
+  requiredBalance?: number | null;
   paymentChain?: PaymentChain | null;
   paymentToken?: PaymentToken | null;
 };
