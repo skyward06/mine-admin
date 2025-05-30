@@ -41,6 +41,7 @@ export const FETCH_ORDER_QUERY = gql(/* GraphQL */ `
       paymentToken
       paymentChain
       paymentAddress
+      requiredBalance
       transactions {
         hash
         tokenType

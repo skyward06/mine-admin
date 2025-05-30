@@ -31,6 +31,7 @@ export type Order = {
   expiredAt: any;
   usdBalance: number;
   paidBalance: number;
+  requiredBalance?: number | null;
   paidAt?: any | null;
   status: OrderStatus;
   createdAt?: any | null;
