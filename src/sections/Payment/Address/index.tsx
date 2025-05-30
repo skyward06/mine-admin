@@ -15,9 +15,10 @@ import Typography from '@mui/material/Typography';
 import { useAgQuery as useQueryString } from 'src/routes/hooks';
 
 import { makeDecimal } from 'src/utils/helper';
+import { truncateMiddle } from 'src/utils/formatNumber';
 import { parseFilterModel } from 'src/utils/parseFilter';
 
-import { PaymentToken } from 'src/__generated__/graphql';
+import { PaymentChain } from 'src/__generated__/graphql';
 import { CHAIN_TYPE, CHAIN_UNIT, ETH_ADDRESS_PATH } from 'src/consts';
 
 import { AgGrid } from 'src/components/AgGrid';
@@ -69,6 +70,7 @@ export default function Addresses() {
         field: 'address',
         headerName: 'Address',
         flex: 1,
+        minWidth: 300,
         filter: 'agTextColumnFilter',
         resizable: true,
         editable: false,
@@ -78,10 +80,11 @@ export default function Addresses() {
           <Stack direction="row" columnGap={1} sx={{ alignItems: 'center', cursor: 'pointer' }}>
             <Typography
               variant="body2"
+              fontFamily="monospace"
               sx={{ cursor: 'pointer' }}
               onClick={() => window.open(`${ETH_ADDRESS_PATH}${data?.address}`)}
             >
-              {data?.address}
+              {truncateMiddle(data?.address ?? '', 30)}
             </Typography>
 
             <Iconify
@@ -100,7 +103,7 @@ export default function Addresses() {
         resizable: true,
         editable: false,
         filterParams: {
-          values: Object.values(PaymentToken),
+          values: Object.values(PaymentChain),
           valueFormatter: (params: any) => parseType(params.value),
           defaultToNothingSelected: true,
         } as ISetFilterParams<Address>,
@@ -124,7 +127,7 @@ export default function Addresses() {
       {
         field: 'isUsed',
         headerName: 'Status',
-        width: 120,
+        width: 200,
         filter: 'agMultiColumnFilter',
         filterParams: {
           values: ['true', 'false'],
