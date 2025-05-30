@@ -177,6 +177,7 @@ export const CHAIN_TYPE = {
 };
 
 export const TOKEN_TYPE = {
+  TXC: 'TXC',
   ETH: 'ETH',
   USDC: 'USDC',
   USDT: 'USDT',
@@ -184,7 +185,7 @@ export const TOKEN_TYPE = {
 };
 
 export const CHAIN_UNIT = {
-  TXC: 9,
+  TXC: 8,
   BNB: 18,
   ETH: 18,
   USDC: 6,
