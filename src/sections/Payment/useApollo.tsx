@@ -3,7 +3,7 @@ import { useMutation, useLazyQuery } from '@apollo/client';
 
 import {
   CANCEL_ORDER,
-  REFERSH_BALANCE,
+  REFRESH_BALANCE,
   FETCH_ORDER_QUERY,
   FETCH_ORDERS_QUERY,
   FETCH_ADDRESSES_QUERY,
@@ -101,7 +101,7 @@ export function useCancelOrder() {
 }
 
 export function useRefreshBalance() {
-  const [refreshBalances, { loading, data, error }] = useMutation(REFERSH_BALANCE, {
+  const [refreshBalances, { loading, data, error }] = useMutation(REFRESH_BALANCE, {
     awaitRefetchQueries: true,
     refetchQueries: ['Addresses'],
   });

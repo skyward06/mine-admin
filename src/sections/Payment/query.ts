@@ -42,10 +42,7 @@ export const FETCH_ORDER_QUERY = gql(/* GraphQL */ `
       paymentChain
       paymentAddress
       transactions {
-        to
-        from
         hash
-        balance
         tokenType
       }
       member {
@@ -93,13 +90,14 @@ export const FETCH_TRANSACTION_QUERY = gql(/* GraphQL */ `
   query Transactions($sort: String, $page: String, $filter: JSONObject) {
     transactions(sort: $sort, page: $page, filter: $filter) {
       transactions {
-        to
         hash
-        from
         chain
-        balance
         tokenType
         createdAt
+        order {
+          ID
+          paymentAddress
+        }
       }
       total
     }
@@ -109,11 +107,8 @@ export const FETCH_TRANSACTION_QUERY = gql(/* GraphQL */ `
 export const FETCH_TRANSACTION_BY_HASH = gql(/* GraphQL */ `
   query TransactionByHash($data: TransactionInput!) {
     transactionByHash(data: $data) {
-      to
-      from
       hash
       chain
-      balance
       createdAt
       tokenType
       order {
@@ -129,11 +124,8 @@ export const FETCH_TRANSACTION_BY_HASH = gql(/* GraphQL */ `
         paymentToken
         paymentChain
         paymentAddress
+        requiredBalance
         transactions {
-          to
-          from
-          hash
-          balance
           tokenType
         }
         member {
@@ -159,7 +151,7 @@ export const CANCEL_ORDER = gql(/* GraphQL */ `
   }
 `);
 
-export const REFERSH_BALANCE = gql(/* GraphQL */ `
+export const REFRESH_BALANCE = gql(/* GraphQL */ `
   mutation RefreshBalance($data: AddressInput!) {
     refreshBalance(data: $data) {
       frontActions {
