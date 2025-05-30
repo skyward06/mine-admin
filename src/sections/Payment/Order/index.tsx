@@ -61,6 +61,7 @@ export default function Orders() {
         field: 'fullName',
         headerName: 'Full Name',
         flex: 1,
+        minWidth: 200,
         filter: 'agTextColumnFilter',
         resizable: true,
         editable: false,

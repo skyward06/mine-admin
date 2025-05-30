@@ -2,10 +2,7 @@ import type { Order, PaymentChain, PaymentToken } from 'src/__generated__/graphq
 
 export type Transaction = {
   __typename?: 'Transaction';
-  to: string;
-  from: string;
   hash: string;
-  balance: number;
   chain: PaymentChain;
   createdAt?: any | null;
   tokenType: PaymentToken;

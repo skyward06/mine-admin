@@ -21,8 +21,8 @@ import { useAgQuery as useQueryString } from 'src/routes/hooks';
 import { formatWeekNumber } from 'src/utils/format-time';
 import { parseFilterModel } from 'src/utils/parseFilter';
 
-import { PaymentToken } from 'src/__generated__/graphql';
 import { DashboardContent } from 'src/layouts/dashboard';
+import { PaymentChain } from 'src/__generated__/graphql';
 import { CHAIN_TYPE, ETH_ADDRESS_PATH } from 'src/consts';
 
 import { AgGrid } from 'src/components/AgGrid';
@@ -106,7 +106,7 @@ export default function CollectAddressListView() {
         resizable: true,
         editable: false,
         filterParams: {
-          values: Object.values(PaymentToken),
+          values: Object.values(PaymentChain),
           valueFormatter: (params: any) => parseType(params.value),
           defaultToNothingSelected: true,
         } as ISetFilterParams<CollectAddress>,
