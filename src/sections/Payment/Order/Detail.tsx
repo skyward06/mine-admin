@@ -27,8 +27,6 @@ interface Props {
 
 export default function Detail({ id, open }: Props) {
   const copy = useBoolean();
-  const toCopy = useBoolean();
-  const fromCopy = useBoolean();
   const hashCopy = useBoolean();
 
   const { order, fetchOrder } = useFetchOrder();
@@ -55,25 +53,9 @@ export default function Detail({ id, open }: Props) {
         hashCopy.onTrue();
       }
 
-      if (field === 'from') {
-        fromCopy.onTrue();
-      }
-
-      if (field === 'to') {
-        toCopy.onTrue();
-      }
-
       setTimeout(() => {
         if (field === 'hash') {
           hashCopy.onFalse();
-        }
-
-        if (field === 'from') {
-          fromCopy.onFalse();
-        }
-
-        if (field === 'to') {
-          toCopy.onFalse();
         }
       }, 2000);
     } catch (error) {
@@ -86,8 +68,6 @@ export default function Detail({ id, open }: Props) {
       fetchOrder({ variables: { data: { id } } });
     }
   }, [id, open, fetchOrder]);
-
-  console.log('order => ', order);
 
   return (
     <Drawer
@@ -147,7 +127,33 @@ export default function Detail({ id, open }: Props) {
 
           <Stack direction="row" spacing={2}>
             <Stack width={0.5} sx={{ fontSize: 14, fontWeight: 700 }}>
-              Received At:
+              Required Balance:
+            </Stack>
+            <Stack width={1} sx={{ fontSize: 14 }}>
+              {makeDecimal(
+                (order?.requiredBalance ?? 0) /
+                  10 ** CHAIN_UNIT[order?.paymentToken ?? ('' as keyof typeof CHAIN_UNIT)],
+                CHAIN_UNIT[order?.paymentToken ?? ('' as keyof typeof CHAIN_UNIT)]
+              )}
+            </Stack>
+          </Stack>
+
+          <Stack direction="row" spacing={2}>
+            <Stack width={0.5} sx={{ fontSize: 14, fontWeight: 700 }}>
+              Paid Balance:
+            </Stack>
+            <Stack width={1} sx={{ fontSize: 14 }}>
+              {makeDecimal(
+                (order?.paidBalance ?? 0) /
+                  10 ** CHAIN_UNIT[order?.paymentToken ?? ('' as keyof typeof CHAIN_UNIT)],
+                CHAIN_UNIT[order?.paymentToken ?? ('' as keyof typeof CHAIN_UNIT)]
+              )}
+            </Stack>
+          </Stack>
+
+          <Stack direction="row" spacing={2}>
+            <Stack width={0.5} sx={{ fontSize: 14, fontWeight: 700 }}>
+              Paid At:
             </Stack>
             <Stack width={1} sx={{ fontSize: 14 }}>
               {order?.paidAt ? formatDateTime(order.paidAt!) : 'Not yet'}
@@ -206,49 +212,6 @@ export default function Detail({ id, open }: Props) {
                     icon={hashCopy.value ? 'system-uicons:check' : 'stash:copy-light'}
                     onClick={() => copyTransaction('hash', item.hash)}
                   />
-                </Stack>
-              </Stack>
-              <Stack direction="row" spacing={2}>
-                <Stack width={0.5} sx={{ fontSize: 14, fontWeight: 700 }}>
-                  From:
-                </Stack>
-                <Stack width={1} sx={{ fontSize: 14 }} direction="row">
-                  {truncateMiddle(item.from, 20)}
-                  <Iconify
-                    sx={{ cursor: 'pointer' }}
-                    icon={fromCopy.value ? 'system-uicons:check' : 'stash:copy-light'}
-                    onClick={() => copyTransaction('from', item.from)}
-                  />
-                </Stack>
-              </Stack>
-              <Stack direction="row" spacing={2}>
-                <Stack width={0.5} sx={{ fontSize: 14, fontWeight: 700 }}>
-                  To:
-                </Stack>
-                <Stack width={1} sx={{ fontSize: 14 }} direction="row">
-                  {truncateMiddle(item.to, 20)}
-                  <Iconify
-                    sx={{ cursor: 'pointer' }}
-                    icon={toCopy.value ? 'system-uicons:check' : 'stash:copy-light'}
-                    onClick={() => copyTransaction('to', item.to)}
-                  />
-                </Stack>
-              </Stack>
-              <Stack direction="row" spacing={2}>
-                <Stack width={0.5} sx={{ fontSize: 14, fontWeight: 700 }}>
-                  Balance:
-                </Stack>
-                <Stack width={1} sx={{ fontSize: 14 }}>
-                  {fCurrency(
-                    makeDecimal(
-                      (item?.balance ?? 0) /
-                        10 ** CHAIN_UNIT[item?.tokenType as keyof typeof CHAIN_UNIT],
-                      CHAIN_UNIT[item?.tokenType as keyof typeof CHAIN_UNIT]
-                    ),
-                    {
-                      maximumFractionDigits: CHAIN_UNIT[item?.tokenType as keyof typeof CHAIN_UNIT],
-                    }
-                  )}
                 </Stack>
               </Stack>
             </Box>
