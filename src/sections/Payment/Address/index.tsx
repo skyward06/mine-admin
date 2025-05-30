@@ -14,12 +14,12 @@ import Typography from '@mui/material/Typography';
 
 import { useAgQuery as useQueryString } from 'src/routes/hooks';
 
-import { makeDecimal } from 'src/utils/helper';
 import { truncateMiddle } from 'src/utils/formatNumber';
 import { parseFilterModel } from 'src/utils/parseFilter';
+import { makeDecimal, isTransaction } from 'src/utils/helper';
 
 import { PaymentChain } from 'src/__generated__/graphql';
-import { CHAIN_TYPE, CHAIN_UNIT, ETH_ADDRESS_PATH } from 'src/consts';
+import { CHAIN_TYPE, CHAIN_UNIT, PREPAID_TYPE } from 'src/consts';
 
 import { AgGrid } from 'src/components/AgGrid';
 import { Iconify } from 'src/components/Iconify';
@@ -82,7 +82,13 @@ export default function Addresses() {
               variant="body2"
               fontFamily="monospace"
               sx={{ cursor: 'pointer' }}
-              onClick={() => window.open(`${ETH_ADDRESS_PATH}${data?.address}`)}
+              onClick={() =>
+                window.open(
+                  isTransaction(data?.address ?? '', data?.chain ?? '')
+                    ? `${(PREPAID_TYPE as any)[data?.chain ?? '']?.transaction}/${data?.address}`
+                    : `${(PREPAID_TYPE as any)[data?.chain ?? '']?.address}/${data?.address}`
+                )
+              }
             >
               {truncateMiddle(data?.address ?? '', 30)}
             </Typography>

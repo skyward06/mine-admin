@@ -14,13 +14,13 @@ import Typography from '@mui/material/Typography';
 
 import { useAgQuery as useQueryString } from 'src/routes/hooks';
 
-import { formatID } from 'src/utils/helper';
 import { formatDate } from 'src/utils/format-time';
 import { truncateMiddle } from 'src/utils/formatNumber';
 import { parseFilterModel } from 'src/utils/parseFilter';
+import { formatID, isTransaction } from 'src/utils/helper';
 
+import { CHAIN_TYPE, TOKEN_TYPE, PREPAID_TYPE } from 'src/consts';
 import { PaymentChain, PaymentToken } from 'src/__generated__/graphql';
-import { CHAIN_TYPE, TOKEN_TYPE, ETH_TRANSACTION_PATH } from 'src/consts';
 
 import { Label } from 'src/components/Label';
 import { AgGrid } from 'src/components/AgGrid';
@@ -86,7 +86,13 @@ export default function Transactions() {
               variant="body2"
               fontFamily="monospace"
               sx={{ cursor: 'pointer' }}
-              onClick={() => window.open(`${ETH_TRANSACTION_PATH}${data?.hash}`)}
+              onClick={() =>
+                window.open(
+                  isTransaction(data?.hash ?? '', data?.chain ?? '')
+                    ? `${(PREPAID_TYPE as any)[data?.chain ?? '']?.transaction}/${data?.hash}`
+                    : `${(PREPAID_TYPE as any)[data?.chain ?? '']?.address}/${data?.hash}`
+                )
+              }
             >
               {truncateMiddle(data?.hash ?? '', 30, false)}
             </Typography>
