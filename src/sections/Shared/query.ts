@@ -37,9 +37,9 @@ export const FETCH_SHARE_ACCOUNT_BY_ID = gql(/* GraphQL */ `
   }
 `);
 
-export const SHARE_WITH_MEMBER = gql(/* GraphQL */ `
-  mutation ShareWithMemberId($data: ShareMemberInput!) {
-    shareWithMemberId(data: $data) {
+export const LINK_MEMBERS = gql(/* GraphQL */ `
+  mutation LinkMembers($data: ShareMemberInput!) {
+    linkMembers(data: $data) {
       result
       message
       frontActions {

@@ -88,6 +88,7 @@ export const FETCH_PEER_ACCEPTABLE_QUERY = gql(/* GraphQL */ `
         username
         fullName
         createdAt
+        peerETHAddress
         totalIntroducers
       }
       total
