@@ -35,3 +35,17 @@ export type ReportMember = {
   assetId?: string | null;
   totalIntroducers: number;
 };
+
+export type PeerAcceptableReportMember = {
+  __typename?: 'PeerAcceptableReportMember';
+  id: string;
+  ID: number;
+  email: string;
+  mobile: string;
+  createdAt: any;
+  username: string;
+  fullName: string;
+  assetId?: string | null;
+  totalIntroducers: number;
+  peerETHAddress?: string | null;
+};
