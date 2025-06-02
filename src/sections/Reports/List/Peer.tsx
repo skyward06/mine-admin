@@ -24,7 +24,7 @@ import { Iconify } from 'src/components/Iconify';
 
 import { useFetchPeerAcceptable } from '../useApollo';
 
-import type { ReportMember } from './type';
+import type { PeerAcceptableReportMember } from './type';
 
 type Checked = {
   checked: boolean;
@@ -61,7 +61,7 @@ export default function PeerList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [graphQueryFilter, page, sort]);
 
-  const colDefs = useMemo<ColDef<any>[]>(
+  const colDefs = useMemo<ColDef<PeerAcceptableReportMember>[]>(
     () => [
       {
         field: 'ID',
@@ -70,7 +70,7 @@ export default function PeerList() {
         filter: 'agNumberColumnFilter',
         resizable: true,
         editable: false,
-        cellRenderer: ({ data }: CustomCellRendererProps<ReportMember>) =>
+        cellRenderer: ({ data }: CustomCellRendererProps<PeerAcceptableReportMember>) =>
           formatID(data?.ID ?? '', 'M'),
       },
       {
@@ -81,7 +81,7 @@ export default function PeerList() {
         editable: false,
         filter: 'agTextColumnFilter',
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellRenderer: ({ data }: CustomCellRendererProps<ReportMember>) => (
+        cellRenderer: ({ data }: CustomCellRendererProps<PeerAcceptableReportMember>) => (
           <Typography
             variant="body2"
             onClick={() => router.push(paths.dashboard.members.edit(data?.id!))}
@@ -103,7 +103,7 @@ export default function PeerList() {
         editable: false,
         filter: 'agTextColumnFilter',
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellRenderer: ({ data }: CustomCellRendererProps<ReportMember>) => (
+        cellRenderer: ({ data }: CustomCellRendererProps<PeerAcceptableReportMember>) => (
           <Stack direction="row" columnGap={1} sx={{ alignItems: 'center', cursor: 'pointer' }}>
             {data?.fullName}
 
@@ -112,7 +112,7 @@ export default function PeerList() {
             )}
           </Stack>
         ),
-        onCellClicked: ({ data }: CellClickedEvent<ReportMember, any>) =>
+        onCellClicked: ({ data }: CellClickedEvent<PeerAcceptableReportMember, any>) =>
           handleCopy(data?.id ?? '', 'fullName', data?.fullName ?? ''),
       },
       {
@@ -123,7 +123,7 @@ export default function PeerList() {
         editable: false,
         filter: 'agTextColumnFilter',
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellRenderer: ({ data }: CustomCellRendererProps<ReportMember>) => (
+        cellRenderer: ({ data }: CustomCellRendererProps<PeerAcceptableReportMember>) => (
           <Stack direction="row" columnGap={1} sx={{ alignItems: 'center', cursor: 'pointer' }}>
             {data?.mobile}
 
@@ -132,12 +132,21 @@ export default function PeerList() {
             )}
           </Stack>
         ),
-        onCellClicked: ({ data }: CellClickedEvent<ReportMember, any>) =>
+        onCellClicked: ({ data }: CellClickedEvent<PeerAcceptableReportMember, any>) =>
           handleCopy(data?.id ?? '', 'mobile', data?.mobile ?? ''),
       },
       {
         field: 'assetId',
         headerName: 'Asset ID',
+        width: 200,
+        resizable: true,
+        editable: false,
+        filter: 'agTextColumnFilter',
+        filterParams: { buttons: ['reset'] } as ITextFilterParams,
+      },
+      {
+        field: 'peerETHAddress',
+        headerName: 'Peer Address',
         width: 200,
         resizable: true,
         editable: false,
@@ -156,7 +165,7 @@ export default function PeerList() {
         } as IDateFilterParams,
         resizable: true,
         editable: false,
-        cellRenderer: ({ data }: CustomCellRendererProps<ReportMember>) =>
+        cellRenderer: ({ data }: CustomCellRendererProps<PeerAcceptableReportMember>) =>
           formatDate(data?.createdAt),
       },
     ],
@@ -172,7 +181,7 @@ export default function PeerList() {
         overflow: 'hidden',
       }}
     >
-      <AgGrid<ReportMember>
+      <AgGrid<PeerAcceptableReportMember>
         gridKey="report-member-list"
         loading={loading}
         rowData={members}
