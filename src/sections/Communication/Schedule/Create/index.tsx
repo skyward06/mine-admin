@@ -25,7 +25,7 @@ import MainFields from './MainFields';
 import ProContent from './ProContent';
 import WeekPicker from './WeekPicker';
 import { Templates } from '../../Campaign/Send/Templates';
-import { useUpdateSchdule, useCreateSchedule } from '../../useApollo';
+import { useUpdateSchedule, useCreateSchedule } from '../../useApollo';
 
 import type { Schedule } from '../List/type';
 import type { WeekType, WhenType } from './type';
@@ -64,7 +64,7 @@ export default function CampaignCreate({ open, current }: Props) {
   });
 
   const { loading: createLoading, createSchedule } = useCreateSchedule();
-  const { loading: updateLoading, updateSchedule } = useUpdateSchdule();
+  const { loading: updateLoading, updateSchedule } = useUpdateSchedule();
 
   const weekToString = useMemo(
     () =>

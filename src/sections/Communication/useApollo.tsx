@@ -15,7 +15,7 @@ import {
   CREATE_SEND_CAMPAIGN,
   CREATE_AUTO_CAMPAIGN,
   UPDATE_AUTO_CAMPAIGN,
-  REMOVE_AUTO_CAMPAITN,
+  REMOVE_AUTO_CAMPAIGN,
   CREATE_EMAIL_TEMPLATE,
   UPDATE_EMAIL_TEMPLATE,
   FETCH_EMAIL_TEMPLATES,
@@ -225,7 +225,7 @@ export function useCreateSchedule() {
   return { loading, data, error, createSchedule };
 }
 
-export function useUpdateSchdule() {
+export function useUpdateSchedule() {
   const [updateSchedule, { loading, data, error }] = useMutation(UPDATE_SCHEDULE, {
     awaitRefetchQueries: true,
     refetchQueries: ['ScheduleCampaigns'],
@@ -262,7 +262,7 @@ export function useUpdateAutoCampaign() {
 }
 
 export function useRemoveAutoCampaign() {
-  const [removeAutoCampaign, { loading, data, error }] = useMutation(REMOVE_AUTO_CAMPAITN, {
+  const [removeAutoCampaign, { loading, data, error }] = useMutation(REMOVE_AUTO_CAMPAIGN, {
     awaitRefetchQueries: true,
     refetchQueries: ['AutoCampaigns'],
   });

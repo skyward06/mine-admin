@@ -282,7 +282,7 @@ export const UPDATE_AUTO_CAMPAIGN = gql(/* GraphQL */ `
   }
 `);
 
-export const REMOVE_AUTO_CAMPAITN = gql(/* GraphQL */ `
+export const REMOVE_AUTO_CAMPAIGN = gql(/* GraphQL */ `
   mutation RemoveAutoCampaign($data: IDInput!) {
     removeAutoCampaign(data: $data) {
       id
