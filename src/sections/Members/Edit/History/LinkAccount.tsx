@@ -14,7 +14,7 @@ import DialogActions from '@mui/material/DialogActions';
 import { toast } from 'src/components/SnackBar';
 import SearchMiner from 'src/components/SearchMiner';
 
-import { useShareWithMember } from 'src/sections/Shared/useApollo';
+import { useLinkMembers } from 'src/sections/Shared/useApollo';
 
 interface Props {
   currentMember: Member;
@@ -24,12 +24,12 @@ interface Props {
 export default function LinkAccount({ open, currentMember }: Props) {
   const [memberId, setMemberId] = useState<string>('');
 
-  const { loading, shareWithMember } = useShareWithMember();
+  const { loading, linkMembers } = useLinkMembers();
 
   const handleShareMember = async () => {
     try {
-      const { data } = await shareWithMember({
-        variables: { data: { parentId: memberId, childId: currentMember.id } },
+      const { data } = await linkMembers({
+        variables: { data: { memberIds: [memberId, currentMember.id].filter(Boolean) } },
       });
 
       if (data) {

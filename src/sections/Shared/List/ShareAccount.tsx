@@ -13,22 +13,23 @@ import DialogActions from '@mui/material/DialogActions';
 import { toast } from 'src/components/SnackBar';
 import SearchMiner from 'src/components/SearchMiner';
 
-import { useShareWithMember } from '../useApollo';
+import { useLinkMembers } from '../useApollo';
 
 interface Props {
   open: UseBooleanReturn;
 }
 
 export default function ShareAccount({ open }: Props) {
-  const [childId, setChildId] = useState<string>('');
-  const [parentId, setParentId] = useState<string>('');
+  const [firstId, setFirstId] = useState<string>('');
+  const [thirdId, setThirdId] = useState<string>('');
+  const [secondId, setSecondId] = useState<string>('');
 
-  const { loading, shareWithMember } = useShareWithMember();
+  const { loading, linkMembers } = useLinkMembers();
 
   const handleShareMember = async () => {
     try {
-      const { data } = await shareWithMember({
-        variables: { data: { parentId, childId } },
+      const { data } = await linkMembers({
+        variables: { data: { memberIds: [firstId, secondId, thirdId].filter(Boolean) } },
       });
 
       if (data) {
@@ -45,8 +46,9 @@ export default function ShareAccount({ open }: Props) {
       <DialogTitle>Link account</DialogTitle>
       <DialogContent>
         <Box sx={{ py: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
-          <SearchMiner setMemberId={setParentId} />
-          <SearchMiner setMemberId={setChildId} />
+          <SearchMiner setMemberId={setFirstId} />
+          <SearchMiner setMemberId={setSecondId} />
+          <SearchMiner setMemberId={setThirdId} />
         </Box>
       </DialogContent>
       <DialogActions>
