@@ -18,12 +18,13 @@ import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 import { useAgQuery as useQueryString } from 'src/routes/hooks';
 
+import { isTransaction } from 'src/utils/helper';
 import { formatWeekNumber } from 'src/utils/format-time';
 import { parseFilterModel } from 'src/utils/parseFilter';
 
+import { CHAIN_TYPE, PREPAID_TYPE } from 'src/consts';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { PaymentChain } from 'src/__generated__/graphql';
-import { CHAIN_TYPE, ETH_ADDRESS_PATH } from 'src/consts';
 
 import { AgGrid } from 'src/components/AgGrid';
 import { Iconify } from 'src/components/Iconify';
@@ -85,7 +86,13 @@ export default function CollectAddressListView() {
             <Typography
               variant="body2"
               sx={{ cursor: 'pointer' }}
-              onClick={() => window.open(`${ETH_ADDRESS_PATH}${data?.address}`)}
+              onClick={() =>
+                window.open(
+                  isTransaction(data?.address ?? '', data?.chain ?? '')
+                    ? `${(PREPAID_TYPE as any)[data?.chain ?? '']?.transaction}/${data?.address}`
+                    : `${(PREPAID_TYPE as any)[data?.chain ?? '']?.address}/${data?.address}`
+                )
+              }
             >
               {data?.address}
             </Typography>
