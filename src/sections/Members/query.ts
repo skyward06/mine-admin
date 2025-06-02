@@ -2,12 +2,13 @@ import { gql } from 'src/__generated__/gql';
 
 export const FETCH_MEMBER_STATS_QUERY = gql(/* GraphQL */ `
   query FetchMemberStats(
+    $paidFilter: JSONObject
+    $addedFilter: JSONObject
+    $blockFilter: JSONObject
+    $rangersFilter: JSONObject
     $approveFilter: JSONObject
     $pendingFilter: JSONObject
     $graveyardFilter: JSONObject
-    $addedFilter: JSONObject
-    $paidFilter: JSONObject
-    $blockFilter: JSONObject
   ) {
     APPROVED: members(filter: $approveFilter) {
       total
@@ -25,6 +26,9 @@ export const FETCH_MEMBER_STATS_QUERY = gql(/* GraphQL */ `
       total
     }
     BLOCKED: members(filter: $blockFilter) {
+      total
+    }
+    RANGERS: members(filter: $rangersFilter) {
       total
     }
   }
