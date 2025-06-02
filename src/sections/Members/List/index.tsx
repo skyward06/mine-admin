@@ -34,6 +34,7 @@ const TABS: { value: AllowState; label: string; color: LabelColor }[] = [
   { value: 'GRAVEYARD', label: 'Graveyard', color: 'warning' },
   { value: 'ADDED', label: 'Added', color: 'warning' },
   { value: 'BLOCKED', label: 'Blocked', color: 'error' },
+  { value: 'RANGERS', label: 'Rangers', color: 'error' },
 ];
 
 export default function MemberListView() {
@@ -51,7 +52,11 @@ export default function MemberListView() {
 
   const handleTabChange = (event: React.SyntheticEvent<Element, Event>, newValue: any) => {
     tabs.onChange(event, newValue);
-    setCustomFilter({ allowState: newValue });
+    if (newValue === 'RANGERS') {
+      setCustomFilter({ isTexitRanger: true });
+    } else {
+      setCustomFilter({ allowState: newValue });
+    }
   };
 
   const handleSearchChange = useCallback(
@@ -83,6 +88,7 @@ export default function MemberListView() {
         addedFilter: { allowState: 'ADDED' },
         paidFilter: { allowState: 'PAID' },
         blockFilter: { allowState: 'BLOCKED' },
+        rangersFilter: { isTexitRanger: true },
       },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
