@@ -113,6 +113,10 @@ export default function SaleGeneral({ currentSale }: Props) {
         return;
       }
 
+      if (paymentMethod === 'Crypto' && !newData.reflinks?.length) {
+        toast.warning('You forgot to include the reference link!');
+      }
+
       const { data } = await checkSaleRefDuplication({
         variables: { data: { ID: currentSale.ID, links: newSale?.reflinks! } },
       });

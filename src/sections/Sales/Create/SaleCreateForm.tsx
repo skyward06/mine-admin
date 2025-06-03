@@ -81,6 +81,10 @@ export default function SaleCreateForm() {
         toast.error(data?.checkSaleRefDuplication.message);
       }
 
+      if (paymentMethod === 'Crypto' && !newData.reflinks?.length) {
+        toast.warning('You forgot to include the reference link!');
+      }
+
       await createSale({
         variables: {
           data: {
