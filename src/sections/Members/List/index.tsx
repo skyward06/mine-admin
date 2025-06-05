@@ -67,10 +67,11 @@ export default function MemberListView() {
         filter: {
           OR: [
             { email: { contains: value, mode: 'insensitive' } },
+            { mobile: { contains: value, mode: 'insensitive' } },
             { assetId: { contains: value, mode: 'insensitive' } },
             { username: { contains: value, mode: 'insensitive' } },
             { fullName: { contains: value, mode: 'insensitive' } },
-            { mobile: { contains: value, mode: 'insensitive' } },
+            { ethAssetId: { contains: value, mode: 'insensitive' } },
             { primaryAddress: { contains: value, mode: 'insensitive' } },
           ],
         },
