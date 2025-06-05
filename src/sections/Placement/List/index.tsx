@@ -45,6 +45,7 @@ import CustomEdge from './customEdge';
 import { StandardNode } from './node';
 import NodeContext from './nodeContext';
 import SearchMiner from './searchMiner';
+import TempMembers from './tempMembers';
 import IndividualMembers from './individualMembers';
 import { useFetchPlacementOMembers } from './useApollo';
 
@@ -209,7 +210,8 @@ function getNewVisibleMap(
 
 function PlacementListView() {
   const popover = usePopover();
-  const open = useBoolean();
+  const temp = useBoolean();
+  const individual = useBoolean();
 
   const searchParams = useSearchParams();
   const memberId = searchParams.get('memberId');
@@ -538,23 +540,41 @@ function PlacementListView() {
           </MenuItem>
           <MenuItem
             onClick={() => {
-              open.onTrue();
+              individual.onTrue();
               popover.onClose();
             }}
           >
             Individual Members
           </MenuItem>
+          <MenuItem
+            onClick={() => {
+              temp.onTrue();
+              popover.onClose();
+            }}
+          >
+            Temp Members
+          </MenuItem>
         </MenuList>
       </CustomPopover>
 
       <Drawer
-        open={open.value}
+        open={individual.value}
         anchor="right"
-        onClose={open.onFalse}
+        onClose={individual.onFalse}
         slotProps={{ backdrop: { invisible: true } }}
         PaperProps={{ sx: { width: { xs: 375, sm: 700 }, p: 2 } }}
       >
-        <IndividualMembers open={open} onMinerChange={onMinerChange} />
+        <IndividualMembers open={individual} onMinerChange={onMinerChange} />
+      </Drawer>
+
+      <Drawer
+        open={temp.value}
+        anchor="right"
+        onClose={temp.onFalse}
+        slotProps={{ backdrop: { invisible: true } }}
+        PaperProps={{ sx: { width: { xs: 375, sm: 700 }, p: 2 } }}
+      >
+        <TempMembers open={temp} onMinerChange={onMinerChange} />
       </Drawer>
     </DashboardContent>
   );

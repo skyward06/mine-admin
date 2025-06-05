@@ -20,7 +20,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
-import { PlacementPosition } from 'src/__generated__/graphql';
+import { PlacementStatus, PlacementPosition } from 'src/__generated__/graphql';
 
 import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
@@ -145,6 +145,7 @@ export default function ActionRender({
         id: curId,
         placementParentId: curPId,
         placementPosition: curPos,
+        placementStatus: PlacementStatus.Visible,
       };
 
       if (st) {
@@ -174,6 +175,21 @@ export default function ActionRender({
     }
   };
 
+  const handleVisible = async () => {
+    try {
+      const { data } = await updateMember({
+        variables: { data: { id, placementStatus: PlacementStatus.Visible } },
+      });
+
+      if (data) {
+        toast.success('Successfully changed!');
+        popover.onClose();
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   return (
     <>
       <CustomPopover
@@ -192,15 +208,20 @@ export default function ActionRender({
             Delete
           </MenuItem>
 
-          <MenuItem onClick={onEdit} disabled={!!cmnCalculatedWeeks}>
-            <Iconify icon="bxs:pencil" />
-            Edit
-          </MenuItem>
+          {placementStatus !== PlacementStatus.Temp && (
+            <>
+              <MenuItem onClick={onEdit} disabled={!!cmnCalculatedWeeks}>
+                <Iconify icon="bxs:pencil" />
+                Edit
+              </MenuItem>
 
-          <MenuItem onClick={onAdd}>
-            <Iconify icon="mdi:plus-circle-outline" />
-            Add
-          </MenuItem>
+              <MenuItem onClick={onAdd}>
+                <Iconify icon="mdi:plus-circle-outline" />
+                Add
+              </MenuItem>
+            </>
+          )}
+
           <MenuItem
             onClick={() => {
               if (expandAll) expandAll(id);
@@ -219,6 +240,13 @@ export default function ActionRender({
             <Iconify icon="fluent:arrow-collapse-all-16-filled" />
             Collapse All
           </MenuItem>
+
+          {placementStatus === PlacementStatus.Temp && (
+            <MenuItem onClick={handleVisible}>
+              <Iconify icon={loading ? 'eos-icons:bubble-loading' : 'streamline:visible'} />
+              Visible
+            </MenuItem>
+          )}
         </MenuList>
       </CustomPopover>
 

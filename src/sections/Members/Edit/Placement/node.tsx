@@ -1,5 +1,3 @@
-import type { PlacementMember } from 'src/__generated__/graphql';
-
 import { useContext } from 'react';
 import { Handle, Position, type NodeProps } from '@xyflow/react';
 
@@ -13,13 +11,15 @@ import { useRouter } from 'src/routes/hooks';
 import { formatDate } from 'src/utils/format-time';
 import { customizeFullName } from 'src/utils/helper';
 
+import { PlacementStatus, type PlacementMember } from 'src/__generated__/graphql';
+
 import { Label } from 'src/components/Label';
 import { Iconify } from 'src/components/Iconify';
 
 import NodeContext from './nodeContext';
 
 export function StandardNode({
-  data: { id, placementPosition, username, fullName, commission, createdAt },
+  data: { id, placementStatus, placementPosition, username, fullName, commission, createdAt },
 }: NodeProps & { data: PlacementMember }) {
   const router = useRouter();
 
@@ -38,6 +38,9 @@ export function StandardNode({
           position: 'relative',
           display: 'inline-flex',
           flexDirection: 'column',
+          ...(placementStatus === PlacementStatus.Visible && {
+            border: (theme) => `1px solid ${theme.palette.error.main}`,
+          }),
         }}
       >
         <Typography
