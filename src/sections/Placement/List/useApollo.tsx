@@ -3,6 +3,7 @@ import { useMutation, useLazyQuery } from '@apollo/client';
 import {
   FETCH_SPONSOR_TEMP,
   FETCH_PLACEMENT_MEMBERS_WEEK,
+  FETCH_PLACEMENT_TEMP_MEMBERS,
   FETCH_PLACEMENT_MEMBERS_O_QUERY,
   REMOVE_MEMBER_FROM_PLACEMENT_TREE,
 } from './query';
@@ -18,12 +19,15 @@ export function useFetchPlacementOMembers() {
     FETCH_PLACEMENT_MEMBERS_O_QUERY
   );
 
-  return {
-    called,
-    loading,
-    members: data?.placementMembers ?? [],
-    fetchPlacementMembers,
-  };
+  return { called, loading, members: data?.placementMembers ?? [], fetchPlacementMembers };
+}
+
+export function useFetchPlacementTempMembers() {
+  const [fetchPlacementTempMembers, { loading, data, called }] = useLazyQuery(
+    FETCH_PLACEMENT_TEMP_MEMBERS
+  );
+
+  return { called, loading, members: data?.placementTempMembers ?? [], fetchPlacementTempMembers };
 }
 
 export function useFetchPlacementForWeek() {

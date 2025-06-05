@@ -46,6 +46,22 @@ export const FETCH_PLACEMENT_MEMBERS_O_QUERY = gql(/* GraphQL */ `
   }
 `);
 
+export const FETCH_PLACEMENT_TEMP_MEMBERS = gql(/* GraphQL */ `
+  query PlacementTempMembers {
+    placementTempMembers {
+      id
+      email
+      username
+      fullName
+      createdAt
+      placementParentId
+      placementPosition
+      placementParentUsername
+      placementParentFullname
+    }
+  }
+`);
+
 export const FETCH_PLACEMENT_MEMBERS_WEEK = gql(/* GraphQL */ `
   query PlacementMembersForWeek($data: WeekStartDateInput!) {
     placementMembersForWeek(data: $data) {
