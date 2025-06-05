@@ -544,7 +544,7 @@ function PlacementListView() {
               popover.onClose();
             }}
           >
-            Individual Members
+            Individual Miners
           </MenuItem>
           <MenuItem
             onClick={() => {
@@ -552,7 +552,7 @@ function PlacementListView() {
               popover.onClose();
             }}
           >
-            Temp Members
+            Temp Miners
           </MenuItem>
         </MenuList>
       </CustomPopover>

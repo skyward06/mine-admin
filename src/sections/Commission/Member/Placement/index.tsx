@@ -445,7 +445,7 @@ function PlacementListView({ memberId, weekStartDate }: Props) {
               popover.onClose();
             }}
           >
-            Individual Members
+            Individual Miners
           </MenuItem>
         </MenuList>
       </CustomPopover>

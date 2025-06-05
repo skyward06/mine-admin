@@ -473,7 +473,7 @@ function PlacementListView() {
               popover.onClose();
             }}
           >
-            Individual Members
+            Individual Miners
           </MenuItem>
         </MenuList>
       </CustomPopover>
