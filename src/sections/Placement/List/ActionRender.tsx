@@ -41,11 +41,11 @@ interface Props {
 
 export default function ActionRender({
   popover,
-  data: { id, placementStatus, placementParentId, placementPosition, cmnCalculatedWeeks },
+  data: { id, status, placementStatus, placementParentId, placementPosition, cmnCalculatedWeeks },
   expandAll,
   collapseAll,
 }: Props) {
-  const status = useBoolean();
+  const state = useBoolean();
   const addModal = useBoolean();
   const editModal = useBoolean();
   const removeModal = useBoolean();
@@ -145,7 +145,9 @@ export default function ActionRender({
         id: curId,
         placementParentId: curPId,
         placementPosition: curPos,
-        placementStatus: PlacementStatus.Visible,
+        ...(st && {
+          placementStatus: PlacementStatus.Visible,
+        }),
       };
 
       if (st) {
@@ -208,18 +210,16 @@ export default function ActionRender({
             Delete
           </MenuItem>
 
-          {placementStatus !== PlacementStatus.Temp && (
-            <>
-              <MenuItem onClick={onEdit} disabled={!!cmnCalculatedWeeks}>
-                <Iconify icon="bxs:pencil" />
-                Edit
-              </MenuItem>
+          <MenuItem onClick={onEdit} disabled={!!cmnCalculatedWeeks || !status}>
+            <Iconify icon="bxs:pencil" />
+            Edit
+          </MenuItem>
 
-              <MenuItem onClick={onAdd}>
-                <Iconify icon="mdi:plus-circle-outline" />
-                Add
-              </MenuItem>
-            </>
+          {placementStatus !== PlacementStatus.Temp && (
+            <MenuItem onClick={onAdd}>
+              <Iconify icon="mdi:plus-circle-outline" />
+              Add
+            </MenuItem>
           )}
 
           <MenuItem
@@ -336,9 +336,9 @@ export default function ActionRender({
           <LoadingButton
             variant="contained"
             color="success"
-            loading={status.value && loading}
+            loading={state.value && loading}
             onClick={() => {
-              status.onTrue();
+              state.onTrue();
               confirmStrategy(memberId, id, position, true);
             }}
           >
@@ -348,7 +348,7 @@ export default function ActionRender({
           <LoadingButton
             variant="contained"
             color="info"
-            loading={!status.value && loading}
+            loading={!state.value && loading}
             onClick={() => {
               confirmStrategy(memberId, id, position, false);
             }}
