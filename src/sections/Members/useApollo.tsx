@@ -23,7 +23,6 @@ import {
   UPDATE_PASSWORD_QUERY,
   FETCH_MEMBER_STATISTICS,
   FETCH_INTRODUCERS_QUERY,
-  REMOVE_MEMBER_PLACEMENT,
   FETCH_MEMBER_STATS_QUERY,
   FETCH_MEMBER_SEARCH_QUERY,
   FETCH_INDIVIDUAL_MEMBERS_QUERY,
@@ -160,15 +159,6 @@ export function useRemoveMember() {
   });
 
   return { loading, error, removeMember };
-}
-
-export function useRemoveMemberPlacement() {
-  const [removeMemberPlacement, { loading, error }] = useMutation(REMOVE_MEMBER_PLACEMENT, {
-    awaitRefetchQueries: true,
-    refetchQueries: ['Members'],
-  });
-
-  return { loading, error, removeMemberPlacement };
 }
 
 export function useApproveMember() {

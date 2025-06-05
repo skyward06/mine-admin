@@ -443,18 +443,6 @@ export const REMOVE_MEMBER_QUERY = gql(/* GraphQL */ `
   }
 `);
 
-export const REMOVE_MEMBER_PLACEMENT = gql(/* GraphQL */ `
-  mutation removeCompleteMemberPlacement($data: IDInput!) {
-    removeCompleteMemberPlacement(data: $data) {
-      message
-      result
-      frontActions {
-        ...FrontActionFields
-      }
-    }
-  }
-`);
-
 export const APPROVE_MEMBER = gql(/* GraphQL */ `
   mutation approveMember($data: IDInput!) {
     approveMember(data: $data) {

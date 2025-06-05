@@ -31,16 +31,17 @@ export const FETCH_PLACEMENT_MEMBERS_O_QUERY = gql(/* GraphQL */ `
       username
       fullName
       createdAt
+      teamStrategy
+      placementStatus
+      placementPosition
+      placementParentId
+      cmnCalculatedWeeks
       commission {
         begL
         begR
         newL
         newR
       }
-      placementPosition
-      placementParentId
-      cmnCalculatedWeeks
-      teamStrategy
     }
   }
 `);
