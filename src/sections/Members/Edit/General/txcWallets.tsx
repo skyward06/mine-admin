@@ -157,12 +157,9 @@ export default function TXCWallets({ wallets }: Props) {
 
               <Field.Switch name={`txcWallets[${index}].isDefault`} label="Default" />
 
-              <Button
-                color="error"
-                sx={{ mt: 0.5 }}
-                startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
-                onClick={() => handleRemove(index)}
-              />
+              <Button color="error" onClick={() => handleRemove(index)}>
+                <Iconify icon="solar:trash-bin-trash-bold" />
+              </Button>
             </Box>
           </Stack>
           <Divider sx={{ borderStyle: 'dashed' }} />

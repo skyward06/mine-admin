@@ -27,6 +27,7 @@ interface Wallet {
   payoutId?: string;
   address?: string;
   percent?: number;
+  isDefault?: boolean;
 }
 
 export default function OtherWallets({ wallets }: Props) {
@@ -37,13 +38,14 @@ export default function OtherWallets({ wallets }: Props) {
 
   useEffect(() => {
     if (fields.length === 0) {
-      wallets.forEach(({ id, payoutId, address, percent, note }) => {
+      wallets.forEach(({ id, payoutId, address, percent, note, isDefault }) => {
         append({
           id,
           payoutId,
           address,
           percent: percent || 0,
           note: note || '',
+          isDefault,
         });
       });
     }
@@ -51,21 +53,23 @@ export default function OtherWallets({ wallets }: Props) {
   }, []);
 
   useEffect(() => {
-    wallets.forEach(({ payoutId, address, note }, index) => {
+    wallets.forEach(({ payoutId, address, note, isDefault }, index) => {
       setValue(`otherWallets[${index}].payoutId`, payoutId);
       setValue(`otherWallets[${index}].address`, address);
       setValue(`otherWallets[${index}].note`, note);
       setValue(`otherWallets[${index}].percent`, 0);
+      setValue(`otherWallets[${index}].isDefault`, isDefault);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wallets]);
 
   const addWallet = () => {
     append({
-      payoutId: '',
-      address: '',
       note: '',
       percent: 0,
+      address: '',
+      payoutId: '',
+      isDefault: !fields.length,
     });
   };
 
@@ -83,6 +87,7 @@ export default function OtherWallets({ wallets }: Props) {
         append({
           note: '',
           percent: 0,
+          isDefault: !fields.length,
           payoutId: OTHER_WALLET[0].id,
           address: response.getElementsByTagName('publicKey').item(0)?.textContent,
         });
@@ -96,9 +101,9 @@ export default function OtherWallets({ wallets }: Props) {
 
   return (
     <Card sx={{ p: 3, mb: 2 }}>
-      <Stack direction="row" justifyContent="space-between" alignItems="cnter" sx={{ pb: 2 }}>
+      <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ pb: 2 }}>
         <Typography sx={{ pb: 2 }} variant="subtitle1">
-          Other Wallets
+          Commission Wallets
         </Typography>
         <IconButton color="default" onClick={handleGenerate}>
           <Iconify icon="streamline:ai-generate-variation-spark-solid" />
@@ -133,15 +138,18 @@ export default function OtherWallets({ wallets }: Props) {
                 defaultValue={item.address}
               />
             </Box>
-            <Box display="grid" sx={{ gridTemplateColumns: { xs: '80% auto', sm: '90% auto' } }}>
+            <Box
+              display="grid"
+              columnGap={2}
+              sx={{ gridTemplateColumns: { xs: '60% 15% auto', sm: '70% 15% auto' } }}
+            >
               <Field.Text name={`otherWallets[${index}].note`} label="Note" size="small" />
 
-              <Button
-                color="error"
-                sx={{ mt: 0.5, width: 80 }}
-                startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
-                onClick={() => handleRemove(index)}
-              />
+              <Field.Switch name={`otherWallets[${index}].isDefault`} label="Default" />
+
+              <Button color="error" onClick={() => handleRemove(index)}>
+                <Iconify icon="solar:trash-bin-trash-bold" />
+              </Button>
             </Box>
           </Stack>
           <Divider flexItem sx={{ borderStyle: 'dashed' }} />
