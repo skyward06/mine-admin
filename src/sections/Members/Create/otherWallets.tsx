@@ -24,6 +24,7 @@ export default function OtherWallets() {
       address: '',
       note: '',
       percent: 0,
+      isDefault: !fields.length,
     });
   };
 
@@ -59,13 +60,15 @@ export default function OtherWallets() {
 
             <Field.Text name={`otherWallets[${index}].address`} label="Address" size="small" />
           </Box>
-          <Box display="grid" sx={{ gridTemplateColumns: '90% auto' }}>
+          <Box display="grid" sx={{ gridTemplateColumns: '70% 15% auto' }} columnGap={2}>
             <Field.Text name={`otherWallets[${index}].note`} label="Note" size="small" />
+
+            <Field.Switch name={`otherWallets[${index}].isDefault`} label="Default" />
 
             <Button
               size="small"
               color="error"
-              sx={{ mt: 1.5, width: 80 }}
+              sx={{ mt: 0.5, width: 80 }}
               startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
               onClick={() => handleRemove(index)}
             />

@@ -43,6 +43,7 @@ export const Schema = zod.object({
       address: zod.string().regex(/^0x[a-fA-F0-9]{40}$/, { message: 'Invalid Ethereum address' }),
       note: zod.string(),
       percent: zod.number().default(0),
+      isDefault: zod.boolean().default(true),
     })
   ),
 });
