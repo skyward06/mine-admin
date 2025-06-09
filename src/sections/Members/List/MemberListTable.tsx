@@ -151,6 +151,7 @@ export default function MemberListTable({ customFilter }: Props) {
         resizable: true,
         editable: false,
         filter: 'agTextColumnFilter',
+        cellClass: 'tabular-nums',
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
         cellRenderer: ({ data }: CustomCellRendererProps<BasicMember>) => (
           <Stack direction="row" columnGap={1} sx={{ alignItems: 'center', cursor: 'pointer' }}>
@@ -198,6 +199,7 @@ export default function MemberListTable({ customFilter }: Props) {
               resizable: true,
               editable: false,
               filter: 'agNumberColumnFilter',
+              cellClass: 'tabular-nums',
               cellRenderer: ({ data }: CustomCellRendererProps<BasicMember>) => (
                 <Typography
                   variant="body2"

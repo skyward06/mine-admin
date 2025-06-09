@@ -20,6 +20,7 @@ import { useRouter, useAgQuery as useQueryString } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
+import { fCurrency } from 'src/utils/formatNumber';
 import { parseFilterModel } from 'src/utils/parseFilter';
 import { formatDate, isSaturday } from 'src/utils/format-time';
 import { formatID, customizeFullName } from 'src/utils/helper';
@@ -103,7 +104,6 @@ export default function SaleListView() {
             )}
           </Stack>
         ),
-        cellClass: 'ag-number-cell ag-cell-center',
         onCellClicked: handleCopy,
       },
       {
@@ -114,7 +114,6 @@ export default function SaleListView() {
         resizable: true,
         editable: false,
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellClass: 'ag-cell-center',
       },
       {
         field: 'username',
@@ -124,7 +123,6 @@ export default function SaleListView() {
         resizable: true,
         editable: false,
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellClass: 'ag-cell-center',
         cellRenderer: ({ data }: CustomCellRendererProps<BasicSale>) => (
           <Typography
             variant="body2"
@@ -147,7 +145,6 @@ export default function SaleListView() {
         resizable: true,
         editable: false,
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellClass: 'ag-cell-center',
       },
       {
         field: 'paymentMethod',
@@ -157,7 +154,6 @@ export default function SaleListView() {
         resizable: true,
         editable: false,
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellClass: 'ag-cell-center',
       },
       {
         field: 'toFullName',
@@ -167,7 +163,6 @@ export default function SaleListView() {
         resizable: true,
         editable: false,
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
-        cellClass: 'ag-cell-center',
         cellRenderer: ({ data }: CustomCellRendererProps<BasicSale>) =>
           customizeFullName(data?.toFullName ?? ''),
       },
@@ -178,7 +173,8 @@ export default function SaleListView() {
         filter: 'agNumberColumnFilter',
         resizable: true,
         editable: false,
-        cellClass: 'ag-number-cell ag-cell-center',
+        cellClass: 'tabular-nums ag-right-aligned-cell',
+        cellRenderer: ({ data }: CustomCellRendererProps<BasicSale>) => fCurrency(data?.amount),
       },
       {
         field: 'point',
@@ -187,7 +183,7 @@ export default function SaleListView() {
         filter: 'agNumberColumnFilter',
         resizable: true,
         editable: false,
-        cellClass: 'ag-number-cell ag-cell-center',
+        cellClass: 'tabular-nums',
       },
       {
         field: 'status',
@@ -213,7 +209,6 @@ export default function SaleListView() {
         resizable: true,
         editable: false,
         cellRenderer: ({ data }: CustomCellRendererProps<BasicSale>) => formatDate(data?.orderedAt),
-        cellClass: 'ag-cell-center',
       },
       {
         colId: 'action',
@@ -222,7 +217,6 @@ export default function SaleListView() {
         resizable: false,
         editable: false,
         sortable: false,
-        cellClass: 'ag-cell-center',
         cellRenderer: ActionRender,
       },
     ],
@@ -285,7 +279,6 @@ export default function SaleListView() {
           rowData={sales}
           columnDefs={colDefs}
           totalRowCount={rowCount}
-          rowHeight={50}
         />
       </Card>
 
