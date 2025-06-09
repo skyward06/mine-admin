@@ -8,14 +8,17 @@ import type {
 } from '@ag-grid-community/core';
 
 import dayjs from 'dayjs';
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import { IconButton } from '@mui/material';
 import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
 import { useRouter, useAgQuery as useQueryString } from 'src/routes/hooks';
+
+import { useCopyToClipboard } from 'src/hooks/use-copy-to-clipboard';
 
 import { parseFilterModel } from 'src/utils/parseFilter';
 import { formatWeekNumber } from 'src/utils/format-time';
@@ -25,6 +28,7 @@ import { COMMISSION_TYPE } from 'src/consts';
 import { ConfirmationStatus, CommissionDefaultEnum } from 'src/__generated__/graphql';
 
 import { AgGrid } from 'src/components/AgGrid';
+import { toast } from 'src/components/SnackBar';
 import { Iconify } from 'src/components/Iconify';
 
 import SelectedBar from './SelectedBar';
@@ -42,14 +46,10 @@ interface Props {
   customFilter: any;
 }
 
-type Checked = {
-  checked: boolean;
-  value: string;
-};
-
 export default function CommissionTable({ status, customFilter }: Props) {
   const router = useRouter();
-  const [checked, setChecked] = useState<Checked>({ checked: false, value: '' });
+
+  const { copy } = useCopyToClipboard();
 
   const [ids, setIds] = useState<string[]>([]);
 
@@ -62,18 +62,15 @@ export default function CommissionTable({ status, customFilter }: Props) {
 
   const { loading, rowCount, weeklyCommissions, fetchCommissions } = useFetchCommissions();
 
-  const handleCopy = async ({ data }: CellClickedEvent<BasicWeeklyCommission, any>) => {
-    try {
-      await navigator.clipboard.writeText(formatID(data?.ID ?? '', 'C'));
-      setChecked({ value: formatID(data?.ID ?? '', 'C'), checked: true });
-
-      setTimeout(() => {
-        setChecked({ checked: false, value: '' });
-      }, 3000);
-    } catch (err) {
-      console.error('Failed to copy test: ', err);
-    }
-  };
+  const handleCopy = useCallback(
+    ({ data }: CellClickedEvent<BasicWeeklyCommission, any>) => {
+      if (data?.ID) {
+        toast.success('Copied!');
+        copy(formatID(data.ID, 'C'));
+      }
+    },
+    [copy]
+  );
 
   useEffect(() => {
     fetchCommissions({
@@ -94,14 +91,14 @@ export default function CommissionTable({ status, customFilter }: Props) {
         cellClass: 'ag-cell-center',
         filter: 'agNumberColumnFilter',
         cellRenderer: ({ data }: CustomCellRendererProps<BasicWeeklyCommission>) => (
-          <Stack direction="row" columnGap={1} sx={{ alignItems: 'center', cursor: 'pointer' }}>
+          <Stack direction="row" justifyContent="space-between" alignItems="center">
             {formatID(data?.ID ?? '', 'C')}
-
-            {checked.value === formatID(data?.ID ?? '', 'C') && (
-              <Iconify icon="line-md:check-all" color="green" />
-            )}
+            <IconButton>
+              <Iconify icon="iconamoon:copy-fill" />
+            </IconButton>
           </Stack>
         ),
+
         onCellClicked: handleCopy,
       },
       {
@@ -288,7 +285,8 @@ export default function CommissionTable({ status, customFilter }: Props) {
     }
 
     return baseColDef;
-  }, [router, status, checked]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router, status]);
 
   const handleSelectionChange = (event: SelectionChangedEvent<BasicWeeklyCommission, any>) => {
     setIds(event.api.getSelectedRows().map((item) => item.id));
