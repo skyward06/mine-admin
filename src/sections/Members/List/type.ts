@@ -134,6 +134,7 @@ export type BasicMember = {
   adminUsername?: string | null;
   adminFullname?: string | null;
   lastAdminNote?: string | null;
+  peerETHAddress?: string | null;
   secondaryAddress?: string | null;
   signUpPaymentType?: string | null;
 };
@@ -148,7 +149,8 @@ export type AllowState =
   | 'PAID'
   | 'BLOCKED'
   | 'ADDED'
-  | 'RANGERS';
+  | 'RANGERS'
+  | 'PEER';
 
 export type IMemberTableFilters = {
   search: string;

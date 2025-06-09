@@ -17,6 +17,7 @@ import { useRouter, useSearchParams, useAgQuery as useQueryString } from 'src/ro
 
 import { formatID } from 'src/utils/helper';
 import { formatDate } from 'src/utils/format-time';
+import { truncateMiddle } from 'src/utils/formatNumber';
 import { parseFilterModel } from 'src/utils/parseFilter';
 
 import { Label } from 'src/components/Label';
@@ -172,6 +173,7 @@ export default function MemberListTable({ customFilter }: Props) {
         resizable: true,
         editable: false,
         filter: 'agTextColumnFilter',
+        cellClass: 'tabular-nums',
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
       },
       ...(customFilter.allowState === 'PENDING'
@@ -191,32 +193,59 @@ export default function MemberListTable({ customFilter }: Props) {
               ),
             },
           ]
-        : [
-            {
-              field: 'totalIntroducers',
-              headerName: 'Sponsor',
-              width: 130,
-              resizable: true,
-              editable: false,
-              filter: 'agNumberColumnFilter',
-              cellClass: 'tabular-nums',
-              cellRenderer: ({ data }: CustomCellRendererProps<BasicMember>) => (
-                <Typography
-                  variant="body2"
-                  onClick={() =>
-                    window.open(`${paths.dashboard.members.root}?sponsorId=${data?.id}`, '_blank')
-                  }
-                  sx={{
-                    mt: 0.7,
-                    cursor: 'pointer',
-                    '&:hover': { color: (theme) => theme.vars.palette.primary.main },
-                  }}
-                >
-                  {data?.totalIntroducers}
-                </Typography>
-              ),
-            },
-          ]),
+        : customFilter.peerAcceptable
+          ? [
+              {
+                field: 'peerETHAddress',
+                headerName: 'Peer Address',
+                width: 200,
+                resizable: true,
+                editable: false,
+                filter: 'agNumberColumnFilter',
+                cellClass: 'tabular-nums',
+                cellRenderer: ({ data }: CustomCellRendererProps<BasicMember>) => (
+                  <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    sx={{ alignItems: 'center', cursor: 'pointer' }}
+                  >
+                    {truncateMiddle(data?.peerETHAddress ?? '', 20)}
+
+                    {checked.id === data?.id && checked.field === 'peer' && (
+                      <Iconify icon="line-md:check-all" color="green" />
+                    )}
+                  </Stack>
+                ),
+                onCellClicked: ({ data }: CellClickedEvent<BasicMember, any>) =>
+                  handleCopy(data?.id ?? '', 'peer', data?.mobile ?? ''),
+              },
+            ]
+          : [
+              {
+                field: 'totalIntroducers',
+                headerName: 'Sponsor',
+                width: 130,
+                resizable: true,
+                editable: false,
+                filter: 'agNumberColumnFilter',
+                cellClass: 'tabular-nums',
+                cellRenderer: ({ data }: CustomCellRendererProps<BasicMember>) => (
+                  <Typography
+                    variant="body2"
+                    onClick={() =>
+                      window.open(`${paths.dashboard.members.root}?sponsorId=${data?.id}`, '_blank')
+                    }
+                    sx={{
+                      mt: 0.7,
+                      cursor: 'pointer',
+                      '&:hover': { color: (theme) => theme.vars.palette.primary.main },
+                    }}
+                  >
+                    {data?.totalIntroducers}
+                  </Typography>
+                ),
+              },
+            ]),
       {
         field: 'placementRequested',
         headerName: 'PR',

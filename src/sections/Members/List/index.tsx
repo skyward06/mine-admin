@@ -32,9 +32,10 @@ const TABS: { value: AllowState; label: string; color: LabelColor }[] = [
   { value: 'PENDING', label: 'Pending', color: 'success' },
   { value: 'PAID', label: 'Paid', color: 'secondary' },
   { value: 'GRAVEYARD', label: 'Graveyard', color: 'warning' },
-  { value: 'ADDED', label: 'Added', color: 'warning' },
+  { value: 'ADDED', label: 'Added', color: 'default' },
+  { value: 'RANGERS', label: 'Rangers', color: 'primary' },
+  { value: 'PEER', label: 'Peer Acceptable', color: 'secondary' },
   { value: 'BLOCKED', label: 'Blocked', color: 'error' },
-  { value: 'RANGERS', label: 'Rangers', color: 'error' },
 ];
 
 export default function MemberListView() {
@@ -52,7 +53,9 @@ export default function MemberListView() {
 
   const handleTabChange = (event: React.SyntheticEvent<Element, Event>, newValue: any) => {
     tabs.onChange(event, newValue);
-    if (newValue === 'RANGERS') {
+    if (newValue === 'PEER') {
+      setCustomFilter({ peerAcceptable: true });
+    } else if (newValue === 'RANGERS') {
       setCustomFilter({ isTexitRanger: true });
     } else {
       setCustomFilter({ allowState: newValue });
@@ -90,6 +93,7 @@ export default function MemberListView() {
         paidFilter: { allowState: 'PAID' },
         blockFilter: { allowState: 'BLOCKED' },
         rangersFilter: { isTexitRanger: true },
+        peerFilter: { peerAcceptable: true },
       },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
