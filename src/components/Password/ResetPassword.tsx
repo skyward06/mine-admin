@@ -15,7 +15,7 @@ import { Form, Field } from 'src/components/Form';
 
 import { useUpdateAdminPassword } from 'src/sections/Profile/useApollo';
 
-import { Schema, type SchemType } from './schema';
+import { Schema, type SchemaType } from './schema';
 
 interface Props {
   open: UseBooleanReturn;
@@ -28,7 +28,7 @@ export default function ResetPassword({ open }: Props) {
 
   const defaultValues = { oldPassword: '', newPassword: '', confirmPassword: '' };
 
-  const methods = useForm<SchemType>({
+  const methods = useForm<SchemaType>({
     resolver: zodResolver(Schema),
     defaultValues,
   });

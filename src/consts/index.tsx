@@ -294,4 +294,4 @@ export const ADMIN_STATUS = {
 export const CASH_POTENTIAL_URL = 'https://help.minetxc.com/understanding-cash-potential/';
 export const WINNER_REPORT_HTML = 'https://report.minetxc.com/wdms-vegas-2025-contest/report.html';
 export const PASSWORD_REG_EXP =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&-])[A-Za-z\d@$!%*?&-]{8,}$/;
+  /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+\\|[\]{};:/?.>])[A-Za-z\d!@#$%^&*()\-_=+\\|[\]{};:/?.>]{8,}$/;
