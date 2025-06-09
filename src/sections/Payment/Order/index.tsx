@@ -17,9 +17,9 @@ import { paths } from 'src/routes/paths';
 import { useRouter, useAgQuery as useQueryString } from 'src/routes/hooks';
 
 import { formatID } from 'src/utils/helper';
-import { fCurrency } from 'src/utils/formatNumber';
 import { formatDate } from 'src/utils/format-time';
 import { parseFilterModel } from 'src/utils/parseFilter';
+import { fNumber, fCurrency } from 'src/utils/formatNumber';
 
 import { CHAIN_UNIT, ORDER_STATUS, REQUEST_TYPE } from 'src/consts';
 import { OrderStatus, OrderRequestType } from 'src/__generated__/graphql';
@@ -111,8 +111,10 @@ export default function Orders() {
         resizable: true,
         editable: false,
         sortable: false,
+        cellClass: 'tabular-nums ag-right-aligned-cell',
         filterParams: { buttons: ['reset'] } as INumberFilterParams,
-        cellRenderer: ({ data }: CustomCellRendererProps<Order>) => fCurrency(data?.usdBalance),
+        cellRenderer: ({ data }: CustomCellRendererProps<Order>) =>
+          fCurrency(data?.usdBalance, { minimumFractionDigits: 2 }),
       },
       {
         field: 'requiredBalance',
@@ -121,9 +123,12 @@ export default function Orders() {
         resizable: true,
         editable: false,
         sortable: false,
+        cellClass: 'tabular-nums ag-right-aligned-cell',
         cellRenderer: ({ data }: CustomCellRendererProps<Order>) =>
           data?.paymentToken &&
-          (data?.requiredBalance ?? 0) / 10 ** CHAIN_UNIT[data?.paymentToken!],
+          fNumber((data?.requiredBalance ?? 0) / 10 ** CHAIN_UNIT[data?.paymentToken!], {
+            minimumFractionDigits: 2,
+          }),
       },
       {
         field: 'paidBalance',
@@ -132,8 +137,12 @@ export default function Orders() {
         resizable: true,
         editable: false,
         sortable: false,
+        cellClass: 'tabular-nums ag-right-aligned-cell',
         cellRenderer: ({ data }: CustomCellRendererProps<Order>) =>
-          data?.paymentToken && (data?.paidBalance ?? 0) / 10 ** CHAIN_UNIT[data?.paymentToken!],
+          data?.paymentToken &&
+          fNumber((data?.paidBalance ?? 0) / 10 ** CHAIN_UNIT[data?.paymentToken!], {
+            minimumFractionDigits: 2,
+          }),
       },
       {
         field: 'requestType',
