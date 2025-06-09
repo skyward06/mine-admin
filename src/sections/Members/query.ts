@@ -3,6 +3,7 @@ import { gql } from 'src/__generated__/gql';
 export const FETCH_MEMBER_STATS_QUERY = gql(/* GraphQL */ `
   query FetchMemberStats(
     $paidFilter: JSONObject
+    $peerFilter: JSONObject
     $addedFilter: JSONObject
     $blockFilter: JSONObject
     $rangersFilter: JSONObject
@@ -23,6 +24,9 @@ export const FETCH_MEMBER_STATS_QUERY = gql(/* GraphQL */ `
       total
     }
     PAID: members(filter: $paidFilter) {
+      total
+    }
+    PEER: members(filter: $peerFilter) {
       total
     }
     BLOCKED: members(filter: $blockFilter) {
@@ -58,6 +62,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         emailVerified
         lastAdminNote
         primaryAddress
+        peerETHAddress
         secondaryAddress
         totalIntroducers
         signUpPaymentType

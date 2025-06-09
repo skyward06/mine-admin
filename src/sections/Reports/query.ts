@@ -76,26 +76,6 @@ export const FETCH_SPONSORS_QUERY = gql(/* GraphQL */ `
   }
 `);
 
-export const FETCH_PEER_ACCEPTABLE_QUERY = gql(/* GraphQL */ `
-  query PeerAcceptableMembers($sort: String, $page: String) {
-    peerAcceptableMembers(sort: $sort, page: $page) {
-      members {
-        id
-        ID
-        email
-        mobile
-        assetId
-        username
-        fullName
-        createdAt
-        peerETHAddress
-        totalIntroducers
-      }
-      total
-    }
-  }
-`);
-
 export const GENERATE_WEEKLY_REPORT = gql(/* GraphQL */ `
   mutation generateWeeklyReport($data: GenerateWeeklyReportInput!) {
     generateWeeklyReport(data: $data) {
