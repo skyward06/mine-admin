@@ -202,12 +202,15 @@ export default function MemberListTable({ customFilter }: Props) {
                 resizable: true,
                 editable: false,
                 filter: 'agNumberColumnFilter',
-                cellClass: 'tabular-nums',
                 cellRenderer: ({ data }: CustomCellRendererProps<BasicMember>) => (
                   <Stack
                     direction="row"
                     justifyContent="space-between"
-                    sx={{ alignItems: 'center', cursor: 'pointer' }}
+                    sx={{
+                      alignItems: 'center',
+                      cursor: 'pointer',
+                      fontFamily: 'monospace',
+                    }}
                   >
                     {truncateMiddle(data?.peerETHAddress ?? '', 20)}
 
@@ -328,6 +331,7 @@ export default function MemberListTable({ customFilter }: Props) {
         } as IDateFilterParams,
         resizable: true,
         editable: false,
+        cellClass: 'tabular-nums',
         cellRenderer: ({ data }: CustomCellRendererProps<BasicMember>) =>
           formatDate(data?.createdAt),
       },
