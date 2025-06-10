@@ -1,19 +1,17 @@
 import type { CustomCellRendererProps } from '@ag-grid-community/react';
-import type {
-  ColDef,
-  CellClickedEvent,
-  IDateFilterParams,
-  ITextFilterParams,
-} from '@ag-grid-community/core';
+import type { ColDef, IDateFilterParams, ITextFilterParams } from '@ag-grid-community/core';
 
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useEffect } from 'react';
 
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
+import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
 import { useRouter, useSearchParams, useAgQuery as useQueryString } from 'src/routes/hooks';
+
+import { useCopyToClipboard } from 'src/hooks/use-copy-to-clipboard';
 
 import { formatID } from 'src/utils/helper';
 import { formatDate } from 'src/utils/format-time';
@@ -34,17 +32,10 @@ interface Props {
   customFilter: any;
 }
 
-type Checked = {
-  checked: boolean;
-  id: string;
-  field: string;
-  value: string;
-};
-
 export default function MemberListTable({ customFilter }: Props) {
   const router = useRouter();
 
-  const [checked, setChecked] = useState<Checked>({ checked: false, id: '', field: '', value: '' });
+  const { copy } = useCopyToClipboard();
 
   const sponsorId = useSearchParams().get('sponsorId');
 
@@ -58,16 +49,10 @@ export default function MemberListTable({ customFilter }: Props) {
 
   const { updateMember } = useUpdateMember();
 
-  const handleCopy = async (id: string, field: string, data: string) => {
-    try {
-      await navigator.clipboard.writeText(data);
-      setChecked({ id, field, value: data, checked: true });
-
-      setTimeout(() => {
-        setChecked({ checked: false, id: '', field: '', value: '' });
-      }, 3000);
-    } catch (err) {
-      console.error('Failed to copy test: ', err);
+  const onCopy = (data: string) => {
+    if (data) {
+      toast.success('Copied!');
+      copy(data);
     }
   };
 
@@ -128,48 +113,52 @@ export default function MemberListTable({ customFilter }: Props) {
       {
         field: 'fullName',
         headerName: 'Full Name',
-        width: 200,
+        width: 250,
         resizable: true,
         editable: false,
         filter: 'agTextColumnFilter',
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
         cellRenderer: ({ data }: CustomCellRendererProps<BasicMember>) => (
-          <Stack direction="row" columnGap={1} sx={{ alignItems: 'center', cursor: 'pointer' }}>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            sx={{ alignItems: 'center', cursor: 'pointer' }}
+          >
             {data?.fullName}
 
-            {checked.id === data?.id && checked.field === 'fullName' && (
-              <Iconify icon="line-md:check-all" color="green" />
-            )}
+            <IconButton onClick={() => onCopy(data?.fullName ?? '')}>
+              <Iconify icon="iconamoon:copy-fill" />
+            </IconButton>
           </Stack>
         ),
-        onCellClicked: ({ data }: CellClickedEvent<BasicMember, any>) =>
-          handleCopy(data?.id ?? '', 'fullName', data?.fullName ?? ''),
       },
       {
         field: 'mobile',
         headerName: 'Mobile',
-        width: 160,
+        width: 180,
         resizable: true,
         editable: false,
         filter: 'agTextColumnFilter',
         cellClass: 'tabular-nums',
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
         cellRenderer: ({ data }: CustomCellRendererProps<BasicMember>) => (
-          <Stack direction="row" columnGap={1} sx={{ alignItems: 'center', cursor: 'pointer' }}>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            sx={{ alignItems: 'center', cursor: 'pointer' }}
+          >
             {data?.mobile}
 
-            {checked.id === data?.id && checked.field === 'mobile' && (
-              <Iconify icon="line-md:check-all" color="green" />
-            )}
+            <IconButton onClick={() => onCopy(data?.mobile ?? '')}>
+              <Iconify icon="iconamoon:copy-fill" />
+            </IconButton>
           </Stack>
         ),
-        onCellClicked: ({ data }: CellClickedEvent<BasicMember, any>) =>
-          handleCopy(data?.id ?? '', 'mobile', data?.mobile ?? ''),
       },
       {
         field: 'assetId',
         headerName: 'Asset ID',
-        width: 130,
+        width: 160,
         resizable: true,
         editable: false,
         filter: 'agTextColumnFilter',
@@ -203,24 +192,25 @@ export default function MemberListTable({ customFilter }: Props) {
                 editable: false,
                 filter: 'agNumberColumnFilter',
                 cellRenderer: ({ data }: CustomCellRendererProps<BasicMember>) => (
-                  <Stack
-                    direction="row"
-                    justifyContent="space-between"
-                    sx={{
-                      alignItems: 'center',
-                      cursor: 'pointer',
-                      fontFamily: 'monospace',
-                    }}
-                  >
-                    {truncateMiddle(data?.peerETHAddress ?? '', 20)}
+                  <>
+                    {data?.peerETHAddress ? (
+                      <Stack
+                        direction="row"
+                        justifyContent="space-between"
+                        sx={{
+                          alignItems: 'center',
+                          fontFamily: 'monospace',
+                        }}
+                      >
+                        {truncateMiddle(data.peerETHAddress, 20)}
 
-                    {checked.id === data?.id && checked.field === 'peer' && (
-                      <Iconify icon="line-md:check-all" color="green" />
-                    )}
-                  </Stack>
+                        <IconButton onClick={() => onCopy(data?.peerETHAddress ?? '')}>
+                          <Iconify icon="iconamoon:copy-fill" />
+                        </IconButton>
+                      </Stack>
+                    ) : null}
+                  </>
                 ),
-                onCellClicked: ({ data }: CellClickedEvent<BasicMember, any>) =>
-                  handleCopy(data?.id ?? '', 'peer', data?.mobile ?? ''),
               },
             ]
           : [
@@ -347,7 +337,7 @@ export default function MemberListTable({ customFilter }: Props) {
       },
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [checked, customFilter]
+    [customFilter]
   );
 
   return (
@@ -357,6 +347,7 @@ export default function MemberListTable({ customFilter }: Props) {
       rowData={members}
       columnDefs={colDefs}
       totalRowCount={rowCount}
+      rowHeight={40}
     />
   );
 }

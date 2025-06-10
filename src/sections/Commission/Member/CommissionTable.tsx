@@ -7,7 +7,7 @@ import type {
 } from '@ag-grid-community/core';
 
 import dayjs from 'dayjs';
-import { useMemo, useState, useEffect, useCallback } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -61,13 +61,10 @@ export default function CommissionTable({ status, customFilter }: Props) {
 
   const { loading, rowCount, weeklyCommissions, fetchCommissions } = useFetchCommissions();
 
-  const handleCopy = useCallback(
-    (value: string) => {
-      toast.success('Copied!');
-      copy(value);
-    },
-    [copy]
-  );
+  const handleCopy = (value: string) => {
+    toast.success('Copied!');
+    copy(value);
+  };
 
   useEffect(() => {
     fetchCommissions({
