@@ -1,7 +1,6 @@
 import type { CustomCellRendererProps } from '@ag-grid-community/react';
 import type {
   ColDef,
-  CellClickedEvent,
   ISetFilterParams,
   ITextFilterParams,
   SelectionChangedEvent,
@@ -63,11 +62,9 @@ export default function CommissionTable({ status, customFilter }: Props) {
   const { loading, rowCount, weeklyCommissions, fetchCommissions } = useFetchCommissions();
 
   const handleCopy = useCallback(
-    ({ data }: CellClickedEvent<BasicWeeklyCommission, any>) => {
-      if (data?.ID) {
-        toast.success('Copied!');
-        copy(formatID(data.ID, 'C'));
-      }
+    (value: string) => {
+      toast.success('Copied!');
+      copy(value);
     },
     [copy]
   );
@@ -88,18 +85,16 @@ export default function CommissionTable({ status, customFilter }: Props) {
         resizable: true,
         editable: false,
         initialSort: 'asc',
-        cellClass: 'ag-cell-center',
+        cellClass: 'ag-cell-center tabular-nums',
         filter: 'agNumberColumnFilter',
         cellRenderer: ({ data }: CustomCellRendererProps<BasicWeeklyCommission>) => (
           <Stack direction="row" justifyContent="space-between" alignItems="center">
             {formatID(data?.ID ?? '', 'C')}
-            <IconButton>
+            <IconButton onClick={() => handleCopy(`${formatID(data?.ID ?? '', 'C')}`)}>
               <Iconify icon="iconamoon:copy-fill" />
             </IconButton>
           </Stack>
         ),
-
-        onCellClicked: handleCopy,
       },
       {
         field: 'weekStartDate',
