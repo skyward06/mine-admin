@@ -11,8 +11,8 @@ import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import { IconButton } from '@mui/material';
 import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
 
 import { paths } from 'src/routes/paths';
 import { useRouter, useAgQuery as useQueryString } from 'src/routes/hooks';
@@ -81,7 +81,7 @@ export default function CommissionTable({ status, customFilter }: Props) {
       {
         field: 'ID',
         headerName: 'ID',
-        width: 120,
+        width: 130,
         resizable: true,
         editable: false,
         initialSort: 'asc',
@@ -166,7 +166,7 @@ export default function CommissionTable({ status, customFilter }: Props) {
         resizable: true,
         editable: false,
         sortable: false,
-        cellClass: 'ag-cell-center',
+        cellClass: 'ag-cell-center tabular-nums',
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
         cellRenderer: ({ data }: CustomCellRendererProps<BasicWeeklyCommission>) =>
           `L${data?.begL}, R${data?.begR}`,
@@ -177,7 +177,7 @@ export default function CommissionTable({ status, customFilter }: Props) {
         resizable: true,
         editable: false,
         sortable: false,
-        cellClass: 'ag-cell-center',
+        cellClass: 'ag-cell-center tabular-nums',
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
         cellRenderer: ({ data }: CustomCellRendererProps<BasicWeeklyCommission>) =>
           `L${data?.newL}, R${data?.newR}`,
@@ -188,7 +188,7 @@ export default function CommissionTable({ status, customFilter }: Props) {
         resizable: true,
         editable: false,
         sortable: false,
-        cellClass: 'ag-cell-center',
+        cellClass: 'ag-cell-center tabular-nums',
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
         cellRenderer: ({ data }: CustomCellRendererProps<BasicWeeklyCommission>) =>
           `L${data?.maxL}, R${data?.maxR}`,
@@ -199,7 +199,7 @@ export default function CommissionTable({ status, customFilter }: Props) {
         resizable: true,
         editable: false,
         sortable: false,
-        cellClass: 'ag-cell-center',
+        cellClass: 'ag-cell-center tabular-nums',
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
         cellRenderer: ({ data }: CustomCellRendererProps<BasicWeeklyCommission>) =>
           data?.status !== COMMISSION_TYPE.NONE.label ? `L${data?.pkgL}, R${data?.pkgR}` : 'None',
@@ -210,7 +210,7 @@ export default function CommissionTable({ status, customFilter }: Props) {
         resizable: true,
         editable: false,
         sortable: false,
-        cellClass: 'ag-cell-center',
+        cellClass: 'ag-cell-center tabular-nums',
         filterParams: { buttons: ['reset'] } as ITextFilterParams,
         cellRenderer: ({ data }: CustomCellRendererProps<BasicWeeklyCommission>) =>
           `L${data?.endL}, R${data?.endR}`,
@@ -218,10 +218,10 @@ export default function CommissionTable({ status, customFilter }: Props) {
       {
         field: 'commission',
         headerName: 'Commissions',
-        width: 120,
+        width: 140,
         resizable: true,
         editable: false,
-        cellClass: 'ag-cell-center',
+        cellClass: 'ag-cell-center tabular-nums ag-right-aligned-cell',
         filter: 'agNumberColumnFilter',
       },
       {
@@ -281,7 +281,7 @@ export default function CommissionTable({ status, customFilter }: Props) {
 
     return baseColDef;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router, status]);
+  }, [status]);
 
   const handleSelectionChange = (event: SelectionChangedEvent<BasicWeeklyCommission, any>) => {
     setIds(event.api.getSelectedRows().map((item) => item.id));
