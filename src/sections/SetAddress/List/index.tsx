@@ -144,11 +144,8 @@ export default function CollectAddressListView() {
   return (
     <DashboardContent>
       <Breadcrumbs
-        heading="Collect Address"
-        links={[
-          { name: 'Collect Address', href: paths.dashboard.setAddress.root },
-          { name: 'List' },
-        ]}
+        heading="Wallet"
+        links={[{ name: 'Wallet', href: paths.dashboard.setAddress.root }, { name: 'List' }]}
         sx={{
           mb: { xs: 1, md: 2 },
         }}

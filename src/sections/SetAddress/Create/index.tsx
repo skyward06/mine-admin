@@ -13,13 +13,13 @@ export default function ProductCreateView() {
     // TODO: Consider moving this Container to dashboard route definition as every page will have same layout
     <DashboardContent>
       <Breadcrumbs
-        heading="Set a new address"
+        heading="Set a new wallet"
         links={[
           {
-            name: 'Set Address',
-            href: paths.dashboard.products.root,
+            name: 'Wallet',
+            href: paths.dashboard.setAddress.root,
           },
-          { name: 'New setting' },
+          { name: 'New Wallet' },
         ]}
         sx={{
           mb: { xs: 1, md: 2 },
