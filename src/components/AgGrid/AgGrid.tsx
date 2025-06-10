@@ -62,9 +62,10 @@ export const AgGrid = <TData,>(props: Props<TData>) => {
           // columnBorder: { style: 'dashed', width: 1, color: theme.vars.palette.divider },
           // textColor: theme.palette.text.primary,
 
-          fontFamily: {
-            ref: 'fontFamily', // Use System Font
-          },
+          // fontFamily: {
+          //   ref: 'fontFamily', // Use System Font
+          // },
+          fontFamily: 'Public sans, sans-serif',
           spacing: 6,
           // iconSize: 14,
           wrapperBorder: false,
