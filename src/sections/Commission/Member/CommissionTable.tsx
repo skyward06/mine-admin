@@ -61,7 +61,7 @@ export default function CommissionTable({ status, customFilter }: Props) {
 
   const { loading, rowCount, weeklyCommissions, fetchCommissions } = useFetchCommissions();
 
-  const handleCopy = (value: string) => {
+  const onCopy = (value: string) => {
     toast.success('Copied!');
     copy(value);
   };
@@ -87,7 +87,7 @@ export default function CommissionTable({ status, customFilter }: Props) {
         cellRenderer: ({ data }: CustomCellRendererProps<BasicWeeklyCommission>) => (
           <Stack direction="row" justifyContent="space-between" alignItems="center">
             {formatID(data?.ID ?? '', 'C')}
-            <IconButton onClick={() => handleCopy(`${formatID(data?.ID ?? '', 'C')}`)}>
+            <IconButton onClick={() => onCopy(`${formatID(data?.ID ?? '', 'C')}`)}>
               <Iconify icon="iconamoon:copy-fill" />
             </IconButton>
           </Stack>
